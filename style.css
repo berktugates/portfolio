@@ -224,7 +224,7 @@ body #footer p{
     color: var(--white);
 }
 
-/*Media Queries*/
+/* index.html Media Queries*/
 
 /*Laptop L - 1440px*/
 @media (max-width: 1440px) {
@@ -303,3 +303,171 @@ body #footer p{
         padding: 2rem 1.4rem;
     }
  } 
+
+ /*------------------ about.html -------------------------*/
+ body #about{
+    background-color: var(--dkblue);
+    border: 1px solid var(--white);
+ }
+ body #about article{
+    position: relative;
+    display: grid;
+    padding: 2rem 16rem;
+ }
+ body #about article img{
+    width:30%;
+    border-top:1px solid var(--aqua);
+    border-left:1px solid var(--aqua);
+    border-radius: 25px;
+ }
+ body #about article div{
+    position: absolute;
+    /* top:4rem; */
+    /* width: 40%; */
+    /* left: 27rem; */
+    background-color: var(--black);
+    padding: 2rem;
+    border-radius: 25px;
+    color: var(--white);
+ }
+ body #about article div h4{
+    color: var(--aqua);
+    margin-bottom: 1rem;
+    font-size: 2rem;
+ }
+ body #about article div p{
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+ }
+
+ /* about.html Media Queries*/
+ @media (max-width: 2560px) {
+    body #about article{
+        padding: 13.5rem 16rem;
+    }
+    body #about article div{
+        top: 11.8rem;
+        left: 68rem;
+        padding: 3rem;
+        width: 47%;
+    }
+ }
+ /* 2060px*/
+ @media (max-width: 2060px) {
+    body #about article{
+        padding: 13.5rem 16rem;
+    }
+    body #about article div{
+        top: 2.8000000000000007rem;
+        left: 45rem;
+        padding: 3rem;
+        width: 47%;
+    }
+ }
+ /*Laptop L - 1440px*/
+ @media (max-width: 1440px) {
+    body #about article{
+        padding: 4rem 12rem;
+    }
+    body #about article div{
+        top: .6rem;
+        left: 37rem;
+        padding: 1rem;
+        width: 44%;
+    }
+    body #about article div h4{
+        font-size: 1rem;
+    }
+    body #about article div p{
+        font-size: .768rem;
+    }
+ }
+
+ /*Laptop  - 1024px*/
+  @media (max-width: 1024px) {
+    body #about article{
+        padding: 5rem 1rem;
+    }
+    body #about article div{
+        top: 1rem;
+        left: 21rem;
+        padding: 1rem;
+        width: 63%;
+    }
+    body #about article div h4{
+        font-size: 1rem;
+    }
+    body #about article div p{
+        font-size: .768rem;
+    }
+ }
+   /*Tablet  - 768px*/
+   @media (max-width: 768px) {
+    body #about article{
+        padding: 10rem 1rem;
+    }
+    body #about article div{
+        top: 1rem;
+        left: 18rem;
+        padding: 1rem;
+        width: 57%;
+    }
+    body #about article div h4{
+        font-size: 1rem;
+    }
+    body #about article div p{
+        font-size: .768rem;
+    }
+ }
+    /*Mobile L - 425px*/
+    @media (max-width: 425px) {
+        body #about article{
+            padding: 25rem 1rem;
+            position: relative;
+        }
+        body #about article img{
+            position: absolute;
+            top: 1rem;
+            left: 9rem;
+        }
+        body #about article div{
+            top: 10rem;
+            left: 2rem;
+            padding: 1rem;
+            width: 84%;
+        }
+        body #about article div h4{
+            font-size: 1rem;
+        }
+        body #about article div p{
+            font-size: .768rem;
+        }
+     }
+     /*Mobile M - 375px*/
+     @media (max-width: 375px) {
+        body #about article{
+            padding: 26.8rem 1rem;
+        }
+        body #about article div {
+            left: 1.8rem;
+            top: 11rem;
+        }
+        body #about article img{
+            left:7rem;
+            width: 40%;
+        }
+     }
+     /*Mobile S - 320px*/
+     @media (max-width: 320px) {
+        body #about article{
+            padding: 28.3rem 1rem;
+        }
+        body #about article div {
+            left: 1.6rem;
+            top: 10rem;
+        }
+        body #about article img{
+            left:6rem;
+            width: 40%;
+        }
+     }
