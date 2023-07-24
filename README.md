@@ -10,7 +10,7 @@ I created my own portfolio site in this repo. My purpose of creation is to use i
     * Resume
 
 ## Live Demo
-[Live Demo](https://berktugates.github.io/)
+[Live Demo]( https://berktugates.github.io/portfolio/)
 
 ## Technologies
 * HTML
