@@ -1,22 +1,17 @@
-import Introduction from "./components/Introduction";
-import Navbar from "./components//Navbar";
-import About from "./components/About";
-import Skills from "./components/Skills";
-import Works from "./components/Works";
-import Footer from "./components/Footer";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from "../src/pages/Home.jsx"
+import Works from "../src/pages/Works.jsx"
 
 
 function App() {
   return (
     <>
-      <div className="flex flex-col md:mx-auto md:w-1/2">
-        <Navbar />
-        <Introduction />
-        <About />
-        <Skills />
-        <Works />
-        <Footer />
-      </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/works" element={<Works />} />
+      </Routes>
+    </Router>
     </>
   );
 }

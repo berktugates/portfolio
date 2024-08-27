@@ -3,7 +3,7 @@ import { FaArrowRightLong } from "react-icons/fa6";
 export default function Introduction() {
   return (
     <>
-      <div id="introduction" className="p-2 md:p-6 my-6 md:my-12">
+      <div id="introduction" className="p-6 my-6 md:my-12">
         <motion.h1
           initial={{
             opacity: 0,
@@ -51,6 +51,8 @@ export default function Introduction() {
               delay: 1.8,
             },
           }}
+          whileTap={{ scale: 0.9 }}
+          onClick={()=>window.location.href= "mailto:berktugberke@icloud.com"}
           className="flex items-center gap-1 mt-4 text-sm text-start rounded-full text-blue-500"
         >
           Get In Touch <FaArrowRightLong />

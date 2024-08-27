@@ -30,7 +30,7 @@
       "start_date": "08/2023",
       "end_date": "08/2023",
       "img_src": "../../../public/shopapp-api.png",
-      "desc": "The Shop App API project is designed to facilitate essential operations for an e-commerce application, including the addition, updating, and deletion of products. This API provides a robust framework for managing inventory and streamlining the backend processes of a shopping app. By offering comprehensive endpoints for product management, the API ensures efficient and reliable handling of product data, enhancing the overall user experience and operational efficiency of the application."
+      "desc": "The Shop App API project enables essential e-commerce operations like adding, updating, and deleting products. It provides a robust framework for managing inventory and streamlining backend processes, ensuring efficient product data handling and improving user experience and operational efficiency."
     }
   ]
 }
