@@ -8,8 +8,10 @@ import { RiNextjsFill } from "react-icons/ri";
 import { SiExpress } from "react-icons/si";
 import { TbFileTypeSql } from "react-icons/tb";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export default function Skills() {
+  const{t} = useTranslation();
   return (
     <>
       <motion.div
@@ -25,9 +27,9 @@ export default function Skills() {
         }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-2xl font-bold">Skills</h1>
+        <h1 className="text-2xl font-bold">{t('skillsTitle')}</h1>
         <div id="tech-stack">
-          <h1 className="border-b mt-2 text-lg font-semibold">Tech Stack</h1>
+          <h1 className="border-b mt-2 text-lg font-semibold">{t('techStackTitle')}</h1>
           <div id="icons" className="flex flex-wrap justify-center my-2 gap-2">
             <FaHtml5 size={40} />
             <FaCss3 size={40} />

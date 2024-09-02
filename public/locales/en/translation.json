@@ -1,0 +1,15 @@
+{
+  "introductionTitle": "Hi, my name is Berktug",
+  "introductionParagraph": "I enjoy turning complex problems into elegant full-stack applications.",
+  "introductionButton": "Get In Touch",
+  "aboutTitle": "About",
+  "aboutText1": "Hi, I'm Berktug Berke Ates, a passionate software engineer based in Marmaris. As a Full Stack Developer, I enjoy building comprehensive and dynamic applications from the ground up.",
+  "aboutText2": "I thrive in team environments and am known for my ambition and adaptability. Beyond coding, I have a strong passion for bodybuilding and playing the guitar, which help me maintain a balanced and creative lifestyle.",
+  "aboutText3": "Feel free to connect with me to discuss technology, projects, or anything else that sparks curiosity!",
+  "educationTitle" : "Education",
+  "universityName": "Firat University",
+  "universityDepartment": "Software Engineering",
+  "skillsTitle": "Skills",
+  "techStackTitle" : "Tech Stack",
+  "recentWorksTitle": "Recent Works"
+}

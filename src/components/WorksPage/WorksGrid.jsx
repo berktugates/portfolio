@@ -23,7 +23,7 @@ export default function Works() {
         </p>
         <div id="works-grid" className="grid grid-cols-1">
           {info.works.map((i, key) => (
-            <Work i={i} key={key} />
+            <Work i={i} key={key} isHomePage={false} />
           ))}
         </div>
       </motion.div>

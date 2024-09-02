@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
 
-export default function Work({ i, key }) {
+export default function Work({ i, key, isHomePage }) {
+  const desc = i.desc.slice(0, 200);
   return (
     <>
       <motion.div
@@ -24,7 +24,7 @@ export default function Work({ i, key }) {
             </h5>
           </div>
           <div id="project-introduction" className="basis-3/5">
-            {i.desc}
+            {isHomePage ? `${desc}...` : `${i.desc}`}
           </div>
         </div>
       </motion.div>
