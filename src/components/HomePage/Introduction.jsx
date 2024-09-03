@@ -1,9 +1,7 @@
 import { motion } from "framer-motion";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { useTranslation } from "react-i18next";
 
-export default function Introduction() {
-  const { t } = useTranslation();
+export default function Introduction({ isDark }) {
   return (
     <>
       <div id="introduction" className="p-6 my-6 md:my-12">
@@ -20,9 +18,13 @@ export default function Introduction() {
               delay: 0.6,
             },
           }}
-          className="text-4xl font-bold tracking-wide"
+          className={
+            isDark
+              ? "text-4xl text-white font-bold tracking-wide"
+              : "text-4xl font-bold tracking-wide"
+          }
         >
-          {t("introductionTitle")}
+          Hi, my name is Berktug
         </motion.h1>
         <motion.p
           initial={{
@@ -39,7 +41,7 @@ export default function Introduction() {
           }}
           className="text-[10px] md:text-xs mt-2 text-gray-400"
         >
-          {t("introductionParagraph")}
+          I enjoy turning complex problems into elegant full-stack applications.
         </motion.p>
         <motion.button
           initial={{
@@ -58,9 +60,9 @@ export default function Introduction() {
           onClick={() =>
             (window.location.href = "mailto:berktugberke@icloud.com")
           }
-          className="flex items-center gap-1 mt-4 text-sm text-start rounded-full text-blue-500"
+          className={isDark ? "flex items-center gap-1 mt-4 text-sm text-start rounded-full text-blue-200":"flex items-center gap-1 mt-4 text-sm text-start rounded-full text-blue-500"}
         >
-          {t("introductionButton")} <FaArrowRightLong />
+          Get In Touch <FaArrowRightLong />
         </motion.button>
       </div>
     </>

@@ -1,10 +1,8 @@
 import info from "../../data/info.json";
 import Work from "./Work";
 import { motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
 
-export default function Works() {
-  const {t} = useTranslation();
+export default function Works({ isDark }) {
   const showcase = info.works.slice(0, 2);
   return (
     <>
@@ -21,13 +19,25 @@ export default function Works() {
         }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-2xl font-bold mb-2">{t('recentWorksTitle')}</h1>
+        <h1
+          className={
+            isDark
+              ? "text-2xl text-white font-bold mb-2"
+              : "text-2xl font-bold mb-2"
+          }
+        >
+          Recent Works
+        </h1>
         {showcase.map((i, key) => (
-          <Work i={i} key={key} isHomePage={true} />
+          <Work i={i} key={key} isHomePage={true} isDark={isDark} />
         ))}
         <a
           href="/works"
-          className="bg-black text-white py-1.5 px-3 md:py-2 md:px-4 lg:py-3 lg:px-6 rounded-lg hover:bg-gray-800"
+          className={
+            isDark
+              ? "bg-gray-100 text-black py-1.5 px-3 md:py-2 md:px-4 lg:py-3 lg:px-6 rounded-lg hover:bg-white"
+              : "bg-black text-white py-1.5 px-3 md:py-2 md:px-4 lg:py-3 lg:px-6 rounded-lg hover:bg-gray-800"
+          }
         >
           View Detailed Projects
         </a>

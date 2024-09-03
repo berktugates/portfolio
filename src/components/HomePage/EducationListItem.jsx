@@ -1,7 +1,4 @@
-import { useTranslation } from "react-i18next";
-
-export default function EducationListItem() {
-  const { t } = useTranslation();
+export default function EducationListItem({isDark}) {
   return (
     <>
       <div
@@ -15,11 +12,11 @@ export default function EducationListItem() {
             className="h-8"
           />
           <div id="name-departman">
-            <h1 className="font-semibold text-sm"> {t("universityName")}</h1>
-            <h3 className="text-xs text-gray-400">{t('universityDepartment')}</h3>
+            <h1 className={isDark ? "font-semibold text-white text-sm":"font-semibold text-sm"}> Firat University</h1>
+            <h3 className="text-xs text-gray-400">Software Engineering</h3>
           </div>
         </div>
-        <h1 className="text-xs">2020-2025</h1>
+        <h1 className={isDark ? "text-xs text-white":"text-xs"}>2020-2025</h1>
       </div>
     </>
   );
