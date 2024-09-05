@@ -35,13 +35,16 @@ export default function About({ isDark }) {
         </p>
         <p className={isDark ? "mt-2 text-white" : "mt-2"}>
           I thrive in team environments and am known for my ambition and
-          adaptability. Beyond coding, I have a strong passion for bodybuilding
-          and playing the guitar, which help me maintain a balanced and creative
-          lifestyle.
+          adaptability. Beyond coding, I have a strong passion for playing the
+          guitar, which helps me maintain a balanced and creative lifestyle.
         </p>
         <p className={isDark ? "mt-2 text-white" : "mt-2"}>
-          Feel free to connect with me to discuss technology, projects, or
-          anything else that sparks curiosity!
+          As a dedicated software engineer who is always eager to learn and
+          grow, I am open to new opportunities where I can add value to exciting
+          projects. If you're looking to add a creative and solution-oriented
+          developer to your team or see a potential area for collaboration, feel
+          free to get in touch. I look forward to hearing from you and creating
+          great projects together.
         </p>
         <h1
           className={

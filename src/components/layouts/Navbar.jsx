@@ -25,7 +25,7 @@ export default function Navbar({ isDark, setIsDark }) {
         </h1>
         <ul className="flex gap-2 text-gray-400 md:text-lg">
           <li className="hover:scale-110 hover:duration-500 hover:ease-in-out">
-            <a href="https://www.linkedin.com/in/berktugates">
+            <a href="https://www.linkedin.com/in/berktugates" target="_blank">
               <FaLinkedin size={20} color={isDark ? "white" : ""} />
             </a>
           </li>
@@ -38,7 +38,7 @@ export default function Navbar({ isDark, setIsDark }) {
             <IoMail size={20} color={isDark ? "white" : ""} />
           </li>
           <li className="hover:scale-110 hover:duration-500 hover:ease-in-out">
-            <a href="https://github.com/berktugates">
+            <a href="https://github.com/berktugates" target="_blank">
               <FaGithubSquare size={20} color={isDark ? "white" : ""} />
             </a>
           </li>
