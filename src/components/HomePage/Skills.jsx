@@ -1,3 +1,4 @@
+import { ThemeContext, useContext } from "../../../context/ThemeProvider";
 import { IoLogoJavascript } from "react-icons/io5";
 import { FaHtml5 } from "react-icons/fa";
 import { FaCss3 } from "react-icons/fa";
@@ -9,7 +10,8 @@ import { SiExpress } from "react-icons/si";
 import { TbFileTypeSql } from "react-icons/tb";
 import { motion } from "framer-motion";
 
-export default function Skills({ isDark }) {
+export default function Skills() {
+  const { isDark } = useContext(ThemeContext);
   return (
     <>
       <motion.div

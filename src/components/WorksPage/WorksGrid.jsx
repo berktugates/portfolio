@@ -1,8 +1,10 @@
+import { ThemeContext, useContext } from "../../../context/ThemeProvider";
 import { motion } from "framer-motion";
 import info from "../../data/info.json";
 import Work from "../HomePage/Work";
-export default function Works({ isDark }) {
-  console.log(info.works);
+
+export default function Works() {
+  const { isDark } = useContext(ThemeContext);
   return (
     <>
       <motion.div

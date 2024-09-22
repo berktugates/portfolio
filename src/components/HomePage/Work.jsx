@@ -1,7 +1,10 @@
+import { useContext } from "react";
+import { ThemeContext } from "../../../context/ThemeProvider";
 import { motion } from "framer-motion";
 
-export default function Work({ i, key, isHomePage, isDark }) {
+export default function Work({ i, key, isHomePage }) {
   const desc = i.desc.slice(0, 200);
+  const { isDark } = useContext(ThemeContext);
   return (
     <>
       <motion.div
@@ -17,13 +20,24 @@ export default function Work({ i, key, isHomePage, isDark }) {
             id="project-title"
             className="flex flex-col justify-center basis-2/5 mb-2"
           >
-            <h1 className={isDark ? "font-semibold text-white text-xl" :"font-semibold text-xl"}>{i.name}</h1>
+            <h1
+              className={
+                isDark
+                  ? "font-semibold text-white text-xl"
+                  : "font-semibold text-xl"
+              }
+            >
+              {i.name}
+            </h1>
             <h3 className={isDark ? "text-white" : ""}>{i.title}</h3>
             <h5 className="text-xs text-gray-400">
               {i.start_date} - {i.end_date}
             </h5>
           </div>
-          <div id="project-introduction" className={isDark ? "basis-3/5 text-white":"basis-3/5"}>
+          <div
+            id="project-introduction"
+            className={isDark ? "basis-3/5 text-white" : "basis-3/5"}
+          >
             {isHomePage ? `${desc}...` : `${i.desc}`}
           </div>
         </div>

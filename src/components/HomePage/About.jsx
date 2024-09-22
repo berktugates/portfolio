@@ -1,7 +1,9 @@
+import { ThemeContext, useContext } from "../../../context/ThemeProvider";
 import EducationListItem from "./EducationListItem";
 import { motion } from "framer-motion";
 
-export default function About({ isDark }) {
+export default function About() {
+  const { isDark } = useContext(ThemeContext);
   return (
     <>
       <motion.div
@@ -57,7 +59,7 @@ export default function About({ isDark }) {
           Education
         </h1>
         <ul className="mb-2">
-          <EducationListItem isDark={isDark} />
+          <EducationListItem />
         </ul>
       </motion.div>
     </>

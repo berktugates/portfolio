@@ -1,10 +1,12 @@
+import { ThemeContext, useContext } from "../../../context/ThemeProvider";
 import { IoMail } from "react-icons/io5";
 import { FaLinkedin } from "react-icons/fa";
 import { FaGithubSquare } from "react-icons/fa";
 import { FaMoon } from "react-icons/fa6";
 import { MdSunny } from "react-icons/md";
 
-export default function Navbar({ isDark, setIsDark }) {
+export default function Navbar() {
+  const {isDark, setIsDark} = useContext(ThemeContext)
   return (
     <>
       <div
@@ -50,7 +52,9 @@ export default function Navbar({ isDark, setIsDark }) {
             </>
           ) : (
             <>
-              <FaMoon onClick={() => setIsDark(true)} />
+              <FaMoon onClick={() => {setIsDark(true)
+                console.log(isDark)
+              }} />
             </>
           )}
         </div>

@@ -1,7 +1,9 @@
+import { ThemeContext, useContext } from "../../../context/ThemeProvider";
 import { motion } from "framer-motion";
 import { FaArrowRightLong } from "react-icons/fa6";
 
-export default function Introduction({ isDark }) {
+export default function Introduction() {
+  const{ isDark } = useContext(ThemeContext)
   return (
     <>
       <div id="introduction" className="p-6 my-6 md:my-12">

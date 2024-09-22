@@ -1,4 +1,8 @@
-export default function EducationListItem({isDark}) {
+import { useContext } from "react";
+import { ThemeContext } from "../../../context/ThemeProvider";
+
+export default function EducationListItem() {
+  const { isDark } = useContext(ThemeContext);
   return (
     <>
       <div
@@ -12,11 +16,20 @@ export default function EducationListItem({isDark}) {
             className="h-8"
           />
           <div id="name-departman">
-            <h1 className={isDark ? "font-semibold text-white text-sm":"font-semibold text-sm"}> Firat University</h1>
+            <h1
+              className={
+                isDark
+                  ? "font-semibold text-white text-sm"
+                  : "font-semibold text-sm"
+              }
+            >
+              {" "}
+              Firat University
+            </h1>
             <h3 className="text-xs text-gray-400">Software Engineering</h3>
           </div>
         </div>
-        <h1 className={isDark ? "text-xs text-white":"text-xs"}>2020-2025</h1>
+        <h1 className={isDark ? "text-xs text-white" : "text-xs"}>2020-2025</h1>
       </div>
     </>
   );
