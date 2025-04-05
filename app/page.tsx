@@ -17,7 +17,7 @@ export default function Home() {
     <>
       <div
         id="root"
-        className={`h-screen ${theme == "light" ? "bg-white" : "bg-black"}`}
+        className={`${theme == "light" ? "bg-white" : "bg-black"} xl:h-screen`}
       >
         <div id="content" className={`flex flex-col max-w-xl mx-auto p-6 `}>
           <ToastContainer

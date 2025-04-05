@@ -54,7 +54,7 @@ const EducationCard: React.FC<IEducationCard> = ({ education }) => {
         </div>
         <div id="education-date">
           <h1
-            className={`text-sm ${
+            className={`text-xs md:text-sm ${
               theme == "light" ? "text-gray-600" : "text-gray-400"
             }`}
           >
