@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 
 interface FollowCursorProps {
-  color?: string;
+  color: string;
 }
 
 
