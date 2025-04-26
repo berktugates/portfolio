@@ -4,6 +4,7 @@ import Image from "next/image";
 import img from "../../public/me.png";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
+import { ChevronRight } from "lucide-react";
 
 const Greetings: React.FC = () => {
   const context = useContext(Tcontext);
@@ -37,16 +38,24 @@ const Greetings: React.FC = () => {
             A software engineer, guitarist and songwriter who loves developing
             and enjoys creating.
           </p>
+          <a
+            href={`mailto:berktugberke@icloud.com?subject=Opportunity/Job Offer Discussion&body=Let's get started :)`}
+            className={`mt-2 flex items-center gap-x-2 text-2xl font-semibold ${
+              theme === "light" ? "" : "text-white"
+            }`}
+          >
+            Get In Touch <ChevronRight />
+          </a>
         </div>
         <MotionImage
-        onClick={()=> toast("If you clicked, you found real talent, not just 'clickbait'")}
+          onClick={() =>
+            toast("If you clicked, you found real talent, not just 'clickbait'")
+          }
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           src={img}
           width={100}
-          className={`rounded-2xl aspect ${
-            theme == "light" ? "" : ""
-          }`}
+          className={`rounded-2xl aspect ${theme == "light" ? "" : ""}`}
           alt="berktug's photo"
         />
       </div>
