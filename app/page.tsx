@@ -8,6 +8,7 @@ import Greetings from "./components/Greetings";
 import Skills from "./components/Skills";
 import Navbar from "./components/Navbar";
 import { Slide, ToastContainer } from "react-toastify";
+import Cursor from "./components/Cursor";
 
 export default function Home() {
   const context = useContext(Tcontext);
@@ -19,6 +20,7 @@ export default function Home() {
         id="root"
         className={`${theme == "light" ? "bg-white" : "bg-black"} xl:h-screen`}
       >
+        <Cursor color={`${theme === "light" ? "#323232a6" : "#f5f5f4a6"}`} />
         <div id="content" className={`flex flex-col max-w-xl mx-auto p-6 `}>
           <ToastContainer
             position="top-center"
