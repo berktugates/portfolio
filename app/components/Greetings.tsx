@@ -4,13 +4,24 @@ import Image from "next/image";
 import img from "../../public/me.png";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
-import { ChevronRight } from "lucide-react";
+import { ArrowDownToLine } from "lucide-react";
+import {saveAs} from "file-saver";
 
 const Greetings: React.FC = () => {
   const context = useContext(Tcontext);
   if (!context) return null;
   const { theme } = context;
   const MotionImage = motion(Image);
+
+  const handleDownload = () => {
+    const fileUrl = "/BerktugBerkeAtes.pdf";
+    const fileName = "BerktugBerkeAtes.pdf"; 
+    
+    fetch(fileUrl)
+      .then((res) => res.blob())
+      .then((blob) => saveAs(blob, fileName));
+  };
+
   return (
     <>
       <div id="greetings" className="flex flex-row items-center my-4">
@@ -39,12 +50,12 @@ const Greetings: React.FC = () => {
             and enjoys creating.
           </p>
           <a
-            href={`mailto:berktugberke@icloud.com?subject=Opportunity/Job Offer Discussion&body=Let's get started :)`}
-            className={`mt-2 flex items-center gap-x-2 text-2xl font-semibold ${
+            onClick={()=> handleDownload()}
+            className={`mt-2 flex items-center gap-x-2 text-2xl font-bold ${
               theme === "light" ? "" : "text-white"
-            }`}
+            } hover:text-blue-500 hover:transition-all hover:duration-300`}
           >
-            Get In Touch <ChevronRight />
+            Download Résumé <ArrowDownToLine />
           </a>
         </div>
         <MotionImage
