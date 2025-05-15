@@ -27,7 +27,7 @@ const Navbar: React.FC = () => {
           </a>
           <GitHub />
           <LinkedIn />
-          <X href="https://x.com/karoyildizi" isNavbar={true} />
+          <X href="https://x.com/plazadilberi" isNavbar={true} />
         </div>
         <div id="light-mode" onClick={() => toggleTheme()}>
           <Light />

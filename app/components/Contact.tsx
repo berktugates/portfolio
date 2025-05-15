@@ -23,7 +23,7 @@ const Contact: React.FC = () => {
             }`}
           >
             Want to chat? Feel free to shoot me a DM on{" "}
-            <X href={"https://x.com/karoyildizi"} /> with a clear question, and
+            <X href={"https://x.com/plazadilberi"} /> with a clear question, and
             I&apos;ll get back to you whenever I can. You can also reach me via{" "}
             <a
               href="mailto:berktugberke@icloud.com"
