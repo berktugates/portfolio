@@ -9,7 +9,7 @@ const GitHub: React.FC = () => {
     <a
       className={`inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground rounded-full ${
         theme == "light" ? "" : "text-white"
-      } hover:scale-110 hover:duration-300 hover:transition-all`}
+      } hover:scale-110 hover:duration-300 hover:transition-all cursor-none`}
       data-state="closed"
       href="https://github.com/berktugates"
       target="_blank"

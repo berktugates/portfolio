@@ -22,6 +22,7 @@ const Navbar: React.FC = () => {
         <div id="social" className="flex gap-x-4">
           <a
             href={`mailto:berktugberke@icloud.com?subject=Opportunity/Job Offer Discussion&body=Let's get started :)`}
+            className="cursor-none hover:scale-110 hover:duration-300 hover:transition-all"
           >
             <Mail color={`${theme === "dark" ? "white" : "black"}`} />
           </a>

@@ -15,7 +15,7 @@ const X: React.FC<X> = ({ href, isNavbar }) => {
       <a
         className={`${
           theme == "light" ? "text-black" : "text-white"
-        } inline-flex items-center justify-center whitespace-nowrap text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground rounded-full hover:scale-110 hover:duration-300 hover:transition-all`}
+        } inline-flex items-center justify-center whitespace-nowrap text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground rounded-full hover:scale-110 hover:duration-300 hover:transition-all cursor-none`}
         data-state="closed"
         href={href}
         target="_blank"
