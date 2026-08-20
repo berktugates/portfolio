@@ -8,15 +8,18 @@ const items = [
   { title: "Developer Community", description: "Sharing knowledge and contributing to the developer community.", accent: "from-orange-100 via-white to-rose-100 dark:from-orange-950 dark:via-zinc-950 dark:to-rose-950", symbol: "◎" },
 ];
 
+const AUTO_PLAY_DELAY = 5000;
+
 export function FocusCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
   const activeIndexRef = useRef(1);
   const [activeIndex, setActiveIndex] = useState(1);
+  const [isPaused, setIsPaused] = useState(false);
 
   const centerCard = useCallback((index: number, smooth = true) => {
     const track = trackRef.current;
     const card = track?.children[index] as HTMLElement | undefined;
-    if (!track || !card || window.innerWidth >= 640) return;
+    if (!track || !card) return;
 
     track.scrollTo({
       left: card.offsetLeft - (track.clientWidth - card.clientWidth) / 2,
@@ -36,9 +39,19 @@ export function FocusCarousel() {
     };
   }, [centerCard]);
 
+  useEffect(() => {
+    if (isPaused) return;
+
+    const timer = window.setTimeout(() => {
+      centerCard((activeIndexRef.current + 1) % items.length);
+    }, AUTO_PLAY_DELAY);
+
+    return () => window.clearTimeout(timer);
+  }, [activeIndex, centerCard, isPaused]);
+
   const handleScroll = () => {
     const track = trackRef.current;
-    if (!track || window.innerWidth >= 640) return;
+    if (!track) return;
     const center = track.scrollLeft + track.clientWidth / 2;
     const closestIndex = Array.from(track.children).reduce(
       (closest, child, index) => {
@@ -53,7 +66,17 @@ export function FocusCarousel() {
   };
 
   return (
-    <>
+    <div
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Areas of focus"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocusCapture={() => setIsPaused(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setIsPaused(false);
+      }}
+    >
       <div ref={trackRef} className="focus-track" aria-label="Areas of focus" onScroll={handleScroll}>
         {items.map((item, index) => (
           <article
@@ -79,7 +102,7 @@ export function FocusCarousel() {
           </article>
         ))}
       </div>
-      <div className="mt-4 flex justify-center gap-2 sm:hidden" aria-label="Select focus card">
+      <div className="mt-4 flex justify-center gap-2" aria-label="Select focus card">
         {items.map((item, index) => (
           <button
             type="button"
@@ -91,6 +114,6 @@ export function FocusCarousel() {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 }
