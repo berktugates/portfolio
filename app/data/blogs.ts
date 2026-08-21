@@ -19,6 +19,33 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "failure-modes-of-ai-feature-rollouts",
+    title: "Failure Modes of AI Feature Rollouts",
+    excerpt: "Most AI launches fail in the gaps between demos, dashboards, and real user workflows.",
+    description: "Anticipate the common failure modes of AI feature rollouts: silent quality drift, cost spikes, incomplete fallbacks, and release criteria that ignore production risk.",
+    publishedAt: "2026-08-22",
+    readingMinutes: 8,
+    keywords: ["AI feature rollout", "production AI", "release engineering", "LLM reliability", "AI product engineering"],
+    sections: [
+      { heading: "Demos hide the operational surface", paragraphs: [
+        "A polished demo proves that a model can produce useful output under curated conditions. A rollout proves that the same system stays useful when traffic is messy, latency budgets are tight, and the organization must recover from bad answers without melting support.",
+        "Treat the first production week as a systems test. You are validating retrieval freshness, tool reliability, fallback paths, cost ceilings, and the human workflows that catch what automation misses. If those pieces are undefined, the feature is not ready—only the demo is."
+      ]},
+      { heading: "Quality drifts without an owner", paragraphs: [
+        "Model providers change defaults. Prompts accumulate exceptions. Retrieval indexes rot. None of this announces itself with a red deploy. Teams that ship AI without an explicit quality owner discover regressions through customer complaints weeks later.",
+        "Assign ownership the same way you would for an availability SLO. Define the properties that matter, sample production traffic, and require a named reviewer when those properties move. Drift is inevitable; unowned drift is a product failure."
+      ], points: ["Version prompts, retrieval config, and evaluation suites together", "Alert on refusal rate, escalation rate, and correction rate—not only errors", "Keep a rollback path that disables AI without disabling the product", "Budget time for post-launch triage before declaring success"]},
+      { heading: "Fallbacks are part of the feature", paragraphs: [
+        "When the model is unavailable, slow, or low-confidence, users still need a path to complete the job. A blank state or a polite apology is not a fallback. A fallback is the deterministic flow, cached answer, search result, or human handoff that preserves progress.",
+        "Design fallbacks before launch and exercise them in staging. Measure how often they fire. If fallbacks are rare in testing but common in production, your confidence thresholds or dependency assumptions are wrong."
+      ]},
+      { heading: "Release criteria must include cost and risk", paragraphs: [
+        "Passing a handful of golden prompts is necessary and insufficient. Gate releases on critical property regressions, cost per successful outcome, latency at p95, and the readiness of support and trust teams. High-stakes actions need stricter bars than low-stakes drafting aids.",
+        "A healthy AI rollout looks boring: gradual exposure, clear kill switches, observed quality, and a team that can explain what changed when something goes wrong. That boredom is the signal that engineering owned the risk instead of hoping the model would."
+      ]}
+    ]
+  },
+  {
     slug: "context-engineering-for-reliable-ai-features",
     title: "Context Engineering for Reliable AI Features",
     excerpt: "Most AI product failures are context failures. Design retrieval, memory, and instructions as a system.",

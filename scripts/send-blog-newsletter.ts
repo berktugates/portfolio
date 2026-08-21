@@ -37,14 +37,21 @@ function buildNewsletterBody(post: BlogPost) {
   const url = `${siteUrl()}/blogs/${post.slug}`;
   const lead = post.sections[0]?.paragraphs[0] ?? post.description;
 
+  // Table-based CTA: right-aligned, white label with !important (some clients restyle <a>).
   return `<!-- buttondown-editor-mode: fancy -->
 <p>${escapeHtml(post.excerpt)}</p>
 <p>${escapeHtml(lead)}</p>
-<p style="margin: 28px 0 8px;">
-  <a href="${url}" style="display:inline-block;background:#09090b;color:#ffffff;padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;line-height:1;">
-    Read more
-  </a>
-</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0 8px;border-collapse:collapse;">
+  <tr>
+    <td align="right" style="text-align:right;">
+      <a href="${url}" style="display:inline-block;background-color:#09090b;background:#09090b;color:#ffffff !important;padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;line-height:1;mso-padding-alt:0;">
+        <!--[if mso]><i style="letter-spacing:18px;mso-font-width:-100%;mso-text-raise:18pt;">&nbsp;</i><![endif]-->
+        <span style="color:#ffffff !important;text-decoration:none;">Read more</span>
+        <!--[if mso]><i style="letter-spacing:18px;mso-font-width:-100%;">&nbsp;</i><![endif]-->
+      </a>
+    </td>
+  </tr>
+</table>
 <p style="margin:0;font-size:12px;color:#71717a;">
   Or open: <a href="${url}" style="color:#71717a;">${url}</a>
 </p>`;
