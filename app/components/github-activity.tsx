@@ -86,7 +86,7 @@ export function GitHubActivity() {
             @berktugates
           </a>
         </div>
-        <div className="github-calendar-scroll text-zinc-500">
+        <div className="text-zinc-500">
           <GitHubCalendar
             username="berktugates"
             blockSize={9}

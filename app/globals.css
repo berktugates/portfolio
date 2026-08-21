@@ -10,8 +10,18 @@ a, button { @apply outline-none focus-visible:ring-2 focus-visible:ring-zinc-500
 .contact-link { @apply mb-3 flex items-center gap-3 rounded-xl bg-white p-3 ring-1 ring-zinc-200/50 transition-all hover:bg-zinc-50 hover:ring-zinc-300 dark:bg-zinc-900 dark:ring-zinc-800/50 dark:hover:bg-zinc-800; }
 .project-track { @apply -mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-[12vw] pb-2 [scrollbar-width:none] sm:mx-0 sm:px-0; }
 .project-track::-webkit-scrollbar { display: none; }
-.github-calendar-scroll { overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
-.github-calendar-scroll::-webkit-scrollbar { display: none; height: 0; width: 0; }
+.github-calendar-scroll,
+.react-activity-calendar__scroll-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.github-calendar-scroll::-webkit-scrollbar,
+.react-activity-calendar__scroll-container::-webkit-scrollbar {
+  display: none;
+  height: 0;
+  width: 0;
+  background: transparent;
+}
 .project-card { @apply w-[76vw] min-w-[76vw] snap-center sm:w-full sm:min-w-full; }
 .project-visual::before { content: ""; position: absolute; inset: -30%; filter: blur(52px); opacity: .72; pointer-events: none; }
 .project-visual::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 45%, rgba(255,255,255,.2), transparent 48%); pointer-events: none; }
