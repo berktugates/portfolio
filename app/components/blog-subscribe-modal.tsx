@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useId, useState, type FormEvent } from "react";
-import { X } from "lucide-react";
 
 const SESSION_KEY = "blog-subscribe-prompted";
 const USERNAME = process.env.NEXT_PUBLIC_BUTTONDOWN_USERNAME ?? "berktug";
@@ -86,17 +85,8 @@ export function BlogSubscribeModal() {
         aria-describedby={descId}
         className="relative w-full max-w-md rounded-2xl bg-white p-5 shadow-xl ring-1 ring-zinc-200/80 dark:bg-zinc-950 dark:ring-zinc-800"
       >
-        <button
-          type="button"
-          onClick={dismiss}
-          className="absolute right-3 top-3 rounded-lg p-1.5 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
-          aria-label="Close"
-        >
-          <X className="size-4" />
-        </button>
-
         {status === "success" ? (
-          <div className="pr-8">
+          <div>
             <h2 id={titleId} className="text-lg font-medium text-zinc-950 dark:text-zinc-50">
               You&apos;re in
             </h2>
@@ -106,7 +96,7 @@ export function BlogSubscribeModal() {
           </div>
         ) : (
           <>
-            <div className="pr-8">
+            <div>
               <h2 id={titleId} className="text-lg font-medium text-zinc-950 dark:text-zinc-50">
                 Stay in the loop
               </h2>
