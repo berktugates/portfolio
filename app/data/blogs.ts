@@ -15,7 +15,279 @@ export type BlogPost = {
   sections: readonly BlogSection[];
 };
 
+export const BLOGS_PER_PAGE = 10;
+
 export const blogPosts: readonly BlogPost[] = [
+  {
+    slug: "context-engineering-for-reliable-ai-features",
+    title: "Context Engineering for Reliable AI Features",
+    excerpt: "Most AI product failures are context failures. Design retrieval, memory, and instructions as a system.",
+    description: "Learn how context engineering improves production AI reliability through retrieval design, memory boundaries, instruction hierarchy, and measurable grounding.",
+    publishedAt: "2026-08-05",
+    readingMinutes: 8,
+    keywords: ["context engineering", "production AI", "RAG architecture", "LLM reliability", "AI product engineering"],
+    sections: [
+      { heading: "Prompts are not the whole system", paragraphs: [
+        "When an AI feature hallucinates, teams often rewrite the system prompt. That can help, but it rarely addresses the root cause. The model can only reason over what it is given. If retrieval is weak, memory is noisy, or tool results are incomplete, no amount of wording will create dependable behavior.",
+        "Context engineering treats the assembled input as a product surface. It asks which facts must be present, which instructions take priority, how much history is useful, and what should be excluded. The goal is a bounded, inspectable packet of information that makes the intended answer possible."
+      ]},
+      { heading: "Separate instructions, facts, and tools", paragraphs: [
+        "A durable context packet has layers with clear ownership. Policy and product instructions define what the model may do. Retrieved facts provide grounded evidence. Tool outputs describe the current world. Conversation history captures user intent. Mixing these layers into one undifferentiated blob makes debugging almost impossible.",
+        "Give each layer a stable format and a size budget. Prefer structured facts over long prose dumps. When evidence conflicts, preserve provenance so the system can prefer authoritative sources or ask a clarifying question instead of inventing reconciliation."
+      ], points: ["Rank context by decision value, not by token count", "Keep authorization decisions outside the model", "Cap history with summarization that preserves commitments", "Log which sources entered the final prompt"]},
+      { heading: "Retrieval quality is product quality", paragraphs: [
+        "Retrieval-augmented generation fails quietly when the wrong documents are fetched with high confidence. Measure recall on the questions that matter, not only embedding similarity. Include hard cases: synonyms, partial identifiers, multilingual queries, and requests that should retrieve nothing.",
+        "Chunking strategy, metadata filters, and reranking belong in the same review as the model choice. A smaller model with excellent context often outperforms a larger model with polluted context, especially under latency and cost constraints."
+      ]},
+      { heading: "Make context observable", paragraphs: [
+        "When users report a bad answer, engineers need to reconstruct the context that produced it. Store prompt and retrieval versions, source identifiers, token budgets, and validation outcomes with privacy controls. Without that trail, every incident becomes anecdotal.",
+        "Context engineering is successful when the system can explain what it knew, what it did not know, and why it answered the way it did. That transparency is the foundation of trust in AI products."
+      ]}
+    ]
+  },
+  {
+    slug: "cost-aware-ai-product-architecture",
+    title: "Cost-Aware Architecture for AI Products",
+    excerpt: "Treat model spend as a product constraint, not an after-the-fact finance surprise.",
+    description: "Design AI features with explicit cost budgets, caching, model routing, evaluation tradeoffs, and unit economics that survive real traffic.",
+    publishedAt: "2026-05-21",
+    readingMinutes: 7,
+    keywords: ["AI cost optimization", "LLM architecture", "AI product design", "model routing", "software economics"],
+    sections: [
+      { heading: "Unit economics belong in the design doc", paragraphs: [
+        "An AI feature that delights ten users and bankrupts the company at ten thousand users is not a finished design. Estimate tokens per request, expected concurrency, cache hit rate, evaluation overhead, and the willingness of customers to pay for the outcome. These numbers should influence model choice and interaction design before launch.",
+        "Cost awareness is not the same as cheapness. Some workflows deserve an expensive model because the alternative is human labor or lost revenue. The engineering task is to spend deliberately where quality creates leverage and refuse spend where it does not."
+      ]},
+      { heading: "Route work by difficulty", paragraphs: [
+        "Not every request needs the strongest available model. Classify tasks by risk and ambiguity. Deterministic extraction, classification, and formatting can often use smaller models or classical software. Open-ended synthesis, planning, and high-stakes advice may justify a stronger model with tighter guardrails.",
+        "Routing should be explicit and measurable. Track quality, latency, and cost by route. A cascade that escalates only when confidence is low preserves experience while keeping the average request affordable."
+      ], points: ["Cache stable retrieval and repeated prompts", "Prefer structured outputs that reduce retries", "Budget evaluation runs like production traffic", "Expose cost alarms before invoices arrive"]},
+      { heading: "Product shape changes the bill", paragraphs: [
+        "Streaming long essays is expensive. Asking for concise structured recommendations is cheaper and often more useful. Interface decisions—when to call a model, how much history to send, whether to regenerate—are cost controls as much as UX choices.",
+        "Batch offline work, precompute frequent answers, and avoid sending the entire account history when a small relevant slice will do. The cheapest token is the one the system never sends."
+      ]},
+      { heading: "Make spend a health signal", paragraphs: [
+        "Track cost per successful outcome, not only cost per request. A cheap endpoint that users retry five times is not cheap. Connect finance metrics to product analytics so teams can see whether spend is buying retention, conversion, or support deflection.",
+        "Sustainable AI products treat model spend as an architectural parameter. When the budget is visible, teams invent better systems instead of hoping traffic stays small."
+      ]}
+    ]
+  },
+  {
+    slug: "evaluating-llm-outputs-in-production",
+    title: "Evaluating LLM Outputs Without Guesswork",
+    excerpt: "Replace vibes-based shipping with evaluation suites that reflect real product risk.",
+    description: "Build production LLM evaluation with golden datasets, automated graders, human review loops, regression gates, and risk-based release criteria.",
+    publishedAt: "2026-01-28",
+    readingMinutes: 8,
+    keywords: ["LLM evaluation", "AI quality assurance", "prompt regression testing", "production AI", "machine learning ops"],
+    sections: [
+      { heading: "Define the properties that matter", paragraphs: [
+        "Generic accuracy scores rarely protect a product. Decide which properties users and the business cannot compromise: factual grounding, schema validity, tone, refusal quality, latency, citation presence, or policy compliance. Different features need different scorecards.",
+        "Write these properties as measurable checks. A grounded answer should cite allowed sources. A booking assistant should never invent inventory. A support helper should refuse account takeover requests. Evaluation starts with product promises, not model leaderboards."
+      ]},
+      { heading: "Build a living dataset", paragraphs: [
+        "Collect examples from production issues, support tickets, adversarial prompts, and edge cases discovered in research. Keep personally identifiable information out of the suite or replace it with realistic synthetic substitutes. Version the dataset alongside prompts and model settings.",
+        "Include cases that should fail gracefully. Evaluation that only covers happy paths will greenlight regressions in the moments that damage trust the most."
+      ], points: ["Separate offline suites from online sampling", "Calibrate automated graders with periodic human review", "Block releases on critical property regressions", "Track evaluation coverage by user journey"]},
+      { heading: "Automate the boring, review the subtle", paragraphs: [
+        "Schema checks, forbidden phrase detection, citation presence, and deterministic fixtures can run on every change. Nuanced qualities such as helpfulness or empathy still need sampled human judgment. Use automation to widen coverage and humans to keep the graders honest.",
+        "When a model or prompt changes, compare against the previous baseline rather than an absolute fantasy of perfection. The question is whether the product got safer and more useful for the users you serve."
+      ]},
+      { heading: "Close the loop after launch", paragraphs: [
+        "Production will invent cases your suite never imagined. Feed high-severity failures back into evaluation quickly. Pair this with telemetry: thumbs-down rates, edit distance on user corrections, escalation to humans, and task completion.",
+        "Evaluation is not a ceremony before launch. It is the continuous immune system of an AI product."
+      ]}
+    ]
+  },
+  {
+    slug: "designing-agentic-workflows-that-stay-controllable",
+    title: "Designing Agentic Workflows That Stay Controllable",
+    excerpt: "Autonomy is useful only when every tool call has a clear boundary and an audit trail.",
+    description: "Learn how to design controllable AI agents with scoped tools, human approval gates, deterministic state machines, and safe recovery paths.",
+    publishedAt: "2025-12-09",
+    readingMinutes: 9,
+    keywords: ["AI agents", "agentic workflows", "tool calling", "AI safety", "software architecture"],
+    sections: [
+      { heading: "Autonomy needs a state machine", paragraphs: [
+        "Free-form agents that invent their own plans are exciting in demos and fragile in production. Prefer an explicit workflow: gather context, propose actions, request approval when needed, execute tools, verify outcomes, and stop. The model can fill flexible steps inside that machine; it should not own the machine.",
+        "State machines make timeouts, retries, and audits possible. They also make product promises enforceable: an agent cannot refund money, delete data, or message customers unless the workflow reaches an approved state."
+      ]},
+      { heading: "Tools are capabilities with contracts", paragraphs: [
+        "Each tool should expose a narrow capability with typed inputs, authorization checks, idempotency, and clear side effects. Broad tools that can do anything through a shell or raw database invite irreversible mistakes.",
+        "Return structured results the workflow can validate. Ambiguous tool failures should not become invented successes. If a payment API times out, the agent must query status rather than assume completion."
+      ], points: ["Require confirmation for irreversible side effects", "Bound loops with step and cost limits", "Persist plans and tool transcripts", "Prefer least-privilege credentials per tool"]},
+      { heading: "Keep humans in the right places", paragraphs: [
+        "Human approval is not a confession of failure. It is a product control for actions with legal, financial, or reputational impact. Design review interfaces that show the proposed action, evidence, and alternatives in seconds, not a raw chain-of-thought dump.",
+        "Over time, promote repeatedly approved patterns into automated paths with monitoring. Controllability improves when the organization learns which decisions are safe to accelerate."
+      ]},
+      { heading: "Recover like software, not like magic", paragraphs: [
+        "Agents will stall, loop, or partially complete work. Provide compensating actions, dead-letter states, and operator tools to resume or unwind. Users should never be told the system finished when the underlying operations are unresolved.",
+        "The winning agentic systems feel calm. They use models for judgment inside carefully owned software boundaries."
+      ]}
+    ]
+  },
+  {
+    slug: "typed-boundaries-in-modern-typescript-systems",
+    title: "Typed Boundaries in Modern TypeScript Systems",
+    excerpt: "TypeScript pays off when types protect the seams between modules, APIs, and runtime data.",
+    description: "Use TypeScript effectively at system boundaries with schema validation, shared contracts, branded types, and practical patterns that reduce production bugs.",
+    publishedAt: "2025-09-30",
+    readingMinutes: 7,
+    keywords: ["TypeScript architecture", "API contracts", "runtime validation", "full-stack TypeScript", "software engineering"],
+    sections: [
+      { heading: "Types are strongest at the edges", paragraphs: [
+        "Internal function annotations help, but the expensive bugs usually cross process, network, storage, or team boundaries. Invest typing effort where untrusted or independently deployed data enters the system: HTTP payloads, queue messages, environment configuration, and third-party webhooks.",
+        "At those edges, compile-time types are not enough. Pair them with runtime schemas so invalid data fails in a controlled way before it corrupts domain logic."
+      ]},
+      { heading: "Share contracts, not implementations", paragraphs: [
+        "Generate or publish shared types for clients and servers from a single source of truth. Keep transport details and UI concerns out of the domain model. A change to a field's nullability should be deliberate and visible to every consumer.",
+        "Branded types for identifiers prevent accidental mixing of user IDs, organization IDs, and external references. Small nominal distinctions catch an entire class of integration mistakes."
+      ], points: ["Validate on read at trust boundaries", "Make illegal states unrepresentable where cheap", "Prefer explicit result types over thrown ambiguity", "Keep DTOs separate from persistence models"]},
+      { heading: "Avoid type theater", paragraphs: [
+        "Overfitting types to every temporary UI state creates churn without safety. Escape hatches such as any, broad casts, and overly clever conditional types should be rare and justified. Readable types that teammates can change are more valuable than ingenious ones nobody understands.",
+        "Measure success by fewer production parsing errors and safer refactors, not by the density of generics."
+      ]},
+      { heading: "Let types document decisions", paragraphs: [
+        "A good type system captures product rules: which fields exist after onboarding, which statuses allow refunds, which payloads are versioned. That documentation stays honest because the compiler enforces it.",
+        "TypeScript is most effective when it encodes the architecture you already believe in, then prevents the team from accidentally abandoning it."
+      ]}
+    ]
+  },
+  {
+    slug: "caching-strategies-for-product-facing-apis",
+    title: "Caching Strategies for Product-Facing APIs",
+    excerpt: "A cache is a correctness decision first and a performance optimization second.",
+    description: "Design API caching with explicit freshness rules, invalidation strategies, stampede protection, and product-aware tradeoffs for web and mobile clients.",
+    publishedAt: "2025-06-18",
+    readingMinutes: 8,
+    keywords: ["API caching", "HTTP cache", "Redis caching", "backend performance", "system design"],
+    sections: [
+      { heading: "Name the freshness contract", paragraphs: [
+        "Before choosing Redis, CDN rules, or HTTP headers, decide how stale a response may be and what happens when it is wrong. Profile pages, inventory counts, prices, and permissions have different tolerance for delay. A single global TTL is usually a product mistake.",
+        "Write the contract in engineering language clients can rely on: absolute expiry, event-driven invalidation, or explicit revalidation. Ambiguous freshness creates duplicate caching layers that fight each other."
+      ]},
+      { heading: "Cache where the audience is", paragraphs: [
+        "Public content benefits from edge caches. Per-user dashboards often need application-level caches keyed by identity and tenant. Expensive computed aggregations may need materialization rather than a short-lived key-value entry.",
+        "Avoid caching unauthorized responses or responses that embed secrets. Cache keys must include every dimension that changes meaning: locale, plan, feature flag, and representation version."
+      ], points: ["Protect against thundering herds on expiry", "Prefer idempotent recomputation paths", "Observe hit rate alongside wrong-data incidents", "Invalidate on meaningful domain events"]},
+      { heading: "Invalidation is the hard part", paragraphs: [
+        "Time-based expiry is simple and often wrong for collaborative data. Event-based invalidation is precise and easy to miss a producer. Many systems combine a modest TTL with explicit purge on write paths for critical entities.",
+        "Design delete and update flows to emit the signals caches need. If writers do not know about readers' caches, stale data becomes a recurring incident theme."
+      ]},
+      { heading: "Measure user-visible outcomes", paragraphs: [
+        "A high hit rate with rising support tickets about outdated information is not a win. Track latency percentiles, origin load, and correctness complaints together. Caching strategy should make the product feel fast and trustworthy at the same time.",
+        "The best cache is invisible: users get timely answers, origins stay calm, and engineers can explain exactly when data is allowed to lag."
+      ]}
+    ]
+  },
+  {
+    slug: "feature-flags-as-engineering-infrastructure",
+    title: "Feature Flags as Engineering Infrastructure",
+    excerpt: "Flags are not temporary hacks. They are how modern teams separate deploy from release.",
+    description: "Use feature flags as reliable engineering infrastructure with ownership, cleanup, targeting rules, experiment hygiene, and operational safety.",
+    publishedAt: "2025-02-14",
+    readingMinutes: 7,
+    keywords: ["feature flags", "progressive delivery", "release engineering", "A/B testing", "continuous deployment"],
+    sections: [
+      { heading: "Deploy should be boring", paragraphs: [
+        "Shipping code to production and exposing a feature to users are different decisions. Feature flags let teams merge continuously while controlling blast radius. Combined with observability, they turn releases into reversible experiments rather than binary events.",
+        "This only works when flags are treated as infrastructure: named clearly, owned by a team, defaulted safely, and removable on a schedule."
+      ]},
+      { heading: "Design for operability", paragraphs: [
+        "Every flag needs a default for when the management service is unavailable. Critical paths should fail closed or open intentionally, never randomly. Targeting rules must be testable and auditable, especially for enterprise customers and regulated workflows.",
+        "Avoid wrapping unrelated behavior in one flag. Coarse flags create tangled cleanup. Fine flags create combinatorial testing cost. Group by user-visible capability."
+      ], points: ["Record who changed a flag and why", "Set removal dates when flags are created", "Keep flag evaluation out of tight loops when possible", "Test both enabled and disabled paths"]},
+      { heading: "Experiments need hygiene", paragraphs: [
+        "When flags power experiments, define the hypothesis, primary metric, and end criteria before launch. Do not leave half-finished experiments running indefinitely; they pollute analytics and increase cognitive load.",
+        "Segment carefully. Overlapping experiments on the same journey can invalidate conclusions and create confusing user experiences."
+      ]},
+      { heading: "Cleanup is part of delivery", paragraphs: [
+        "A flag that survives long after a feature is fully released becomes dead configuration and hidden branching. Schedule cleanup work with the same seriousness as the launch. Delete unused paths so the codebase reflects reality.",
+        "Mature teams win with flags not because they have more toggles, but because they can release safely and leave the system simpler afterward."
+      ]}
+    ]
+  },
+  {
+    slug: "using-ai-coding-tools-without-losing-architecture",
+    title: "Using AI Coding Tools Without Losing Architecture",
+    excerpt: "Speed is free only when the system boundaries remain intentional.",
+    description: "Adopt AI coding assistants effectively while preserving architecture, code review quality, security review, and long-term maintainability.",
+    publishedAt: "2024-11-05",
+    readingMinutes: 8,
+    keywords: ["AI coding tools", "developer productivity", "software architecture", "code review", "AI pair programming"],
+    sections: [
+      { heading: "Start from the constraint, not the autocomplete", paragraphs: [
+        "AI coding tools excel when the task is bounded: implement this interface, add this test, migrate this call site. They struggle when asked to invent an architecture the repository does not yet express. Provide the invariant first—ownership boundaries, naming conventions, error model, and forbidden shortcuts.",
+        "The engineer remains responsible for framing. A vague prompt yields plausible code that quietly duplicates existing modules or bypasses shared utilities."
+      ]},
+      { heading: "Review generated changes as architecture", paragraphs: [
+        "Look beyond syntax. Does the change respect module boundaries? Does it introduce a new persistence path? Does it handle authorization and failure? Large generated diffs invite skim reading; insist on small commits that a human can truly understand.",
+        "Ask the tool for alternatives when a decision is expensive to reverse. Comparing two approaches is often more valuable than accepting the first draft."
+      ], points: ["Require tests for behavior you cannot visually verify", "Search for existing helpers before adding new ones", "Keep secrets and production data out of prompts", "Prefer repository docs over generic framework folklore"]},
+      { heading: "Protect the feedback loop", paragraphs: [
+        "Typechecks, lint rules, contract tests, and preview environments are what make high-speed generation safe. If the suite is weak, AI simply helps you produce unverified complexity faster.",
+        "Invest a portion of the time saved into better fixtures, clearer module README files, and examples of preferred patterns. Those artifacts improve both human and AI contributors."
+      ]},
+      { heading: "Keep taste in the loop", paragraphs: [
+        "Architecture is accumulated taste under constraints. AI can propose implementations; it cannot own the product's future. Use the tools to accelerate verified work, not to outsource judgment about what the system should become.",
+        "Teams that thrive with AI coding tools are disciplined about boundaries. The code moves faster because the rails are clear."
+      ]}
+    ]
+  },
+  {
+    slug: "event-driven-design-for-product-backends",
+    title: "Event-Driven Design for Product Backends",
+    excerpt: "Events help products scale workflows—if you treat them as contracts, not firehoses.",
+    description: "Apply event-driven architecture to product backends with clear domain events, consumer isolation, idempotency, ordering tradeoffs, and operational visibility.",
+    publishedAt: "2024-07-24",
+    readingMinutes: 8,
+    keywords: ["event-driven architecture", "domain events", "message queues", "backend architecture", "distributed systems"],
+    sections: [
+      { heading: "Emit facts about the business", paragraphs: [
+        "Useful events describe something meaningful that happened: order placed, recording processed, membership upgraded. They are not a dump of database rows or a remote procedure call in disguise. Name events in the past tense and include enough context for consumers to act without chatty callbacks.",
+        "Version the payload. Consumers evolve on different schedules, and a breaking field rename can cascade into silent failures across teams."
+      ]},
+      { heading: "Isolate consumers on purpose", paragraphs: [
+        "Each consumer should own a specific outcome: send email, update search index, provision entitlements, or notify analytics. Sharing one giant worker for unrelated side effects recreates a monolith with worse failure modes.",
+        "Backpressure, retries, and dead-letter queues belong per consumer. A poison message in notifications should not block search indexing."
+      ], points: ["Make handlers idempotent by default", "Prefer at-least-once delivery with deduplication keys", "Document ordering guarantees honestly", "Trace production flows across publish and consume"]},
+      { heading: "Accept the consistency tradeoff", paragraphs: [
+        "Event-driven systems often embrace eventual consistency. Product copy and UI must acknowledge that some states catch up asynchronously. Showing a processing state is better than pretending every side effect is instantaneous.",
+        "Where strong consistency is required—balances, inventory reservations, unique constraints—keep that logic in a transactional boundary and emit events after commit."
+      ]},
+      { heading: "Operate the choreography", paragraphs: [
+        "Without correlation IDs, lag metrics, and replay tools, event systems become mysterious. Build the ability to reprocess a window of events safely after a bug fix. Measure consumer lag as a user-facing reliability signal.",
+        "Event-driven design pays off when teams can extend product behavior by adding consumers without destabilizing the core transaction path."
+      ]}
+    ]
+  },
+  {
+    slug: "testing-strategies-for-ai-powered-features",
+    title: "Testing Strategies for AI-Powered Features",
+    excerpt: "Deterministic tests still matter. Pair them with evaluation for the parts that are probabilistic.",
+    description: "Create a practical testing strategy for AI features covering schema contracts, golden evaluations, integration stubs, and release gates for nondeterministic systems.",
+    publishedAt: "2024-04-16",
+    readingMinutes: 7,
+    keywords: ["AI feature testing", "software testing", "LLM testing", "quality engineering", "continuous integration"],
+    sections: [
+      { heading: "Split deterministic from probabilistic", paragraphs: [
+        "Much of an AI feature is still ordinary software: authentication, input validation, retrieval queries, rate limits, persistence, and UI rendering. Those layers deserve classic unit and integration tests with fixed fixtures. Do not weaken them because a model sits in the middle.",
+        "The generative step needs a different approach. Exact string matching on free-form answers creates flaky suites. Test the contract around the model and evaluate the model outputs against product properties."
+      ]},
+      { heading: "Stub wisely in continuous integration", paragraphs: [
+        "Calling live models on every pull request is slow, expensive, and nondeterministic. Use recorded fixtures or deterministic stubs for pull request pipelines, and run broader evaluation suites on a schedule or when prompts, models, or retrieval logic change.",
+        "When stubbing, preserve realistic latency and failure modes. Tests that only see perfect model responses will not protect timeout handling or malformed output paths."
+      ], points: ["Assert output schema before rendering", "Golden-file critical grounded answers", "Simulate empty retrieval and tool failures", "Gate merges on contract tests, not on model creativity"]},
+      { heading: "Add journey-level confidence", paragraphs: [
+        "End-to-end tests should verify that a user can complete the AI-assisted journey: enter a request, see a validated response, recover from a refusal, and escalate when needed. Keep these journeys few and stable.",
+        "Pair automated journeys with periodic human review of sampled production outputs. Quality engineering for AI is a blend of software discipline and product taste."
+      ]},
+      { heading: "Make failure actionable", paragraphs: [
+        "A failing AI test should tell you whether the schema broke, retrieval missed, policy refused incorrectly, or evaluation scores dropped. Vague red builds train teams to ignore them.",
+        "The purpose of testing AI features is not to pretend models are deterministic. It is to keep probabilistic components inside a system that remains operable, reviewable, and safe to change."
+      ]}
+    ]
+  },
   {
     slug: "engineering-ai-products-that-earn-trust",
     title: "Engineering AI Products That Earn Trust",
@@ -229,6 +501,15 @@ export const blogPosts: readonly BlogPost[] = [
 ];
 
 export const sortedBlogPosts = [...blogPosts].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+
+export function getBlogTotalPages() {
+  return Math.max(1, Math.ceil(sortedBlogPosts.length / BLOGS_PER_PAGE));
+}
+
+export function getBlogPage(page: number) {
+  const start = (page - 1) * BLOGS_PER_PAGE;
+  return sortedBlogPosts.slice(start, start + BLOGS_PER_PAGE);
+}
 
 export function getBlogPost(slug: string) {
   return blogPosts.find((post) => post.slug === slug);

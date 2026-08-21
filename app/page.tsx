@@ -187,7 +187,7 @@ export default function Home() {
                     rel="me noreferrer"
                     className="inline-flex shrink-0 items-center rounded-full bg-zinc-100 px-3 py-1.5 text-xs text-black transition-colors duration-200 hover:bg-zinc-950 hover:text-zinc-50 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
                   >
-                    Github
+                    GitHub
                   </a>
                   <a
                     href="https://www.linkedin.com/in/berktugates/"
