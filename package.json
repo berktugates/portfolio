@@ -13,7 +13,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "check": "pnpm lint && pnpm typecheck && pnpm build",
-    "newsletter:send": "pnpm dlx tsx scripts/send-blog-newsletter.ts"
+    "newsletter:send": "pnpm dlx tsx scripts/send-blog-newsletter.ts",
+    "newsletter:sync": "pnpm dlx tsx scripts/send-blog-newsletter.ts --sync"
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",

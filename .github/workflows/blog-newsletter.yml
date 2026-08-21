@@ -1,0 +1,44 @@
+name: Blog newsletter
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - app/data/blogs.ts
+
+concurrency:
+  group: blog-newsletter-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  notify-subscribers:
+    name: Notify Buttondown subscribers
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.8.1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Sync new blog announcements
+        env:
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+          NEXT_PUBLIC_SITE_URL: https://berktugberke.com
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+          CI: "true"
+        run: pnpm newsletter:sync
