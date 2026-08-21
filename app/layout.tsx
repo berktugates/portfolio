@@ -4,7 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 const geistMono = Geist_Mono({ subsets: ["latin"], display: "swap" });
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://berktugates.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://berktugberke.com";
 const structuredData = { "@context": "https://schema.org", "@type": "Person", name: "Berktug Berke Ates", url: siteUrl, image: `${siteUrl}/me.png`, jobTitle: ["Co-Founder", "Software Engineer"], hasOccupation: [{ "@type": "Occupation", name: "Co-Founder", occupationLocation: { "@type": "City", name: "Istanbul" } }, { "@type": "Occupation", name: "Software Engineer", occupationLocation: { "@type": "City", name: "London" } }], alumniOf: { "@type": "CollegeOrUniversity", name: "Fırat University" }, worksFor: [{ "@type": "Organization", name: "Figtures", url: "https://figtures.com", location: "Istanbul" }, { "@type": "Organization", name: "bradi.tech", url: "https://www.bradi.tech", location: "London" }], sameAs: ["https://github.com/berktugates", "https://www.linkedin.com/in/berktugates/"], knowsAbout: ["TypeScript", "Next.js", "React", "Node.js", "AI", "Health Tech"] };
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl), title: { default: "Berktug Berke Ates — Software Engineer", template: "%s | Berktug Berke Ates" },

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "react-github-calendar/tooltips.css";
 @custom-variant dark (&:where(.dark, .dark *));
 :root { color-scheme: light; }
 .dark { color-scheme: dark; }
@@ -7,9 +8,26 @@ body { @apply bg-white text-zinc-950 antialiased selection:bg-zinc-900 selection
 a, button { @apply outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-950; }
 .section-title { @apply mb-5 text-lg font-medium; }
 .contact-link { @apply mb-3 flex items-center gap-3 rounded-xl bg-white p-3 ring-1 ring-zinc-200/50 transition-all hover:bg-zinc-50 hover:ring-zinc-300 dark:bg-zinc-900 dark:ring-zinc-800/50 dark:hover:bg-zinc-800; }
-.focus-track { @apply -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-[12vw] pb-2 [scrollbar-width:none] sm:mx-0 sm:px-0; }
-.focus-track::-webkit-scrollbar { display: none; }
-.focus-card { @apply w-[76vw] min-w-[76vw] cursor-pointer snap-center outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 sm:w-full sm:min-w-full sm:cursor-default; }
+.project-track { @apply -mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-[12vw] pb-2 [scrollbar-width:none] sm:mx-0 sm:px-0; }
+.project-track::-webkit-scrollbar { display: none; }
+.project-card { @apply w-[76vw] min-w-[76vw] snap-center sm:w-full sm:min-w-full; }
+.project-visual::before { content: ""; position: absolute; inset: -30%; filter: blur(52px); opacity: .72; pointer-events: none; }
+.project-visual::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 45%, rgba(255,255,255,.2), transparent 48%); pointer-events: none; }
+.project-visual img { position: relative; z-index: 1; }
+.project-visual-celestial { background: linear-gradient(145deg, #19160d, #080808 55%, #281d09); }
+.project-visual-celestial::before { background: radial-gradient(circle, rgba(232,190,60,.38), transparent 58%); }
+.project-visual-taleland { background: linear-gradient(145deg, #fff1f7, #f4eaff 48%, #eaf5ff); }
+.project-visual-taleland::before { background: conic-gradient(from 190deg, rgba(255,134,179,.52), rgba(142,109,255,.42), rgba(94,190,255,.38), rgba(255,198,111,.46), rgba(255,134,179,.52)); }
+.project-visual-strumai { background: linear-gradient(145deg, #242a30, #101316 56%, #33281e); }
+.project-visual-strumai::before { background: radial-gradient(circle, rgba(189,143,88,.34), transparent 60%); }
+.project-visual-medula { background: linear-gradient(145deg, #111827, #020617 58%, #172033); }
+.store-badge-link { display: inline-flex; min-height: 40px; align-items: center; transition: opacity 160ms ease; }
+.store-badge-link:hover { opacity: .82; }
+.store-badge { width: 136px; height: 40px; display: block; }
+.dark-store-badge { display: none; }
+.dark .light-store-badge { display: none; }
+.dark .dark-store-badge { display: block; }
+.google-store-badge { width: 151px; height: 58px; object-fit: contain; margin: -9px -8px; }
 .blog-card { @apply relative -mx-3 flex w-full overflow-hidden rounded-xl bg-transparent p-px transition-[background] duration-200; }
 .blog-prose { @apply text-zinc-700 dark:text-zinc-300; }
 .blog-prose h1 { @apply mb-6 text-xl font-medium text-zinc-950 dark:text-zinc-50; }
@@ -23,8 +41,12 @@ a, button { @apply outline-none focus-visible:ring-2 focus-visible:ring-zinc-500
 ::view-transition-old(blog-title), ::view-transition-new(blog-title) { height: 100%; animation-duration: 420ms; animation-timing-function: cubic-bezier(.22, 1, .36, 1); }
 ::view-transition-old(root) { animation: blog-page-out 160ms ease-out both; }
 ::view-transition-new(root) { animation: blog-page-in 280ms 90ms ease-out both; }
+::view-transition { pointer-events: none; }
+::view-transition-group(.project-morph) { z-index: 20; animation-duration: 520ms; animation-timing-function: cubic-bezier(.22, 1, .36, 1); }
+::view-transition-image-pair(.project-morph) { isolation: auto; }
+::view-transition-old(.project-morph), ::view-transition-new(.project-morph) { height: 100%; overflow: clip; border-radius: 16px; object-fit: cover; }
 @keyframes blog-page-out { to { opacity: 0; } }
 @keyframes blog-page-in { from { opacity: 0; } to { opacity: 1; } }
 #main-content { transition: opacity 200ms ease-out; }
 body.blog-route-leaving #main-content { opacity: 0; }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } ::view-transition-old(*), ::view-transition-new(*), ::view-transition-group(*) { animation-duration: 0s !important; animation-delay: 0s !important; } }

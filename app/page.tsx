@@ -6,7 +6,8 @@ import { GlowCard } from "./components/glow-card";
 import { BlogTransitionLink } from "./components/blog-transition-link";
 import { SiteFooter } from "./components/site-footer";
 import { SiteHeader } from "./components/site-header";
-import { FocusCarousel } from "./components/focus-carousel";
+import { ProjectsCarousel } from "./components/projects-carousel";
+import { sortedBlogPosts } from "./data/blogs";
 
 function ArrowIcon() {
   return (
@@ -18,6 +19,7 @@ function ArrowIcon() {
 }
 
 export default function Home() {
+  const latestPost = sortedBlogPosts[0];
   return (
     <div className="flex min-h-screen w-full flex-col">
       <div className="relative mx-auto w-full max-w-screen-sm flex-1 px-4 pt-20">
@@ -36,11 +38,11 @@ export default function Home() {
             </p>
           </section>
 
-          <section aria-labelledby="focus-heading">
-            <h2 id="focus-heading" className="section-title">
-              Focus
+          <section aria-labelledby="products-heading">
+            <h2 id="products-heading" className="section-title">
+              Products
             </h2>
-            <FocusCarousel />
+            <ProjectsCarousel />
           </section>
 
           <section aria-labelledby="experience-heading">
@@ -212,16 +214,16 @@ export default function Home() {
                 View all
               </Link>
             </div>
-            <BlogTransitionLink className="blog-card group">
+            <BlogTransitionLink href={`/blogs/${latestPost.slug}`} className="blog-card group">
               <span className="z-10">
                 <span className="flex items-center gap-2">
-                  <span style={{ viewTransitionName: "blog-title" }}>
-                    Hello World
+                  <span style={{ viewTransitionName: `blog-title-${latestPost.slug}` }}>
+                    {latestPost.title}
                   </span>
                   <ArrowUpRight className="size-4 text-zinc-400 opacity-0 transition-opacity group-hover:opacity-100" />
                 </span>
                 <span className="mt-1 block text-zinc-500 dark:text-zinc-400">
-                  My first blog post
+                  {latestPost.excerpt}
                 </span>
               </span>
             </BlogTransitionLink>
