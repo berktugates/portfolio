@@ -16,5 +16,6 @@ export function GlowCard({ children, href, label }: Props) {
   const content = <span className="relative block h-full w-full rounded-[15px] bg-white p-4 dark:bg-zinc-950">{children}</span>;
   const classes = "group relative block overflow-hidden rounded-2xl bg-zinc-300/30 p-px transition-[background] duration-200 dark:bg-zinc-600/30";
   const interactions = { onMouseEnter: paintGlow, onMouseMove: paintGlow, onMouseLeave: clearGlow };
-  return href ? <a href={href} target="_blank" rel="noreferrer" aria-label={label} {...interactions} className={classes}>{content}</a> : <div {...interactions} className={classes}>{content}</div>;
+  const opensNewTab = href?.startsWith("http");
+  return href ? <a href={href} target={opensNewTab ? "_blank" : undefined} rel={opensNewTab ? "noreferrer" : undefined} aria-label={label} {...interactions} className={classes}>{content}</a> : <div {...interactions} className={classes}>{content}</div>;
 }

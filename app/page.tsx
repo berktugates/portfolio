@@ -151,27 +151,30 @@ export default function Home() {
                     Get in Touch
                   </h2>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Let&apos;s discuss your next project or have a chat about
-                    software, AI, health tech and music.
+                    Have a project in mind or simply want to connect? I&apos;m
+                    always open to thoughtful conversations and meaningful
+                    collaborations.
                   </p>
                 </div>
-                <a
+                <GlowCard
                   href="mailto:contact@berktugberke.com"
-                  className="group flex items-center gap-3 rounded-xl bg-white p-4 ring-1 ring-zinc-200/50 transition-all hover:bg-zinc-50 hover:ring-zinc-300 dark:bg-zinc-900 dark:ring-zinc-800/50 dark:hover:bg-zinc-800 dark:hover:ring-zinc-700"
+                  label="Email Berktug Berke Ates"
                 >
-                  <span className="flex size-10 items-center justify-center rounded-lg bg-zinc-100 transition-colors group-hover:bg-zinc-200 dark:bg-zinc-800 dark:group-hover:bg-zinc-700">
-                    <Mail className="size-5 text-zinc-700 dark:text-zinc-300" />
-                  </span>
-                  <span className="flex-1">
-                    <span className="block text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                      Email me
+                  <span className="flex items-center gap-3">
+                    <span className="flex size-10 items-center justify-center rounded-lg bg-zinc-100 transition-colors group-hover:bg-zinc-200 dark:bg-zinc-800 dark:group-hover:bg-zinc-700">
+                      <Mail className="size-5 text-zinc-700 dark:text-zinc-300" />
                     </span>
-                    <span className="block text-xs text-zinc-600 dark:text-zinc-400">
-                      contact@berktugberke.com
+                    <span className="flex-1">
+                      <span className="block text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                        Email me
+                      </span>
+                      <span className="block text-xs text-zinc-600 dark:text-zinc-400">
+                        contact@berktugberke.com
+                      </span>
                     </span>
+                    <ArrowIcon />
                   </span>
-                  <ArrowIcon />
-                </a>
+                </GlowCard>
                 <nav
                   aria-label="Social profiles"
                   className="flex flex-wrap gap-2"
