@@ -115,11 +115,16 @@ async function listAllEmails(): Promise<Email[]> {
   return emails;
 }
 
-function alreadyAnnounced(emails: Email[], slug: string) {
-  const active = new Set(["draft", "scheduled", "about_to_send", "in_flight", "sent", "throttled", "resending"]);
-  return emails.some(
-    (email) => email.metadata?.blog_slug === slug && email.metadata?.source === "portfolio-blog" && active.has(email.status),
+function findAnnouncement(emails: Email[], slug: string) {
+  return emails.find(
+    (email) => email.metadata?.blog_slug === slug && email.metadata?.source === "portfolio-blog",
   );
+}
+
+function alreadyAnnounced(emails: Email[], slug: string) {
+  const active = new Set(["scheduled", "about_to_send", "in_flight", "sent", "throttled", "resending"]);
+  const existing = findAnnouncement(emails, slug);
+  return Boolean(existing && active.has(existing.status));
 }
 
 function newSlugsFromGitDiff(): string[] {
@@ -165,7 +170,7 @@ async function waitUntilLive(url: string) {
   console.warn(`Continuing without confirmed live URL after ${attempts} attempts: ${url}`);
 }
 
-async function sendBlogNewsletter(slug: string, options: { dryRun?: boolean; draftOnly?: boolean; skipLiveWait?: boolean } = {}) {
+async function sendBlogNewsletter(slug: string, options: { dryRun?: boolean; draftOnly?: boolean; skipLiveWait?: boolean; existingDraftId?: string } = {}) {
   const post = getBlogPost(slug);
   if (!post) {
     throw new Error(`Unknown blog slug: ${slug}`);
@@ -188,34 +193,50 @@ async function sendBlogNewsletter(slug: string, options: { dryRun?: boolean; dra
     await waitUntilLive(canonicalUrl);
   }
 
-  const email = await buttondown<Email>("/emails", {
-    method: "POST",
-    body: JSON.stringify({
-      subject,
-      body,
-      email_type: "public",
-      status: "draft",
-      canonical_url: canonicalUrl,
-      description: post.excerpt,
-      slug: post.slug.slice(0, 100).replace(/[^a-zA-Z0-9_-]/g, "-"),
-      metadata: {
-        source: "portfolio-blog",
-        blog_slug: post.slug,
-      },
-    }),
-  });
-
-  console.log(`Created draft: ${email.id}`);
+  let email: Email;
+  if (options.existingDraftId) {
+    email = await buttondown<Email>(`/emails/${options.existingDraftId}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        subject,
+        body,
+        canonical_url: canonicalUrl,
+        description: post.excerpt,
+      }),
+    });
+    console.log(`Reusing draft: ${email.id}`);
+  } else {
+    email = await buttondown<Email>("/emails", {
+      method: "POST",
+      body: JSON.stringify({
+        subject,
+        body,
+        email_type: "public",
+        status: "draft",
+        canonical_url: canonicalUrl,
+        description: post.excerpt,
+        slug: post.slug.slice(0, 100).replace(/[^a-zA-Z0-9_-]/g, "-"),
+        metadata: {
+          source: "portfolio-blog",
+          blog_slug: post.slug,
+        },
+      }),
+    });
+    console.log(`Created draft: ${email.id}`);
+  }
 
   if (options.draftOnly) {
     console.log("Left as draft (--draft).");
     return email;
   }
 
+  // Buttondown rejects publish_date values that are already in the past by the
+  // time the request is processed, so schedule a short buffer ahead of "now".
+  const publishDate = new Date(Date.now() + 60_000).toISOString();
   const published = await buttondown<Email>(`/emails/${email.id}/publish`, {
     method: "POST",
     body: JSON.stringify({
-      publish_date: new Date().toISOString(),
+      publish_date: publishDate,
     }),
   });
 
@@ -238,7 +259,11 @@ async function syncFromDiff(options: { dryRun?: boolean; draftOnly?: boolean }) 
       console.log(`Skip ${slug}: already announced.`);
       continue;
     }
-    await sendBlogNewsletter(slug, options);
+    const existing = options.dryRun ? undefined : findAnnouncement(emails, slug);
+    await sendBlogNewsletter(slug, {
+      ...options,
+      existingDraftId: existing?.status === "draft" ? existing.id : undefined,
+    });
   }
 }
 
