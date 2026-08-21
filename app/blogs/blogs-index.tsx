@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowUpRight } from "lucide-react";
 import { BlogPagination } from "../components/blog-pagination";
+import { BlogSubscribeModal } from "../components/blog-subscribe-modal";
 import { BlogTransitionLink } from "../components/blog-transition-link";
 import { SiteFooter } from "../components/site-footer";
 import { SiteHeader } from "../components/site-header";
@@ -69,6 +70,7 @@ export function BlogsIndex({ page = 1 }: BlogsIndexProps) {
         <BlogPagination currentPage={page} totalPages={totalPages} />
       </main>
       <SiteFooter />
+      <BlogSubscribeModal />
     </div>
   );
 }
