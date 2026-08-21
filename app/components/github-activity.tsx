@@ -86,7 +86,7 @@ export function GitHubActivity() {
             @berktugates
           </a>
         </div>
-        <div className="overflow-x-auto pb-1 text-zinc-500 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="github-calendar-scroll text-zinc-500">
           <GitHubCalendar
             username="berktugates"
             blockSize={9}
