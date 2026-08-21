@@ -104,10 +104,10 @@ async function listAllEmails(): Promise<Email[]> {
   let path: string | null = "/emails?page_size=100&ordering=-creation_date";
 
   while (path) {
-    const requestPath = path.startsWith("http")
+    const requestPath: string = path.startsWith("http")
       ? path.replace(/^https?:\/\/api\.buttondown\.com\/v1/, "")
       : path;
-    const page = await buttondown<EmailList>(requestPath);
+    const page: EmailList = await buttondown<EmailList>(requestPath);
     emails.push(...page.results);
     path = page.next;
   }
