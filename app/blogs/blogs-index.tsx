@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { absoluteUrl } from "../lib/seo";
 import { ArrowUpRight } from "lucide-react";
 import { BlogPagination } from "../components/blog-pagination";
 import { BlogSubscribeModal } from "../components/blog-subscribe-modal";
@@ -25,12 +26,18 @@ export const blogsIndexMetadata = (page = 1): Metadata => {
       "cross-platform mobile development",
       "production AI",
     ],
-    alternates: { canonical },
+    alternates: { canonical: absoluteUrl(canonical) },
     openGraph: {
       type: "website",
       title,
       description: "Practical writing on building dependable software, AI products, and engineering organizations.",
       url: canonical,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: "Practical writing on building dependable software, AI products, and engineering organizations.",
+      images: ["/opengraph-image"],
     },
   };
 };

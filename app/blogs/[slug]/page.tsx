@@ -7,6 +7,13 @@ import { CopyUrl } from "../../components/copy-url";
 import { SiteFooter } from "../../components/site-footer";
 import { SiteHeader } from "../../components/site-header";
 import { blogPosts, getBlogPost } from "../../data/blogs";
+import {
+  AUTHOR_ID,
+  SITE_NAME,
+  WEBSITE_ID,
+  absoluteUrl,
+  jsonLd,
+} from "../../lib/seo";
 
 export const dynamicParams = false;
 type BlogPageProps = { params: Promise<{ slug: string }> };
@@ -23,8 +30,8 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
     title: post.title,
     description: post.description,
     keywords: [...post.keywords],
-    authors: [{ name: "Berktug Berke Ates", url: "https://berktugberke.com" }],
-    alternates: { canonical: `/blogs/${post.slug}` },
+    authors: [{ name: SITE_NAME, url: absoluteUrl() }],
+    alternates: { canonical: absoluteUrl(`/blogs/${post.slug}`) },
     openGraph: {
       type: "article",
       title: post.title,
@@ -33,8 +40,9 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
       publishedTime: post.publishedAt,
       authors: ["Berktug Berke Ates"],
       tags: [...post.keywords],
+      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: post.title }],
     },
-    twitter: { card: "summary_large_image", title: post.title, description: post.description },
+    twitter: { card: "summary_large_image", title: post.title, description: post.description, images: ["/opengraph-image"] },
   };
 }
 
@@ -44,15 +52,22 @@ export default async function BlogPage({ params }: BlogPageProps) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
+    "@id": `${absoluteUrl(`/blogs/${post.slug}`)}#article`,
     headline: post.title,
     description: post.description,
+    image: absoluteUrl("/opengraph-image"),
     datePublished: post.publishedAt,
     dateModified: post.publishedAt,
-    mainEntityOfPage: `https://berktugberke.com/blogs/${post.slug}`,
-    keywords: post.keywords.join(", "),
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": absoluteUrl(`/blogs/${post.slug}`),
+    },
+    isPartOf: { "@id": WEBSITE_ID },
+    inLanguage: "en",
+    keywords: post.keywords,
     timeRequired: `PT${post.readingMinutes}M`,
-    author: { "@type": "Person", name: "Berktug Berke Ates", url: "https://berktugberke.com" },
-    publisher: { "@type": "Person", name: "Berktug Berke Ates" },
+    author: { "@id": AUTHOR_ID, "@type": "Person", name: SITE_NAME },
+    publisher: { "@id": AUTHOR_ID, "@type": "Person", name: SITE_NAME },
   };
   return (
     <div className="relative mx-auto min-h-screen w-full max-w-screen-sm px-4 pt-20">
@@ -103,7 +118,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
       <SiteFooter />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }}
       />
     </div>
   );

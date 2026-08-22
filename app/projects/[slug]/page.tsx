@@ -8,6 +8,13 @@ import { notFound } from "next/navigation";
 import { SiteFooter } from "../../components/site-footer";
 import { SiteHeader } from "../../components/site-header";
 import { getProject, projects } from "../../data/projects";
+import {
+  AUTHOR_ID,
+  SITE_NAME,
+  WEBSITE_ID,
+  absoluteUrl,
+  jsonLd,
+} from "../../lib/seo";
 
 export const dynamicParams = false;
 
@@ -26,14 +33,20 @@ export async function generateMetadata({
 
   return {
     title: project.title,
-    description: project.description,
-    alternates: { canonical: `/projects/${project.slug}` },
+    description: project.summary,
+    alternates: { canonical: absoluteUrl(`/projects/${project.slug}`) },
     openGraph: {
       type: "website",
       title: project.title,
-      description: project.description,
+      description: project.summary,
       url: `/projects/${project.slug}`,
       images: [{ url: project.image, alt: project.imageAlt }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description: project.summary,
+      images: [project.image],
     },
   };
 }
@@ -46,11 +59,15 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
+    "@id": `${absoluteUrl(`/projects/${project.slug}`)}#software`,
     name: project.title,
     description: project.description,
+    url: absoluteUrl(`/projects/${project.slug}`),
+    image: absoluteUrl(project.image),
     applicationCategory: "SoftwareApplication",
-    url: project.href,
-    author: { "@type": "Person", name: "Berktug Berke Ates" },
+    author: { "@id": AUTHOR_ID, "@type": "Person", name: SITE_NAME },
+    isPartOf: { "@id": WEBSITE_ID },
+    ...(project.href ? { sameAs: project.href } : {}),
   };
 
   return (
@@ -155,7 +172,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+          __html: jsonLd(structuredData),
         }}
       />
     </div>

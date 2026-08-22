@@ -1,36 +1,30 @@
 import type { MetadataRoute } from "next";
 import { projects } from "./data/projects";
-import { blogPosts, getBlogTotalPages } from "./data/blogs";
+import { blogPosts, getBlogPage, getBlogTotalPages } from "./data/blogs";
+import { SITE_LAST_MODIFIED, SITE_URL } from "./lib/seo";
 
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://berktugberke.com";
   const totalPages = getBlogTotalPages();
   const blogIndexPages = Array.from({ length: totalPages }, (_, index) => {
     const page = index + 1;
     return {
-      url: page === 1 ? `${base}/blogs` : `${base}/blogs/pages/${page}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: page === 1 ? 0.9 : 0.7,
+      url: page === 1 ? `${SITE_URL}/blogs` : `${SITE_URL}/blogs/pages/${page}`,
+      lastModified: getBlogPage(page)[0]?.publishedAt,
     };
   });
 
   return [
-    { url: base, lastModified: new Date(), changeFrequency: "monthly", priority: 1 },
+    { url: SITE_URL, lastModified: SITE_LAST_MODIFIED },
     ...projects.map((project) => ({
-      url: `${base}/projects/${project.slug}`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
+      url: `${SITE_URL}/projects/${project.slug}`,
+      lastModified: SITE_LAST_MODIFIED,
     })),
     ...blogIndexPages,
     ...blogPosts.map((post) => ({
-      url: `${base}/blogs/${post.slug}`,
-      lastModified: new Date(post.publishedAt),
-      changeFrequency: "yearly" as const,
-      priority: 0.75,
+      url: `${SITE_URL}/blogs/${post.slug}`,
+      lastModified: post.publishedAt,
     })),
   ];
 }
