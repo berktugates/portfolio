@@ -8,6 +8,7 @@ import { SiteFooter } from "./components/site-footer";
 import { SiteHeader } from "./components/site-header";
 import { ProjectsCarousel } from "./components/projects-carousel";
 import { sortedBlogPosts } from "./data/blogs";
+import { SITE_INTRO } from "./lib/seo";
 
 function ArrowIcon() {
   return (
@@ -27,14 +28,10 @@ export default function Home() {
         <main className="space-y-24">
           <section aria-labelledby="intro-title">
             <h1 id="intro-title" className="sr-only">
-              Berktug Berke Ates — Software Engineer
+              Berktug Berke Ates — Software Engineer and Product Builder
             </h1>
             <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
-              I&apos;m Berktug Berke Ates, a software engineer. I build and
-              evolve products across web and cross-platform mobile—from early
-              technical decisions to production systems. My work is about making
-              complex software simpler to operate, easier to change, and
-              dependable as it grows.
+              {SITE_INTRO}
             </p>
           </section>
 
