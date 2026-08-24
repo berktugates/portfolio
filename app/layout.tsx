@@ -45,6 +45,16 @@ const structuredData = {
       url: SITE_URL,
       image: { "@type": "ImageObject", url: `${SITE_URL}/me.png` },
       jobTitle: ["Software Engineer", "Product Builder"],
+      homeLocation: {
+        "@type": "Place",
+        name: "Marmaris, Muğla, Türkiye",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Marmaris",
+          addressRegion: "Muğla",
+          addressCountry: "TR",
+        },
+      },
       worksFor: [
         { "@type": "Organization", name: "Figtures", url: "https://figtures.com" },
         { "@type": "Organization", name: "bradi.tech", url: "https://www.bradi.tech" },
@@ -73,7 +83,10 @@ export const metadata: Metadata = {
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
   publisher: SITE_NAME,
-  alternates: { canonical: SITE_URL },
+  alternates: {
+    canonical: SITE_URL,
+    languages: { en: SITE_URL, tr: `${SITE_URL}/tr`, "x-default": SITE_URL },
+  },
   openGraph: { type: "website", locale: "en_US", url: SITE_URL, siteName: SITE_NAME, title: SITE_TITLE, description: SITE_DESCRIPTION, images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: SITE_TITLE }] },
   twitter: { card: "summary_large_image", title: SITE_TITLE, description: SITE_DESCRIPTION, images: ["/opengraph-image"] },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },

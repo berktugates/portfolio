@@ -16,7 +16,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
   });
 
   return [
-    { url: SITE_URL, lastModified: SITE_LAST_MODIFIED },
+    {
+      url: SITE_URL,
+      lastModified: SITE_LAST_MODIFIED,
+      alternates: { languages: { en: SITE_URL, tr: `${SITE_URL}/tr` } },
+    },
+    {
+      url: `${SITE_URL}/tr`,
+      lastModified: SITE_LAST_MODIFIED,
+      alternates: { languages: { en: SITE_URL, tr: `${SITE_URL}/tr` } },
+    },
     ...projects.map((project) => ({
       url: `${SITE_URL}/projects/${project.slug}`,
       lastModified: SITE_LAST_MODIFIED,
