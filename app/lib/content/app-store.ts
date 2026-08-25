@@ -41,7 +41,12 @@ export function localizeAppStoreUrl(url: string, locale: Locale): string {
   }
 }
 
-/** Official Apple badges, vendored under `/public/badges/app-store`. */
+/**
+ * Official Apple “Download on the App Store” badges (Marketing Guidelines),
+ * vendored as retina PNGs under `/public/badges/app-store`.
+ * `App Store` stays English by Apple policy; the download line is localized.
+ */
 export function appStoreBadgeSrc(locale: Locale, variant: "black" | "white"): string {
-  return `/badges/app-store/${locale}-${variant}.svg`;
+  // Bump when badge assets change so CDNs/browsers cannot keep a stale English file.
+  return `/badges/app-store/${locale}-${variant}.png?v=20260825`;
 }

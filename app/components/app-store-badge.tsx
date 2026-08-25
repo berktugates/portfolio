@@ -13,8 +13,14 @@ type AppStoreBadgeProps = {
   ariaLabel: string;
 };
 
+/**
+ * Official Apple App Store badge for the active locale.
+ * Uses vendored PNG artwork (not the US-only developer.apple.com SVG).
+ */
 export function AppStoreBadge({ locale, href, title, label, ariaLabel }: AppStoreBadgeProps) {
   const storeUrl = localizeAppStoreUrl(href, locale);
+  const blackSrc = appStoreBadgeSrc(locale, "black");
+  const whiteSrc = appStoreBadgeSrc(locale, "white");
 
   return (
     <a
@@ -26,18 +32,20 @@ export function AppStoreBadge({ locale, href, title, label, ariaLabel }: AppStor
       hrefLang={locale === "zh" ? "zh-Hans" : locale}
     >
       <img
-        src={appStoreBadgeSrc(locale, "black")}
+        key={blackSrc}
+        src={blackSrc}
         alt={label}
-        width={120}
         height={40}
         className="store-badge light-store-badge"
+        decoding="async"
       />
       <img
-        src={appStoreBadgeSrc(locale, "white")}
+        key={whiteSrc}
+        src={whiteSrc}
         alt={label}
-        width={120}
         height={40}
         className="store-badge dark-store-badge"
+        decoding="async"
       />
     </a>
   );

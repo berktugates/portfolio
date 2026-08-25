@@ -35,7 +35,7 @@ a, button { @apply outline-none focus-visible:ring-2 focus-visible:ring-zinc-500
 .project-visual-medula { background: linear-gradient(145deg, #111827, #020617 58%, #172033); }
 .store-badge-link { display: inline-flex; min-height: 40px; align-items: center; transition: opacity 160ms ease; }
 .store-badge-link:hover { opacity: .82; }
-.store-badge { width: 136px; height: 40px; display: block; }
+.store-badge { height: 40px; width: auto; max-width: 168px; display: block; object-fit: contain; }
 .dark-store-badge { display: none; }
 .dark .light-store-badge { display: none; }
 .dark .dark-store-badge { display: block; }
