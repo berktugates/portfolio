@@ -5,7 +5,7 @@ import { SITE_DESCRIPTION, SITE_INTRO, SITE_NAME, SITE_URL } from "../lib/seo";
 
 export const dynamic = "force-static";
 
-export function GET() {
+export async function GET() {
   const projectLinks = projects
     .map(
       (project) =>
@@ -21,11 +21,15 @@ export function GET() {
     )
     .join("\n");
 
-  const localeLinks = LOCALES.map((locale) => {
-    const dict = getDictionary(locale);
-    const name = localeMeta[locale].nativeName;
-    return `- [${name} profile](${localeUrl(locale)}): ${dict.metaDescription}`;
-  }).join("\n");
+  const localeLinks = (
+    await Promise.all(
+      LOCALES.map(async (locale) => {
+        const dict = await getDictionary(locale);
+        const name = localeMeta[locale].nativeName;
+        return `- [${name} profile](${localeUrl(locale)}): ${dict.metaDescription}`;
+      }),
+    )
+  ).join("\n");
 
   const body = `# ${SITE_NAME}
 

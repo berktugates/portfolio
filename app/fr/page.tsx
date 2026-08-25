@@ -1,6 +1,8 @@
 import { createHomeMetadata, HomePage } from "../components/home-page";
 
-export const metadata = createHomeMetadata("fr");
+export async function generateMetadata() {
+  return createHomeMetadata("fr");
+}
 
 export default function FrenchHomePage() {
   return <HomePage locale="fr" />;

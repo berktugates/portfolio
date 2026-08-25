@@ -6,11 +6,11 @@ import { BlogTransitionLink } from "./blog-transition-link";
 import { GitHubActivity } from "./github-activity";
 import { GlowCard } from "./glow-card";
 import { LanguageSwitcher } from "./language-switcher";
-import { LocalePreference } from "./locale-preference";
 import { ProjectsCarousel } from "./projects-carousel";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
-import { sortedBlogPosts } from "../data/blogs";
+import { getLocalizedBlogPosts, getLocalizedProjects } from "../lib/content/get-content";
+import { blogPostPath, blogsIndexPath, projectPath } from "../lib/content/paths";
 import {
   type Locale,
   getDictionary,
@@ -30,8 +30,8 @@ function ArrowIcon() {
   );
 }
 
-export function createHomeMetadata(locale: Locale): Metadata {
-  const dict = getDictionary(locale);
+export async function createHomeMetadata(locale: Locale): Promise<Metadata> {
+  const dict = await getDictionary(locale);
   const meta = localeMeta[locale];
   const url = localeUrl(locale);
 
@@ -60,12 +60,25 @@ export function createHomeMetadata(locale: Locale): Metadata {
   };
 }
 
-export function HomePage({ locale }: { locale: Locale }) {
-  const dict = getDictionary(locale);
+export async function HomePage({ locale }: { locale: Locale }) {
+  const [dict, localizedProjects, localizedPosts] = await Promise.all([
+    getDictionary(locale),
+    getLocalizedProjects(locale),
+    getLocalizedBlogPosts(locale),
+  ]);
   const meta = localeMeta[locale];
-  const latestPost = sortedBlogPosts[0];
+  const latestPost = localizedPosts[0];
   const homeHref = localePath(locale);
   const cjk = locale === "zh" || locale === "ja";
+  const carouselProjects = localizedProjects.map((project) => ({
+    slug: project.slug,
+    title: project.title,
+    summary: project.summary,
+    image: project.image,
+    imageAlt: project.imageAlt,
+    visualClassName: project.visualClassName,
+    href: projectPath(locale, project.slug),
+  }));
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -94,7 +107,6 @@ export function HomePage({ locale }: { locale: Locale }) {
           : undefined
       }
     >
-      <LocalePreference locale={locale} />
       <div className="relative mx-auto w-full max-w-screen-sm flex-1 px-4 pt-20">
         <SiteHeader
           homeHref={homeHref}
@@ -115,7 +127,15 @@ export function HomePage({ locale }: { locale: Locale }) {
             <h2 id="products-heading" className="section-title">
               {dict.products}
             </h2>
-            <ProjectsCarousel locale={locale} summaries={dict.projectSummaries} />
+            <ProjectsCarousel
+              projects={carouselProjects}
+              labels={{
+                ariaLabel: dict.productsAria,
+                selectLabel: dict.carousel.select,
+                viewProject: dict.carousel.viewProject,
+                showProject: dict.carousel.showProject,
+              }}
+            />
           </section>
 
           <section aria-labelledby="experience-heading">
@@ -174,7 +194,12 @@ export function HomePage({ locale }: { locale: Locale }) {
                 </span>
               </GlowCard>
             </div>
-            <GitHubActivity locale={locale} />
+            <GitHubActivity
+              copy={{
+                ...dict.github,
+                dateLocale: meta.htmlLang,
+              }}
+            />
           </section>
 
           <section aria-labelledby="education-heading">
@@ -261,13 +286,13 @@ export function HomePage({ locale }: { locale: Locale }) {
                 {dict.latestBlog}
               </h2>
               <Link
-                href="/blogs"
+                href={blogsIndexPath(locale)}
                 className="text-sm text-zinc-500 transition-colors hover:text-zinc-950 dark:hover:text-zinc-50"
               >
                 {dict.viewAll}
               </Link>
             </div>
-            <BlogTransitionLink href={`/blogs/${latestPost.slug}`} className="blog-card group">
+            <BlogTransitionLink href={blogPostPath(locale, latestPost.slug)} className="blog-card group">
               <span className="z-10">
                 <span className="flex items-center gap-2">
                   <span style={{ viewTransitionName: `blog-title-${latestPost.slug}` }}>

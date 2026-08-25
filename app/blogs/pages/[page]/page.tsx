@@ -1,7 +1,6 @@
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { BlogsIndexView, createBlogsIndexMetadata } from "../../../components/blogs-index-view";
 import { getBlogTotalPages } from "../../../data/blogs";
-import { BlogsIndex, blogsIndexMetadata } from "../../blogs-index";
 
 type BlogPagedProps = {
   params: Promise<{ page: string }>;
@@ -14,17 +13,15 @@ export function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: BlogPagedProps): Promise<Metadata> {
+export async function generateMetadata({ params }: BlogPagedProps) {
   const page = Number((await params).page);
   if (!Number.isInteger(page) || page < 2 || page > getBlogTotalPages()) return {};
-  return blogsIndexMetadata(page);
+  return createBlogsIndexMetadata("en", page);
 }
 
 export default async function BlogPagedPage({ params }: BlogPagedProps) {
   const page = Number((await params).page);
   const totalPages = getBlogTotalPages();
-
   if (!Number.isInteger(page) || page < 2 || page > totalPages) notFound();
-
-  return <BlogsIndex page={page} />;
+  return <BlogsIndexView locale="en" page={page} />;
 }

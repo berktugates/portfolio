@@ -4,26 +4,37 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { ViewTransition, useCallback, useEffect, useRef, useState } from "react";
-import { projects } from "../data/projects";
-import { type Locale, getDictionary } from "../lib/i18n";
+import { formatMessage } from "../lib/i18n/format";
 
 const AUTO_PLAY_DELAY = 5000;
 
-type ProjectsCarouselProps = {
-  locale?: Locale;
-  summaries?: Record<string, string>;
+export type CarouselProject = {
+  slug: string;
+  title: string;
+  summary: string;
+  image: string;
+  imageAlt: string;
+  visualClassName: string;
+  href: string;
 };
 
-export function ProjectsCarousel({ locale = "en", summaries }: ProjectsCarouselProps = {}) {
+export type ProjectsCarouselLabels = {
+  ariaLabel: string;
+  selectLabel: string;
+  viewProject: string;
+  showProject: string;
+};
+
+type ProjectsCarouselProps = {
+  projects: readonly CarouselProject[];
+  labels: ProjectsCarouselLabels;
+};
+
+export function ProjectsCarousel({ projects, labels }: ProjectsCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const dict = getDictionary(locale);
-  const ariaLabel = dict.productsAria;
-  const selectLabel = dict.carousel.select;
-  const viewLabel = dict.carousel.view;
-  const showLabel = dict.carousel.show;
 
   const centerCard = useCallback((index: number, smooth = true) => {
     const track = trackRef.current;
@@ -52,13 +63,13 @@ export function ProjectsCarousel({ locale = "en", summaries }: ProjectsCarouselP
   }, [centerCard]);
 
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || projects.length === 0) return;
     const timer = window.setTimeout(
       () => centerCard((activeIndexRef.current + 1) % projects.length),
       AUTO_PLAY_DELAY,
     );
     return () => window.clearTimeout(timer);
-  }, [activeIndex, centerCard, isPaused]);
+  }, [activeIndex, centerCard, isPaused, projects.length]);
 
   const handleScroll = () => {
     const track = trackRef.current;
@@ -80,7 +91,7 @@ export function ProjectsCarousel({ locale = "en", summaries }: ProjectsCarouselP
     <div
       role="region"
       aria-roledescription="carousel"
-      aria-label={ariaLabel}
+      aria-label={labels.ariaLabel}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onFocusCapture={() => setIsPaused(true)}
@@ -92,10 +103,10 @@ export function ProjectsCarousel({ locale = "en", summaries }: ProjectsCarouselP
         {projects.map((project, index) => (
           <article className="project-card" key={project.slug}>
             <Link
-              href={`/projects/${project.slug}`}
+              href={project.href}
               transitionTypes={["project-forward"]}
               className="group block outline-none"
-              aria-label={viewLabel(project.title)}
+              aria-label={formatMessage(labels.viewProject, { title: project.title })}
             >
               <ViewTransition name={`project-${project.slug}`} share="project-morph" default="none">
                 <span className="relative block aspect-video overflow-hidden rounded-2xl bg-zinc-50/40 p-1.5 ring-1 ring-inset ring-zinc-200/50 transition-all duration-300 group-hover:bg-zinc-100/60 group-hover:ring-zinc-300/60 dark:bg-zinc-950/40 dark:ring-zinc-800/50 dark:group-hover:bg-zinc-900/60 dark:group-hover:ring-zinc-700/60">
@@ -120,20 +131,18 @@ export function ProjectsCarousel({ locale = "en", summaries }: ProjectsCarouselP
                   </span>
                   <ArrowUpRight className="size-4 text-zinc-400 opacity-0 transition-opacity group-hover:opacity-100" />
                 </span>
-                <span className="mt-1 block text-zinc-500 dark:text-zinc-400">
-                  {summaries?.[project.slug] ?? project.summary}
-                </span>
+                <span className="mt-1 block text-zinc-500 dark:text-zinc-400">{project.summary}</span>
               </span>
             </Link>
           </article>
         ))}
       </div>
-      <div className="mt-4 flex justify-center gap-2" aria-label={selectLabel}>
+      <div className="mt-4 flex justify-center gap-2" aria-label={labels.selectLabel}>
         {projects.map((project, index) => (
           <button
             type="button"
             key={project.slug}
-            aria-label={showLabel(project.title)}
+            aria-label={formatMessage(labels.showProject, { title: project.title })}
             aria-current={activeIndex === index ? "true" : undefined}
             className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${
               activeIndex === index

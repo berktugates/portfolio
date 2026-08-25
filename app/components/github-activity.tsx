@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { type Locale, getDictionary, localeMeta } from "../lib/i18n";
+import { formatMessage } from "../lib/i18n/format";
 
 const GitHubCalendar = dynamic(
   () => import("react-github-calendar").then((module) => module.GitHubCalendar),
@@ -16,11 +16,19 @@ function getSiteColorScheme(): "light" | "dark" {
   return document.documentElement.classList.contains("dark") ? "dark" : "light";
 }
 
-export function GitHubActivity({ locale = "en" }: { locale?: Locale } = {}) {
+export type GitHubActivityCopy = {
+  title: string;
+  currentStreak: string;
+  longestStreak: string;
+  noContributions: string;
+  contribution: string;
+  dateLocale: string;
+};
+
+export function GitHubActivity({ copy }: { copy: GitHubActivityCopy }) {
   const [streaks, setStreaks] = useState({ current: 0, longest: 0 });
   const [colorScheme, setColorScheme] = useState<"light" | "dark">("light");
-  const copy = getDictionary(locale).github;
-  const contributionDateFormatter = new Intl.DateTimeFormat(localeMeta[locale].htmlLang, {
+  const contributionDateFormatter = new Intl.DateTimeFormat(copy.dateLocale, {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -106,7 +114,7 @@ export function GitHubActivity({ locale = "en" }: { locale?: Locale } = {}) {
                   const count =
                     activity.count === 0
                       ? copy.noContributions
-                      : copy.contribution(activity.count);
+                      : formatMessage(copy.contribution, { count: activity.count });
                   return `${count} · ${contributionDateFormatter.format(new Date(`${activity.date}T00:00:00Z`))}`;
                 },
               },

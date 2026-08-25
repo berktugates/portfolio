@@ -1,6 +1,7 @@
 type BlogShareProps = {
   title: string;
-  slug: string;
+  /** Absolute or site-relative path used for share links. */
+  url: string;
 };
 
 function XIcon({ className }: { className?: string }) {
@@ -30,10 +31,10 @@ function WhatsAppIcon({ className }: { className?: string }) {
 const shareLinkClassName =
   "inline-flex size-9 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50";
 
-export function BlogShare({ title, slug }: BlogShareProps) {
+export function BlogShare({ title, url }: BlogShareProps) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://berktugberke.com";
-  const url = `${siteUrl}/blogs/${slug}`;
-  const encodedUrl = encodeURIComponent(url);
+  const absolute = url.startsWith("http") ? url : `${siteUrl}${url}`;
+  const encodedUrl = encodeURIComponent(absolute);
   const encodedTitle = encodeURIComponent(title);
 
   return (
@@ -58,7 +59,7 @@ export function BlogShare({ title, slug }: BlogShareProps) {
         <RedditIcon className="size-4" />
       </a>
       <a
-        href={`https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`}
+        href={`https://wa.me/?text=${encodeURIComponent(`${title} ${absolute}`)}`}
         target="_blank"
         rel="noreferrer"
         className={shareLinkClassName}

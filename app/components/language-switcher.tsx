@@ -1,16 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { withLocalePath } from "../lib/content/paths";
 import {
   LOCALES,
+  LOCALE_BOOT_KEY,
   PREFERRED_LOCALE_KEY,
   type Locale,
   localeMeta,
-  localePath,
-} from "../lib/i18n";
+} from "../lib/i18n/config";
 
 export function LanguageSwitcher({ locale }: { locale: Locale }) {
+  const pathname = usePathname() || "/";
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -43,7 +46,7 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
           {LOCALES.map((item) => (
             <li key={item} role="option" aria-selected={item === locale}>
               <Link
-                href={localePath(item)}
+                href={withLocalePath(item, pathname)}
                 hrefLang={localeMeta[item].hreflang}
                 className={`block px-3 py-1.5 text-xs transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-900 ${
                   item === locale
@@ -53,6 +56,7 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
                 onClick={() => {
                   try {
                     localStorage.setItem(PREFERRED_LOCALE_KEY, item);
+                    localStorage.setItem(LOCALE_BOOT_KEY, "1");
                   } catch {
                     // ignore
                   }

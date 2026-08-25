@@ -1,34 +1,48 @@
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { blogsIndexPath } from "../lib/content/paths";
+import type { Locale } from "../lib/i18n/config";
 
 type BlogPaginationProps = {
+  locale: Locale;
   currentPage: number;
   totalPages: number;
+  labels: {
+    previous: string;
+    next: string;
+    ariaLabel: string;
+  };
 };
 
-function pageHref(page: number) {
-  return page <= 1 ? "/blogs" : `/blogs/pages/${page}`;
-}
-
-export function BlogPagination({ currentPage, totalPages }: BlogPaginationProps) {
-  if (totalPages <= 1) return null;
-
-  const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+export function BlogPagination({
+  locale,
+  currentPage,
+  totalPages,
+  labels,
+}: BlogPaginationProps) {
+  const pageCount = Math.max(1, totalPages);
+  const pages = Array.from({ length: pageCount }, (_, index) => index + 1);
 
   return (
-    <nav aria-label="Blog pagination" className="mt-12 flex items-center justify-between border-t border-zinc-100 pt-6 dark:border-zinc-800">
+    <nav
+      aria-label={labels.ariaLabel}
+      className="flex items-center justify-between border-t border-zinc-100 pt-6 dark:border-zinc-800"
+    >
       {currentPage > 1 ? (
         <Link
-          href={pageHref(currentPage - 1)}
+          href={blogsIndexPath(locale, currentPage - 1)}
           className="inline-flex items-center gap-1 text-sm text-zinc-500 transition-colors hover:text-zinc-950 dark:hover:text-zinc-50"
         >
           <ChevronLeft className="size-4" />
-          Previous
+          {labels.previous}
         </Link>
       ) : (
-        <span className="inline-flex items-center gap-1 text-sm text-zinc-300 dark:text-zinc-700" aria-hidden="true">
+        <span
+          className="inline-flex items-center gap-1 text-sm text-zinc-300 dark:text-zinc-700"
+          aria-hidden="true"
+        >
           <ChevronLeft className="size-4" />
-          Previous
+          {labels.previous}
         </span>
       )}
 
@@ -46,7 +60,7 @@ export function BlogPagination({ currentPage, totalPages }: BlogPaginationProps)
                 </span>
               ) : (
                 <Link
-                  href={pageHref(page)}
+                  href={blogsIndexPath(locale, page)}
                   className="inline-flex size-8 items-center justify-center rounded-lg text-sm text-zinc-500 transition-colors hover:bg-zinc-50 hover:text-zinc-950 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
                 >
                   {page}
@@ -57,17 +71,20 @@ export function BlogPagination({ currentPage, totalPages }: BlogPaginationProps)
         })}
       </ol>
 
-      {currentPage < totalPages ? (
+      {currentPage < pageCount ? (
         <Link
-          href={pageHref(currentPage + 1)}
+          href={blogsIndexPath(locale, currentPage + 1)}
           className="inline-flex items-center gap-1 text-sm text-zinc-500 transition-colors hover:text-zinc-950 dark:hover:text-zinc-50"
         >
-          Next
+          {labels.next}
           <ChevronRight className="size-4" />
         </Link>
       ) : (
-        <span className="inline-flex items-center gap-1 text-sm text-zinc-300 dark:text-zinc-700" aria-hidden="true">
-          Next
+        <span
+          className="inline-flex items-center gap-1 text-sm text-zinc-300 dark:text-zinc-700"
+          aria-hidden="true"
+        >
+          {labels.next}
           <ChevronRight className="size-4" />
         </span>
       )}
