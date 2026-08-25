@@ -8,11 +8,25 @@ import { projects } from "../data/projects";
 
 const AUTO_PLAY_DELAY = 5000;
 
-export function ProjectsCarousel() {
+type ProjectsCarouselProps = {
+  summaries?: Record<string, string>;
+  locale?: "en" | "tr";
+};
+
+export function ProjectsCarousel({
+  summaries,
+  locale = "en",
+}: ProjectsCarouselProps = {}) {
   const trackRef = useRef<HTMLDivElement>(null);
   const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const ariaLabel = locale === "tr" ? "Seçili ürünler" : "Selected projects";
+  const selectLabel = locale === "tr" ? "Ürün seç" : "Select project";
+  const viewLabel = (title: string) =>
+    locale === "tr" ? `${title} projesini incele` : `View ${title} project`;
+  const showLabel = (title: string) =>
+    locale === "tr" ? `${title} ürününü göster` : `Show ${title}`;
 
   const centerCard = useCallback((index: number, smooth = true) => {
     const track = trackRef.current;
@@ -69,7 +83,7 @@ export function ProjectsCarousel() {
     <div
       role="region"
       aria-roledescription="carousel"
-      aria-label="Selected projects"
+      aria-label={ariaLabel}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onFocusCapture={() => setIsPaused(true)}
@@ -84,7 +98,7 @@ export function ProjectsCarousel() {
               href={`/projects/${project.slug}`}
               transitionTypes={["project-forward"]}
               className="group block outline-none"
-              aria-label={`View ${project.title} project`}
+              aria-label={viewLabel(project.title)}
             >
               <ViewTransition
                 name={`project-${project.slug}`}
@@ -112,19 +126,19 @@ export function ProjectsCarousel() {
                   <ArrowUpRight className="size-4 text-zinc-400 opacity-0 transition-opacity group-hover:opacity-100" />
                 </span>
                 <span className="mt-1 block text-zinc-500 dark:text-zinc-400">
-                  {project.summary}
+                  {summaries?.[project.slug] ?? project.summary}
                 </span>
               </span>
             </Link>
           </article>
         ))}
       </div>
-      <div className="mt-4 flex justify-center gap-2" aria-label="Select project">
+      <div className="mt-4 flex justify-center gap-2" aria-label={selectLabel}>
         {projects.map((project, index) => (
           <button
             type="button"
             key={project.slug}
-            aria-label={`Show ${project.title}`}
+            aria-label={showLabel(project.title)}
             aria-current={activeIndex === index ? "true" : undefined}
             className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${activeIndex === index ? "w-7 bg-zinc-900 dark:bg-zinc-100" : "w-1.5 bg-zinc-300 dark:bg-zinc-700"}`}
             onClick={() => centerCard(index)}
