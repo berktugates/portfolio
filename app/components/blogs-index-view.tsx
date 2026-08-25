@@ -138,7 +138,7 @@ export async function BlogsIndexView({
       <SiteFooter className="mt-8 border-t border-zinc-100 px-0 py-4 dark:border-zinc-800">
         <LanguageSwitcher locale={locale} />
       </SiteFooter>
-      <BlogSubscribeModal />
+      <BlogSubscribeModal copy={content.ui.subscribe} />
     </div>
   );
 }

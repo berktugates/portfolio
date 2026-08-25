@@ -18,6 +18,19 @@ const ui: ContentUi = {
   techStack: "Teknoloji Yığını",
   downloadOnAppStore: "App Store'dan İndirin",
   downloadOnAppStoreAria: "{{title}} uygulamasını App Store'dan indir",
+  subscribe: {
+    title: "Güncel kal",
+    body: "berktugberke.com'da yeni bir yazı yayınlandığında e-posta al. İsteğe bağlı—istediğin zaman geçebilirsin.",
+    emailLabel: "E-posta",
+    emailPlaceholder: "ornek@eposta.com",
+    skip: "Geç",
+    submit: "Beni bilgilendir",
+    submitting: "Kaydediliyor…",
+    footnote: "Yalnızca yeni blog yazıları. İstediğin zaman abonelikten çıkabilirsin.",
+    successTitle: "Tamamdır",
+    successBody: "Onay için gelen kutunu kontrol et. Yeni yazılar yayınlandığında oraya düşer.",
+    dismissAria: "Abone olma penceresini kapat",
+  },
 };
 
 export default ui;

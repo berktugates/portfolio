@@ -46,6 +46,19 @@ export type ContentUi = {
   downloadOnAppStore: string;
   /** Template with `{{title}}` */
   downloadOnAppStoreAria: string;
+  subscribe: {
+    title: string;
+    body: string;
+    emailLabel: string;
+    emailPlaceholder: string;
+    skip: string;
+    submit: string;
+    submitting: string;
+    footnote: string;
+    successTitle: string;
+    successBody: string;
+    dismissAria: string;
+  };
 };
 
 export type LocaleContentModule = {

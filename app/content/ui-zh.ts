@@ -18,6 +18,19 @@ const ui: ContentUi = {
   techStack: "技术栈",
   downloadOnAppStore: "在 App Store 中下载",
   downloadOnAppStoreAria: "在 App Store 中下载 {{title}}",
+  subscribe: {
+    title: "保持关注",
+    body: "当 berktugberke.com 发布新文章时收到邮件。可选——随时可跳过。",
+    emailLabel: "邮箱",
+    emailPlaceholder: "you@example.com",
+    skip: "跳过",
+    submit: "通知我",
+    submitting: "订阅中…",
+    footnote: "仅限新博客文章。可随时取消订阅。",
+    successTitle: "已加入",
+    successBody: "请查收邮箱完成确认。新文章发布后会发到那里。",
+    dismissAria: "关闭订阅对话框",
+  },
 };
 
 export default ui;

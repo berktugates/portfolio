@@ -18,6 +18,19 @@ const ui: ContentUi = {
   techStack: "Tech-Stack",
   downloadOnAppStore: "Im App Store laden",
   downloadOnAppStoreAria: "{{title}} im App Store laden",
+  subscribe: {
+    title: "Bleib auf dem Laufenden",
+    body: "Erhalte eine E-Mail, wenn auf berktugberke.com ein neuer Beitrag erscheint. Optional—jederzeit überspringen.",
+    emailLabel: "E-Mail",
+    emailPlaceholder: "du@beispiel.com",
+    skip: "Überspringen",
+    submit: "Benachrichtige mich",
+    submitting: "Wird abonniert…",
+    footnote: "Nur neue Blogbeiträge. Jederzeit abbestellbar.",
+    successTitle: "Du bist dabei",
+    successBody: "Prüfe dein Postfach zur Bestätigung. Neue Beiträge landen dort, sobald sie live sind.",
+    dismissAria: "Abonnieren-Dialog schließen",
+  },
 };
 
 export default ui;

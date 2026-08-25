@@ -21,6 +21,19 @@ const content: LocaleContentModule = {
     techStack: "Tech Stack",
     downloadOnAppStore: "Download on the App Store",
     downloadOnAppStoreAria: "Download {{title}} on the App Store",
+    subscribe: {
+      title: "Stay in the loop",
+      body: "Get an email when a new post goes live on berktugberke.com. Optional—skip anytime.",
+      emailLabel: "Email",
+      emailPlaceholder: "you@example.com",
+      skip: "Skip",
+      submit: "Notify me",
+      submitting: "Subscribing…",
+      footnote: "Only new blog posts. Unsubscribe anytime.",
+      successTitle: "You're in",
+      successBody: "Check your inbox to confirm. New posts land there when they ship.",
+      dismissAria: "Dismiss subscribe dialog",
+    },
   },
 };
 

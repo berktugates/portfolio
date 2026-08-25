@@ -18,6 +18,19 @@ const ui: ContentUi = {
   techStack: "Stack technique",
   downloadOnAppStore: "Télécharger dans l'App Store",
   downloadOnAppStoreAria: "Télécharger {{title}} dans l'App Store",
+  subscribe: {
+    title: "Restez informé",
+    body: "Recevez un e-mail lorsqu'un nouvel article est publié sur berktugberke.com. Facultatif—passez quand vous voulez.",
+    emailLabel: "E-mail",
+    emailPlaceholder: "vous@exemple.com",
+    skip: "Passer",
+    submit: "Me prévenir",
+    submitting: "Inscription…",
+    footnote: "Uniquement les nouveaux articles. Désabonnement à tout moment.",
+    successTitle: "C'est noté",
+    successBody: "Vérifiez votre boîte mail pour confirmer. Les nouveaux articles y arriveront dès leur publication.",
+    dismissAria: "Fermer la boîte d'inscription",
+  },
 };
 
 export default ui;

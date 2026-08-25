@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState, type FormEvent } from "react";
+import type { ContentUi } from "../lib/content/types";
 
 const SESSION_KEY = "blog-subscribe-prompted";
 const USERNAME = process.env.NEXT_PUBLIC_BUTTONDOWN_USERNAME ?? "berktug";
@@ -8,7 +9,9 @@ const SUBSCRIBE_ACTION = `https://buttondown.com/api/emails/embed-subscribe/${US
 
 type Status = "idle" | "submitting" | "success";
 
-export function BlogSubscribeModal() {
+export type BlogSubscribeCopy = ContentUi["subscribe"];
+
+export function BlogSubscribeModal({ copy }: { copy: BlogSubscribeCopy }) {
   const titleId = useId();
   const descId = useId();
   const [open, setOpen] = useState(false);
@@ -74,7 +77,7 @@ export function BlogSubscribeModal() {
     <div className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center" role="presentation">
       <button
         type="button"
-        aria-label="Dismiss subscribe dialog"
+        aria-label={copy.dismissAria}
         className="absolute inset-0 bg-zinc-950/40 backdrop-blur-[2px]"
         onClick={dismiss}
       />
@@ -88,34 +91,34 @@ export function BlogSubscribeModal() {
         {status === "success" ? (
           <div>
             <h2 id={titleId} className="text-lg font-medium text-zinc-950 dark:text-zinc-50">
-              You&apos;re in
+              {copy.successTitle}
             </h2>
             <p id={descId} className="mt-2 text-sm leading-6 text-zinc-500 dark:text-zinc-400">
-              Check your inbox to confirm. New posts land there when they ship.
+              {copy.successBody}
             </p>
           </div>
         ) : (
           <>
             <div>
               <h2 id={titleId} className="text-lg font-medium text-zinc-950 dark:text-zinc-50">
-                Stay in the loop
+                {copy.title}
               </h2>
               <p id={descId} className="mt-2 text-sm leading-6 text-zinc-500 dark:text-zinc-400">
-                Get an email when a new post goes live on berktugberke.com. Optional—skip anytime.
+                {copy.body}
               </p>
             </div>
 
             <form action={SUBSCRIBE_ACTION} method="post" className="mt-5 space-y-3" onSubmit={onSubmit}>
               <input type="hidden" name="tag" value="blog" />
               <label className="block">
-                <span className="sr-only">Email</span>
+                <span className="sr-only">{copy.emailLabel}</span>
                 <input
                   type="email"
                   name="email"
                   required
                   autoComplete="email"
                   inputMode="email"
-                  placeholder="you@example.com"
+                  placeholder={copy.emailPlaceholder}
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-950 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-600"
@@ -127,20 +130,18 @@ export function BlogSubscribeModal() {
                   onClick={dismiss}
                   className="inline-flex items-center justify-center rounded-xl px-3 py-2.5 text-sm text-zinc-500 transition-colors hover:text-zinc-950 dark:hover:text-zinc-50"
                 >
-                  Skip
+                  {copy.skip}
                 </button>
                 <button
                   type="submit"
                   disabled={status === "submitting"}
                   className="inline-flex items-center justify-center rounded-xl bg-zinc-950 px-3 py-2.5 text-sm text-white transition-colors hover:bg-zinc-800 disabled:opacity-60 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
                 >
-                  {status === "submitting" ? "Subscribing…" : "Notify me"}
+                  {status === "submitting" ? copy.submitting : copy.submit}
                 </button>
               </div>
             </form>
-            <p className="mt-3 text-xs leading-5 text-zinc-400 dark:text-zinc-500">
-              Only new blog posts. Unsubscribe anytime.
-            </p>
+            <p className="mt-3 text-xs leading-5 text-zinc-400 dark:text-zinc-500">{copy.footnote}</p>
           </>
         )}
       </div>
