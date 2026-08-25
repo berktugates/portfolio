@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { ViewTransition } from "react";
 import { notFound } from "next/navigation";
 import { projects } from "../data/projects";
+import { localizeAppStoreUrl } from "../lib/content/app-store";
 import { getLocalizedProject, getLocaleContent } from "../lib/content/get-content";
 import { projectPath } from "../lib/content/paths";
 import type { Locale } from "../lib/i18n";
@@ -17,6 +18,7 @@ import {
   absoluteUrl,
   jsonLd,
 } from "../lib/seo";
+import { AppStoreBadge } from "./app-store-badge";
 import { LanguageSwitcher } from "./language-switcher";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
@@ -100,7 +102,11 @@ export async function ProjectDetailPage({
     inLanguage: meta.htmlLang,
     author: { "@id": AUTHOR_ID, "@type": "Person", name: SITE_NAME },
     isPartOf: { "@id": WEBSITE_ID },
-    ...(project.href ? { sameAs: project.href } : {}),
+    ...(project.href
+      ? { sameAs: localizeAppStoreUrl(project.href, locale) }
+      : project.stores?.apple
+        ? { sameAs: localizeAppStoreUrl(project.stores.apple, locale) }
+        : {}),
   };
 
   return (
@@ -148,24 +154,13 @@ export async function ProjectDetailPage({
             {project.stores ? (
               <div className="flex shrink-0 flex-wrap justify-start gap-2 sm:justify-end">
                 {project.stores.apple ? (
-                  <a
+                  <AppStoreBadge
+                    locale={locale}
                     href={project.stores.apple}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`Download ${project.title} on the App Store`}
-                    className="store-badge-link"
-                  >
-                    <img
-                      src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
-                      alt="Download on the App Store"
-                      className="store-badge light-store-badge"
-                    />
-                    <img
-                      src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
-                      alt="Download on the App Store"
-                      className="store-badge dark-store-badge"
-                    />
-                  </a>
+                    title={project.title}
+                    label={content.ui.downloadOnAppStore}
+                    ariaLabel={content.ui.downloadOnAppStoreAria}
+                  />
                 ) : null}
                 {project.stores.google ? (
                   <a

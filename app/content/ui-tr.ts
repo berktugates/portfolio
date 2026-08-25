@@ -16,6 +16,8 @@ const ui: ContentUi = {
   paginationAria: "Blog sayfalama",
   productScope: "Ürün Kapsamı",
   techStack: "Teknoloji Yığını",
+  downloadOnAppStore: "App Store'dan İndirin",
+  downloadOnAppStoreAria: "{{title}} uygulamasını App Store'dan indir",
 };
 
 export default ui;

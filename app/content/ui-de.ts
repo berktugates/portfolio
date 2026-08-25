@@ -16,6 +16,8 @@ const ui: ContentUi = {
   paginationAria: "Blog-Seitennavigation",
   productScope: "Produktumfang",
   techStack: "Tech-Stack",
+  downloadOnAppStore: "Im App Store laden",
+  downloadOnAppStoreAria: "{{title}} im App Store laden",
 };
 
 export default ui;

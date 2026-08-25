@@ -16,6 +16,8 @@ const ui: ContentUi = {
   paginationAria: "博客分页",
   productScope: "产品范围",
   techStack: "技术栈",
+  downloadOnAppStore: "在 App Store 中下载",
+  downloadOnAppStoreAria: "在 App Store 中下载 {{title}}",
 };
 
 export default ui;

@@ -19,6 +19,8 @@ const content: LocaleContentModule = {
     paginationAria: "Blog pagination",
     productScope: "Product Scope",
     techStack: "Tech Stack",
+    downloadOnAppStore: "Download on the App Store",
+    downloadOnAppStoreAria: "Download {{title}} on the App Store",
   },
 };
 

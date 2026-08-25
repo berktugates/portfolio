@@ -16,6 +16,8 @@ const ui: ContentUi = {
   paginationAria: "ブログのページネーション",
   productScope: "プロダクト範囲",
   techStack: "技術スタック",
+  downloadOnAppStore: "App Store からダウンロード",
+  downloadOnAppStoreAria: "{{title}} を App Store からダウンロード",
 };
 
 export default ui;

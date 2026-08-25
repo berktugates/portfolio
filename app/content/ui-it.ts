@@ -16,6 +16,8 @@ const ui: ContentUi = {
   paginationAria: "Paginazione del blog",
   productScope: "Ambito del prodotto",
   techStack: "Stack tecnologico",
+  downloadOnAppStore: "Scarica su App Store",
+  downloadOnAppStoreAria: "Scarica {{title}} su App Store",
 };
 
 export default ui;

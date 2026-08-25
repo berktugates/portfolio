@@ -42,6 +42,10 @@ export type ContentUi = {
   paginationAria: string;
   productScope: string;
   techStack: string;
+  /** Official App Store badge alt text */
+  downloadOnAppStore: string;
+  /** Template with `{{title}}` */
+  downloadOnAppStoreAria: string;
 };
 
 export type LocaleContentModule = {
