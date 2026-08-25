@@ -5,28 +5,25 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { ViewTransition, useCallback, useEffect, useRef, useState } from "react";
 import { projects } from "../data/projects";
+import { type Locale, getDictionary } from "../lib/i18n";
 
 const AUTO_PLAY_DELAY = 5000;
 
 type ProjectsCarouselProps = {
+  locale?: Locale;
   summaries?: Record<string, string>;
-  locale?: "en" | "tr";
 };
 
-export function ProjectsCarousel({
-  summaries,
-  locale = "en",
-}: ProjectsCarouselProps = {}) {
+export function ProjectsCarousel({ locale = "en", summaries }: ProjectsCarouselProps = {}) {
   const trackRef = useRef<HTMLDivElement>(null);
   const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const ariaLabel = locale === "tr" ? "Seçili ürünler" : "Selected projects";
-  const selectLabel = locale === "tr" ? "Ürün seç" : "Select project";
-  const viewLabel = (title: string) =>
-    locale === "tr" ? `${title} projesini incele` : `View ${title} project`;
-  const showLabel = (title: string) =>
-    locale === "tr" ? `${title} ürününü göster` : `Show ${title}`;
+  const dict = getDictionary(locale);
+  const ariaLabel = dict.productsAria;
+  const selectLabel = dict.carousel.select;
+  const viewLabel = dict.carousel.view;
+  const showLabel = dict.carousel.show;
 
   const centerCard = useCallback((index: number, smooth = true) => {
     const track = trackRef.current;
@@ -100,13 +97,11 @@ export function ProjectsCarousel({
               className="group block outline-none"
               aria-label={viewLabel(project.title)}
             >
-              <ViewTransition
-                name={`project-${project.slug}`}
-                share="project-morph"
-                default="none"
-              >
+              <ViewTransition name={`project-${project.slug}`} share="project-morph" default="none">
                 <span className="relative block aspect-video overflow-hidden rounded-2xl bg-zinc-50/40 p-1.5 ring-1 ring-inset ring-zinc-200/50 transition-all duration-300 group-hover:bg-zinc-100/60 group-hover:ring-zinc-300/60 dark:bg-zinc-950/40 dark:ring-zinc-800/50 dark:group-hover:bg-zinc-900/60 dark:group-hover:ring-zinc-700/60">
-                  <span className={`project-visual relative flex h-full items-center justify-center overflow-hidden rounded-[11px] ${project.visualClassName}`}>
+                  <span
+                    className={`project-visual relative flex h-full items-center justify-center overflow-hidden rounded-[11px] ${project.visualClassName}`}
+                  >
                     <Image
                       src={project.image}
                       alt={project.imageAlt}
@@ -140,7 +135,11 @@ export function ProjectsCarousel({
             key={project.slug}
             aria-label={showLabel(project.title)}
             aria-current={activeIndex === index ? "true" : undefined}
-            className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${activeIndex === index ? "w-7 bg-zinc-900 dark:bg-zinc-100" : "w-1.5 bg-zinc-300 dark:bg-zinc-700"}`}
+            className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${
+              activeIndex === index
+                ? "w-7 bg-zinc-900 dark:bg-zinc-100"
+                : "w-1.5 bg-zinc-300 dark:bg-zinc-700"
+            }`}
             onClick={() => centerCard(index)}
           />
         ))}

@@ -14,6 +14,7 @@ import {
   WEBSITE_ID,
   jsonLd,
 } from "./lib/seo";
+import { LOCALE_REDIRECT_SCRIPT, hreflangLanguages } from "./lib/i18n";
 const geistMono = Geist_Mono({ subsets: ["latin"], display: "swap" });
 const structuredData = {
   "@context": "https://schema.org",
@@ -24,7 +25,7 @@ const structuredData = {
       url: SITE_URL,
       name: SITE_NAME,
       description: SITE_DESCRIPTION,
-      inLanguage: "en",
+      inLanguage: ["en", "tr", "de", "fr", "it", "zh-Hans", "ja"],
       publisher: { "@id": AUTHOR_ID },
     },
     {
@@ -85,7 +86,7 @@ export const metadata: Metadata = {
   publisher: SITE_NAME,
   alternates: {
     canonical: SITE_URL,
-    languages: { en: SITE_URL, tr: `${SITE_URL}/tr`, "x-default": SITE_URL },
+    languages: hreflangLanguages(),
   },
   openGraph: { type: "website", locale: "en_US", url: SITE_URL, siteName: SITE_NAME, title: SITE_TITLE, description: SITE_DESCRIPTION, images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: SITE_TITLE }] },
   twitter: { card: "summary_large_image", title: SITE_TITLE, description: SITE_DESCRIPTION, images: ["/opengraph-image"] },
@@ -93,4 +94,26 @@ export const metadata: Metadata = {
   category: "technology",
 };
 export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: [{ media: "(prefers-color-scheme: light)", color: "#ffffff" }, { media: "(prefers-color-scheme: dark)", color: "#09090b" }] };
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth"><head><script dangerouslySetInnerHTML={{ __html: `try{document.documentElement.classList.toggle('dark',localStorage.theme==='dark'||(!('theme'in localStorage)&&matchMedia('(prefers-color-scheme:dark)').matches))}catch(e){}` }} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} /></head><body className={`${geistMono.className} tracking-tight`}><a href="#main-content" className="sr-only focus:not-sr-only">Skip to content</a><div id="main-content">{children}</div><Analytics /><SpeedInsights /></body></html>; }
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{document.documentElement.classList.toggle('dark',localStorage.theme==='dark'||(!('theme'in localStorage)&&matchMedia('(prefers-color-scheme:dark)').matches))}catch(e){}`,
+          }}
+        />
+        <script dangerouslySetInnerHTML={{ __html: LOCALE_REDIRECT_SCRIPT }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
+      </head>
+      <body className={`${geistMono.className} tracking-tight`}>
+        <a href="#main-content" className="sr-only focus:not-sr-only">
+          Skip to content
+        </a>
+        <div id="main-content">{children}</div>
+        <Analytics />
+        <SpeedInsights />
+      </body>
+    </html>
+  );
+}

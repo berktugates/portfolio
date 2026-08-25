@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { type Locale, getDictionary, localeMeta } from "../lib/i18n";
 
 const GitHubCalendar = dynamic(
   () => import("react-github-calendar").then((module) => module.GitHubCalendar),
@@ -15,36 +16,16 @@ function getSiteColorScheme(): "light" | "dark" {
   return document.documentElement.classList.contains("dark") ? "dark" : "light";
 }
 
-type GitHubActivityProps = {
-  locale?: "en" | "tr";
-};
-
-export function GitHubActivity({ locale = "en" }: GitHubActivityProps = {}) {
+export function GitHubActivity({ locale = "en" }: { locale?: Locale } = {}) {
   const [streaks, setStreaks] = useState({ current: 0, longest: 0 });
   const [colorScheme, setColorScheme] = useState<"light" | "dark">("light");
-  const contributionDateFormatter = new Intl.DateTimeFormat(locale, {
+  const copy = getDictionary(locale).github;
+  const contributionDateFormatter = new Intl.DateTimeFormat(localeMeta[locale].htmlLang, {
     month: "short",
     day: "numeric",
     year: "numeric",
     timeZone: "UTC",
   });
-  const copy =
-    locale === "tr"
-      ? {
-          title: "GitHub Aktivitesi",
-          currentStreakLabel: "Güncel Seri",
-          longestStreakLabel: "En Uzun Seri",
-          noContributionsLabel: "Katkı yok",
-          contributionLabel: (count: number) => `${count} katkı`,
-        }
-      : {
-          title: "GitHub Activity",
-          currentStreakLabel: "Current Streak",
-          longestStreakLabel: "Longest Streak",
-          noContributionsLabel: "No contributions",
-          contributionLabel: (count: number) =>
-            `${count} contribution${count === 1 ? "" : "s"}`,
-        };
 
   useEffect(() => {
     const syncColorScheme = () => setColorScheme(getSiteColorScheme());
@@ -124,8 +105,8 @@ export function GitHubActivity({ locale = "en" }: GitHubActivityProps = {}) {
                 text: (activity) => {
                   const count =
                     activity.count === 0
-                      ? copy.noContributionsLabel
-                      : copy.contributionLabel(activity.count);
+                      ? copy.noContributions
+                      : copy.contribution(activity.count);
                   return `${count} · ${contributionDateFormatter.format(new Date(`${activity.date}T00:00:00Z`))}`;
                 },
               },
@@ -135,11 +116,11 @@ export function GitHubActivity({ locale = "en" }: GitHubActivityProps = {}) {
         <div className="mt-5 grid grid-cols-2 border-t border-zinc-100 pt-4 text-center dark:border-zinc-800">
           <div className="border-r border-zinc-100 dark:border-zinc-800">
             <p className="text-xl font-medium text-zinc-900 dark:text-zinc-100">{streaks.current}</p>
-            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{copy.currentStreakLabel}</p>
+            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{copy.currentStreak}</p>
           </div>
           <div>
             <p className="text-xl font-medium text-zinc-900 dark:text-zinc-100">{streaks.longest}</p>
-            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{copy.longestStreakLabel}</p>
+            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{copy.longestStreak}</p>
           </div>
         </div>
       </div>
