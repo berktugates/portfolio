@@ -1,0 +1,21 @@
+Official Apple App Store badge artwork
+======================================
+
+Source: Apple App Store Marketing Tools
+  https://toolbox.marketingtools.apple.com/
+Guidelines:
+  https://developer.apple.com/app-store/marketing/guidelines/
+
+Files are unmodified SVGs returned by:
+  /api/v2/badges/download-on-the-app-store/{black|white}/{lang}?size=250x83
+
+Locale map used by this site:
+  en → en-us
+  tr → tr-tr
+  de → de-de
+  fr → fr-fr
+  it → it-it
+  zh → zh-cn (Simplified Chinese)
+  ja → ja-jp
+
+Do not edit paths/text in these SVGs. Re-download from Apple if assets change.

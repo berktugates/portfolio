@@ -1,5 +1,16 @@
 import type { Locale } from "../i18n/config";
 
+/**
+ * Official App Store badge + storefront helpers.
+ * Artwork: Apple App Store Marketing Tools / Marketing Guidelines
+ * https://developer.apple.com/app-store/marketing/guidelines/
+ * https://toolbox.marketingtools.apple.com/
+ *
+ * Do not invent badge artwork. Always use Apple-provided localized badges.
+ * Note: Apple keeps the “App Store” service mark in English; only the
+ * “Download on the …” line is localized.
+ */
+
 /** App Store storefront country codes used in `apps.apple.com/{cc}/app/...`. */
 export const APP_STORE_STOREFRONT: Record<Locale, string> = {
   en: "us",
@@ -9,6 +20,17 @@ export const APP_STORE_STOREFRONT: Record<Locale, string> = {
   it: "it",
   zh: "cn",
   ja: "jp",
+};
+
+/** Apple Marketing Tools badge language tags (official artwork API). */
+export const APP_STORE_BADGE_LANG: Record<Locale, string> = {
+  en: "en-us",
+  tr: "tr-tr",
+  de: "de-de",
+  fr: "fr-fr",
+  it: "it-it",
+  zh: "zh-cn",
+  ja: "ja-jp",
 };
 
 /**
@@ -42,11 +64,15 @@ export function localizeAppStoreUrl(url: string, locale: Locale): string {
 }
 
 /**
- * Official Apple “Download on the App Store” badges (Marketing Guidelines),
- * vendored as retina PNGs under `/public/badges/app-store`.
- * `App Store` stays English by Apple policy; the download line is localized.
+ * Official Apple “Download on the App Store” badge SVG from Marketing Tools.
+ * Preferred black badge for light UI; white alternative for dark UI.
  */
 export function appStoreBadgeSrc(locale: Locale, variant: "black" | "white"): string {
-  // Bump when badge assets change so CDNs/browsers cannot keep a stale English file.
-  return `/badges/app-store/${locale}-${variant}.png?v=20260825`;
+  const lang = APP_STORE_BADGE_LANG[locale];
+  return `https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/${variant}/${lang}?size=250x83`;
+}
+
+/** Local mirror of the same official Apple SVGs (offline / CSP fallback). */
+export function appStoreBadgeFallbackSrc(locale: Locale, variant: "black" | "white"): string {
+  return `/badges/app-store/${locale}-${variant}.svg`;
 }
