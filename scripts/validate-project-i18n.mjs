@@ -22,6 +22,13 @@ function requireText(html, needle, context) {
   if (!html.includes(needle)) throw new Error(`${context}: missing ${JSON.stringify(needle)}`);
 }
 
+function jsonLdObjects(html) {
+  return [...html.matchAll(/<script type="application\/ld\+json">([^<]+)<\/script>/g)].flatMap((match) => {
+    const value = JSON.parse(match[1]);
+    return value["@graph"] ?? [value];
+  });
+}
+
 let legalPageCount = 0;
 for (const [locale, copy] of Object.entries(locales)) {
   for (const slug of projects) {
@@ -54,4 +61,32 @@ for (const copy of Object.values(locales)) {
   }
 }
 
-console.log(`Validated ${legalPageCount} localized legal pages and their project links.`);
+const expectedHreflangs = ["x-default", "en", "tr", "de", "fr", "it", "zh-Hans", "ja"];
+for (const hreflang of expectedHreflangs) {
+  requireText(sitemap, `hreflang="${hreflang}"`, "sitemap hreflang");
+}
+
+const home = await readFile(resolve(out, "index.html"), "utf8");
+const homeProfilePages = jsonLdObjects(home).filter((item) => item["@type"] === "ProfilePage");
+if (homeProfilePages.length !== 1) {
+  throw new Error(`Expected one home ProfilePage, found ${homeProfilePages.length}`);
+}
+if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/.test(homeProfilePages[0].dateModified)) {
+  throw new Error("Home ProfilePage dateModified must be an ISO 8601 DateTime with timezone");
+}
+
+for (const page of [
+  "projects/celestial-insights.html",
+  "projects/strumai.html",
+  "blogs/failure-modes-of-ai-feature-rollouts.html",
+]) {
+  const html = await readFile(resolve(out, page), "utf8");
+  const profilePages = jsonLdObjects(html).filter((item) => item["@type"] === "ProfilePage");
+  if (profilePages.length !== 0) {
+    throw new Error(`${page}: ProfilePage markup must only appear on locale home pages`);
+  }
+}
+
+console.log(
+  `Validated ${legalPageCount} localized legal pages, reciprocal sitemap hreflang, and ProfilePage structured data.`,
+);

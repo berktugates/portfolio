@@ -7,7 +7,6 @@ import {
   AUTHOR_ID,
   SITE_DESCRIPTION,
   SITE_INTRO,
-  SITE_LAST_MODIFIED,
   SITE_NAME,
   SITE_TITLE,
   SITE_URL,
@@ -27,15 +26,6 @@ const structuredData = {
       description: SITE_DESCRIPTION,
       inLanguage: ["en", "tr", "de", "fr", "it", "zh-Hans", "ja"],
       publisher: { "@id": AUTHOR_ID },
-    },
-    {
-      "@type": "ProfilePage",
-      "@id": `${SITE_URL}/#profile-page`,
-      url: SITE_URL,
-      name: SITE_TITLE,
-      dateModified: SITE_LAST_MODIFIED,
-      isPartOf: { "@id": WEBSITE_ID },
-      mainEntity: { "@id": AUTHOR_ID },
     },
     {
       "@type": "Person",

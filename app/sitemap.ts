@@ -2,25 +2,34 @@ import type { MetadataRoute } from "next";
 import { projects } from "./data/projects";
 import { blogPosts, getBlogPage, getBlogTotalPages } from "./data/blogs";
 import { blogPostPath, blogsIndexPath, projectLegalPath, projectPath } from "./lib/content/paths";
-import { LOCALES, hreflangLanguages, localeUrl } from "./lib/i18n";
+import { LOCALES, hreflangLanguages, localeMeta, localeUrl } from "./lib/i18n";
 import { SITE_LAST_MODIFIED, absoluteUrl } from "./lib/seo";
 
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const languages = hreflangLanguages();
+  const homeLanguages = hreflangLanguages();
   const totalPages = getBlogTotalPages();
 
   const localeHomes = LOCALES.map((locale) => ({
     url: localeUrl(locale),
     lastModified: SITE_LAST_MODIFIED,
-    alternates: { languages },
+    alternates: { languages: homeLanguages },
   }));
 
   const projectEntries = projects.flatMap((project) =>
     LOCALES.map((locale) => ({
       url: absoluteUrl(projectPath(locale, project.slug)),
       lastModified: SITE_LAST_MODIFIED,
+      alternates: {
+        languages: Object.fromEntries([
+          ["x-default", absoluteUrl(projectPath("en", project.slug))],
+          ...LOCALES.map((targetLocale) => [
+            localeMeta[targetLocale].hreflang,
+            absoluteUrl(projectPath(targetLocale, project.slug)),
+          ]),
+        ]),
+      },
     })),
   );
   const legalEntries = projects.flatMap((project) =>
@@ -29,6 +38,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
           (["privacy", "terms"] as const).map((document) => ({
             url: absoluteUrl(projectLegalPath(locale, project.slug, document)),
             lastModified: SITE_LAST_MODIFIED,
+            alternates: {
+              languages: Object.fromEntries([
+                ["x-default", absoluteUrl(projectLegalPath("en", project.slug, document))],
+                ...LOCALES.map((targetLocale) => [
+                  localeMeta[targetLocale].hreflang,
+                  absoluteUrl(projectLegalPath(targetLocale, project.slug, document)),
+                ]),
+              ]),
+            },
           })),
         )
       : [],
@@ -39,6 +57,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     return LOCALES.map((locale) => ({
       url: absoluteUrl(blogsIndexPath(locale, page)),
       lastModified: getBlogPage(page)[0]?.publishedAt,
+      alternates: {
+        languages: Object.fromEntries([
+          ["x-default", absoluteUrl(blogsIndexPath("en", page))],
+          ...LOCALES.map((targetLocale) => [
+            localeMeta[targetLocale].hreflang,
+            absoluteUrl(blogsIndexPath(targetLocale, page)),
+          ]),
+        ]),
+      },
     }));
   }).flat();
 
@@ -46,6 +73,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     LOCALES.map((locale) => ({
       url: absoluteUrl(blogPostPath(locale, post.slug)),
       lastModified: post.publishedAt,
+      alternates: {
+        languages: Object.fromEntries([
+          ["x-default", absoluteUrl(blogPostPath("en", post.slug))],
+          ...LOCALES.map((targetLocale) => [
+            localeMeta[targetLocale].hreflang,
+            absoluteUrl(blogPostPath(targetLocale, post.slug)),
+          ]),
+        ]),
+      },
     })),
   );
 
