@@ -1,0 +1,364 @@
+{
+  "version": 1,
+  "site": "https://berktugberke.com",
+  "generatedAt": "2026-08-27T00:57:50.736Z",
+  "posts": [
+    {
+      "id": "failure-modes-of-ai-feature-rollouts",
+      "slug": "failure-modes-of-ai-feature-rollouts",
+      "title": "Failure Modes of AI Feature Rollouts",
+      "url": "https://berktugberke.com/blogs/failure-modes-of-ai-feature-rollouts",
+      "publishedAt": "2026-08-22",
+      "tags": [
+        "AI feature rollout",
+        "production AI",
+        "release engineering",
+        "LLM reliability",
+        "AI product engineering"
+      ],
+      "excerpt": "Most AI launches fail in the gaps between demos, dashboards, and real user workflows.",
+      "bodyPlain": "A polished demo proves that a model can produce useful output under curated conditions. A rollout proves that the same system stays useful when traffic is messy, latency budgets are tight, and the organization must recover from bad answers without melting support.\n\nTreat the first production week as a systems test. You are validating retrieval freshness, tool reliability, fallback paths, cost ceilings, and the human workflows that catch what automation misses. If those pieces are undefined, the feature is not ready—only the demo is.\n\nModel providers change defaults. Prompts accumulate exceptions. Retrieval indexes rot. None of this announces itself with a red deploy. Teams that ship AI without an explicit quality owner discover regressions through customer complaints weeks later.\n\nAssign ownership the same way you would for an availability SLO. Define the properties that matter, sample production traffic, and require a named reviewer when those properties move. Drift is inevitable; unowned drift is a product failure.\n\nVersion prompts, retrieval config, and evaluation suites together\n\nAlert on refusal rate, escalation rate, and correction rate—not only errors\n\nKeep a rollback path that disables AI without disabling the product\n\nBudget time for post-launch triage before declaring success\n\nWhen the model is unavailable, slow, or low-confidence, users still need a path to complete the job. A blank state or a polite apology is not a fallback. A fallback is the deterministic flow, cached answer, search result, or human handoff that preserves progress.\n\nDesign fallbacks before launch and exercise them in staging. Measure how often they fire. If fallbacks are rare in testing but common in production, your confidence thresholds or dependency assumptions are wrong.\n\nPassing a handful of golden prompts is necessary and insufficient. Gate releases on critical property regressions, cost per successful outcome, latency at p95, and the readiness of support and trust teams. High-stakes actions need stricter bars than low-stakes drafting aids.\n\nA healthy AI rollout looks boring: gradual exposure, clear kill switches, observed quality, and a team that can explain what changed when something goes wrong. That boredom is the signal that engineering owned the risk instead of hoping the model would.",
+      "contentHash": "22222dc2cecd70f7"
+    },
+    {
+      "id": "context-engineering-for-reliable-ai-features",
+      "slug": "context-engineering-for-reliable-ai-features",
+      "title": "Context Engineering for Reliable AI Features",
+      "url": "https://berktugberke.com/blogs/context-engineering-for-reliable-ai-features",
+      "publishedAt": "2026-08-05",
+      "tags": [
+        "context engineering",
+        "production AI",
+        "RAG architecture",
+        "LLM reliability",
+        "AI product engineering"
+      ],
+      "excerpt": "Most AI product failures are context failures. Design retrieval, memory, and instructions as a system.",
+      "bodyPlain": "When an AI feature hallucinates, teams often rewrite the system prompt. That can help, but it rarely addresses the root cause. The model can only reason over what it is given. If retrieval is weak, memory is noisy, or tool results are incomplete, no amount of wording will create dependable behavior.\n\nContext engineering treats the assembled input as a product surface. It asks which facts must be present, which instructions take priority, how much history is useful, and what should be excluded. The goal is a bounded, inspectable packet of information that makes the intended answer possible.\n\nA durable context packet has layers with clear ownership. Policy and product instructions define what the model may do. Retrieved facts provide grounded evidence. Tool outputs describe the current world. Conversation history captures user intent. Mixing these layers into one undifferentiated blob makes debugging almost impossible.\n\nGive each layer a stable format and a size budget. Prefer structured facts over long prose dumps. When evidence conflicts, preserve provenance so the system can prefer authoritative sources or ask a clarifying question instead of inventing reconciliation.\n\nRank context by decision value, not by token count\n\nKeep authorization decisions outside the model\n\nCap history with summarization that preserves commitments\n\nLog which sources entered the final prompt\n\nRetrieval-augmented generation fails quietly when the wrong documents are fetched with high confidence. Measure recall on the questions that matter, not only embedding similarity. Include hard cases: synonyms, partial identifiers, multilingual queries, and requests that should retrieve nothing.\n\nChunking strategy, metadata filters, and reranking belong in the same review as the model choice. A smaller model with excellent context often outperforms a larger model with polluted context, especially under latency and cost constraints.\n\nWhen users report a bad answer, engineers need to reconstruct the context that produced it. Store prompt and retrieval versions, source identifiers, token budgets, and validation outcomes with privacy controls. Without that trail, every incident becomes anecdotal.\n\nContext engineering is successful when the system can explain what it knew, what it did not know, and why it answered the way it did. That transparency is the foundation of trust in AI products.",
+      "contentHash": "4228df75c2e8ce9c"
+    },
+    {
+      "id": "cost-aware-ai-product-architecture",
+      "slug": "cost-aware-ai-product-architecture",
+      "title": "Cost-Aware Architecture for AI Products",
+      "url": "https://berktugberke.com/blogs/cost-aware-ai-product-architecture",
+      "publishedAt": "2026-05-21",
+      "tags": [
+        "AI cost optimization",
+        "LLM architecture",
+        "AI product design",
+        "model routing",
+        "software economics"
+      ],
+      "excerpt": "Treat model spend as a product constraint, not an after-the-fact finance surprise.",
+      "bodyPlain": "An AI feature that delights ten users and bankrupts the company at ten thousand users is not a finished design. Estimate tokens per request, expected concurrency, cache hit rate, evaluation overhead, and the willingness of customers to pay for the outcome. These numbers should influence model choice and interaction design before launch.\n\nCost awareness is not the same as cheapness. Some workflows deserve an expensive model because the alternative is human labor or lost revenue. The engineering task is to spend deliberately where quality creates leverage and refuse spend where it does not.\n\nNot every request needs the strongest available model. Classify tasks by risk and ambiguity. Deterministic extraction, classification, and formatting can often use smaller models or classical software. Open-ended synthesis, planning, and high-stakes advice may justify a stronger model with tighter guardrails.\n\nRouting should be explicit and measurable. Track quality, latency, and cost by route. A cascade that escalates only when confidence is low preserves experience while keeping the average request affordable.\n\nCache stable retrieval and repeated prompts\n\nPrefer structured outputs that reduce retries\n\nBudget evaluation runs like production traffic\n\nExpose cost alarms before invoices arrive\n\nStreaming long essays is expensive. Asking for concise structured recommendations is cheaper and often more useful. Interface decisions—when to call a model, how much history to send, whether to regenerate—are cost controls as much as UX choices.\n\nBatch offline work, precompute frequent answers, and avoid sending the entire account history when a small relevant slice will do. The cheapest token is the one the system never sends.\n\nTrack cost per successful outcome, not only cost per request. A cheap endpoint that users retry five times is not cheap. Connect finance metrics to product analytics so teams can see whether spend is buying retention, conversion, or support deflection.\n\nSustainable AI products treat model spend as an architectural parameter. When the budget is visible, teams invent better systems instead of hoping traffic stays small.",
+      "contentHash": "e14dcf05045fd313"
+    },
+    {
+      "id": "evaluating-llm-outputs-in-production",
+      "slug": "evaluating-llm-outputs-in-production",
+      "title": "Evaluating LLM Outputs Without Guesswork",
+      "url": "https://berktugberke.com/blogs/evaluating-llm-outputs-in-production",
+      "publishedAt": "2026-01-28",
+      "tags": [
+        "LLM evaluation",
+        "AI quality assurance",
+        "prompt regression testing",
+        "production AI",
+        "machine learning ops"
+      ],
+      "excerpt": "Replace vibes-based shipping with evaluation suites that reflect real product risk.",
+      "bodyPlain": "Generic accuracy scores rarely protect a product. Decide which properties users and the business cannot compromise: factual grounding, schema validity, tone, refusal quality, latency, citation presence, or policy compliance. Different features need different scorecards.\n\nWrite these properties as measurable checks. A grounded answer should cite allowed sources. A booking assistant should never invent inventory. A support helper should refuse account takeover requests. Evaluation starts with product promises, not model leaderboards.\n\nCollect examples from production issues, support tickets, adversarial prompts, and edge cases discovered in research. Keep personally identifiable information out of the suite or replace it with realistic synthetic substitutes. Version the dataset alongside prompts and model settings.\n\nInclude cases that should fail gracefully. Evaluation that only covers happy paths will greenlight regressions in the moments that damage trust the most.\n\nSeparate offline suites from online sampling\n\nCalibrate automated graders with periodic human review\n\nBlock releases on critical property regressions\n\nTrack evaluation coverage by user journey\n\nSchema checks, forbidden phrase detection, citation presence, and deterministic fixtures can run on every change. Nuanced qualities such as helpfulness or empathy still need sampled human judgment. Use automation to widen coverage and humans to keep the graders honest.\n\nWhen a model or prompt changes, compare against the previous baseline rather than an absolute fantasy of perfection. The question is whether the product got safer and more useful for the users you serve.\n\nProduction will invent cases your suite never imagined. Feed high-severity failures back into evaluation quickly. Pair this with telemetry: thumbs-down rates, edit distance on user corrections, escalation to humans, and task completion.\n\nEvaluation is not a ceremony before launch. It is the continuous immune system of an AI product.",
+      "contentHash": "7cb21b7a2252d5bb"
+    },
+    {
+      "id": "designing-agentic-workflows-that-stay-controllable",
+      "slug": "designing-agentic-workflows-that-stay-controllable",
+      "title": "Designing Agentic Workflows That Stay Controllable",
+      "url": "https://berktugberke.com/blogs/designing-agentic-workflows-that-stay-controllable",
+      "publishedAt": "2025-12-09",
+      "tags": [
+        "AI agents",
+        "agentic workflows",
+        "tool calling",
+        "AI safety",
+        "software architecture"
+      ],
+      "excerpt": "Autonomy is useful only when every tool call has a clear boundary and an audit trail.",
+      "bodyPlain": "Free-form agents that invent their own plans are exciting in demos and fragile in production. Prefer an explicit workflow: gather context, propose actions, request approval when needed, execute tools, verify outcomes, and stop. The model can fill flexible steps inside that machine; it should not own the machine.\n\nState machines make timeouts, retries, and audits possible. They also make product promises enforceable: an agent cannot refund money, delete data, or message customers unless the workflow reaches an approved state.\n\nEach tool should expose a narrow capability with typed inputs, authorization checks, idempotency, and clear side effects. Broad tools that can do anything through a shell or raw database invite irreversible mistakes.\n\nReturn structured results the workflow can validate. Ambiguous tool failures should not become invented successes. If a payment API times out, the agent must query status rather than assume completion.\n\nRequire confirmation for irreversible side effects\n\nBound loops with step and cost limits\n\nPersist plans and tool transcripts\n\nPrefer least-privilege credentials per tool\n\nHuman approval is not a confession of failure. It is a product control for actions with legal, financial, or reputational impact. Design review interfaces that show the proposed action, evidence, and alternatives in seconds, not a raw chain-of-thought dump.\n\nOver time, promote repeatedly approved patterns into automated paths with monitoring. Controllability improves when the organization learns which decisions are safe to accelerate.\n\nAgents will stall, loop, or partially complete work. Provide compensating actions, dead-letter states, and operator tools to resume or unwind. Users should never be told the system finished when the underlying operations are unresolved.\n\nThe winning agentic systems feel calm. They use models for judgment inside carefully owned software boundaries.",
+      "contentHash": "b1270e0c5c2cd8cb"
+    },
+    {
+      "id": "typed-boundaries-in-modern-typescript-systems",
+      "slug": "typed-boundaries-in-modern-typescript-systems",
+      "title": "Typed Boundaries in Modern TypeScript Systems",
+      "url": "https://berktugberke.com/blogs/typed-boundaries-in-modern-typescript-systems",
+      "publishedAt": "2025-09-30",
+      "tags": [
+        "TypeScript architecture",
+        "API contracts",
+        "runtime validation",
+        "full-stack TypeScript",
+        "software engineering"
+      ],
+      "excerpt": "TypeScript pays off when types protect the seams between modules, APIs, and runtime data.",
+      "bodyPlain": "Internal function annotations help, but the expensive bugs usually cross process, network, storage, or team boundaries. Invest typing effort where untrusted or independently deployed data enters the system: HTTP payloads, queue messages, environment configuration, and third-party webhooks.\n\nAt those edges, compile-time types are not enough. Pair them with runtime schemas so invalid data fails in a controlled way before it corrupts domain logic.\n\nGenerate or publish shared types for clients and servers from a single source of truth. Keep transport details and UI concerns out of the domain model. A change to a field's nullability should be deliberate and visible to every consumer.\n\nBranded types for identifiers prevent accidental mixing of user IDs, organization IDs, and external references. Small nominal distinctions catch an entire class of integration mistakes.\n\nValidate on read at trust boundaries\n\nMake illegal states unrepresentable where cheap\n\nPrefer explicit result types over thrown ambiguity\n\nKeep DTOs separate from persistence models\n\nOverfitting types to every temporary UI state creates churn without safety. Escape hatches such as any, broad casts, and overly clever conditional types should be rare and justified. Readable types that teammates can change are more valuable than ingenious ones nobody understands.\n\nMeasure success by fewer production parsing errors and safer refactors, not by the density of generics.\n\nA good type system captures product rules: which fields exist after onboarding, which statuses allow refunds, which payloads are versioned. That documentation stays honest because the compiler enforces it.\n\nTypeScript is most effective when it encodes the architecture you already believe in, then prevents the team from accidentally abandoning it.",
+      "contentHash": "1d5d708bd3b35680"
+    },
+    {
+      "id": "caching-strategies-for-product-facing-apis",
+      "slug": "caching-strategies-for-product-facing-apis",
+      "title": "Caching Strategies for Product-Facing APIs",
+      "url": "https://berktugberke.com/blogs/caching-strategies-for-product-facing-apis",
+      "publishedAt": "2025-06-18",
+      "tags": [
+        "API caching",
+        "HTTP cache",
+        "Redis caching",
+        "backend performance",
+        "system design"
+      ],
+      "excerpt": "A cache is a correctness decision first and a performance optimization second.",
+      "bodyPlain": "Before choosing Redis, CDN rules, or HTTP headers, decide how stale a response may be and what happens when it is wrong. Profile pages, inventory counts, prices, and permissions have different tolerance for delay. A single global TTL is usually a product mistake.\n\nWrite the contract in engineering language clients can rely on: absolute expiry, event-driven invalidation, or explicit revalidation. Ambiguous freshness creates duplicate caching layers that fight each other.\n\nPublic content benefits from edge caches. Per-user dashboards often need application-level caches keyed by identity and tenant. Expensive computed aggregations may need materialization rather than a short-lived key-value entry.\n\nAvoid caching unauthorized responses or responses that embed secrets. Cache keys must include every dimension that changes meaning: locale, plan, feature flag, and representation version.\n\nProtect against thundering herds on expiry\n\nPrefer idempotent recomputation paths\n\nObserve hit rate alongside wrong-data incidents\n\nInvalidate on meaningful domain events\n\nTime-based expiry is simple and often wrong for collaborative data. Event-based invalidation is precise and easy to miss a producer. Many systems combine a modest TTL with explicit purge on write paths for critical entities.\n\nDesign delete and update flows to emit the signals caches need. If writers do not know about readers' caches, stale data becomes a recurring incident theme.\n\nA high hit rate with rising support tickets about outdated information is not a win. Track latency percentiles, origin load, and correctness complaints together. Caching strategy should make the product feel fast and trustworthy at the same time.\n\nThe best cache is invisible: users get timely answers, origins stay calm, and engineers can explain exactly when data is allowed to lag.",
+      "contentHash": "7d2f5195516a3f5a"
+    },
+    {
+      "id": "feature-flags-as-engineering-infrastructure",
+      "slug": "feature-flags-as-engineering-infrastructure",
+      "title": "Feature Flags as Engineering Infrastructure",
+      "url": "https://berktugberke.com/blogs/feature-flags-as-engineering-infrastructure",
+      "publishedAt": "2025-02-14",
+      "tags": [
+        "feature flags",
+        "progressive delivery",
+        "release engineering",
+        "A/B testing",
+        "continuous deployment"
+      ],
+      "excerpt": "Flags are not temporary hacks. They are how modern teams separate deploy from release.",
+      "bodyPlain": "Shipping code to production and exposing a feature to users are different decisions. Feature flags let teams merge continuously while controlling blast radius. Combined with observability, they turn releases into reversible experiments rather than binary events.\n\nThis only works when flags are treated as infrastructure: named clearly, owned by a team, defaulted safely, and removable on a schedule.\n\nEvery flag needs a default for when the management service is unavailable. Critical paths should fail closed or open intentionally, never randomly. Targeting rules must be testable and auditable, especially for enterprise customers and regulated workflows.\n\nAvoid wrapping unrelated behavior in one flag. Coarse flags create tangled cleanup. Fine flags create combinatorial testing cost. Group by user-visible capability.\n\nRecord who changed a flag and why\n\nSet removal dates when flags are created\n\nKeep flag evaluation out of tight loops when possible\n\nTest both enabled and disabled paths\n\nWhen flags power experiments, define the hypothesis, primary metric, and end criteria before launch. Do not leave half-finished experiments running indefinitely; they pollute analytics and increase cognitive load.\n\nSegment carefully. Overlapping experiments on the same journey can invalidate conclusions and create confusing user experiences.\n\nA flag that survives long after a feature is fully released becomes dead configuration and hidden branching. Schedule cleanup work with the same seriousness as the launch. Delete unused paths so the codebase reflects reality.\n\nMature teams win with flags not because they have more toggles, but because they can release safely and leave the system simpler afterward.",
+      "contentHash": "98d3b3a14f98e52e"
+    },
+    {
+      "id": "using-ai-coding-tools-without-losing-architecture",
+      "slug": "using-ai-coding-tools-without-losing-architecture",
+      "title": "Using AI Coding Tools Without Losing Architecture",
+      "url": "https://berktugberke.com/blogs/using-ai-coding-tools-without-losing-architecture",
+      "publishedAt": "2024-11-05",
+      "tags": [
+        "AI coding tools",
+        "developer productivity",
+        "software architecture",
+        "code review",
+        "AI pair programming"
+      ],
+      "excerpt": "Speed is free only when the system boundaries remain intentional.",
+      "bodyPlain": "AI coding tools excel when the task is bounded: implement this interface, add this test, migrate this call site. They struggle when asked to invent an architecture the repository does not yet express. Provide the invariant first—ownership boundaries, naming conventions, error model, and forbidden shortcuts.\n\nThe engineer remains responsible for framing. A vague prompt yields plausible code that quietly duplicates existing modules or bypasses shared utilities.\n\nLook beyond syntax. Does the change respect module boundaries? Does it introduce a new persistence path? Does it handle authorization and failure? Large generated diffs invite skim reading; insist on small commits that a human can truly understand.\n\nAsk the tool for alternatives when a decision is expensive to reverse. Comparing two approaches is often more valuable than accepting the first draft.\n\nRequire tests for behavior you cannot visually verify\n\nSearch for existing helpers before adding new ones\n\nKeep secrets and production data out of prompts\n\nPrefer repository docs over generic framework folklore\n\nTypechecks, lint rules, contract tests, and preview environments are what make high-speed generation safe. If the suite is weak, AI simply helps you produce unverified complexity faster.\n\nInvest a portion of the time saved into better fixtures, clearer module README files, and examples of preferred patterns. Those artifacts improve both human and AI contributors.\n\nArchitecture is accumulated taste under constraints. AI can propose implementations; it cannot own the product's future. Use the tools to accelerate verified work, not to outsource judgment about what the system should become.\n\nTeams that thrive with AI coding tools are disciplined about boundaries. The code moves faster because the rails are clear.",
+      "contentHash": "17377520394c5f72"
+    },
+    {
+      "id": "event-driven-design-for-product-backends",
+      "slug": "event-driven-design-for-product-backends",
+      "title": "Event-Driven Design for Product Backends",
+      "url": "https://berktugberke.com/blogs/event-driven-design-for-product-backends",
+      "publishedAt": "2024-07-24",
+      "tags": [
+        "event-driven architecture",
+        "domain events",
+        "message queues",
+        "backend architecture",
+        "distributed systems"
+      ],
+      "excerpt": "Events help products scale workflows—if you treat them as contracts, not firehoses.",
+      "bodyPlain": "Useful events describe something meaningful that happened: order placed, recording processed, membership upgraded. They are not a dump of database rows or a remote procedure call in disguise. Name events in the past tense and include enough context for consumers to act without chatty callbacks.\n\nVersion the payload. Consumers evolve on different schedules, and a breaking field rename can cascade into silent failures across teams.\n\nEach consumer should own a specific outcome: send email, update search index, provision entitlements, or notify analytics. Sharing one giant worker for unrelated side effects recreates a monolith with worse failure modes.\n\nBackpressure, retries, and dead-letter queues belong per consumer. A poison message in notifications should not block search indexing.\n\nMake handlers idempotent by default\n\nPrefer at-least-once delivery with deduplication keys\n\nDocument ordering guarantees honestly\n\nTrace production flows across publish and consume\n\nEvent-driven systems often embrace eventual consistency. Product copy and UI must acknowledge that some states catch up asynchronously. Showing a processing state is better than pretending every side effect is instantaneous.\n\nWhere strong consistency is required—balances, inventory reservations, unique constraints—keep that logic in a transactional boundary and emit events after commit.\n\nWithout correlation IDs, lag metrics, and replay tools, event systems become mysterious. Build the ability to reprocess a window of events safely after a bug fix. Measure consumer lag as a user-facing reliability signal.\n\nEvent-driven design pays off when teams can extend product behavior by adding consumers without destabilizing the core transaction path.",
+      "contentHash": "8ff24933bc351149"
+    },
+    {
+      "id": "testing-strategies-for-ai-powered-features",
+      "slug": "testing-strategies-for-ai-powered-features",
+      "title": "Testing Strategies for AI-Powered Features",
+      "url": "https://berktugberke.com/blogs/testing-strategies-for-ai-powered-features",
+      "publishedAt": "2024-04-16",
+      "tags": [
+        "AI feature testing",
+        "software testing",
+        "LLM testing",
+        "quality engineering",
+        "continuous integration"
+      ],
+      "excerpt": "Deterministic tests still matter. Pair them with evaluation for the parts that are probabilistic.",
+      "bodyPlain": "Much of an AI feature is still ordinary software: authentication, input validation, retrieval queries, rate limits, persistence, and UI rendering. Those layers deserve classic unit and integration tests with fixed fixtures. Do not weaken them because a model sits in the middle.\n\nThe generative step needs a different approach. Exact string matching on free-form answers creates flaky suites. Test the contract around the model and evaluate the model outputs against product properties.\n\nCalling live models on every pull request is slow, expensive, and nondeterministic. Use recorded fixtures or deterministic stubs for pull request pipelines, and run broader evaluation suites on a schedule or when prompts, models, or retrieval logic change.\n\nWhen stubbing, preserve realistic latency and failure modes. Tests that only see perfect model responses will not protect timeout handling or malformed output paths.\n\nAssert output schema before rendering\n\nGolden-file critical grounded answers\n\nSimulate empty retrieval and tool failures\n\nGate merges on contract tests, not on model creativity\n\nEnd-to-end tests should verify that a user can complete the AI-assisted journey: enter a request, see a validated response, recover from a refusal, and escalate when needed. Keep these journeys few and stable.\n\nPair automated journeys with periodic human review of sampled production outputs. Quality engineering for AI is a blend of software discipline and product taste.\n\nA failing AI test should tell you whether the schema broke, retrieval missed, policy refused incorrectly, or evaluation scores dropped. Vague red builds train teams to ignore them.\n\nThe purpose of testing AI features is not to pretend models are deterministic. It is to keep probabilistic components inside a system that remains operable, reviewable, and safe to change.",
+      "contentHash": "d6f88538621a8680"
+    },
+    {
+      "id": "engineering-ai-products-that-earn-trust",
+      "slug": "engineering-ai-products-that-earn-trust",
+      "title": "Engineering AI Products That Earn Trust",
+      "url": "https://berktugberke.com/blogs/engineering-ai-products-that-earn-trust",
+      "publishedAt": "2026-07-14",
+      "tags": [
+        "AI product engineering",
+        "production AI",
+        "LLM architecture",
+        "AI observability",
+        "software engineering"
+      ],
+      "excerpt": "A practical architecture for useful, observable, and dependable AI features in production.",
+      "bodyPlain": "A convincing prototype can be built around a single model call. A dependable product cannot. Production AI sits inside a larger system of input validation, context assembly, policy enforcement, retrieval, generation, post-processing, persistence, analytics, and recovery. The model may be the most visible component, but product quality is determined by the contracts between all of them.\n\nThis changes the engineering question. Instead of asking which prompt produces the most impressive answer, ask what the system promises, how that promise is measured, and what happens when confidence is low. A strong architecture makes uncertainty explicit. It treats generated output as untrusted data, validates its shape, and keeps deterministic business rules outside the model boundary.\n\nStart with the user outcome and work backward. Define the inputs the feature truly needs, the output schema the interface can safely render, latency and cost budgets, prohibited behavior, and the fallback experience. A typed response with bounded fields is easier to test than a block of prose whose meaning changes between runs.\n\nThe contract should also separate facts from interpretation. Retrieved account data, product records, or medical references need provenance. Generated suggestions need clear language that reflects their confidence and purpose. When these categories are mixed, users cannot tell which part of the response is grounded and engineers cannot diagnose why an answer failed.\n\nValidate model output at runtime\n\nVersion prompts, schemas, and evaluation datasets together\n\nKeep authorization and pricing rules deterministic\n\nProvide a useful non-AI fallback\n\nAI quality cannot be reduced to a unit test, but that does not make it untestable. Build a representative evaluation set from real product scenarios: common requests, ambiguous inputs, adversarial phrasing, multilingual cases, missing context, and high-risk edge conditions. Score the properties users care about, such as correctness, relevance, tone, groundedness, and refusal behavior.\n\nRun this suite whenever the model, system prompt, retrieval strategy, or output schema changes. Automated graders can accelerate feedback, while targeted human review calibrates the graders and catches subtle product regressions. The goal is not a magical universal score. It is a repeatable decision process that prevents a locally impressive change from silently degrading the wider experience.\n\nObservability should follow a request across the full pipeline without storing unnecessary sensitive content. Track model and prompt versions, retrieval results, schema validation, latency, token usage, fallback rates, user corrections, and downstream actions. Product analytics tells you whether the feature is valuable; operational telemetry tells you whether it is healthy.\n\nRate limits, circuit breakers, timeouts, caching, and graceful degradation are not secondary concerns. They are what keep a model outage or cost spike from becoming a product outage. Mature AI engineering is less about hiding uncertainty and more about containing it.\n\nUsers learn whether a product deserves trust through repeated small interactions. Clear boundaries, predictable behavior, fast recovery, and honest explanations matter more than occasional brilliance. The best AI experience often feels restrained: it uses intelligence where ambiguity benefits from it and conventional software where precision is required.\n\nThat restraint is also a competitive advantage. Models will change quickly; a well-designed evaluation and operations layer lets the product adopt better models without rebuilding its identity each time.",
+      "contentHash": "97610a692857d905"
+    },
+    {
+      "id": "staff-level-engineering-without-the-title",
+      "slug": "staff-level-engineering-without-the-title",
+      "title": "Staff-Level Engineering Is a Way of Working",
+      "url": "https://berktugberke.com/blogs/staff-level-engineering-without-the-title",
+      "publishedAt": "2026-03-03",
+      "tags": [
+        "staff engineer",
+        "technical leadership",
+        "software architecture",
+        "engineering strategy",
+        "senior software engineer"
+      ],
+      "excerpt": "How senior engineers create leverage through decisions, systems, and clarity—not heroics.",
+      "bodyPlain": "Staff-level work is often described as writing less code and attending more meetings. That description misses the point. The meaningful change is scope: the engineer becomes accountable for the quality of decisions that span systems, teams, and time. Code remains important, but it is one instrument among architecture, communication, sequencing, mentoring, and risk management.\n\nThe strongest engineers do not manufacture complexity to demonstrate depth. They find the smallest coherent model that multiple teams can share. They make constraints visible, identify the decisions that are expensive to reverse, and keep reversible choices lightweight.\n\nHeroic delivery can look valuable while making an organization fragile. If every difficult migration, incident, or architectural decision requires the same person, knowledge has not been converted into leverage. Staff-level impact leaves behind clearer interfaces, useful documentation, better defaults, and people who can make the next decision independently.\n\nThis means investing in paved roads: shared observability, deployment patterns, API conventions, testing strategies, and examples that make the correct path easier than the accidental one. A platform or abstraction is worthwhile only when it removes repeated cognitive load without hiding essential behavior.\n\nWrite decisions for future readers\n\nMeasure adoption, not the existence of a platform\n\nTeach the reasoning behind standards\n\nDelete abstractions that no longer earn their cost\n\nA strategy is not a diagram of the final architecture. It is an ordered set of moves that delivers value while reducing risk. Good strategy names the current constraints, the target capabilities, and the intermediate states the organization can safely operate. It acknowledges staffing, product commitments, and migration cost rather than treating them as implementation details.\n\nThe best plan usually contains checkpoints where evidence can change the direction. This makes strategy robust without making it vague. Teams know what they are optimizing for, what must remain stable, and which assumptions should be tested first.\n\nCross-team leadership is not winning architectural arguments. It begins by understanding the incentives and constraints of the people who must adopt the decision. Product teams may value speed, operations may value diagnosability, security may value control, and finance may care about unit economics. A durable proposal incorporates these realities instead of dismissing them.\n\nStrong technical writing is a force multiplier here. A concise document with context, options, tradeoffs, a recommendation, and an explicit decision date creates a shared surface for disagreement. It lets quiet experts contribute and prevents the loudest meeting from becoming the architecture.\n\nStaff-level engineering is visible in the condition left behind: fewer unknown failure modes, clearer ownership, shorter feedback loops, and teams that can move with more confidence. The work is not always dramatic. Often it is the steady removal of ambiguity before ambiguity turns into incidents and rewrites.\n\nTitles vary between organizations. The practice is consistent: improve the quality and reach of engineering decisions while helping others do their best work.",
+      "contentHash": "c31a5ea4394d10d5"
+    },
+    {
+      "id": "cross-platform-mobile-architecture-that-scales",
+      "slug": "cross-platform-mobile-architecture-that-scales",
+      "title": "Cross-Platform Mobile Architecture That Scales",
+      "url": "https://berktugberke.com/blogs/cross-platform-mobile-architecture-that-scales",
+      "publishedAt": "2025-11-19",
+      "tags": [
+        "cross-platform mobile development",
+        "React Native architecture",
+        "Expo app",
+        "mobile software engineering",
+        "iOS Android development"
+      ],
+      "excerpt": "A pragmatic approach to shared product logic without sacrificing native quality.",
+      "bodyPlain": "Cross-platform development succeeds when teams share product behavior and domain rules while preserving room for platform-specific interaction. A single codebase is not valuable because every line is identical. It is valuable because important concepts—identity, permissions, pricing, synchronization, analytics, and business workflows—have one source of truth.\n\nForcing visual or native behavior through an abstraction that fits neither platform creates a different kind of duplication: workarounds. Keep shared boundaries deliberate. Navigation intent, data contracts, validation, and state transitions usually belong in common code. Widgets, background execution, purchases, notifications, and accessibility details may require native-aware adapters.\n\nMobile applications become difficult to reason about when all state is placed in one global store. Server state has caching, freshness, retry, and invalidation semantics. Local product state has interaction and persistence semantics. Ephemeral view state belongs close to the component. Treating these as separate categories reduces accidental coupling.\n\nA query layer should own remote resources and mutations. A focused client store can coordinate durable local workflows such as onboarding or a draft recording. Secure credentials belong in platform-protected storage. This model makes offline behavior explicit because the team can decide which resources may be stale, queued, or unavailable.\n\nModel network status as product state\n\nPersist only data that has a clear restoration purpose\n\nMake optimistic updates reversible\n\nKeep authentication refresh outside screens\n\nMicrophones, cameras, push notifications, subscriptions, health data, and background tasks are not ordinary libraries. They cross permission, privacy, lifecycle, and store-policy boundaries. Wrap each capability in a small domain-facing interface and keep platform details behind it. This makes simulators and tests useful without pretending the native layer does not exist.\n\nPermission requests should be triggered by understandable user intent, not at application startup. Failure paths deserve first-class design: denied permissions, interrupted recordings, restored purchases, expired notification tokens, and operating-system restrictions are normal states, not exceptional bugs.\n\nA smooth interface begins with data flow. Avoid rerendering large trees for unrelated state, virtualize long collections, resize media before transfer, and move heavy audio or image work away from the JavaScript thread. Measure startup, navigation, and interaction latency on representative devices rather than relying on a development simulator.\n\nPerceived performance matters too. Preserve navigation continuity, show stable skeletons, and make optimistic actions feel immediate when they can be safely reconciled. The fastest request is often the one the interface does not need to wait for.\n\nA scalable mobile architecture includes signed builds, environment separation, staged rollout, crash reporting, over-the-air update policy, and store metadata. Every release should be traceable to code, configuration, backend compatibility, and feature flags. Mobile clients remain in the wild long after a backend deploy, so APIs must tolerate version overlap.\n\nThe outcome is not maximum code sharing. It is a product that behaves coherently on iOS and Android, can use native capabilities responsibly, and remains operable as the team and feature set grow.",
+      "contentHash": "2cc6f457c3781df7"
+    },
+    {
+      "id": "designing-resilient-full-stack-systems",
+      "slug": "designing-resilient-full-stack-systems",
+      "title": "Designing Resilient Full-Stack Systems",
+      "url": "https://berktugberke.com/blogs/designing-resilient-full-stack-systems",
+      "publishedAt": "2025-08-07",
+      "tags": [
+        "full-stack architecture",
+        "resilient systems",
+        "software reliability",
+        "API design",
+        "system design"
+      ],
+      "excerpt": "Reliability begins at product boundaries long before infrastructure fails.",
+      "bodyPlain": "A healthy database does not guarantee a reliable product. Users experience a chain that includes device state, network conditions, edge infrastructure, application code, queues, third-party services, and human operations. Resilience comes from understanding that chain and choosing where failures should be absorbed.\n\nBegin with critical user journeys. Identify what must succeed synchronously, what can be delayed, what can be retried, and what must never occur twice. This produces a more useful architecture than applying generic availability patterns to every endpoint.\n\nTyped APIs help, but a resilient contract also defines timeouts, error categories, idempotency, pagination, version compatibility, and authorization behavior. Clients should be able to distinguish a validation problem from a temporary dependency failure and a permission denial.\n\nIdempotency keys are essential for payments, orders, messages, and any mutation a client may retry. A request timeout does not tell the client whether the server completed the operation. Without a stable key and retrievable operation state, retries become data corruption.\n\nUse stable machine-readable error codes\n\nMake mutation outcomes queryable\n\nBound every network call with a timeout\n\nDesign backward compatibility for mobile clients\n\nGraceful degradation should preserve the useful core of a product. If recommendations fail, search may still work. If real-time updates disconnect, a timestamped snapshot may remain readable. If media processing is delayed, the upload can be accepted and completed asynchronously.\n\nFeature boundaries make this possible. When one dependency is embedded across every route and render path, its outage becomes universal. Isolate optional capabilities behind clear interfaces, cache safe results, and ensure the interface communicates freshness rather than silently presenting stale data as current.\n\nInfrastructure metrics reveal resource pressure. Product-level telemetry reveals broken outcomes. Trace a user operation with correlation identifiers across the client, API, queue, and worker. Record meaningful transitions such as order accepted, payment authorized, asset processed, and notification delivered.\n\nLogs should be structured, privacy-aware, and connected to an operational question. Dashboards need service-level indicators tied to journeys, while alerts should identify conditions that require action. An alert that fires frequently and changes no decision is noise that weakens the entire response system.\n\nBackups are intentions until restoration is tested. Queues are durable until poison messages block progress. Runbooks are useful until they assume access or knowledge responders do not have. Regular recovery exercises expose these gaps while the system is calm.\n\nResilience is ultimately the ability to make failure unsurprising. Teams cannot remove every incident, but they can create bounded failures, visible state, safe retries, and practiced recovery paths that protect both users and engineers.",
+      "contentHash": "85be526afe3b4a08"
+    },
+    {
+      "id": "practical-software-observability-for-product-teams",
+      "slug": "practical-software-observability-for-product-teams",
+      "title": "Practical Observability for Product Teams",
+      "url": "https://berktugberke.com/blogs/practical-software-observability-for-product-teams",
+      "publishedAt": "2025-04-22",
+      "tags": [
+        "software observability",
+        "OpenTelemetry",
+        "frontend monitoring",
+        "SLO",
+        "incident response"
+      ],
+      "excerpt": "Build telemetry that shortens decisions instead of producing another wall of dashboards.",
+      "bodyPlain": "Observability is the ability to explain unfamiliar system behavior using the evidence the system emits. Collecting every available metric does not guarantee that ability. Start with the questions people need to answer: Are users completing checkout? Which release increased startup time? Where is this request waiting? How many operations are being retried?\n\nThese questions connect telemetry to decisions. They also prevent expensive instrumentation that nobody can interpret. A compact set of reliable signals is more valuable than a large dashboard whose definitions vary between teams.\n\nProduct failures often begin on the client and disappear at the API boundary. Carry a correlation identifier from the browser or mobile application through the gateway, services, queues, and workers. Add release version, route, operation, and safe account context so a trace can be connected to the experience that produced it.\n\nFrontend telemetry should include real user performance, navigation errors, failed resources, and important interaction timings. Avoid indiscriminate session capture. Privacy-aware instrumentation collects the minimum context needed to diagnose behavior and establishes retention and access rules before sensitive data arrives.\n\nUse consistent operation names\n\nAttach deploy versions to every signal\n\nRedact at collection time\n\nSample routine traffic while retaining errors\n\nA service-level indicator should represent something users can perceive: successful request rate, processing completion, freshness, or interaction latency. A service-level objective creates a shared reliability target and an error budget for making delivery decisions.\n\nAverages hide the experiences that need attention. Use percentiles for latency and segment critical signals by platform, region, release, and journey. Segmentation should remain bounded; uncontrolled labels create cost and make queries unreliable.\n\nAn alert should indicate a meaningful threat to an objective and have an expected response. Route low-urgency anomalies to review instead of waking someone. Include relevant dashboards, recent deploys, ownership, and a short diagnostic path in the notification.\n\nAfter an incident, improve the system that shaped the response. Add missing context, remove noisy alerts, automate a safe recovery step, or clarify ownership. The best post-incident work reduces both the chance of recurrence and the cognitive load of the next event.\n\nInstrumentation has users, interfaces, quality problems, and maintenance cost. Give important events owners and definitions. Test that critical traces survive releases. Review dashboards when architecture changes. Delete signals that no longer support a decision.\n\nObservability becomes valuable when it changes engineering behavior: experiments are safer, regressions are found earlier, incidents are shorter, and tradeoffs are made with evidence rather than intuition.",
+      "contentHash": "67f1aec51d352331"
+    },
+    {
+      "id": "ai-assisted-development-with-engineering-judgment",
+      "slug": "ai-assisted-development-with-engineering-judgment",
+      "title": "AI-Assisted Development Still Requires Judgment",
+      "url": "https://berktugberke.com/blogs/ai-assisted-development-with-engineering-judgment",
+      "publishedAt": "2024-12-11",
+      "tags": [
+        "AI coding assistant",
+        "AI software development",
+        "coding agents",
+        "developer productivity",
+        "software engineering judgment"
+      ],
+      "excerpt": "A disciplined workflow for using coding agents without outsourcing engineering responsibility.",
+      "bodyPlain": "AI can produce implementation options, tests, migrations, documentation, and investigations at remarkable speed. That speed moves the bottleneck from typing to judgment. Engineers must define the problem, select constraints, recognize plausible mistakes, and decide whether the result fits the system that will own it.\n\nA generated change can be syntactically correct and architecturally wrong. It may duplicate an existing abstraction, bypass authorization, ignore deployment constraints, or optimize a local function while weakening the product boundary. Repository understanding remains the difference between code generation and engineering.\n\nStrong tasks describe the user-visible outcome, relevant files or modules, invariants that must remain true, and how success will be verified. They avoid prescribing every line while preventing the agent from expanding into unrelated refactors.\n\nBefore editing, inspect local conventions, framework documentation, and the current dependency versions. AI systems are trained on historical patterns; fast-moving frameworks frequently invalidate familiar APIs. Grounding the work in the actual repository is part of correctness, not ceremony.\n\nState non-negotiable behavior\n\nName the tests and environments that matter\n\nPreserve unrelated user changes\n\nAsk for alternatives when a decision is expensive to reverse\n\nReview generated work at multiple levels. Does the user flow make sense? Are boundaries and data ownership clear? Are failure states handled? Is the code readable in the repository's language? Then inspect security, accessibility, performance, and operational behavior.\n\nLarge generated diffs reduce the quality of review. Prefer small coherent increments with verification between them. When a change is mechanical, automation can be broad; when it contains architectural judgment, keep the surface compact enough that a human can genuinely understand it.\n\nRun static analysis, type checks, tests, and production builds. For interface work, inspect real browser behavior at relevant breakpoints and interaction states. For migrations, test both forward execution and recovery. For APIs, verify authorization and malformed inputs, not only the happy path.\n\nAI can help design this verification, but it cannot make responsibility disappear. If the test suite is weak, the generated confidence is weak too. Add the smallest high-value test that protects the behavior being changed.\n\nCoding agents are powerful collaborators when the engineer remains accountable for intent and consequences. Record important decisions, disclose generated dependencies, and avoid sending secrets or sensitive production data into tools without an approved boundary.\n\nThe durable advantage is not producing more code. It is shortening the path from a well-framed problem to a verified outcome while maintaining system coherence.",
+      "contentHash": "5a090307bfb2ef6c"
+    },
+    {
+      "id": "api-design-for-evolving-products",
+      "slug": "api-design-for-evolving-products",
+      "title": "API Design for Products That Keep Evolving",
+      "url": "https://berktugberke.com/blogs/api-design-for-evolving-products",
+      "publishedAt": "2024-09-18",
+      "tags": [
+        "API design",
+        "REST API best practices",
+        "API versioning",
+        "backend architecture",
+        "software contracts"
+      ],
+      "excerpt": "Build interfaces that support change without turning every release into a coordinated migration.",
+      "bodyPlain": "Interfaces change faster than the concepts behind them. An API built around a specific screen tends to expose presentation state and force duplicate endpoints as new clients appear. Start with stable domain resources, their lifecycle, and the operations the business recognizes.\n\nThis does not require theoretical purity. A product-facing API can aggregate data for a journey, but the aggregation should have a clear purpose and ownership. Avoid leaking database tables directly; storage structure is an implementation detail that will eventually need to change.\n\nConsumers deploy on different schedules, especially mobile applications and external integrations. Additive changes are usually safer: new optional fields, new resources, and new enum values with tolerant readers. Removing or redefining existing behavior requires a migration plan, telemetry, and a published end date.\n\nVersioning is useful when semantics genuinely diverge, but version numbers do not replace compatibility discipline. A versioned API can still surprise consumers through changed ordering, error behavior, limits, or authorization. Maintain a machine-readable schema and test representative consumers against it.\n\nTreat unknown enum values safely\n\nDocument nullability and defaults\n\nUse contract tests for critical consumers\n\nMeasure deprecated-field usage before removal\n\nRetries are unavoidable across unreliable networks. For important mutations, accept an idempotency key scoped to the caller and operation. Store the result so a repeated request returns the original outcome rather than performing the action again.\n\nLong-running work should return an operation resource with explicit states. Clients can poll or subscribe without holding a fragile request open. This also improves support: the system can explain whether work is queued, active, completed, or failed and why.\n\nAuthentication establishes identity; authorization decides whether that identity may perform an operation on a resource. Enforce this on the server at the narrowest meaningful boundary. Hiding a button in the client is interface behavior, not access control.\n\nMulti-tenant systems need tenant context that cannot be freely supplied and trusted by the client. Derive scope from verified membership, validate ownership on every resource access, and log administrative actions with enough context for audit and investigation.\n\nConsistent naming, predictable pagination, useful errors, examples, and a clear change log reduce integration time more than clever protocol choices. An API is successful when consumers can use it correctly without learning its internal history.\n\nDesign reviews should include client engineers and operational scenarios. The interface will live longer than the first implementation, so spend precision on the parts that are hardest to change: identifiers, semantics, authorization, and lifecycle.",
+      "contentHash": "02c7329700758d82"
+    },
+    {
+      "id": "zero-downtime-database-migrations",
+      "slug": "zero-downtime-database-migrations",
+      "title": "Zero-Downtime Database Migrations in Practice",
+      "url": "https://berktugberke.com/blogs/zero-downtime-database-migrations",
+      "publishedAt": "2024-06-05",
+      "tags": [
+        "database migration",
+        "zero downtime deployment",
+        "PostgreSQL migration",
+        "expand and contract",
+        "backend engineering"
+      ],
+      "excerpt": "Use expand-and-contract delivery to change schemas safely under real traffic.",
+      "bodyPlain": "A schema migration rarely runs in isolation. Old and new application instances may serve traffic simultaneously, workers may process delayed jobs, and mobile clients may remain active for months. A safe migration assumes this overlap and keeps each intermediate state compatible.\n\nThe expand-and-contract pattern separates a risky replacement into reversible stages. First expand the schema or interface, then migrate behavior and data, observe the result, and only later remove the old path. The extra steps buy control at the moment it matters.\n\nAdd new nullable columns, tables, indexes, or endpoints in a way existing code can ignore. Avoid defaults or constraints that rewrite a large table under lock without understanding database behavior. Build large indexes concurrently when the engine supports it and monitor replication lag and lock duration.\n\nDeploy code that can write both representations or populate the new model for newly created data. Dual writes introduce consistency risk, so keep the transition bounded, instrument divergence, and prefer a single transaction when both records share a database.\n\nMeasure table size and lock behavior first\n\nMake migration commands restartable\n\nThrottle backfills under production load\n\nRecord progress with stable checkpoints\n\nA production backfill is a workload, not a one-off script. Process deterministic batches, persist checkpoints, limit concurrency, and expose progress and failures. The job should be safe to stop and resume without duplicating effects.\n\nValidate the new representation continuously. Compare counts, checksums, invariants, and sampled records rather than waiting until the end. If the migration transforms meaning, encode the expected mapping in executable checks reviewed by domain owners.\n\nOnce new writes and historical data are ready, shift reads behind a feature flag or controlled rollout. Shadow reads can compare old and new results without changing the user response. Segment errors and latency by path so the decision to advance is based on evidence.\n\nRollback during this stage should usually mean switching reads back, not reversing the schema. Destructive rollback scripts can make a recoverable deployment much worse. Preserve the expanded state until confidence is high.\n\nStop writing the old representation, wait for overlapping application versions and queued work to clear, then remove unused code. Confirm through telemetry that the old field or table is no longer read before dropping it in a separate deployment.\n\nZero downtime is not the absence of risk. It is a delivery shape that makes risk observable, limits blast radius, and preserves a safe decision at every stage.",
+      "contentHash": "a27f87a59343f4f5"
+    },
+    {
+      "id": "building-accessible-interfaces-by-default",
+      "slug": "building-accessible-interfaces-by-default",
+      "title": "Building Accessible Interfaces by Default",
+      "url": "https://berktugberke.com/blogs/building-accessible-interfaces-by-default",
+      "publishedAt": "2024-03-27",
+      "tags": [
+        "web accessibility",
+        "WCAG",
+        "accessible React",
+        "keyboard navigation",
+        "inclusive design"
+      ],
+      "excerpt": "Accessibility becomes sustainable when semantics and interaction are architectural defaults.",
+      "bodyPlain": "Accessibility is often treated as a final compliance pass. By then, foundational choices—component semantics, focus order, color systems, navigation structure, and motion—are expensive to repair. Treat accessibility as a constraint during design and component development, where the correct default can be reused everywhere.\n\nThe goal is not a separate simplified experience. It is an interface whose information and actions remain available across different input methods, vision, hearing, cognition, language, and device conditions. These improvements frequently benefit every user, especially under stress or imperfect environments.\n\nUse headings for structure, buttons for actions, links for navigation, labels for controls, and lists for related items. Native elements bring keyboard behavior, accessibility roles, and platform expectations that custom containers must otherwise recreate.\n\nARIA can clarify relationships and dynamic state, but it cannot repair an interaction whose underlying behavior is wrong. Build a predictable tab order, maintain visible focus, and ensure every pointer interaction has a keyboard equivalent. On mobile, provide meaningful accessibility labels and group content according to the way it should be announced.\n\nPreserve a logical heading hierarchy\n\nGive icon-only controls an accessible name\n\nDo not encode meaning through color alone\n\nKeep touch targets comfortably sized\n\nSingle-page navigation, dialogs, drawers, and animated transitions change the interface without a full document load. Move focus intentionally so keyboard and screen-reader users understand where the new context begins. Restore focus to the triggering control when a temporary surface closes.\n\nAvoid trapping focus except inside a true modal interaction. Announce important asynchronous outcomes with restrained live regions, and do not flood assistive technology with routine visual updates. The announcement should answer what changed and whether the user needs to act.\n\nText and interactive controls need sufficient contrast in every theme and state, including placeholders, disabled controls, borders, and hover indicators. Support zoom and text resizing without clipping or hiding actions. Responsive design should adapt to content, not assume fixed labels.\n\nMotion can communicate continuity, but it can also cause discomfort. Honor reduced-motion preferences and provide a simpler transition that preserves orientation. Never make critical information available only during an animation or hover state.\n\nAutomated checks catch missing names, invalid relationships, and many contrast problems, making them valuable in continuous integration. They cannot judge whether focus movement is understandable, screen-reader phrasing is useful, or a workflow is cognitively exhausting.\n\nRegularly navigate key journeys using only a keyboard, a screen reader, zoom, and high-contrast settings. Include disabled users in research and testing. Accessibility matures when findings improve shared components and design rules, not only the page where a problem was discovered.",
+      "contentHash": "bb2195eb7b41a242"
+    },
+    {
+      "id": "from-prototype-to-production-software",
+      "slug": "from-prototype-to-production-software",
+      "title": "From Prototype to Production Software",
+      "url": "https://berktugberke.com/blogs/from-prototype-to-production-software",
+      "publishedAt": "2024-01-16",
+      "tags": [
+        "production software",
+        "software prototype",
+        "MVP engineering",
+        "software architecture",
+        "product development"
+      ],
+      "excerpt": "The engineering work that turns a promising demo into a product people can depend on.",
+      "bodyPlain": "A prototype asks whether an idea can work and whether the experience is worth pursuing. Production software asks whether the idea can keep working for real users, real data, changing requirements, and an on-call engineer at an inconvenient hour. Confusing these goals either slows discovery or ships hidden risk.\n\nPreserve the learning from the prototype, but review every shortcut explicitly. Identify hard-coded assumptions, shared credentials, manual steps, missing ownership, unbounded costs, and data that cannot be recovered. The prototype is evidence, not automatically the first production architecture.\n\nWrite down who uses the product, what data it handles, which actions are irreversible, and which external services it depends on. Define acceptable latency, availability, support expectations, retention, and recovery. These constraints guide architecture more effectively than choosing technologies by popularity.\n\nKeep the first production system as simple as the constraints allow. A modular monolith with a clear data model is often easier to operate than prematurely distributed services. Distribution should solve a measured scaling, ownership, isolation, or deployment problem.\n\nSeparate environments and credentials\n\nAutomate repeatable deployments\n\nCreate backups and test restoration\n\nSet budgets for latency, errors, and third-party cost\n\nValidate data at every trust boundary, enforce authorization on the server, protect secrets, and minimize collected personal information. Use least-privilege service identities and rotate credentials without rebuilding the application. Security is strongest when the normal development path is also the safe path.\n\nAdministrative tools deserve the same care as customer interfaces. Sensitive actions need explicit permissions, audit records, confirmation where appropriate, and bounded batch operations. Many damaging incidents happen through legitimate capabilities used with the wrong scope.\n\nA production repository needs fast feedback: formatting, static analysis, type checking, tests around critical behavior, and a reproducible build. Deployments should be small, observable, and reversible. Feature flags can separate release from exposure when they have ownership and removal dates.\n\nInstrument important user outcomes before launch. Error reporting without release identifiers or request context produces reports that are difficult to act on. Combine technical health with product signals so the team can distinguish a successful deployment from a successful experience.\n\nThere is no single moment when software becomes permanently production-ready. Traffic grows, integrations change, teams reorganize, and assumptions expire. Use incidents, support requests, performance data, and product behavior to refine the system.\n\nThe shift from demo to durable product is mostly the addition of explicit responsibility: for data, failure, cost, security, releases, and users. That responsibility is what allows a small piece of software to become dependable.",
+      "contentHash": "0a3d477d8230f61e"
+    }
+  ]
+}

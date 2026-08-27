@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
+    "prebuild": "node scripts/generate-blogs-feed.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
