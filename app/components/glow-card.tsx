@@ -1,8 +1,8 @@
 "use client";
 import type { MouseEvent, ReactNode } from "react";
 
-type Props = { children: ReactNode; href?: string; label?: string };
-export function GlowCard({ children, href, label }: Props) {
+type Props = { children: ReactNode; href?: string };
+export function GlowCard({ children, href }: Props) {
   const paintGlow = (event: MouseEvent<HTMLElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -17,5 +17,5 @@ export function GlowCard({ children, href, label }: Props) {
   const classes = "group relative block overflow-hidden rounded-2xl bg-zinc-300/30 p-px transition-[background] duration-200 dark:bg-zinc-600/30";
   const interactions = { onMouseEnter: paintGlow, onMouseMove: paintGlow, onMouseLeave: clearGlow };
   const opensNewTab = href?.startsWith("http");
-  return href ? <a href={href} target={opensNewTab ? "_blank" : undefined} rel={opensNewTab ? "noreferrer" : undefined} aria-label={label} {...interactions} className={classes}>{content}</a> : <div {...interactions} className={classes}>{content}</div>;
+  return href ? <a href={href} target={opensNewTab ? "_blank" : undefined} rel={opensNewTab ? "noreferrer" : undefined} {...interactions} className={classes}>{content}</a> : <div {...interactions} className={classes}>{content}</div>;
 }

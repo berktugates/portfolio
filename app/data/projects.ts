@@ -33,7 +33,7 @@ export const projects: readonly Project[] = [
       "Supabase Edge Functions, push notifications, subscriptions, and iOS widgets",
     ],
     period: "2026",
-    image: "/projects/celestial-insights.png",
+    image: "/projects/celestial-insights.webp",
     imageAlt: "Celestial Insights app icon",
     screenshots: Array.from({ length: 6 }, (_, index) => ({
       src: `/projects/celestial-insights/screenshot-${index + 1}.jpg`,
@@ -75,7 +75,7 @@ export const projects: readonly Project[] = [
       "Shared OpenAPI contracts with responsive web, iOS, and Android clients",
     ],
     period: "In development",
-    image: "/projects/medula-eczane.png",
+    image: "/projects/medula-eczane.webp",
     imageAlt: "Medula Eczane app icon",
     visualClassName: "project-visual-medula",
     stack: [
@@ -107,8 +107,8 @@ export const projects: readonly Project[] = [
       "Community, moderation, gamification, subscriptions, notifications, and widgets",
     ],
     period: "2026",
-    image: "/projects/strumai.png",
-    imageAlt: "Strumai app icon",
+    image: "/projects/strumai.webp",
+    imageAlt: "StrumAI app icon",
     screenshots: Array.from({ length: 6 }, (_, index) => ({
       src: `/projects/strumai/screenshot-${index + 1}.jpg`,
       alt: `StrumAI App Store screenshot ${index + 1}`,

@@ -34,7 +34,7 @@ const structuredData = {
       alternateName: ["Berktuğ Berke Ateş", "Berktug Berke Ates", "Berktug Ates"],
       description: SITE_INTRO,
       url: SITE_URL,
-      image: { "@type": "ImageObject", url: `${SITE_URL}/me.png` },
+      image: { "@type": "ImageObject", url: `${SITE_URL}/me.webp` },
       jobTitle: ["Software Engineer", "Product Builder"],
       homeLocation: {
         "@type": "Place",

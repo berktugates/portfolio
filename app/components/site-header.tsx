@@ -21,7 +21,7 @@ export function SiteHeader({
       <div className="flex items-center gap-4">
         <Link href={homeHref} aria-label={ariaLabel}>
           <Image
-            src="/me.png"
+            src="/me.webp"
             alt={imageAlt}
             width={48}
             height={48}

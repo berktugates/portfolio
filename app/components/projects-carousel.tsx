@@ -6,8 +6,6 @@ import { ArrowUpRight } from "lucide-react";
 import { ViewTransition, useCallback, useEffect, useRef, useState } from "react";
 import { formatMessage } from "../lib/i18n/format";
 
-const AUTO_PLAY_DELAY = 5000;
-
 export type CarouselProject = {
   slug: string;
   title: string;
@@ -21,7 +19,6 @@ export type CarouselProject = {
 export type ProjectsCarouselLabels = {
   ariaLabel: string;
   selectLabel: string;
-  viewProject: string;
   showProject: string;
 };
 
@@ -34,7 +31,6 @@ export function ProjectsCarousel({ projects, labels }: ProjectsCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
 
   const centerCard = useCallback((index: number, smooth = true) => {
     const track = trackRef.current;
@@ -62,15 +58,6 @@ export function ProjectsCarousel({ projects, labels }: ProjectsCarouselProps) {
     };
   }, [centerCard]);
 
-  useEffect(() => {
-    if (isPaused || projects.length === 0) return;
-    const timer = window.setTimeout(
-      () => centerCard((activeIndexRef.current + 1) % projects.length),
-      AUTO_PLAY_DELAY,
-    );
-    return () => window.clearTimeout(timer);
-  }, [activeIndex, centerCard, isPaused, projects.length]);
-
   const handleScroll = () => {
     const track = trackRef.current;
     if (!track) return;
@@ -92,12 +79,6 @@ export function ProjectsCarousel({ projects, labels }: ProjectsCarouselProps) {
       role="region"
       aria-roledescription="carousel"
       aria-label={labels.ariaLabel}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      onFocusCapture={() => setIsPaused(true)}
-      onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setIsPaused(false);
-      }}
     >
       <div ref={trackRef} className="project-track" onScroll={handleScroll}>
         {projects.map((project, index) => (
@@ -106,7 +87,6 @@ export function ProjectsCarousel({ projects, labels }: ProjectsCarouselProps) {
               href={project.href}
               transitionTypes={["project-forward"]}
               className="group block outline-none"
-              aria-label={formatMessage(labels.viewProject, { title: project.title })}
             >
               <ViewTransition name={`project-${project.slug}`} share="project-morph" default="none">
                 <span className="relative block aspect-video overflow-hidden rounded-2xl bg-zinc-50/40 p-1.5 ring-1 ring-inset ring-zinc-200/50 transition-all duration-300 group-hover:bg-zinc-100/60 group-hover:ring-zinc-300/60 dark:bg-zinc-950/40 dark:ring-zinc-800/50 dark:group-hover:bg-zinc-900/60 dark:group-hover:ring-zinc-700/60">
@@ -137,20 +117,25 @@ export function ProjectsCarousel({ projects, labels }: ProjectsCarouselProps) {
           </article>
         ))}
       </div>
-      <div className="mt-4 flex justify-center gap-2" aria-label={labels.selectLabel}>
+      <div className="mt-4 flex justify-center" aria-label={labels.selectLabel}>
         {projects.map((project, index) => (
           <button
             type="button"
             key={project.slug}
             aria-label={formatMessage(labels.showProject, { title: project.title })}
             aria-current={activeIndex === index ? "true" : undefined}
-            className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${
-              activeIndex === index
-                ? "w-7 bg-zinc-900 dark:bg-zinc-100"
-                : "w-1.5 bg-zinc-300 dark:bg-zinc-700"
-            }`}
+            className="grid h-6 w-7 place-items-center"
             onClick={() => centerCard(index)}
-          />
+          >
+            <span
+              aria-hidden="true"
+              className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${
+                activeIndex === index
+                  ? "w-7 bg-zinc-900 dark:bg-zinc-100"
+                  : "w-1.5 bg-zinc-300 dark:bg-zinc-700"
+              }`}
+            />
+          </button>
         ))}
       </div>
     </div>

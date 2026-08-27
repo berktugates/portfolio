@@ -132,7 +132,6 @@ export async function HomePage({ locale }: { locale: Locale }) {
               labels={{
                 ariaLabel: dict.productsAria,
                 selectLabel: dict.carousel.select,
-                viewProject: dict.carousel.viewProject,
                 showProject: dict.carousel.showProject,
               }}
             />
@@ -143,12 +142,12 @@ export async function HomePage({ locale }: { locale: Locale }) {
               {dict.experience}
             </h2>
             <div className="space-y-2">
-              <GlowCard href="https://figtures.com" label={dict.coFounderAria}>
+              <GlowCard href="https://figtures.com">
                 <span className="flex min-h-12 w-full items-start justify-between gap-4">
                   <span className="flex items-start gap-3">
                     <span className="mt-1 grid size-10 shrink-0 place-items-center overflow-hidden rounded-lg bg-zinc-900 transition-colors duration-200 group-hover:bg-zinc-800">
                       <Image
-                        src="/figtures-logo.png"
+                        src="/figtures-logo.webp"
                         alt={dict.figturesLogoAlt}
                         width={40}
                         height={40}
@@ -168,12 +167,12 @@ export async function HomePage({ locale }: { locale: Locale }) {
                   </span>
                 </span>
               </GlowCard>
-              <GlowCard href="https://www.bradi.tech" label={dict.engineerAria}>
+              <GlowCard href="https://www.bradi.tech">
                 <span className="flex min-h-12 w-full items-start justify-between gap-4">
                   <span className="flex items-start gap-3">
                     <span className="mt-1 grid size-10 shrink-0 place-items-center overflow-hidden rounded-lg bg-zinc-100 transition-colors duration-200 group-hover:bg-zinc-200 dark:bg-zinc-800 dark:group-hover:bg-zinc-700">
                       <Image
-                        src="/bradi-logo.png"
+                        src="/bradi-logo.webp"
                         alt={dict.bradiLogoAlt}
                         width={40}
                         height={40}
@@ -211,7 +210,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
                 <span className="flex items-start gap-3">
                   <span className="mt-1 grid size-10 shrink-0 place-items-center overflow-hidden rounded-lg bg-zinc-100 transition-colors duration-200 group-hover:bg-zinc-200 dark:bg-zinc-800 dark:group-hover:bg-zinc-700">
                     <Image
-                      src="/firat-university.png"
+                      src="/firat-university.webp"
                       alt={dict.universityLogoAlt}
                       width={40}
                       height={40}
@@ -242,7 +241,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
                   </h2>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">{dict.contactBody}</p>
                 </div>
-                <GlowCard href="mailto:contact@berktugberke.com" label={dict.emailAria}>
+                <GlowCard href="mailto:contact@berktugberke.com">
                   <span className="flex items-center gap-3">
                     <span className="flex size-10 items-center justify-center rounded-lg bg-zinc-100 transition-colors group-hover:bg-zinc-200 dark:bg-zinc-800 dark:group-hover:bg-zinc-700">
                       <Mail className="size-5 text-zinc-700 dark:text-zinc-300" />

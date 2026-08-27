@@ -31,7 +31,7 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label="Language"
+        aria-label={`Language: ${localeMeta[locale].nativeName}`}
         className="text-xs text-zinc-500 transition-colors hover:text-zinc-950 dark:hover:text-zinc-50"
         onClick={() => setOpen((value) => !value)}
       >
