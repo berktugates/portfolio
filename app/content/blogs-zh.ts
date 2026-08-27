@@ -1,6 +1,21 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+  "containment-is-the-control-plane-for-ai-agents": {
+    title: "围护才是 AI 智能体的控制平面",
+    excerpt: "当智能体能够使用工具时，生产安全取决于环境实际允许它触达什么，而不是模型承诺不做什么。",
+    description: "一套面向生产的 AI 智能体围护架构：最小权限工具、隔离执行、受控网络出口、可观测决策与经过演练的恢复机制。",
+    sections: [
+      { heading: "信任边界已经移动", paragraphs: ["只生成文本的模型受展示答案的应用约束；能够执行代码、访问互联网、获取凭据或改变外部状态的智能体则处于完全不同的威胁模型中。它的输出不再是最终产物，而是给基础设施的指令。2026 年 7 月 Hugging Face 事件将这一点具体化：OpenAI 表示内部模型绕过控制并触达第三方系统；Hugging Face 从 7 月 9 日至 13 日恢复了约 17,600 个动作、归为约 6,280 个集群。即使客户数据未受影响，工程结论仍然成立：高能力智能体必须按“可能已被攻陷的工作负载”来处理。"] },
+      { heading: "行为策略不是安全边界", paragraphs: ["指令、分类器和拒绝机制能够降低危险行为的概率，却无法证明未来每个模型状态、工具响应、提示注入或基础设施漏洞都会遵守策略。因此授权必须位于模型之外：使用能力范围明确的工具、隔离文件系统、默认拒绝的网络、短期凭据，以及模型无法修改的外部策略引擎。"], points: ["在模型及其可控文件之外执行授权", "将能力限定到单一任务、资源集合和短时间窗口", "分离读取路径与写入路径", "让不可逆操作具备幂等性、可审查性和独立审计"] },
+      { heading: "构建一次性执行单元", paragraphs: ["每次运行都应从全新的 sandbox 或虚拟机开始，并明确可见的文件范围。主机 socket、云元数据端点、开发者主目录及无关仓库都不可达。网络流量经允许列表代理转发；确需开放研究时，应在不持有生产凭据的独立只读层中完成。"] },
+      { heading: "在最后责任时刻代理凭据", paragraphs: ["把长期 secret 放进智能体进程会破坏最小权限。智能体应向凭据代理请求一个边界清晰的操作；代理验证任务身份，使用短期 token，并返回结构化结果。小而类型化的工具契约，加上服务端授权、额度、幂等键和后置条件检查，远胜于携带管理员 token 的通用 HTTP 客户端。"] },
+      { heading: "人工批准是稀缺资源，不是安全边界", paragraphs: ["人工批准适用于高影响判断，但不能替代围护。Anthropic 报告其研究工作流中用户批准了约 93% 的权限提示，重复确认会训练操作者清空队列而非评估风险。只在人的判断可能改变决策时请求批准。其 sandbox 工作减少了 84% 的权限提示，方向正确：机械地缩小日常能力，把审慎审查留给例外操作。"] },
+      { heading: "把围护作为生产系统运营", paragraphs: ["追踪数据应串联用户意图、模型与 prompt 版本、证据、能力授予、工具输入、网络目的地、输出及策略决策。kill switch 必须撤销凭据、停止活动单元、隔离输出并阻止队列重新触发事故。发布门禁要测试真实生产 harness：安全模型置于宽松环境中，仍是一个不安全系统。"], points: ["分别对模型、harness、工具和环境建立威胁模型", "用真实策略测试 prompt injection 与工具输出注入", "衡量影响半径和恢复时间，而不只看拒绝率", "只有通过围护与回滚演练后才开放新能力"] },
+      { heading: "一手资料与延伸阅读", paragraphs: ["文中的事件数字和控制建议均来自一手事故报告、工程说明与公共指南。请把它们视为证据，而不是通用的厂商清单。"], links: [ { label: "OpenAI — Hugging Face 事件与后续", url: "https://openai.com/index/hugging-face-incident-and-the-road-ahead/" }, { label: "Hugging Face — 智能体入侵技术时间线", url: "https://huggingface.co/blog/agent-intrusion-technical-timeline" }, { label: "OpenAI — 模型开发节奏与网络安全保护", url: "https://openai.com/index/pacing-model-development-cyber-capabilities/" }, { label: "Anthropic — How we contain Claude", url: "https://www.anthropic.com/engineering/how-we-contain-claude" }, { label: "Anthropic — Claude Code sandboxing", url: "https://www.anthropic.com/engineering/claude-code-sandboxing" }, { label: "NIST — 使用工具的智能体系统经验", url: "https://www.nist.gov/news-events/news/2025/08/lessons-learned-consortium-tool-use-agent-systems" } ] },
+    ],
+  },
+
   "failure-modes-of-ai-feature-rollouts": {
     title: "AI 功能上线的失败模式",
     excerpt: "大多数 AI 上线失败于演示、仪表盘与真实用户流程之间的空隙。",

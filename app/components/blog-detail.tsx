@@ -160,6 +160,15 @@ export async function BlogDetailPage({
                   ))}
                 </ul>
               ) : null}
+              {section.links ? (
+                <ul>
+                  {section.links.map((link) => (
+                    <li key={link.url}>
+                      <a href={link.url} target="_blank" rel="noreferrer noopener">{link.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
             </section>
           ))}
           <hr />

@@ -78,6 +78,7 @@ function mergeBlog(
       heading: section.heading,
       paragraphs: [...section.paragraphs],
       ...(section.points ? { points: [...section.points] } : {}),
+      ...(section.links ? { links: section.links.map((link) => ({ ...link })) } : {}),
     })),
   };
 }

@@ -90,6 +90,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script
           dangerouslySetInnerHTML={{
+            __html: `(()=>{const s=location.pathname.split('/')[1];const l=['tr','de','fr','it','zh','ja'].includes(s)?s:'en';document.documentElement.lang=l==='zh'?'zh-Hans':l;document.documentElement.dir='ltr'})()`,
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
             __html: `try{document.documentElement.classList.toggle('dark',localStorage.theme==='dark'||(!('theme'in localStorage)&&matchMedia('(prefers-color-scheme:dark)').matches))}catch(e){}`,
           }}
         />

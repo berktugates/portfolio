@@ -33,6 +33,7 @@ const posts = commonJsModule.exports.blogPosts.map((post) => {
     excerpt: post.excerpt,
     bodyPlain,
     contentHash: createHash("sha256").update(bodyPlain).digest("hex").slice(0, 16),
+    ...(post.socialThreadTr ? { socialThreadTr: [...post.socialThreadTr] } : {}),
   };
 });
 

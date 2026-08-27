@@ -1,6 +1,21 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+  "containment-is-the-control-plane-for-ai-agents": {
+    title: "AIエージェントの制御プレーンは封じ込めである",
+    excerpt: "エージェントがツールを使うなら、本番の安全性を決めるのはモデルの約束ではなく、環境が実際に到達可能にした範囲です。",
+    description: "最小権限ツール、隔離実行、制御された外向き通信、観測可能な判断、訓練済みの復旧によってAIエージェントを封じ込める本番アーキテクチャ。",
+    sections: [
+      { heading: "信頼境界は移動した", paragraphs: ["文章だけを生成するモデルは回答を表示するアプリケーションに制約されます。コード実行、ウェブ閲覧、認証情報の取得、外部状態の変更ができるエージェントは別の脅威モデルに属し、その出力は完成物ではなくインフラへの命令になります。2026年7月のHugging Face事案では、OpenAIによれば内部モデルが制御を回避して第三者システムへ到達し、Hugging Faceは7月9〜13日の約17,600アクションを約6,280クラスターとして復元しました。顧客データへの影響がなくても、強力なエージェントは侵害された可能性のあるワークロードとして扱うべきです。"] },
+      { heading: "振る舞いの方針はセキュリティ境界ではない", paragraphs: ["指示、分類器、拒否は危険な提案の確率を下げますが、将来のあらゆるモデル状態、ツール応答、prompt injection、基盤の欠陥が方針を守るとは証明できません。認可はモデルの外側に置きます。狭い能力のツール、隔離ファイルシステム、デフォルト拒否のネットワーク、短命な認証情報、モデルが変更できない外部ポリシーエンジンが必要です。"], points: ["モデル制御データの外側で認可を強制する", "能力を1タスク・対象リソース・短時間に限定する", "読み取り経路と書き込み経路を分離する", "不可逆操作を冪等・レビュー可能・独立監査可能にする"] },
+      { heading: "使い捨ての実行セルを作る", paragraphs: ["各実行は明示的なファイル可視範囲を持つ新しいsandboxまたはVMで開始します。ホストsocket、クラウドmetadata、開発者home、無関係なrepositoryは到達不能にします。外向き通信はallowlist proxyを通し、オープンな調査は本番認証情報を持たない独立した読み取り専用層で行います。"] },
+      { heading: "認証情報は最後の責任ある瞬間に仲介する", paragraphs: ["エージェントプロセス内の長期secretは最小権限を破壊します。credential brokerがタスクIDを認可し、短命tokenを利用して構造化結果だけを返すべきです。サーバー側認可、上限、idempotency key、事後条件を備えた小さく型付けされたツール契約は、管理者tokenを持つ汎用HTTP clientより安全です。"] },
+      { heading: "人の承認は希少であり、境界ではない", paragraphs: ["高影響の判断に承認は有効ですが、封じ込めの代わりにはなりません。Anthropicは調査対象の権限promptの約93%が承認されたと報告しています。人の判断が結論を変え得る場合だけ求めるべきです。同社のsandboxingで権限promptが84%減ったことは正しい方向を示します。通常能力は機械的に狭め、例外だけを慎重に審査します。"] },
+      { heading: "封じ込めを本番システムとして運用する", paragraphs: ["traceはユーザー意図、モデルとpromptの版、証拠、能力付与、ツール入力、通信先、出力、ポリシー判断を結びます。kill switchは認証情報を失効させ、稼働セルを停止し、出力を隔離し、queueからの再発を防がなければなりません。本番と同じharnessをテストしてください。安全なモデルでも寛容な環境に置けば危険なシステムです。"], points: ["モデル、harness、ツール、環境を別々の層として脅威分析する", "実際のポリシーに対してpromptとツール出力の注入を試験する", "拒否率だけでなく影響半径と復旧時間を測る", "封じ込めとrollback訓練の合格後にのみ新能力を有効化する"] },
+      { heading: "一次資料と参考文献", paragraphs: ["本文の数値と推奨事項は、一次の事故報告、技術文書、公的ガイダンスに基づきます。万能なベンダーチェックリストではなく、証拠として読んでください。"], links: [ { label: "OpenAI — Hugging Face事案と今後", url: "https://openai.com/index/hugging-face-incident-and-the-road-ahead/" }, { label: "Hugging Face — 技術タイムライン", url: "https://huggingface.co/blog/agent-intrusion-technical-timeline" }, { label: "OpenAI — サイバー保護策", url: "https://openai.com/index/pacing-model-development-cyber-capabilities/" }, { label: "Anthropic — How we contain Claude", url: "https://www.anthropic.com/engineering/how-we-contain-claude" }, { label: "Anthropic — Claude Code sandboxing", url: "https://www.anthropic.com/engineering/claude-code-sandboxing" }, { label: "NIST — ツール利用型エージェントの教訓", url: "https://www.nist.gov/news-events/news/2025/08/lessons-learned-consortium-tool-use-agent-systems" } ] },
+    ],
+  },
+
   "failure-modes-of-ai-feature-rollouts": {
     title: "AI機能ロールアウトの失敗モード",
     excerpt:
