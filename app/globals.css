@@ -26,6 +26,11 @@ a, button { @apply outline-none focus-visible:ring-2 focus-visible:ring-zinc-500
 .project-visual::before { content: ""; position: absolute; inset: -30%; filter: blur(52px); opacity: .72; pointer-events: none; }
 .project-visual::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 45%, rgba(255,255,255,.2), transparent 48%); pointer-events: none; }
 .project-visual img { position: relative; z-index: 1; }
+.project-screenshot-track { position: relative; z-index: 1; display: flex; gap: 14px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: rgba(161,161,170,.55) transparent; padding: 20px max(20px, calc((100% - 270px) / 2)) 22px; }
+.project-screenshot-track:focus-visible { outline: 2px solid rgba(161,161,170,.8); outline-offset: -4px; }
+.project-screenshot-track::-webkit-scrollbar { height: 6px; }
+.project-screenshot-track::-webkit-scrollbar-thumb { background: rgba(161,161,170,.55); border-radius: 999px; }
+.project-screenshot { width: min(62vw, 270px); min-width: min(62vw, 270px); overflow: hidden; scroll-snap-align: center; border-radius: 22px; background: #09090b; box-shadow: 0 24px 60px rgba(0,0,0,.34), 0 0 0 1px rgba(255,255,255,.12); }
 .project-visual-celestial { background: linear-gradient(145deg, #19160d, #080808 55%, #281d09); }
 .project-visual-celestial::before { background: radial-gradient(circle, rgba(232,190,60,.38), transparent 58%); }
 .project-visual-taleland { background: linear-gradient(145deg, #fff1f7, #f4eaff 48%, #eaf5ff); }
@@ -49,6 +54,12 @@ a, button { @apply outline-none focus-visible:ring-2 focus-visible:ring-zinc-500
 .blog-prose li::marker { @apply text-zinc-300 dark:text-zinc-700; }
 .blog-prose hr { @apply my-10 border-zinc-100 dark:border-zinc-800; }
 .blog-prose em { @apply text-sm text-zinc-500; }
+.legal-document h1 { @apply mt-3 text-3xl font-medium tracking-tight text-zinc-950 dark:text-zinc-50; }
+.legal-document h2 { @apply mb-3 mt-10 text-lg font-medium text-zinc-950 dark:text-zinc-50; }
+.legal-document p, .legal-document li { @apply leading-7 text-zinc-600 dark:text-zinc-400; }
+.legal-document ul { @apply list-disc space-y-2 pl-6; }
+.legal-document .legal-date { @apply mt-3 text-sm text-zinc-500; }
+.legal-document .legal-introduction { @apply mt-8 text-base; }
 ::view-transition-group(blog-title) { animation-duration: 420ms; animation-timing-function: cubic-bezier(.22, 1, .36, 1); }
 ::view-transition-old(blog-title), ::view-transition-new(blog-title) { height: 100%; animation-duration: 420ms; animation-timing-function: cubic-bezier(.22, 1, .36, 1); }
 ::view-transition-old(root) { animation: blog-page-out 160ms ease-out both; }

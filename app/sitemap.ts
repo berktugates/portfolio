@@ -23,6 +23,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: SITE_LAST_MODIFIED,
     })),
   );
+  const legalEntries = projects.flatMap((project) =>
+    project.legal
+      ? [project.legal.privacy, project.legal.terms].map((path) => ({ url: absoluteUrl(path), lastModified: SITE_LAST_MODIFIED }))
+      : [],
+  );
 
   const blogIndexEntries = Array.from({ length: totalPages }, (_, index) => {
     const page = index + 1;
@@ -39,5 +44,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   );
 
-  return [...localeHomes, ...projectEntries, ...blogIndexEntries, ...blogPostEntries];
+  return [...localeHomes, ...projectEntries, ...legalEntries, ...blogIndexEntries, ...blogPostEntries];
 }

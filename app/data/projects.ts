@@ -8,6 +8,8 @@ export type Project = {
   period: string;
   image: string;
   imageAlt: string;
+  screenshots?: readonly { src: string; alt: string }[];
+  legal?: { privacy: string; terms: string };
   visualClassName: string;
   href?: string;
   stores?: { apple?: string; google?: string };
@@ -33,6 +35,14 @@ export const projects: readonly Project[] = [
     period: "2026",
     image: "/projects/celestial-insights.png",
     imageAlt: "Celestial Insights app icon",
+    screenshots: Array.from({ length: 6 }, (_, index) => ({
+      src: `/projects/celestial-insights/screenshot-${index + 1}.jpg`,
+      alt: `Celestial Insights App Store screenshot ${index + 1}`,
+    })),
+    legal: {
+      privacy: "/projects/celestial-insights/privacy",
+      terms: "/projects/celestial-insights/terms",
+    },
     visualClassName: "project-visual-celestial",
     href: "https://apps.apple.com/app/celestial-insights/id6771793086",
     stores: { apple: "https://apps.apple.com/us/app/celestial-insights/id6771793086" },
@@ -99,6 +109,14 @@ export const projects: readonly Project[] = [
     period: "2026",
     image: "/projects/strumai.png",
     imageAlt: "Strumai app icon",
+    screenshots: Array.from({ length: 6 }, (_, index) => ({
+      src: `/projects/strumai/screenshot-${index + 1}.jpg`,
+      alt: `StrumAI App Store screenshot ${index + 1}`,
+    })),
+    legal: {
+      privacy: "/projects/strumai/privacy",
+      terms: "/projects/strumai/terms",
+    },
     visualClassName: "project-visual-strumai",
     href: "https://apps.apple.com/app/strumai/id6780034403",
     stores: { apple: "https://apps.apple.com/us/app/strumai/id6780034403" },

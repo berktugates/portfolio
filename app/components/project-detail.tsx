@@ -39,7 +39,7 @@ export async function createProjectMetadata(
 
   const path = projectPath(locale, project.slug);
   const languages: Record<string, string> = { "x-default": absoluteUrl(`/projects/${project.slug}`) };
-  for (const [hreflang, url] of Object.entries(hreflangLanguages())) {
+  for (const hreflang of Object.keys(hreflangLanguages())) {
     if (hreflang === "x-default") continue;
     const loc = Object.entries(localeMeta).find(([, meta]) => meta.hreflang === hreflang)?.[0] as
       | Locale
@@ -130,18 +130,23 @@ export async function ProjectDetailPage({
           </Link>
 
           <ViewTransition name={`project-${project.slug}`} share="project-morph" default="none">
-            <div className="relative aspect-video overflow-hidden rounded-2xl bg-zinc-50/40 p-1.5 ring-1 ring-inset ring-zinc-200/50 dark:bg-zinc-950/40 dark:ring-zinc-800/50">
+            <div className="relative overflow-hidden rounded-2xl bg-zinc-50/40 p-1.5 ring-1 ring-inset ring-zinc-200/50 dark:bg-zinc-950/40 dark:ring-zinc-800/50">
               <div
-                className={`project-visual relative flex h-full items-center justify-center overflow-hidden rounded-[11px] ${project.visualClassName}`}
+                className={`project-visual relative overflow-hidden rounded-[11px] ${project.visualClassName}`}
               >
-                <Image
-                  src={project.image}
-                  alt={project.imageAlt}
-                  width={224}
-                  height={224}
-                  priority
-                  className="size-44 rounded-[34px] object-cover shadow-2xl shadow-black/50 sm:size-56 sm:rounded-[44px]"
-                />
+                {project.screenshots?.length ? (
+                  <div className="project-screenshot-track" role="region" aria-label={`${project.title} App Store screenshots`} tabIndex={0}>
+                    {project.screenshots.map((screenshot, index) => (
+                      <figure className="project-screenshot" key={screenshot.src}>
+                        <Image src={screenshot.src} alt={screenshot.alt} width={444} height={960} priority={index === 0} sizes="(max-width: 640px) 62vw, 270px" className="h-auto w-full" />
+                      </figure>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex aspect-video items-center justify-center">
+                    <Image src={project.image} alt={project.imageAlt} width={224} height={224} priority className="size-44 rounded-[34px] object-cover shadow-2xl shadow-black/50 sm:size-56 sm:rounded-[44px]" />
+                  </div>
+                )}
               </div>
             </div>
           </ViewTransition>
@@ -180,6 +185,13 @@ export async function ProjectDetailPage({
               </div>
             ) : null}
           </div>
+
+          {project.legal ? (
+            <nav aria-label={`${project.title} legal documents`} className="mt-4 flex gap-4 text-sm">
+              <Link className="text-zinc-500 underline decoration-zinc-300 underline-offset-4 transition-colors hover:text-zinc-950 dark:decoration-zinc-700 dark:hover:text-zinc-50" href={project.legal.privacy}>Privacy Policy</Link>
+              <Link className="text-zinc-500 underline decoration-zinc-300 underline-offset-4 transition-colors hover:text-zinc-950 dark:decoration-zinc-700 dark:hover:text-zinc-50" href={project.legal.terms}>Terms of Service</Link>
+            </nav>
+          ) : null}
 
           <div className="mt-6 space-y-4 leading-7 text-zinc-600 dark:text-zinc-400">
             <p>{project.description}</p>
