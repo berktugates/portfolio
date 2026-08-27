@@ -23,6 +23,8 @@ const ui: ContentUi = {
   legalDocumentsAria: "{{title}} の法的文書",
   appStoreScreenshotsAria: "{{title}} の App Store スクリーンショット",
   appStoreScreenshotAlt: "{{title}} の App Store スクリーンショット {{index}}",
+  previousScreenshots: "前のスクリーンショット",
+  nextScreenshots: "次のスクリーンショット",
   subscribe: {
     title: "最新情報を受け取る",
     body: "berktugberke.com に新しい記事が公開されたらメールでお知らせします。任意です—いつでもスキップできます。",

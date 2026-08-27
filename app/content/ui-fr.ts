@@ -23,6 +23,8 @@ const ui: ContentUi = {
   legalDocumentsAria: "Documents juridiques de {{title}}",
   appStoreScreenshotsAria: "Captures d’écran App Store de {{title}}",
   appStoreScreenshotAlt: "Capture d’écran App Store {{index}} de {{title}}",
+  previousScreenshots: "Captures d’écran précédentes",
+  nextScreenshots: "Captures d’écran suivantes",
   subscribe: {
     title: "Restez informé",
     body: "Recevez un e-mail lorsqu'un nouvel article est publié sur berktugberke.com. Facultatif—passez quand vous voulez.",

@@ -26,11 +26,25 @@ a, button { @apply outline-none focus-visible:ring-2 focus-visible:ring-zinc-500
 .project-visual::before { content: ""; position: absolute; inset: -30%; filter: blur(52px); opacity: .72; pointer-events: none; }
 .project-visual::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 45%, rgba(255,255,255,.2), transparent 48%); pointer-events: none; }
 .project-visual img { position: relative; z-index: 1; }
-.project-screenshot-track { position: relative; z-index: 1; display: flex; gap: 14px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: rgba(161,161,170,.55) transparent; padding: 20px max(20px, calc((100% - 270px) / 2)) 22px; }
-.project-screenshot-track:focus-visible { outline: 2px solid rgba(161,161,170,.8); outline-offset: -4px; }
-.project-screenshot-track::-webkit-scrollbar { height: 6px; }
-.project-screenshot-track::-webkit-scrollbar-thumb { background: rgba(161,161,170,.55); border-radius: 999px; }
-.project-screenshot { width: min(62vw, 270px); min-width: min(62vw, 270px); overflow: hidden; scroll-snap-align: center; border-radius: 22px; background: #09090b; box-shadow: 0 24px 60px rgba(0,0,0,.34), 0 0 0 1px rgba(255,255,255,.12); }
+.app-store-gallery { position: relative; margin-inline: -1rem; padding-top: 13px; }
+.app-store-gallery-track { display: grid; grid-auto-flow: column; grid-auto-columns: 250px; column-gap: 20px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: 25px; scrollbar-width: none; margin-top: -15px; padding-inline: 25px; }
+.app-store-gallery-track::-webkit-scrollbar { display: none; }
+.app-store-gallery-item { width: 250px; padding: 15px; scroll-snap-align: start; }
+.app-store-gallery-artwork { width: 220px; overflow: hidden; border-radius: 21px; background: #f5f5f7; }
+.app-store-gallery-image { display: block; width: 220px; height: auto; }
+.app-store-gallery-arrow { position: absolute; z-index: 2; top: 50%; display: grid; size: 44px; translate: 0 -50%; place-items: center; border-radius: 999px; background: rgba(232,232,237,.92); color: #1d1d1f; opacity: 0; box-shadow: 0 1px 3px rgba(0,0,0,.12); backdrop-filter: blur(12px); transition: opacity 160ms ease, background-color 160ms ease; }
+.app-store-gallery:hover .app-store-gallery-arrow:not(:disabled), .app-store-gallery-arrow:focus-visible { opacity: 1; }
+.app-store-gallery-arrow:hover { background: rgba(218,218,223,.96); }
+.app-store-gallery-arrow:disabled { pointer-events: none; opacity: 0; }
+.app-store-gallery-arrow svg { width: 9px; height: 31px; stroke-width: 1.7; }
+.app-store-gallery-arrow-previous { left: 2px; }
+.app-store-gallery-arrow-next { right: 2px; }
+@media (max-width: 480px) {
+  .app-store-gallery-track { grid-auto-columns: 174px; column-gap: 10px; }
+  .app-store-gallery-item { width: 174px; }
+  .app-store-gallery-artwork, .app-store-gallery-image { width: 144px; }
+  .app-store-gallery-arrow { display: none; }
+}
 .project-visual-celestial { background: linear-gradient(145deg, #19160d, #080808 55%, #281d09); }
 .project-visual-celestial::before { background: radial-gradient(circle, rgba(232,190,60,.38), transparent 58%); }
 .project-visual-taleland { background: linear-gradient(145deg, #fff1f7, #f4eaff 48%, #eaf5ff); }

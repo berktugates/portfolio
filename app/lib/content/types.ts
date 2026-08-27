@@ -72,6 +72,8 @@ export type ContentUi = {
   appStoreScreenshotsAria: string;
   /** Template with `{{title}}` and `{{index}}`. */
   appStoreScreenshotAlt: string;
+  previousScreenshots: string;
+  nextScreenshots: string;
   subscribe: {
     title: string;
     body: string;

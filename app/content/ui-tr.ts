@@ -23,6 +23,8 @@ const ui: ContentUi = {
   legalDocumentsAria: "{{title}} yasal belgeleri",
   appStoreScreenshotsAria: "{{title}} App Store ekran görüntüleri",
   appStoreScreenshotAlt: "{{title}} App Store ekran görüntüsü {{index}}",
+  previousScreenshots: "Önceki ekran görüntüleri",
+  nextScreenshots: "Sonraki ekran görüntüleri",
   subscribe: {
     title: "Güncel kal",
     body: "berktugberke.com'da yeni bir yazı yayınlandığında e-posta al. İsteğe bağlı—istediğin zaman geçebilirsin.",

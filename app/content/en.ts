@@ -28,6 +28,8 @@ const content: LocaleContentModule = {
     legalDocumentsAria: "{{title}} legal documents",
     appStoreScreenshotsAria: "{{title}} App Store screenshots",
     appStoreScreenshotAlt: "{{title}} App Store screenshot {{index}}",
+    previousScreenshots: "Previous screenshots",
+    nextScreenshots: "Next screenshots",
     subscribe: {
       title: "Stay in the loop",
       body: "Get an email when a new post goes live on berktugberke.com. Optional—skip anytime.",

@@ -19,6 +19,7 @@ import {
   jsonLd,
 } from "../lib/seo";
 import { AppStoreBadge } from "./app-store-badge";
+import { AppStoreScreenshotGallery } from "./app-store-screenshot-gallery";
 import { LanguageSwitcher } from "./language-switcher";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
@@ -130,25 +131,32 @@ export async function ProjectDetailPage({
           </Link>
 
           <ViewTransition name={`project-${project.slug}`} share="project-morph" default="none">
-            <div className="relative overflow-hidden rounded-2xl bg-zinc-50/40 p-1.5 ring-1 ring-inset ring-zinc-200/50 dark:bg-zinc-950/40 dark:ring-zinc-800/50">
-              <div
-                className={`project-visual relative overflow-hidden rounded-[11px] ${project.visualClassName}`}
-              >
-                {project.screenshots?.length ? (
-                  <div className="project-screenshot-track" role="region" aria-label={formatMessage(content.ui.appStoreScreenshotsAria, { title: project.title })} tabIndex={0}>
-                    {project.screenshots.map((screenshot, index) => (
-                      <figure className="project-screenshot" key={screenshot.src}>
-                        <Image src={screenshot.src} alt={formatMessage(content.ui.appStoreScreenshotAlt, { title: project.title, index: String(index + 1) })} width={444} height={960} priority={index === 0} sizes="(max-width: 640px) 62vw, 270px" className="h-auto w-full" />
-                      </figure>
-                    ))}
-                  </div>
-                ) : (
+            {project.screenshots?.length ? (
+              <AppStoreScreenshotGallery
+                screenshots={project.screenshots.map((screenshot, index) => ({
+                  src: screenshot.src,
+                  alt: formatMessage(content.ui.appStoreScreenshotAlt, {
+                    title: project.title,
+                    index: String(index + 1),
+                  }),
+                }))}
+                ariaLabel={formatMessage(content.ui.appStoreScreenshotsAria, {
+                  title: project.title,
+                })}
+                previousLabel={content.ui.previousScreenshots}
+                nextLabel={content.ui.nextScreenshots}
+              />
+            ) : (
+              <div className="relative overflow-hidden rounded-2xl bg-zinc-50/40 p-1.5 ring-1 ring-inset ring-zinc-200/50 dark:bg-zinc-950/40 dark:ring-zinc-800/50">
+                <div
+                  className={`project-visual relative overflow-hidden rounded-[11px] ${project.visualClassName}`}
+                >
                   <div className="flex aspect-video items-center justify-center">
                     <Image src={project.image} alt={project.imageAlt} width={224} height={224} priority className="size-44 rounded-[34px] object-cover shadow-2xl shadow-black/50 sm:size-56 sm:rounded-[44px]" />
                   </div>
-                )}
+                </div>
               </div>
-            </div>
+            )}
           </ViewTransition>
 
           <div className="mt-5 flex flex-col items-start justify-between gap-4 sm:flex-row">
