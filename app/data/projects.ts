@@ -93,7 +93,7 @@ export const projects: readonly Project[] = [
   },
   {
     slug: "strumai",
-    title: "Strumai",
+    title: "StrumAI",
     summary: "A complete guitar practice system with real-time audio and an AI mentor.",
     description:
       "Strumai is a cross-platform guitar practice system built around real playing, not passive content. It combines a microphone-driven tuner, metronome and tempo training, chords and theory, ear and performance tools, transcription, practice streaks, achievements, and Maestro—an AI mentor for contextual guidance.",

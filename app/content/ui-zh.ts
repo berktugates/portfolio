@@ -18,6 +18,11 @@ const ui: ContentUi = {
   techStack: "技术栈",
   downloadOnAppStore: "在 App Store 中下载",
   downloadOnAppStoreAria: "在 App Store 中下载 {{title}}",
+  privacyPolicy: "隐私政策",
+  termsOfService: "服务条款",
+  legalDocumentsAria: "{{title}} 法律文件",
+  appStoreScreenshotsAria: "{{title}} App Store 截图",
+  appStoreScreenshotAlt: "{{title}} App Store 截图 {{index}}",
   subscribe: {
     title: "保持关注",
     body: "当 berktugberke.com 发布新文章时收到邮件。可选——随时可跳过。",

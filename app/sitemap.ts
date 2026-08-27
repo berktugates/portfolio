@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { projects } from "./data/projects";
 import { blogPosts, getBlogPage, getBlogTotalPages } from "./data/blogs";
-import { blogPostPath, blogsIndexPath, projectPath } from "./lib/content/paths";
+import { blogPostPath, blogsIndexPath, projectLegalPath, projectPath } from "./lib/content/paths";
 import { LOCALES, hreflangLanguages, localeUrl } from "./lib/i18n";
 import { SITE_LAST_MODIFIED, absoluteUrl } from "./lib/seo";
 
@@ -25,7 +25,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   );
   const legalEntries = projects.flatMap((project) =>
     project.legal
-      ? [project.legal.privacy, project.legal.terms].map((path) => ({ url: absoluteUrl(path), lastModified: SITE_LAST_MODIFIED }))
+      ? LOCALES.flatMap((locale) =>
+          (["privacy", "terms"] as const).map((document) => ({
+            url: absoluteUrl(projectLegalPath(locale, project.slug, document)),
+            lastModified: SITE_LAST_MODIFIED,
+          })),
+        )
       : [],
   );
 

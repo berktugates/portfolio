@@ -10,6 +10,7 @@
     "dev": "next dev --turbopack",
     "prebuild": "node scripts/generate-blogs-feed.mjs",
     "build": "next build",
+    "postbuild": "node scripts/validate-project-i18n.mjs",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

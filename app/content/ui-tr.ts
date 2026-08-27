@@ -18,6 +18,11 @@ const ui: ContentUi = {
   techStack: "Teknoloji Yığını",
   downloadOnAppStore: "App Store'dan İndirin",
   downloadOnAppStoreAria: "{{title}} uygulamasını App Store'dan indir",
+  privacyPolicy: "Gizlilik Politikası",
+  termsOfService: "Hizmet Koşulları",
+  legalDocumentsAria: "{{title}} yasal belgeleri",
+  appStoreScreenshotsAria: "{{title}} App Store ekran görüntüleri",
+  appStoreScreenshotAlt: "{{title}} App Store ekran görüntüsü {{index}}",
   subscribe: {
     title: "Güncel kal",
     body: "berktugberke.com'da yeni bir yazı yayınlandığında e-posta al. İsteğe bağlı—istediğin zaman geçebilirsin.",

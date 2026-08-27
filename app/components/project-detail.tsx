@@ -8,9 +8,9 @@ import { notFound } from "next/navigation";
 import { projects } from "../data/projects";
 import { localizeAppStoreUrl } from "../lib/content/app-store";
 import { getLocalizedProject, getLocaleContent } from "../lib/content/get-content";
-import { projectPath } from "../lib/content/paths";
+import { projectLegalPath, projectPath } from "../lib/content/paths";
 import type { Locale } from "../lib/i18n";
-import { getDictionary, hreflangLanguages, localeMeta, localePath } from "../lib/i18n";
+import { formatMessage, getDictionary, hreflangLanguages, localeMeta, localePath } from "../lib/i18n";
 import {
   AUTHOR_ID,
   SITE_NAME,
@@ -135,10 +135,10 @@ export async function ProjectDetailPage({
                 className={`project-visual relative overflow-hidden rounded-[11px] ${project.visualClassName}`}
               >
                 {project.screenshots?.length ? (
-                  <div className="project-screenshot-track" role="region" aria-label={`${project.title} App Store screenshots`} tabIndex={0}>
+                  <div className="project-screenshot-track" role="region" aria-label={formatMessage(content.ui.appStoreScreenshotsAria, { title: project.title })} tabIndex={0}>
                     {project.screenshots.map((screenshot, index) => (
                       <figure className="project-screenshot" key={screenshot.src}>
-                        <Image src={screenshot.src} alt={screenshot.alt} width={444} height={960} priority={index === 0} sizes="(max-width: 640px) 62vw, 270px" className="h-auto w-full" />
+                        <Image src={screenshot.src} alt={formatMessage(content.ui.appStoreScreenshotAlt, { title: project.title, index: String(index + 1) })} width={444} height={960} priority={index === 0} sizes="(max-width: 640px) 62vw, 270px" className="h-auto w-full" />
                       </figure>
                     ))}
                   </div>
@@ -187,9 +187,9 @@ export async function ProjectDetailPage({
           </div>
 
           {project.legal ? (
-            <nav aria-label={`${project.title} legal documents`} className="mt-4 flex gap-4 text-sm">
-              <Link className="text-zinc-500 underline decoration-zinc-300 underline-offset-4 transition-colors hover:text-zinc-950 dark:decoration-zinc-700 dark:hover:text-zinc-50" href={project.legal.privacy}>Privacy Policy</Link>
-              <Link className="text-zinc-500 underline decoration-zinc-300 underline-offset-4 transition-colors hover:text-zinc-950 dark:decoration-zinc-700 dark:hover:text-zinc-50" href={project.legal.terms}>Terms of Service</Link>
+            <nav aria-label={formatMessage(content.ui.legalDocumentsAria, { title: project.title })} className="mt-4 flex gap-4 text-sm">
+              <Link className="text-zinc-500 underline decoration-zinc-300 underline-offset-4 transition-colors hover:text-zinc-950 dark:decoration-zinc-700 dark:hover:text-zinc-50" href={projectLegalPath(locale, project.slug, "privacy")}>{content.ui.privacyPolicy}</Link>
+              <Link className="text-zinc-500 underline decoration-zinc-300 underline-offset-4 transition-colors hover:text-zinc-950 dark:decoration-zinc-700 dark:hover:text-zinc-50" href={projectLegalPath(locale, project.slug, "terms")}>{content.ui.termsOfService}</Link>
             </nav>
           ) : null}
 

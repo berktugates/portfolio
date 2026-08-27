@@ -1,13 +1,6 @@
-export type LegalDocument = {
-  title: string;
-  effectiveDate: string;
-  introduction: string;
-  sections: readonly { title: string; paragraphs?: readonly string[]; items?: readonly string[] }[];
-};
+import type { ProjectLegalLocaleMap } from "../lib/content/types";
 
-type LegalPair = { privacy: LegalDocument; terms: LegalDocument };
-
-export const projectLegalDocuments: Readonly<Record<string, LegalPair>> = {
+export const projectLegalDocuments: ProjectLegalLocaleMap = {
   "celestial-insights": {
     privacy: {
       title: "Privacy Policy",

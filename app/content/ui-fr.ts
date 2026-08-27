@@ -18,6 +18,11 @@ const ui: ContentUi = {
   techStack: "Stack technique",
   downloadOnAppStore: "Télécharger dans l'App Store",
   downloadOnAppStoreAria: "Télécharger {{title}} dans l'App Store",
+  privacyPolicy: "Politique de confidentialité",
+  termsOfService: "Conditions d’utilisation",
+  legalDocumentsAria: "Documents juridiques de {{title}}",
+  appStoreScreenshotsAria: "Captures d’écran App Store de {{title}}",
+  appStoreScreenshotAlt: "Capture d’écran App Store {{index}} de {{title}}",
   subscribe: {
     title: "Restez informé",
     body: "Recevez un e-mail lorsqu'un nouvel article est publié sur berktugberke.com. Facultatif—passez quand vous voulez.",

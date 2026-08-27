@@ -38,6 +38,16 @@ export function projectPath(locale: Locale, slug: string): string {
   return withLocalePath(locale, `/projects/${slug}`);
 }
 
+export type ProjectLegalDocument = "privacy" | "terms";
+
+export function projectLegalPath(
+  locale: Locale,
+  slug: string,
+  document: ProjectLegalDocument,
+): string {
+  return withLocalePath(locale, `/projects/${slug}/${document}`);
+}
+
 export function contentLocales(): Locale[] {
   return [...LOCALES];
 }

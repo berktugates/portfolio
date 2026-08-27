@@ -18,6 +18,11 @@ const ui: ContentUi = {
   techStack: "技術スタック",
   downloadOnAppStore: "App Store からダウンロード",
   downloadOnAppStoreAria: "{{title}} を App Store からダウンロード",
+  privacyPolicy: "プライバシーポリシー",
+  termsOfService: "利用規約",
+  legalDocumentsAria: "{{title}} の法的文書",
+  appStoreScreenshotsAria: "{{title}} の App Store スクリーンショット",
+  appStoreScreenshotAlt: "{{title}} の App Store スクリーンショット {{index}}",
   subscribe: {
     title: "最新情報を受け取る",
     body: "berktugberke.com に新しい記事が公開されたらメールでお知らせします。任意です—いつでもスキップできます。",

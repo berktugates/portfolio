@@ -1,8 +1,10 @@
 import type { LocaleContentModule } from "../lib/content/types";
+import { projectLegalCopies } from "./legal-shared";
 
 const content: LocaleContentModule = {
   projects: {},
   blogs: {},
+  legal: projectLegalCopies.en,
   ui: {
     back: "Back",
     blogs: "Blogs",
@@ -21,6 +23,11 @@ const content: LocaleContentModule = {
     techStack: "Tech Stack",
     downloadOnAppStore: "Download on the App Store",
     downloadOnAppStoreAria: "Download {{title}} on the App Store",
+    privacyPolicy: "Privacy Policy",
+    termsOfService: "Terms of Service",
+    legalDocumentsAria: "{{title}} legal documents",
+    appStoreScreenshotsAria: "{{title}} App Store screenshots",
+    appStoreScreenshotAlt: "{{title}} App Store screenshot {{index}}",
     subscribe: {
       title: "Stay in the loop",
       body: "Get an email when a new post goes live on berktugberke.com. Optional—skip anytime.",

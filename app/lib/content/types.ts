@@ -28,6 +28,24 @@ export type BlogLocaleMap = Record<string, BlogCopy>;
 
 export type LocalizedBlogPost = BlogPost;
 
+export type LegalDocument = {
+  title: string;
+  effectiveDate: string;
+  introduction: string;
+  sections: readonly {
+    title: string;
+    paragraphs?: readonly string[];
+    items?: readonly string[];
+  }[];
+};
+
+export type ProjectLegalDocuments = {
+  privacy: LegalDocument;
+  terms: LegalDocument;
+};
+
+export type ProjectLegalLocaleMap = Record<string, ProjectLegalDocuments>;
+
 export type ContentUi = {
   back: string;
   blogs: string;
@@ -46,6 +64,14 @@ export type ContentUi = {
   downloadOnAppStore: string;
   /** Template with `{{title}}` */
   downloadOnAppStoreAria: string;
+  privacyPolicy: string;
+  termsOfService: string;
+  /** Template with `{{title}}`. */
+  legalDocumentsAria: string;
+  /** Template with `{{title}}`. */
+  appStoreScreenshotsAria: string;
+  /** Template with `{{title}}` and `{{index}}`. */
+  appStoreScreenshotAlt: string;
   subscribe: {
     title: string;
     body: string;
@@ -64,6 +90,7 @@ export type ContentUi = {
 export type LocaleContentModule = {
   projects: ProjectLocaleMap;
   blogs: BlogLocaleMap;
+  legal: ProjectLegalLocaleMap;
   ui: ContentUi;
 };
 
