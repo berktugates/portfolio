@@ -1,6 +1,18 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+  "agent-identity-is-production-infrastructure": {
+    title: "エージェントのアイデンティティは本番インフラである",
+    excerpt: "自律型エージェントは、アイデンティティをログインの問題から、ツール呼び出し・承認・復旧経路の制御面へ変えている。",
+    description: "エージェント身份の本番アーキテクチャ。ワークロード ID、限定された能力、ポリシー適用、監査証跡、復旧訓練を扱う。",
+    sections: [
+      { heading: "アイデンティティはチャット欄の下に移動した", paragraphs: ["Agentic AI は回答するだけではない。ツールを選び、API を呼び、ファイルに触れ、外部状態を変えることがある。入口の認証だけでは不十分だ。本番で問うべきことは、どの ID が、誰のために、どの能力で、どのタスクを、どれだけの時間実行するのかである。", "NIST は 2026 年 8 月のガイダンスで、組織がエージェントの強い ID 基盤より機能速度を優先しがちな点を指摘した。エージェントでは、この欠落が未承認操作、過剰アクセス、追跡不能な承認、タスク後も残る secret になり得る。"] },
+      { heading: "モデルをセキュリティ主体にしない", paragraphs: ["セキュリティ主体はモデルではなく、harness が特定タスク用に作る限定されたワークロード ID であるべきだ。モデルは行動を提案し、環境が許可を判断する。これにより認可は prompt とモデル管理メモリの外に残る。", "有効なチェーンは、ユーザー、製品セッション、エージェント実行、ツール呼び出し、下流サービスで構成される。コードアクセスには repo、branch、理由、task id、時間窓を結び、公開投稿には正確な内容と副作用を結び付ける。"], points: ["ユーザー ID とエージェントのワークロード ID を分離する", "単一タスク用の短命 credential を発行する", "ツール呼び出しはサーバー側で認可する", "各 write の判断、入力、出力、rollback を記録する"] },
+      { heading: "能力が least privilege の単位になる", paragraphs: ["ロールはエージェントには粗すぎる。1 回の実行に必要なのは多くの場合、1 つの repo、1 つの branch、少数の操作だけだ。各ツールを、型付き入力、前提条件、事後条件、予算、期限を持つ capability として扱う。", "これにより permission fatigue も減る。安全に制限された read と決定的な check は毎回ユーザーを止める必要がない。人間の承認は、公開、削除、支払い、アクセス付与、機密データ送信に残すべきだ。"] },
+      { heading: "監査証跡はインシデント対応に耐える必要がある", paragraphs: ["必要なのは、ユーザー意図、モデルと prompt のバージョン、証拠、付与 capability、ツール入出力、ポリシー判断、provider id、最終的な副作用だ。この鎖がなければ、モデルの悪い提案、harness のバグ、盗まれた credential、誤承認を区別できない。", "OpenAI が 2026 年 7 月に公開した Hugging Face インシデントは、trajectory レベルの再構築がなぜ重要かを示した。Hugging Face は複数日にわたる数千の行動を復元した。ID と telemetry は最初の重大インシデント前に設計すべきである。"] },
+      { heading: "本番チェックリスト", paragraphs: ["deny-by-default から始める。各 run に task id を与え、明示的 capability を結び、credential は最後の責任ある時点で broker 経由にし、ネットワーク宛先を制限し、write を idempotent にする。そのうえで revoke、quarantine、証拠保全を演習する。", "健全なシステムは説明できる。どの ID が動き、なぜ許可され、何が変わり、どう戻し、次回どの monitor が反応するかを言えるなら、本番に近い。"] },
+    ],
+  },
   "containment-is-the-control-plane-for-ai-agents": {
     title: "AIエージェントの制御プレーンは封じ込めである",
     excerpt: "エージェントがツールを使うなら、本番の安全性を決めるのはモデルの約束ではなく、環境が実際に到達可能にした範囲です。",

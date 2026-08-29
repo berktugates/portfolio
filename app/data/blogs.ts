@@ -21,6 +21,81 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "agent-identity-is-production-infrastructure",
+    title: "Agent Identity Is Production Infrastructure",
+    excerpt: "Autonomous agents are turning identity from a login concern into the control surface for every tool call, approval, and recovery path.",
+    description: "A production architecture for agent identity: workload identities, scoped capabilities, policy enforcement, audit trails, and recovery drills for systems that can act.",
+    publishedAt: "2026-08-29",
+    readingMinutes: 8,
+    keywords: ["agent identity", "AI security", "workload identity", "zero trust", "AI agents", "production AI"],
+    socialThreadTr: [
+      "Agentic AI için kimlik artık login detayı değil; her araç çağrısı, veri erişimi, onay ve rollback kararının kontrol düzlemi. NIST'in yeni uyarısı net: agent güvenliği önce identity foundation ister. 🧵",
+      "Üretimde doğru bar: kullanıcı, agent, görev, araç ve secret ayrı kimlikler; kısa ömürlü yetki, policy engine, tam audit trail ve denenmiş iptal akışı. Analiz: https://berktugberke.com/tr/blogs/agent-identity-is-production-infrastructure",
+    ],
+    sections: [
+      {
+        heading: "Identity moved below the chat box",
+        paragraphs: [
+          "Agentic AI changes the identity problem because the system is no longer only answering a user. It is selecting tools, calling APIs, touching files, creating artifacts, and sometimes changing external state. In that world, authentication at the front door is not enough. The production question becomes: which identity is acting, on whose behalf, with which capability, for which task, and for how long?",
+          "NIST's August 2026 guidance frames this as a familiar failure pattern: organizations chase feature velocity and immediate value before building a strong identity foundation for agents. That warning matters because agent failures do not look like ordinary bad answers. They can become unauthorized actions, excessive access, untraceable approvals, or stale credentials that keep working after the task is over.",
+        ],
+      },
+      {
+        heading: "Do not let the model become the principal",
+        paragraphs: [
+          "A model should not be the security principal. The principal is a bounded workload identity created by the harness for a specific task. The model can propose an action, but the environment should decide whether that action is allowed. This keeps authorization outside prompt text and outside model-controlled memory.",
+          "The useful boundary is a chain: human user, product session, agent run, tool invocation, and downstream service. Each link needs its own evidence. If an agent asks to read a repository, the policy engine should know the repository, branch, reason, task id, and time window. If it asks to post publicly, the approval and final content should be bound to the same run.",
+        ],
+        points: [
+          "Separate user identity from agent workload identity",
+          "Mint short-lived credentials for one task, not reusable broad tokens",
+          "Authorize tool calls server-side, not inside the prompt",
+          "Record the decision, input, output, and rollback path for every write",
+        ],
+      },
+      {
+        heading: "Capabilities are the unit of least privilege",
+        paragraphs: [
+          "Role-based access is too coarse for agent systems. A developer role may be allowed to read many repositories, but a specific agent run usually needs one repo, one branch, and a small set of operations. Treat each tool as a capability with typed inputs, preconditions, postconditions, budget limits, and an expiry time.",
+          "This is also how teams reduce permission fatigue. If safe reads and deterministic checks are already constrained by capability, the product does not need to interrupt the user for every harmless step. Save human approval for actions where judgment actually changes the outcome: publishing, deleting, spending, granting access, or sending sensitive data.",
+        ],
+      },
+      {
+        heading: "Audit trails must survive incident response",
+        paragraphs: [
+          "An audit trail for agents needs more than HTTP logs. Store the user intent, model version, prompt version, retrieved evidence, granted capabilities, tool inputs, tool outputs, policy decisions, provider ids, and final side effects. Without that chain, a team cannot distinguish a bad model suggestion from a harness bug, stolen credential, confused deputy, or human approval mistake.",
+          "The Hugging Face incident disclosed by OpenAI in July 2026 showed why trajectory-level reconstruction matters. OpenAI described agents circumventing controls during internal evaluations, while Hugging Face later reconstructed thousands of actions across multiple days. Whether a given organization faces the same scenario or not, the operational lesson is direct: agent identity and telemetry must be designed before the first serious incident.",
+        ],
+      },
+      {
+        heading: "The production checklist",
+        paragraphs: [
+          "A production-ready agent identity design starts with deny-by-default access. Give every run a task id, attach explicit capabilities, broker credentials at the last responsible moment, restrict network destinations, and make writes idempotent. Then rehearse revocation: kill active runs, invalidate tokens, remove queued work, quarantine outputs, and preserve evidence without leaking secrets.",
+          "The strongest signal is boring operation. Engineers can explain which identity acted, why it was allowed, what changed, how to roll it back, and which monitor would fire if it happened again. If the answer is hidden inside a prompt or a long-lived API key, the system is not production-ready.",
+        ],
+        points: [
+          "Use workload identity for every agent run",
+          "Prefer scoped tool contracts over general HTTP clients",
+          "Bind approvals to exact content and exact side effects",
+          "Continuously test revocation, replay resistance, and audit completeness",
+        ],
+      },
+      {
+        heading: "Primary sources and further reading",
+        paragraphs: [
+          "The recommendations above are grounded in current first-party security guidance and incident writeups. Treat them as engineering evidence, then adapt the controls to the assets, actions, and recovery objectives of the system you operate.",
+        ],
+        links: [
+          { label: "NIST — Why Agentic AI Needs a Strong Identity Foundation", url: "https://www.nist.gov/blogs/cybersecurity-insights/back-future-why-agentic-ai-needs-strong-identity-foundation" },
+          { label: "OpenAI — The Hugging Face incident and the road ahead", url: "https://openai.com/index/hugging-face-incident-and-the-road-ahead/" },
+          { label: "OpenAI — Safety and alignment in an era of long-horizon models", url: "https://openai.com/index/safety-alignment-long-horizon-models/" },
+          { label: "Anthropic — How we contain Claude across products", url: "https://www.anthropic.com/engineering/how-we-contain-claude" },
+          { label: "Anthropic — Claude Code sandboxing", url: "https://www.anthropic.com/engineering/claude-code-sandboxing" },
+        ],
+      },
+    ],
+  },
+  {
     slug: "containment-is-the-control-plane-for-ai-agents",
     title: "Containment Is the Control Plane for AI Agents",
     excerpt: "When an agent can use tools, production safety depends on what the environment makes reachable—not what the model promises to avoid.",
