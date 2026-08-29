@@ -1,7 +1,30 @@
+export type HireFaq = {
+  question: string;
+  answer: string;
+};
+
+export type HireDictionary = {
+  metaTitle: string;
+  metaDescription: string;
+  h1: string;
+  lead: string;
+  availabilityHeading: string;
+  availabilityBody: string;
+  workHeading: string;
+  workBody: string;
+  productsHeading: string;
+  howHeading: string;
+  howBody: string;
+  faqHeading: string;
+  faqs: readonly HireFaq[];
+};
+
 export type HomeDictionary = {
   metaTitle: string;
   metaDescription: string;
   intro: string;
+  availability: string;
+  hireLinkLabel: string;
   headerName: string;
   headerRole: string;
   headerAriaLabel: string;
@@ -48,4 +71,5 @@ export type HomeDictionary = {
     showProject: string;
     select: string;
   };
+  hire: HireDictionary;
 };

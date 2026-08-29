@@ -1,4 +1,4 @@
-export type { HomeDictionary } from "./types";
+export type { HireDictionary, HireFaq, HomeDictionary } from "./types";
 export type { Locale } from "./config";
 export {
   DEFAULT_LOCALE,

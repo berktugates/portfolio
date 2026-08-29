@@ -75,6 +75,50 @@ if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/.test(homeProfilePage
   throw new Error("Home ProfilePage dateModified must be an ISO 8601 DateTime with timezone");
 }
 
+const personNodes = jsonLdObjects(home).filter((item) => item["@type"] === "Person");
+if (!personNodes.some((person) => person.email === "contact@berktugberke.com")) {
+  throw new Error("Person JSON-LD must include contact@berktugberke.com");
+}
+if (!personNodes.some((person) => Array.isArray(person.knowsLanguage) && person.knowsLanguage.length >= 2)) {
+  throw new Error("Person JSON-LD must declare knowsLanguage");
+}
+if (!personNodes.some((person) => person.alumniOf)) {
+  throw new Error("Person JSON-LD must include alumniOf");
+}
+
+const offerCatalogs = jsonLdObjects(home).filter((item) => item["@type"] === "OfferCatalog");
+if (offerCatalogs.length !== 1) {
+  throw new Error(`Expected one OfferCatalog, found ${offerCatalogs.length}`);
+}
+
+let hirePageCount = 0;
+for (const [locale, copy] of Object.entries(locales)) {
+  const hireFile = htmlPath(`${copy.prefix}/hire`);
+  const hire = await readFile(hireFile, "utf8");
+  requireText(hire, `lang="${locale === "zh" ? "zh-Hans" : locale}"`, `${locale}/hire language`);
+  requireText(hire, "contact@berktugberke.com", `${locale}/hire email`);
+  requireText(sitemap, `https://berktugberke.com${copy.prefix}/hire`, "sitemap hire");
+  const types = jsonLdObjects(hire).map((item) => item["@type"]);
+  if (!types.includes("FAQPage")) throw new Error(`${locale}/hire: missing FAQPage JSON-LD`);
+  if (!types.includes("WebPage")) throw new Error(`${locale}/hire: missing WebPage JSON-LD`);
+  if (types.includes("ProfilePage")) {
+    throw new Error(`${locale}/hire: ProfilePage belongs on locale home pages only`);
+  }
+  hirePageCount += 1;
+}
+if (hirePageCount !== 7) throw new Error(`Expected 7 hire pages, validated ${hirePageCount}`);
+
+const robots = await readFile(resolve(out, "robots.txt"), "utf8");
+for (const bot of ["GPTBot", "ChatGPT-User", "ClaudeBot", "Anthropic-AI", "Google-Extended", "PerplexityBot", "Applebot-Extended"]) {
+  requireText(robots, bot, "robots.txt AI crawler");
+}
+
+const llms = await readFile(resolve(out, "llms.txt"), "utf8");
+requireText(llms, "## Hiring and availability", "llms.txt hire section");
+requireText(llms, "https://berktugberke.com/hire", "llms.txt English hire URL");
+requireText(llms, "https://berktugberke.com/tr/hire", "llms.txt Turkish hire URL");
+requireText(llms, "freelance, full-time, and part-time", "llms.txt engagement types");
+
 for (const page of [
   "projects/celestial-insights.html",
   "projects/strumai.html",
@@ -88,5 +132,5 @@ for (const page of [
 }
 
 console.log(
-  `Validated ${legalPageCount} localized legal pages, reciprocal sitemap hreflang, and ProfilePage structured data.`,
+  `Validated ${legalPageCount} localized legal pages, ${hirePageCount} hire pages, reciprocal sitemap hreflang, and ProfilePage structured data.`,
 );
