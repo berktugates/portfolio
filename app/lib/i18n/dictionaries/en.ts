@@ -8,7 +8,6 @@ const dictionary: HomeDictionary = {
     "Based in Marmaris, Muğla, Türkiye, Berktuğ Berke Ates is a software engineer and product builder who designs and builds scalable software products and complex digital systems. His work covers software architecture, backend engineering, infrastructure, AI-powered systems, automation, and end-to-end product development, from technical design to production deployment.",
   availability:
     "Available for freelance, full-time, and part-time software engineering — in Türkiye or remotely abroad.",
-  hireLinkLabel: "How to hire",
   headerName: "Berktug Berke Ates",
   headerRole: "Software Engineer",
   headerAriaLabel: "Berktug Berke Ates home",

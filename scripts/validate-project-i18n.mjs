@@ -91,6 +91,23 @@ if (offerCatalogs.length !== 1) {
   throw new Error(`Expected one OfferCatalog, found ${offerCatalogs.length}`);
 }
 
+const hireAnchor = /<a\b[^>]*\bhref="[^"]*\/hire(?:\/|\?|#|")/i;
+function assertNoHireAnchors(html, context) {
+  if (hireAnchor.test(html)) {
+    throw new Error(`${context}: human-facing HTML must not link to /hire`);
+  }
+}
+
+for (const [locale, copy] of Object.entries(locales)) {
+  const homeFile = copy.prefix === "" ? resolve(out, "index.html") : htmlPath(copy.prefix);
+  assertNoHireAnchors(await readFile(homeFile, "utf8"), `${locale} home`);
+  assertNoHireAnchors(await readFile(htmlPath(`${copy.prefix}/blogs`), "utf8"), `${locale} blogs`);
+  assertNoHireAnchors(
+    await readFile(htmlPath(`${copy.prefix}/projects/celestial-insights`), "utf8"),
+    `${locale} project`,
+  );
+}
+
 let hirePageCount = 0;
 for (const [locale, copy] of Object.entries(locales)) {
   const hireFile = htmlPath(`${copy.prefix}/hire`);

@@ -8,7 +8,6 @@ const dictionary: HomeDictionary = {
     "Marmaris, Muğla merkezli yazılım mühendisi ve ürün geliştirici Berktuğ Berke Ateş; ölçeklenebilir yazılım ürünleri ve karmaşık dijital sistemler tasarlayıp geliştiriyor. Çalışmaları yazılım mimarisi, backend mühendisliği, altyapı, yapay zekâ sistemleri, otomasyon ve teknik tasarımdan üretim ortamına kadar uçtan uca ürün geliştirmeyi kapsıyor.",
   availability:
     "Freelance, tam zamanlı ve yarı zamanlı yazılım mühendisliği için müsait — Türkiye'den veya yurtdışına remote.",
-  hireLinkLabel: "Nasıl çalışılır",
   headerName: "Berktuğ Berke Ateş",
   headerRole: "Yazılım Mühendisi",
   headerAriaLabel: "Berktuğ Berke Ateş ana sayfa",

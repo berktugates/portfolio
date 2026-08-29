@@ -8,7 +8,6 @@ const dictionary: HomeDictionary = {
     "Basé à Marmaris, Muğla, Türkiye, Berktuğ Berke Ates est un ingénieur logiciel et product builder qui conçoit et construit des produits logiciels évolutifs et des systèmes numériques complexes. Son travail couvre l’architecture logicielle, le backend, l’infrastructure, les systèmes d’IA, l’automatisation et le développement produit de bout en bout, de la conception technique au déploiement en production.",
   availability:
     "Disponible en freelance, temps plein et temps partiel — depuis la Türkiye ou à distance à l’international.",
-  hireLinkLabel: "Comment collaborer",
   headerName: "Berktug Berke Ates",
   headerRole: "Ingénieur logiciel",
   headerAriaLabel: "Accueil Berktug Berke Ates",
