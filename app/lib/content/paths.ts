@@ -3,8 +3,10 @@ import {
   LOCALES,
   type Locale,
   isLocale,
+  localeMeta,
   localePath,
 } from "../i18n/config";
+import { absoluteUrl } from "../seo";
 
 /** Strip a leading `/{locale}` segment when present. */
 export function stripLocalePrefix(pathname: string): string {
@@ -46,6 +48,20 @@ export function projectLegalPath(
   document: ProjectLegalDocument,
 ): string {
   return withLocalePath(locale, `/projects/${slug}/${document}`);
+}
+
+export function hirePath(locale: Locale): string {
+  return withLocalePath(locale, "/hire");
+}
+
+export function pathHreflangLanguages(pathname: string): Record<string, string> {
+  return Object.fromEntries([
+    ["x-default", absoluteUrl(withLocalePath(DEFAULT_LOCALE, pathname))],
+    ...LOCALES.map((locale) => [
+      localeMeta[locale].hreflang,
+      absoluteUrl(withLocalePath(locale, pathname)),
+    ]),
+  ]);
 }
 
 export function contentLocales(): Locale[] {

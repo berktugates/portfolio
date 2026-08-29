@@ -1,7 +1,14 @@
 import type { MetadataRoute } from "next";
 import { projects } from "./data/projects";
 import { blogPosts, getBlogPage, getBlogTotalPages } from "./data/blogs";
-import { blogPostPath, blogsIndexPath, projectLegalPath, projectPath } from "./lib/content/paths";
+import {
+  blogPostPath,
+  blogsIndexPath,
+  hirePath,
+  pathHreflangLanguages,
+  projectLegalPath,
+  projectPath,
+} from "./lib/content/paths";
 import { LOCALES, hreflangLanguages, localeMeta, localeUrl } from "./lib/i18n";
 import { SITE_LAST_MODIFIED, absoluteUrl } from "./lib/seo";
 
@@ -15,6 +22,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: localeUrl(locale),
     lastModified: SITE_LAST_MODIFIED,
     alternates: { languages: homeLanguages },
+  }));
+
+  const hireLanguages = pathHreflangLanguages("/hire");
+  const localeHires = LOCALES.map((locale) => ({
+    url: absoluteUrl(hirePath(locale)),
+    lastModified: SITE_LAST_MODIFIED,
+    alternates: { languages: hireLanguages },
   }));
 
   const projectEntries = projects.flatMap((project) =>
@@ -85,5 +99,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   );
 
-  return [...localeHomes, ...projectEntries, ...legalEntries, ...blogIndexEntries, ...blogPostEntries];
+  return [
+    ...localeHomes,
+    ...localeHires,
+    ...projectEntries,
+    ...legalEntries,
+    ...blogIndexEntries,
+    ...blogPostEntries,
+  ];
 }
