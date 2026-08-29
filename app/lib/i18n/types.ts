@@ -24,7 +24,6 @@ export type HomeDictionary = {
   metaDescription: string;
   intro: string;
   availability: string;
-  hireLinkLabel: string;
   headerName: string;
   headerRole: string;
   headerAriaLabel: string;

@@ -10,7 +10,7 @@ import { ProjectsCarousel } from "./projects-carousel";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import { getLocalizedBlogPosts, getLocalizedProjects } from "../lib/content/get-content";
-import { blogPostPath, blogsIndexPath, hirePath, projectPath } from "../lib/content/paths";
+import { blogPostPath, blogsIndexPath, projectPath } from "../lib/content/paths";
 import {
   type Locale,
   getDictionary,
@@ -121,15 +121,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
               {dict.h1}
             </h1>
             <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">{dict.intro}</p>
-            <p className="mt-4 leading-relaxed text-zinc-700 dark:text-zinc-300">
-              {dict.availability}{" "}
-              <Link
-                href={hirePath(locale)}
-                className="text-zinc-950 underline decoration-zinc-300 underline-offset-4 transition-colors hover:decoration-zinc-500 dark:text-zinc-50 dark:decoration-zinc-600 dark:hover:decoration-zinc-400"
-              >
-                {dict.hireLinkLabel}
-              </Link>
-            </p>
+            <p className="mt-4 leading-relaxed text-zinc-700 dark:text-zinc-300">{dict.availability}</p>
           </section>
 
           <section aria-labelledby="products-heading">
@@ -249,14 +241,6 @@ export async function HomePage({ locale }: { locale: Locale }) {
                     {dict.contact}
                   </h2>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">{dict.contactBody}</p>
-                  <p className="mt-3 text-sm">
-                    <Link
-                      href={hirePath(locale)}
-                      className="text-zinc-700 underline decoration-zinc-300 underline-offset-4 transition-colors hover:text-zinc-950 hover:decoration-zinc-500 dark:text-zinc-300 dark:decoration-zinc-700 dark:hover:text-zinc-50"
-                    >
-                      {dict.hireLinkLabel}
-                    </Link>
-                  </p>
                 </div>
                 <GlowCard href="mailto:contact@berktugberke.com">
                   <span className="flex items-center gap-3">

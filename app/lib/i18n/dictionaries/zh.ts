@@ -7,7 +7,6 @@ const dictionary: HomeDictionary = {
   intro:
     "Berktuğ Berke Ates 常驻土耳其穆拉省马尔马里斯，是一名软件工程师与产品构建者，负责设计并打造可扩展的软件产品与复杂数字系统。他的工作涵盖软件架构、后端工程、基础设施、人工智能系统、自动化，以及从技术方案到生产部署的端到端产品开发。",
   availability: "可接受自由职业、全职与兼职软件工程合作 — 在土耳其本地，或远程服务海外团队。",
-  hireLinkLabel: "如何合作",
   headerName: "Berktug Berke Ates",
   headerRole: "软件工程师",
   headerAriaLabel: "Berktug Berke Ates 首页",

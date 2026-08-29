@@ -8,7 +8,6 @@ const dictionary: HomeDictionary = {
     "トルコ・ムーラ県マルマリスを拠点とする Berktuğ Berke Ates は、スケーラブルなソフトウェア製品と複雑なデジタルシステムを設計・構築するソフトウェアエンジニア兼プロダクトビルダーです。ソフトウェアアーキテクチャ、バックエンド、インフラ、AIシステム、自動化、そして技術設計から本番デプロイまでのエンドツーエンドな製品開発を手がけています。",
   availability:
     "フリーランス、フルタイム、パートタイムのソフトウェアエンジニアリングに対応しています。トルコ国内、または海外リモート。",
-  hireLinkLabel: "依頼方法",
   headerName: "Berktug Berke Ates",
   headerRole: "ソフトウェアエンジニア",
   headerAriaLabel: "Berktug Berke Ates ホーム",
