@@ -121,7 +121,6 @@ export async function HomePage({ locale }: { locale: Locale }) {
               {dict.h1}
             </h1>
             <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">{dict.intro}</p>
-            <p className="mt-4 leading-relaxed text-zinc-700 dark:text-zinc-300">{dict.availability}</p>
           </section>
 
           <section aria-labelledby="products-heading">
