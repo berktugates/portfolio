@@ -1,6 +1,19 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+  "ai-crawler-control-is-now-web-infrastructure": {
+    title: "AI 爬虫控制已经成为 Web 基础设施",
+    excerpt: "AI 爬虫策略已经从 robots.txt 里的附注，变成影响可见性、成本、许可和信任的生产控制面。",
+    description: "发布者和产品团队如何用 robots.txt、llms.txt 信号、边缘执行、日志和可衡量的 SEO 权衡来运营 AI 爬虫访问。",
+    sections: [
+      { heading: "爬虫策略已经是产品决策", paragraphs: ["AI 爬虫把一个安静的基础设施文件推到了发布策略中心。搜索索引、模型训练、检索产品、答案引擎、归档机器人和恶意抓取器在 HTTP 形态上可能相似，但业务后果完全不同。", "生产决策不只是允许或阻止。有效策略要区分面向用户的搜索、商业 AI 训练、带引用的检索、合作伙伴集成和恶意抓取。每一类都需要负责人、证据、执行机制和复审节奏。"] },
+      { heading: "robots.txt 是信号，不是完整控制面", paragraphs: ["robots.txt 仍然是发布意图的最低摩擦位置，守规矩的爬虫也会读取它。但它不是认证系统、合同登记表、限流器或滥用检测器。", "因此边缘控制很重要：分类请求，限制昂贵路径，阻止不需要的爬虫类别，并按机器人身份、路径、缓存状态和响应大小记录行为。"], points: ["保持 robots.txt 简单、明确并定期审查", "把 llms.txt 当作机器可读内容指南，而不是执行机制", "在边缘或应用层执行高影响规则", "分别衡量抓取成本、推荐流量价值和引用价值"] },
+      { heading: "可见性和保护必须一起衡量", paragraphs: ["一刀切阻止看起来安全，但如果答案引擎、搜索界面或合作系统看不到最佳内容，就会削弱正当发现。一刀切允许看起来有增长性，却可能补贴不回流用户的价值提取。", "把爬虫流量和结果一起看：索引页面、展示、推荐会话、服务器成本、缓存命中率、转化路径和未经授权的复制。"] },
+      { heading: "像生产基础设施一样构建策略", paragraphs: ["可靠方案从清单开始：站点看到哪些爬虫类别，它们触达哪些内容，创造什么用户价值，引入什么成本或风险。", "把策略写入版本控制规则，为关键路径添加测试，并在新内容区域的发布评审中包含爬虫行为。"] },
+      { heading: "实际运营模型", paragraphs: ["把爬虫治理作为月度运营循环：审查日志，更新机器人分类，对比 Search Console 覆盖和服务端抓取活动，检查新的 AI referrer 或答案界面是否正确归因。", "技术内容团队的最佳姿态是有纪律的开放：让高质量公开内容容易被发现、引用和分享；让没有归因的提取变得昂贵。"] },
+      { heading: "主要来源与延伸阅读", paragraphs: ["这些建议结合了 Web 标准实践和基础设施供应商当前的爬虫控制指南。"], links: [{ label: "Cloudflare Docs — AI crawler and bot traffic controls", url: "https://developers.cloudflare.com/bots/concepts/bot/ai-crawlers/" }, { label: "Cloudflare Docs — Managed robots.txt", url: "https://developers.cloudflare.com/bots/additional-configurations/managed-robots-txt/" }, { label: "IETF — The Robots Exclusion Protocol", url: "https://www.rfc-editor.org/rfc/rfc9309" }, { label: "llms.txt proposal", url: "https://llmstxt.org/" }, { label: "Google Search Central — robots.txt introduction", url: "https://developers.google.com/search/docs/crawling-indexing/robots/intro" }] },
+    ],
+  },
   "agent-identity-is-production-infrastructure": {
     title: "Agent 身份就是生产基础设施",
     excerpt: "自主 Agent 正把身份从登录问题变成每一次工具调用、审批和恢复路径的控制面。",

@@ -1,6 +1,19 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+  "ai-crawler-control-is-now-web-infrastructure": {
+    title: "AI クローラー制御は Web インフラになった",
+    excerpt: "AI クローラーのポリシーは robots.txt の小さな注記から、可視性、コスト、ライセンス、信頼を扱う本番の制御面へ移った。",
+    description: "公開者とプロダクトチームが robots.txt、llms.txt シグナル、エッジでの enforcement、ログ、測定可能な SEO トレードオフで AI クローラーアクセスを運用する方法。",
+    sections: [
+      { heading: "クローラーポリシーはプロダクト判断になった", paragraphs: ["AI クローラーは、静かなインフラファイルを公開戦略の中心に押し上げた。検索インデックス、モデル学習、検索拡張プロダクト、回答エンジン、アーカイブ bot、不正 scraper は HTTP 上では似て見えるが、事業上の結果は大きく異なる。", "本番の判断は単純な許可かブロックではない。有効なポリシーは、ユーザー向け検索、商用 AI 学習、引用を伴う retrieval、パートナー連携、敵対的 scraping を分ける。"] },
+      { heading: "robots.txt はシグナルであり、制御面全体ではない", paragraphs: ["robots.txt は意図を公開する最も低摩擦な場所であり、行儀のよいクローラーは今も読む。ただし認証、契約レジストリ、レートリミッター、不正検知ではない。", "そのためエッジ制御が重要になる。リクエストを分類し、高コストなパスを制限し、望まないクローラー種別をブロックし、bot ID、パス、キャッシュ状態、レスポンスサイズで行動を記録する。"], points: ["robots.txt は単純、明示的、レビュー済みに保つ", "llms.txt は enforcement ではなく機械可読のコンテンツガイドとして使う", "重要なルールはエッジまたはアプリケーション層で実施する", "crawl コスト、referral 価値、citation 価値を分けて測る"] },
+      { heading: "可視性と保護は一緒に測る", paragraphs: ["一律ブロックは安全に見えるが、回答エンジンや検索面、パートナーシステムが最良のコンテンツを見られなくなると正当な発見も落ちる。一律許可は成長志向に見えるが、ユーザーを戻さない価値抽出を補助する可能性がある。", "クローラー流入は成果と突き合わせる。インデックス済みページ、表示回数、referral セッション、サーバーコスト、キャッシュヒット率、コンバージョン経路、無断複製を同時に見る。"] },
+      { heading: "ポリシーを本番インフラとして構築する", paragraphs: ["耐久性のある構成はインベントリから始まる。サイトが見るクローラー種別、触れるコンテンツ、作るユーザー価値、持ち込むコストやリスクを列挙する。", "ポリシーをバージョン管理されたルールにし、重要パスにテストを付け、新しいコンテンツ領域のリリースレビューにクローラー挙動を含める。"] },
+      { heading: "実務上の運用モデル", paragraphs: ["クローラーガバナンスを月次の運用ループとして回す。ログを確認し、bot カテゴリを更新し、Search Console の coverage とサーバー側 crawl 活動を比較し、新しい AI referrer や回答面が正しく帰属しているかを見る。", "技術コンテンツでは、規律あるオープン性が勝つ。高品質な公開物を発見、引用、共有しやすくし、帰属のない抽出を高コストにする。"] },
+      { heading: "一次情報と参考資料", paragraphs: ["この提案は Web 標準の実務と、インフラ提供者の最新クローラー制御ガイドを組み合わせたものだ。"], links: [{ label: "Cloudflare Docs — AI crawler and bot traffic controls", url: "https://developers.cloudflare.com/bots/concepts/bot/ai-crawlers/" }, { label: "Cloudflare Docs — Managed robots.txt", url: "https://developers.cloudflare.com/bots/additional-configurations/managed-robots-txt/" }, { label: "IETF — The Robots Exclusion Protocol", url: "https://www.rfc-editor.org/rfc/rfc9309" }, { label: "llms.txt proposal", url: "https://llmstxt.org/" }, { label: "Google Search Central — robots.txt introduction", url: "https://developers.google.com/search/docs/crawling-indexing/robots/intro" }] },
+    ],
+  },
   "agent-identity-is-production-infrastructure": {
     title: "エージェントのアイデンティティは本番インフラである",
     excerpt: "自律型エージェントは、アイデンティティをログインの問題から、ツール呼び出し・承認・復旧経路の制御面へ変えている。",

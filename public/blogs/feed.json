@@ -1,8 +1,30 @@
 {
   "version": 1,
   "site": "https://berktugberke.com",
-  "generatedAt": "2026-08-29T07:12:29.662Z",
+  "generatedAt": "2026-08-30T09:16:05.550Z",
   "posts": [
+    {
+      "id": "ai-crawler-control-is-now-web-infrastructure",
+      "slug": "ai-crawler-control-is-now-web-infrastructure",
+      "title": "AI Crawler Control Is Now Web Infrastructure",
+      "url": "https://berktugberke.com/blogs/ai-crawler-control-is-now-web-infrastructure",
+      "publishedAt": "2026-08-30",
+      "tags": [
+        "AI crawlers",
+        "robots.txt",
+        "llms.txt",
+        "technical SEO",
+        "web infrastructure",
+        "content governance"
+      ],
+      "excerpt": "AI crawler policy has moved from a side note in robots.txt to a production control plane for visibility, cost, licensing, and trust.",
+      "bodyPlain": "AI crawlers changed a quiet infrastructure file into a board-level publishing question. Search indexing, model training, retrieval products, answer engines, archival bots, and abusive scrapers can all arrive with similar HTTP shapes but very different business consequences. Treating them as one category either leaks value or destroys legitimate discovery.\n\nThe production decision is not simply allow or block. A useful policy separates user-facing search, commercial AI training, citation-oriented retrieval, partner integrations, and hostile scraping. Each category needs an owner, evidence, enforcement, and a review cadence because the crawler landscape changes faster than most content governance processes.\n\nrobots.txt remains the lowest-friction place to publish intent, and well-behaved crawlers still read it. It is not an authentication system, a contract registry, a rate limiter, or an abuse detector. If the site depends only on robots.txt, the policy is enforceable only against actors that voluntarily comply.\n\nThis is why edge controls matter. Classify requests, rate-limit expensive paths, block known unwanted crawler classes, and log crawler behavior by bot identity, path, cache status, and response size. The policy should be visible in robots.txt, but the operational truth should live in infrastructure that can measure and enforce it.\n\nKeep robots.txt simple, explicit, and reviewed\n\nUse llms.txt as a machine-readable content guide, not as enforcement\n\nEnforce high-impact rules at the edge or application layer\n\nTrack crawl cost, referral value, and citation value separately\n\nBlanket blocking feels safe, but it can suppress legitimate discovery if answer engines, search surfaces, or partner systems stop seeing the best version of the content. Blanket allowing feels growth-oriented, but it can subsidize products that extract value without sending users back. The staff-level move is to make the tradeoff observable.\n\nMeasure crawler traffic against outcomes: indexed pages, impressions, referral sessions, server cost, cache hit ratio, conversion paths, and unauthorized replication. If a bot consumes meaningful infrastructure and produces no visible upside, tighten it. If a crawler drives qualified discovery with proper attribution, give it a stable path and a crawl budget.\n\nA durable setup starts with an inventory. List every crawler class the site sees, the content it touches, the user value it creates, and the cost or risk it introduces. Then encode policy in version-controlled rules, attach tests to critical paths, and include crawler behavior in release reviews for new content sections.\n\nThe same principle applies to smaller portfolio and product sites. Publish clean canonical pages, structured metadata, sitemap entries, and feeds for legitimate discovery. Then protect expensive or low-value paths with clear disallow rules, caching, and rate limits. The goal is not to hide from AI systems; it is to decide which access creates durable value.\n\nRun crawler governance as a monthly operating loop. Review logs, update bot categories, compare Search Console coverage with server-side crawl activity, check whether new AI referrers or answer surfaces cite the site, and adjust rules with a rollback path. Treat unexplained crawl spikes like reliability events, not marketing trivia.\n\nFor teams publishing technical content, the winning posture is disciplined openness. Make high-quality public work easy to discover, cite, and share. Make extraction without attribution expensive. That combination preserves SEO upside while preventing the website from becoming unpaid infrastructure for every crawler on the internet.\n\nVersion-control robots.txt, llms.txt, sitemap, and feed generation\n\nSeparate search, AI training, retrieval, monitoring, and abusive traffic\n\nUse cache and rate limits before expensive origin work\n\nReview crawler policy whenever content strategy or monetization changes\n\nThe recommendations above combine web standards practice with current crawler-control guidance from infrastructure providers. The implementation detail will vary by stack, but the operating model is stable: publish intent, enforce at the edge, measure outcomes, and revise policy deliberately.",
+      "contentHash": "d400e5cd21f09a7c",
+      "socialThreadTr": [
+        "AI crawler trafiği artık SEO'nun kenar konusu değil; yayıncı ekonomisi, içerik görünürlüğü ve altyapı maliyeti aynı kontrol düzlemine taşındı. robots.txt tek başına yetmez: sınıflandırma, policy ve ölçüm gerekiyor. 🧵",
+        "Doğru yaklaşım botları kör bloklamak değil: arama, eğitim, özetleme ve kötüye kullanım crawler'larını ayır; izinleri kanıta bağla; logla; llms.txt'i sinyal, edge policy'yi yaptırım yap. Analiz: https://berktugberke.com/tr/blogs/ai-crawler-control-is-now-web-infrastructure"
+      ]
+    },
     {
       "id": "agent-identity-is-production-infrastructure",
       "slug": "agent-identity-is-production-infrastructure",
