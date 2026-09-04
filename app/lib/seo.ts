@@ -4,12 +4,12 @@ export const SITE_TITLE = "Berktug Berke Ates — Software Engineer and Product 
 export const SITE_DESCRIPTION =
   "Software engineer and product builder designing scalable software products, complex digital systems, infrastructure, AI-powered systems, automation, and production-ready end-to-end products.";
 export const SITE_INTRO =
-  "Based in Marmaris, Muğla, in Türkiye's Aegean (Ege) region, Berktuğ Berke Ates is a software engineer and product builder who designs and builds scalable software products and complex digital systems. His work covers software architecture, backend engineering, infrastructure, AI-powered systems, automation, and end-to-end product development, from technical design to production deployment. He is available for freelance, full-time, and part-time software engineering engagements across the Aegean (Ege) and Central Anatolia (İç Anadolu) regions and for remote and international work.";
+  "Based in Marmaris, Muğla, in Türkiye's Aegean (Ege) region, Berktuğ Berke Ates is a software engineer and product builder who designs and builds scalable software products and complex digital systems. His work covers software architecture, backend engineering, infrastructure, AI-powered systems, automation, and end-to-end product development, from technical design to production deployment. He is available for freelance, full-time, and part-time software engineering engagements across the Aegean (Ege), Central Anatolia (İç Anadolu), and Marmara regions and for remote and international work.";
 /**
  * Human-edited profile metadata timestamp. Keep the timezone explicit so
  * structured-data consumers receive an unambiguous ISO 8601 DateTime.
  */
-export const SITE_LAST_MODIFIED = "2026-09-04T23:25:00+03:00";
+export const SITE_LAST_MODIFIED = "2026-09-04T23:30:00+03:00";
 
 export const CONTACT_EMAIL = "contact@berktugberke.com";
 export const GITHUB_PROFILE = "https://github.com/berktugates";
@@ -46,6 +46,18 @@ export const AREA_SERVED = [
   { "@type": "City", name: "Sivas" },
   { "@type": "City", name: "Aksaray" },
   { "@type": "Place", name: "Nevşehir" },
+  {
+    "@type": "AdministrativeArea",
+    name: "Marmara Bölgesi / Marmara Region (Türkiye)",
+  },
+  { "@type": "City", name: "İstanbul" },
+  { "@type": "City", name: "Bursa" },
+  { "@type": "City", name: "Kocaeli" },
+  { "@type": "City", name: "Tekirdağ" },
+  { "@type": "City", name: "Balıkesir" },
+  { "@type": "City", name: "Sakarya" },
+  { "@type": "Place", name: "Çanakkale" },
+  { "@type": "Place", name: "Yalova" },
   { "@type": "Place", name: "Remote" },
   { "@type": "AdministrativeArea", name: "Worldwide" },
 ] as const;

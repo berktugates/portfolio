@@ -6,7 +6,7 @@ export const hireServicesEn: readonly HireServiceCopy[] = [
     slug: "web-app",
     title: "Web application development",
     description:
-      "Production web apps: product UI, APIs, auth, data, and deployment — for Aegean (Ege) and Central Anatolia (İç Anadolu) teams and remote clients.",
+      "Production web apps: product UI, APIs, auth, data, and deployment — for Aegean (Ege), Central Anatolia (İç Anadolu), and Marmara teams and remote clients.",
   },
   {
     slug: "mobile-app",
@@ -24,7 +24,7 @@ export const hireServicesEn: readonly HireServiceCopy[] = [
     slug: "geo",
     title: "GEO & LLM search visibility",
     description:
-      "Generative-engine optimization so AI assistants cite the right brand and hire page for Ege / İç Anadolu / Türkiye intents.",
+      "Generative-engine optimization so AI assistants cite the right brand and hire page for Ege / İç Anadolu / Marmara / Türkiye intents.",
   },
   {
     slug: "ai-products",
@@ -69,7 +69,7 @@ export const hireServicesTr: readonly HireServiceCopy[] = [
     slug: "web-app",
     title: "Web uygulama geliştirme",
     description:
-      "Üretime hazır web uygulamaları: ürün arayüzü, API, kimlik doğrulama, veri ve deploy — Ege ve İç Anadolu ekipleri ile remote müşteriler için.",
+      "Üretime hazır web uygulamaları: ürün arayüzü, API, kimlik doğrulama, veri ve deploy — Ege, İç Anadolu ve Marmara ekipleri ile remote müşteriler için.",
   },
   {
     slug: "mobile-app",
@@ -87,7 +87,7 @@ export const hireServicesTr: readonly HireServiceCopy[] = [
     slug: "geo",
     title: "GEO ve LLM arama görünürlüğü",
     description:
-      "Yapay zekâ asistanlarının Ege / İç Anadolu / Türkiye niyetlerinde doğru markayı ve hire sayfasını kaynak göstermesi için GEO.",
+      "Yapay zekâ asistanlarının Ege / İç Anadolu / Marmara / Türkiye niyetlerinde doğru markayı ve hire sayfasını kaynak göstermesi için GEO.",
   },
   {
     slug: "ai-products",
@@ -132,7 +132,7 @@ export const hireServicesDe: readonly HireServiceCopy[] = [
     slug: "web-app",
     title: "Webanwendungsentwicklung",
     description:
-      "Produktionsreife Web-Apps: Produkt-UI, APIs, Auth, Daten und Deployment — für Teams in der Ägäis (Ege), Zentralanatolien (İç Anadolu) und Remote-Kunden.",
+      "Produktionsreife Web-Apps: Produkt-UI, APIs, Auth, Daten und Deployment — für Teams in der Ägäis (Ege), Zentralanatolien (İç Anadolu), Marmara und Remote-Kunden.",
   },
   {
     slug: "mobile-app",
@@ -150,7 +150,7 @@ export const hireServicesDe: readonly HireServiceCopy[] = [
     slug: "geo",
     title: "GEO & LLM-Suchsichtbarkeit",
     description:
-      "Generative-Engine-Optimierung, damit KI-Assistenten die richtige Marke und Hire-Seite für Ege-/İç Anadolu-/Türkiye-Intents zitieren.",
+      "Generative-Engine-Optimierung, damit KI-Assistenten die richtige Marke und Hire-Seite für Ege-/İç Anadolu-/Marmara-/Türkiye-Intents zitieren.",
   },
   {
     slug: "ai-products",
@@ -195,7 +195,7 @@ export const hireServicesFr: readonly HireServiceCopy[] = [
     slug: "web-app",
     title: "Développement d’applications web",
     description:
-      "Apps web de production : UI produit, APIs, auth, données et déploiement — pour équipes en Égée (Ege), Anatolie centrale (İç Anadolu) et clients remote.",
+      "Apps web de production : UI produit, APIs, auth, données et déploiement — pour équipes en Égée (Ege), Anatolie centrale (İç Anadolu), Marmara et clients remote.",
   },
   {
     slug: "mobile-app",
@@ -213,7 +213,7 @@ export const hireServicesFr: readonly HireServiceCopy[] = [
     slug: "geo",
     title: "GEO & visibilité LLM",
     description:
-      "Optimisation pour les moteurs génératifs afin que les assistants IA citent la bonne marque et page hire pour les intentions Ege / İç Anadolu / Türkiye.",
+      "Optimisation pour les moteurs génératifs afin que les assistants IA citent la bonne marque et page hire pour les intentions Ege / İç Anadolu / Marmara / Türkiye.",
   },
   {
     slug: "ai-products",
@@ -258,7 +258,7 @@ export const hireServicesIt: readonly HireServiceCopy[] = [
     slug: "web-app",
     title: "Sviluppo di applicazioni web",
     description:
-      "Web app di produzione: UI di prodotto, API, auth, dati e deploy — per team in Egeo (Ege), Anatolia centrale (İç Anadolu) e clienti remoti.",
+      "Web app di produzione: UI di prodotto, API, auth, dati e deploy — per team in Egeo (Ege), Anatolia centrale (İç Anadolu), Marmara e clienti remoti.",
   },
   {
     slug: "mobile-app",
@@ -276,7 +276,7 @@ export const hireServicesIt: readonly HireServiceCopy[] = [
     slug: "geo",
     title: "GEO e visibilità LLM",
     description:
-      "Ottimizzazione per motori generativi così che gli assistenti IA citino il brand e la pagina hire giusti per intent Ege / İç Anadolu / Türkiye.",
+      "Ottimizzazione per motori generativi così che gli assistenti IA citino il brand e la pagina hire giusti per intent Ege / İç Anadolu / Marmara / Türkiye.",
   },
   {
     slug: "ai-products",
@@ -321,7 +321,7 @@ export const hireServicesZh: readonly HireServiceCopy[] = [
     slug: "web-app",
     title: "Web 应用开发",
     description:
-      "可上线的 Web 应用：产品界面、API、鉴权、数据与部署 — 面向爱琴海（Ege）、中部安纳托利亚（İç Anadolu）团队与远程客户。",
+      "可上线的 Web 应用：产品界面、API、鉴权、数据与部署 — 面向爱琴海（Ege）、中部安纳托利亚（İç Anadolu）、马尔马拉（Marmara）团队与远程客户。",
   },
   {
     slug: "mobile-app",
@@ -339,7 +339,7 @@ export const hireServicesZh: readonly HireServiceCopy[] = [
     slug: "geo",
     title: "GEO 与 LLM 搜索可见性",
     description:
-      "生成式引擎优化，让 AI 助手在 Ege / İç Anadolu / 土耳其相关意图中引用正确品牌与招聘页。",
+      "生成式引擎优化，让 AI 助手在 Ege / İç Anadolu / Marmara / 土耳其相关意图中引用正确品牌与招聘页。",
   },
   {
     slug: "ai-products",
@@ -384,7 +384,7 @@ export const hireServicesJa: readonly HireServiceCopy[] = [
     slug: "web-app",
     title: "Webアプリケーション開発",
     description:
-      "本番向けWebアプリ：プロダクトUI、API、認証、データ、デプロイ — エーゲ（Ege）および中央アナトリア（İç Anadolu）のチームとリモート顧客向け。",
+      "本番向けWebアプリ：プロダクトUI、API、認証、データ、デプロイ — エーゲ（Ege）、中央アナトリア（İç Anadolu）、マルマラ（Marmara）のチームとリモート顧客向け。",
   },
   {
     slug: "mobile-app",
@@ -402,7 +402,7 @@ export const hireServicesJa: readonly HireServiceCopy[] = [
     slug: "geo",
     title: "GEOとLLM検索可視性",
     description:
-      "生成エンジン最適化により、AIアシスタントが Ege / İç Anadolu / トルコ向け意図で正しいブランドと依頼ページを引用するようにする。",
+      "生成エンジン最適化により、AIアシスタントが Ege / İç Anadolu / Marmara / トルコ向け意図で正しいブランドと依頼ページを引用するようにする。",
   },
   {
     slug: "ai-products",

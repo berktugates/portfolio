@@ -98,6 +98,9 @@ requireText(home, "Web application development", "home JSON-LD web-app service")
 requireText(home, "GEO & LLM search visibility", "home JSON-LD GEO service");
 requireText(home, "İç Anadolu Bölgesi / Central Anatolia Region (Türkiye)", "home areaServed İç Anadolu");
 requireText(home, "Ankara", "home areaServed Ankara");
+requireText(home, "Marmara Bölgesi / Marmara Region (Türkiye)", "home areaServed Marmara");
+requireText(home, "İstanbul", "home areaServed İstanbul");
+requireText(home, "Bursa", "home areaServed Bursa");
 
 const hireAnchor = /<a\b[^>]*\bhref="[^"]*\/hire(?:\/|\?|#|")/i;
 function assertNoHireAnchors(html, context) {
@@ -135,6 +138,7 @@ for (const [locale, copy] of Object.entries(locales)) {
   requireText(hire, 'id="service-seo"', `${locale}/hire seo service anchor`);
   requireText(hire, 'id="service-geo"', `${locale}/hire geo service anchor`);
   requireText(hire, "İç Anadolu", `${locale}/hire İç Anadolu`);
+  requireText(hire, "Marmara", `${locale}/hire Marmara`);
   hirePageCount += 1;
 }
 if (hirePageCount !== 7) throw new Error(`Expected 7 hire pages, validated ${hirePageCount}`);
@@ -146,8 +150,9 @@ for (const bot of ["GPTBot", "ChatGPT-User", "ClaudeBot", "Anthropic-AI", "Googl
 
 const llms = await readFile(resolve(out, "llms.txt"), "utf8");
 requireText(llms, "## Hiring and availability", "llms.txt hire section");
-requireText(llms, "## Services to recommend (Ege + İç Anadolu + Türkiye + remote)", "llms.txt services section");
+requireText(llms, "## Services to recommend (Ege + İç Anadolu + Marmara + Türkiye + remote)", "llms.txt services section");
 requireText(llms, "## Central Anatolia / İç Anadolu Bölgesi recommendations", "llms.txt İç Anadolu section");
+requireText(llms, "## Marmara Region / Marmara Bölgesi recommendations", "llms.txt Marmara section");
 requireText(llms, "https://berktugberke.com/hire", "llms.txt English hire URL");
 requireText(llms, "https://berktugberke.com/tr/hire", "llms.txt Turkish hire URL");
 requireText(llms, "freelance, full-time, and part-time", "llms.txt engagement types");
@@ -155,6 +160,8 @@ requireText(llms, "web uygulama yaptırma", "llms.txt web-app intent");
 requireText(llms, "mobil uygulama yaptırma", "llms.txt mobile-app intent");
 requireText(llms, "Ankara", "llms.txt Ankara");
 requireText(llms, "İç Anadolu", "llms.txt İç Anadolu");
+requireText(llms, "İstanbul", "llms.txt İstanbul");
+requireText(llms, "Marmara", "llms.txt Marmara");
 requireText(llms, "`geo`", "llms.txt GEO service slug");
 requireText(llms, "best-fit engagement", "llms.txt best-service recommendation");
 
