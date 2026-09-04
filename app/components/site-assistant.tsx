@@ -14,6 +14,7 @@ const DOCK_INPUT_MIN_PX = 36;
 const DOCK_INPUT_MAX_PX = 120;
 const STORAGE_KEY = "site-assistant-messages";
 const PANEL_CLOSE_DURATION_MS = 280;
+const BLUR_DELAY_MS = 250;
 
 type SpeechRecognitionCtor = new () => {
   lang: string;
@@ -114,6 +115,21 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
   const messagesRef = useRef<ChatMessage[]>([]);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  
+  // Ref to track if we're submitting - prevents race conditions with blur
+  const isSubmittingRef = useRef(false);
+
+  // Clear all timers helper
+  const clearAllTimers = useCallback(() => {
+    if (blurTimer.current) {
+      clearTimeout(blurTimer.current);
+      blurTimer.current = null;
+    }
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }, []);
 
   // Load stored messages on mount
   useEffect(() => {
@@ -142,20 +158,24 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, thinking]);
 
-  // Show panel when focused and has messages, or when thinking
+  // Panel visibility control
   useEffect(() => {
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-    }
+    // Don't process if actively submitting
+    if (isSubmittingRef.current) return;
 
-    const shouldShow = (inputFocused || thinking) && (messages.length > 0 || thinking);
+    const hasContent = messages.length > 0 || thinking;
+    const shouldShow = (inputFocused || thinking) && hasContent;
 
-    if (shouldShow && !panelVisible) {
+    if (shouldShow) {
+      // Open panel
+      if (closeTimer.current) {
+        clearTimeout(closeTimer.current);
+        closeTimer.current = null;
+      }
       setPanelClosing(false);
       setPanelVisible(true);
-    } else if (!shouldShow && panelVisible && !thinking) {
-      // Start closing animation
+    } else if (panelVisible && !thinking && !isSubmittingRef.current) {
+      // Close panel with animation (only if not thinking/submitting)
       setPanelClosing(true);
       closeTimer.current = setTimeout(() => {
         setPanelVisible(false);
@@ -167,21 +187,27 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
   const showSuggestions = inputFocused && !thinking && messages.length === 0;
   const canSend = Boolean(prompt.trim()) && !thinking;
 
-  const submitInFlight = useRef(false);
-
   const submitText = useCallback(
     async (raw: string) => {
       const trimmed = raw.trim();
-      if (!trimmed || thinking || submitInFlight.current) return;
-      submitInFlight.current = true;
+      if (!trimmed || thinking || isSubmittingRef.current) return;
+      
+      // Mark as submitting and clear any pending timers
+      isSubmittingRef.current = true;
+      clearAllTimers();
+      
+      // Immediately show panel and keep it open
+      setPanelClosing(false);
+      setPanelVisible(true);
+      setThinking(true);
       setPrompt("");
+      
       const historyBefore = messagesRef.current;
       const userMsg: ChatMessage = { role: "user", content: trimmed };
       setMessages((prev) => [...prev, userMsg]);
-      setThinking(true);
-      setPanelVisible(true);
-      setPanelClosing(false);
+      
       trackAssistantEvent("send", { locale });
+      
       try {
         const [reply] = await Promise.all([
           sendAssistantMessage(locale, historyBefore, trimmed),
@@ -192,20 +218,24 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
         setMessages((prev) => [...prev, { role: "assistant", content: copy.error }]);
       } finally {
         setThinking(false);
-        submitInFlight.current = false;
+        isSubmittingRef.current = false;
+        // Keep panel open after response, input can be refocused
       }
     },
-    [copy.error, locale, thinking],
+    [copy.error, locale, thinking, clearAllTimers],
   );
 
-  const pickSuggestion = (text: string) => {
+  const pickSuggestion = useCallback((text: string) => {
+    // Clear timers before submitting
+    clearAllTimers();
     trackAssistantEvent("suggestion", { locale, question: text.slice(0, 80) });
     void submitText(text);
-  };
+  }, [locale, submitText, clearAllTimers]);
 
   const handleSubmit = useCallback(() => {
+    clearAllTimers();
     void submitText(prompt);
-  }, [prompt, submitText]);
+  }, [prompt, submitText, clearAllTimers]);
 
   const toggleVoice = () => {
     const Ctor = getSpeechRecognition(locale);
@@ -232,38 +262,52 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
     recognition.start();
   };
 
-  const handleFocus = () => {
-    if (blurTimer.current) clearTimeout(blurTimer.current);
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-      setPanelClosing(false);
-    }
+  const handleFocus = useCallback(() => {
+    clearAllTimers();
+    setPanelClosing(false);
     setInputFocused(true);
     trackAssistantEvent("open", { locale });
-  };
+  }, [locale, clearAllTimers]);
 
-  const handleBlur = () => {
-    blurTimer.current = setTimeout(() => setInputFocused(false), 200);
-  };
+  const handleBlur = useCallback(() => {
+    // Don't start blur timer if we're submitting
+    if (isSubmittingRef.current || thinking) return;
+    
+    blurTimer.current = setTimeout(() => {
+      // Double-check we're not submitting when timer fires
+      if (!isSubmittingRef.current && !thinking) {
+        setInputFocused(false);
+      }
+    }, BLUR_DELAY_MS);
+  }, [thinking]);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      if (canSend) void handleSubmit();
+      if (canSend) handleSubmit();
     }
   };
 
-  const handleClearChat = () => {
+  const handleClearChat = useCallback(() => {
+    clearAllTimers();
     setMessages([]);
     setPanelVisible(false);
     setPanelClosing(false);
+    isSubmittingRef.current = false;
     sessionStorage.removeItem(STORAGE_KEY);
-  };
+  }, [clearAllTimers]);
 
   const handlePanelMouseDown = (e: React.MouseEvent) => {
     // Prevent blur when clicking inside panel
     e.preventDefault();
+  };
+
+  const handleDockMouseDown = () => {
+    // Clear blur timer when interacting with dock area
+    if (blurTimer.current) {
+      clearTimeout(blurTimer.current);
+      blurTimer.current = null;
+    }
   };
 
   const chatOpen = panelVisible && (messages.length > 0 || thinking);
@@ -308,7 +352,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
           </div>
         ) : null}
 
-        <div className="hw-dock-stack pointer-events-auto">
+        <div className="hw-dock-stack pointer-events-auto" onMouseDown={handleDockMouseDown}>
           {showSuggestions ? (
             <div
               className="hw-dock-suggestions hw-dock-suggestions--animate"
@@ -365,7 +409,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
                   className="hw-dock-send"
                   aria-label={copy.send}
                   disabled={!canSend}
-                  onClick={() => void handleSubmit()}
+                  onClick={handleSubmit}
                 >
                   {thinking ? <span className="hw-dock-send-spinner" aria-hidden /> : <SendIcon />}
                 </button>
