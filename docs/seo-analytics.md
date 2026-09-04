@@ -12,12 +12,12 @@ Prefer **one** client-side tag path to avoid double-counting:
 
 | Item | Value / status |
 |------|----------------|
-| GTM container | `GTM-K2PXS8ZC` (ready; wire GA4 Configuration tag → All Pages → Publish, then prefer GTM again) |
+| GTM container | `GTM-K2PXS8ZC` — **v2 Live**: Google tag `G-5H6GDB1CRH`, trigger Initialization – All Pages |
 | GA4 Measurement ID | `G-5H6GDB1CRH` (property berktugberke.com) |
-| Vercel (current) | `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-5H6GDB1CRH` Production + Preview (direct gtag until GTM tag is published) |
-| GSC | Domain property `sc-domain:berktugberke.com` |
-| Tag path | Temporary: direct GA4. Target: GTM-only (set `NEXT_PUBLIC_GTM_ID`, remove GA env to avoid double-count) |
-| Redeploy | Required after env changes so static export embeds tags |
+| Vercel | `NEXT_PUBLIC_GTM_ID=GTM-K2PXS8ZC` Production + Preview (GTM-only; no direct GA env) |
+| GSC | Domain `sc-domain:berktugberke.com` — sitemap `https://berktugberke.com/sitemap.xml` **Başarılı** (252 URLs) |
+| Tag path | GTM container on site → published Google tag → GA4 |
+| Daily blogs | Cron `0 6 * * *` UTC; queue through 2026-09-17 |
 
 ## Recommended path (GTM + GA4 + GSC)
 
