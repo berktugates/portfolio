@@ -9,7 +9,7 @@ export const SITE_INTRO =
  * Human-edited profile metadata timestamp. Keep the timezone explicit so
  * structured-data consumers receive an unambiguous ISO 8601 DateTime.
  */
-export const SITE_LAST_MODIFIED = "2026-09-04T22:40:00+03:00";
+export const SITE_LAST_MODIFIED = "2026-09-04T23:20:00+03:00";
 
 export const CONTACT_EMAIL = "contact@berktugberke.com";
 export const GITHUB_PROFILE = "https://github.com/berktugates";

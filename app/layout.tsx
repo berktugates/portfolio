@@ -25,6 +25,13 @@ import {
   WEBSITE_ID,
   jsonLd,
 } from "./lib/seo";
+import {
+  SERVICE_CATALOG_ID,
+  SERVICE_OFFERS,
+  serviceOfferCatalogJsonLd,
+  serviceOfferId,
+  serviceTypesForProfessionalService,
+} from "./lib/services";
 import { LOCALE_REDIRECT_SCRIPT, hreflangLanguages } from "./lib/i18n";
 const geistMono = Geist_Mono({ subsets: ["latin"], display: "swap" });
 const structuredData = {
@@ -91,12 +98,14 @@ const structuredData = {
         "AI product engineering",
         "Freelance software engineering",
         "Remote software engineering",
+        ...serviceTypesForProfessionalService(),
       ],
-      hasOfferCatalog: { "@id": OFFER_CATALOG_ID },
+      hasOfferCatalog: [{ "@id": OFFER_CATALOG_ID }, { "@id": SERVICE_CATALOG_ID }],
       makesOffer: [
         { "@id": OFFER_FREELANCE_ID },
         { "@id": OFFER_FULL_TIME_ID },
         { "@id": OFFER_PART_TIME_ID },
+        ...SERVICE_OFFERS.map((service) => ({ "@id": serviceOfferId(service.slug) })),
       ],
     },
     {
@@ -110,8 +119,9 @@ const structuredData = {
         "Freelance software engineering",
         "Full-time software engineering",
         "Part-time software engineering",
+        ...serviceTypesForProfessionalService(),
       ],
-      hasOfferCatalog: { "@id": OFFER_CATALOG_ID },
+      hasOfferCatalog: [{ "@id": OFFER_CATALOG_ID }, { "@id": SERVICE_CATALOG_ID }],
     },
     {
       "@type": "OfferCatalog",
@@ -174,6 +184,7 @@ const structuredData = {
         },
       ],
     },
+    serviceOfferCatalogJsonLd(),
   ],
 };
 export const metadata: Metadata = {

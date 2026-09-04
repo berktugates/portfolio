@@ -84,7 +84,24 @@ export async function HirePage({ locale }: { locale: Locale }) {
         isPartOf: { "@id": WEBSITE_ID },
         mainEntity: { "@id": AUTHOR_ID },
         about: { "@id": AUTHOR_ID },
-        hasPart: { "@id": `${pageUrl}#faq` },
+        hasPart: [
+          { "@id": `${pageUrl}#faq` },
+          { "@id": `${pageUrl}#services` },
+        ],
+      },
+      {
+        "@type": "ItemList",
+        "@id": `${pageUrl}#services`,
+        name: dict.hire.servicesHeading,
+        description: dict.hire.servicesIntro,
+        numberOfItems: dict.hire.services.length,
+        itemListElement: dict.hire.services.map((service, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: service.title,
+          url: `${pageUrl}#service-${service.slug}`,
+          description: service.description,
+        })),
       },
       {
         "@type": "FAQPage",
@@ -154,7 +171,24 @@ export async function HirePage({ locale }: { locale: Locale }) {
               {dict.hire.workHeading}
             </h2>
             <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">{dict.hire.workBody}</p>
-            <h3 className="mt-8 mb-5 text-sm font-medium text-zinc-900 dark:text-zinc-100">
+          </section>
+
+          <section aria-labelledby="services-heading">
+            <h2 id="services-heading" className="section-title">
+              {dict.hire.servicesHeading}
+            </h2>
+            <p className="mb-6 leading-relaxed text-zinc-700 dark:text-zinc-300">{dict.hire.servicesIntro}</p>
+            <ul className="space-y-4">
+              {dict.hire.services.map((service) => (
+                <li key={service.slug} id={`service-${service.slug}`}>
+                  <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{service.title}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                    {service.description}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <h3 className="mt-10 mb-5 text-sm font-medium text-zinc-900 dark:text-zinc-100">
               {dict.hire.productsHeading}
             </h3>
             <ul className="space-y-2">

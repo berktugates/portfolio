@@ -1,6 +1,14 @@
+import type { ServiceSlug } from "../services";
+
 export type HireFaq = {
   question: string;
   answer: string;
+};
+
+export type HireServiceCopy = {
+  slug: ServiceSlug;
+  title: string;
+  description: string;
 };
 
 export type HireDictionary = {
@@ -12,6 +20,9 @@ export type HireDictionary = {
   availabilityBody: string;
   workHeading: string;
   workBody: string;
+  servicesHeading: string;
+  servicesIntro: string;
+  services: readonly HireServiceCopy[];
   productsHeading: string;
   howHeading: string;
   howBody: string;

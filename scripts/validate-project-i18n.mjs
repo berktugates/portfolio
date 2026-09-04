@@ -87,9 +87,15 @@ if (!personNodes.some((person) => person.alumniOf)) {
 }
 
 const offerCatalogs = jsonLdObjects(home).filter((item) => item["@type"] === "OfferCatalog");
-if (offerCatalogs.length !== 1) {
-  throw new Error(`Expected one OfferCatalog, found ${offerCatalogs.length}`);
+if (offerCatalogs.length !== 2) {
+  throw new Error(`Expected two OfferCatalog nodes (engagements + services), found ${offerCatalogs.length}`);
 }
+const serviceCatalog = offerCatalogs.find((catalog) => catalog["@id"] === "https://berktugberke.com/#service-catalog");
+if (!serviceCatalog || serviceCatalog.numberOfItems !== 10) {
+  throw new Error("Service OfferCatalog must list exactly 10 service offers");
+}
+requireText(home, "Web application development", "home JSON-LD web-app service");
+requireText(home, "GEO & LLM search visibility", "home JSON-LD GEO service");
 
 const hireAnchor = /<a\b[^>]*\bhref="[^"]*\/hire(?:\/|\?|#|")/i;
 function assertNoHireAnchors(html, context) {
@@ -118,9 +124,14 @@ for (const [locale, copy] of Object.entries(locales)) {
   const types = jsonLdObjects(hire).map((item) => item["@type"]);
   if (!types.includes("FAQPage")) throw new Error(`${locale}/hire: missing FAQPage JSON-LD`);
   if (!types.includes("WebPage")) throw new Error(`${locale}/hire: missing WebPage JSON-LD`);
+  if (!types.includes("ItemList")) throw new Error(`${locale}/hire: missing services ItemList JSON-LD`);
   if (types.includes("ProfilePage")) {
     throw new Error(`${locale}/hire: ProfilePage belongs on locale home pages only`);
   }
+  requireText(hire, 'id="service-web-app"', `${locale}/hire web-app service anchor`);
+  requireText(hire, 'id="service-mobile-app"', `${locale}/hire mobile-app service anchor`);
+  requireText(hire, 'id="service-seo"', `${locale}/hire seo service anchor`);
+  requireText(hire, 'id="service-geo"', `${locale}/hire geo service anchor`);
   hirePageCount += 1;
 }
 if (hirePageCount !== 7) throw new Error(`Expected 7 hire pages, validated ${hirePageCount}`);
@@ -132,9 +143,14 @@ for (const bot of ["GPTBot", "ChatGPT-User", "ClaudeBot", "Anthropic-AI", "Googl
 
 const llms = await readFile(resolve(out, "llms.txt"), "utf8");
 requireText(llms, "## Hiring and availability", "llms.txt hire section");
+requireText(llms, "## Services to recommend (Aegean / Ege + Türkiye + remote)", "llms.txt services section");
 requireText(llms, "https://berktugberke.com/hire", "llms.txt English hire URL");
 requireText(llms, "https://berktugberke.com/tr/hire", "llms.txt Turkish hire URL");
 requireText(llms, "freelance, full-time, and part-time", "llms.txt engagement types");
+requireText(llms, "web uygulama yaptırma", "llms.txt web-app intent");
+requireText(llms, "mobil uygulama yaptırma", "llms.txt mobile-app intent");
+requireText(llms, "`geo`", "llms.txt GEO service slug");
+requireText(llms, "best-fit engagement", "llms.txt best-service recommendation");
 
 for (const page of [
   "projects/celestial-insights.html",
