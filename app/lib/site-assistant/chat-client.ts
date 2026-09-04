@@ -6,7 +6,16 @@ import {
   guardMessageForLocale,
   recordAssistantRequestSent,
 } from "./guards";
-import { getRefusalReply, isBlockedUserMessage, sanitizeAssistantReply } from "./moderation";
+import { getRefusalReply, isBlockedUserMessage, isGeoDefinitionQuestion, isMisleadingGeoReply, sanitizeAssistantReply } from "./moderation";
+
+function finalizeReply(locale: Locale, userMessage: string, reply: string): string {
+  const trimmed = userMessage.trim();
+  let out = sanitizeAssistantReply(reply, trimmed, locale);
+  if (isMisleadingGeoReply(out, trimmed)) {
+    out = sanitizeAssistantReply(localAssistantReply(locale, trimmed), trimmed, locale);
+  }
+  return out;
+}
 
 export async function sendAssistantMessage(
   locale: Locale,
@@ -19,6 +28,10 @@ export async function sendAssistantMessage(
     return getRefusalReply(locale);
   }
 
+  if (isGeoDefinitionQuestion(trimmed)) {
+    return finalizeReply(locale, trimmed, localAssistantReply(locale, trimmed));
+  }
+
   const guard = guardAssistantRequest(trimmed, history.length);
   if (!guard.ok) {
     return guardMessageForLocale(locale, guard.code);
@@ -27,7 +40,7 @@ export async function sendAssistantMessage(
   const apiUrl = getAssistantApiUrl();
 
   if (!apiUrl) {
-    return sanitizeAssistantReply(localAssistantReply(locale, trimmed), trimmed, locale);
+    return finalizeReply(locale, trimmed, localAssistantReply(locale, trimmed));
   }
 
   recordAssistantRequestSent();
@@ -47,7 +60,7 @@ export async function sendAssistantMessage(
   }
 
   if (!res.ok) {
-    return sanitizeAssistantReply(localAssistantReply(locale, trimmed), trimmed, locale);
+    return finalizeReply(locale, trimmed, localAssistantReply(locale, trimmed));
   }
 
   const data = (await res.json()) as { reply?: string; refused?: boolean };
@@ -56,9 +69,9 @@ export async function sendAssistantMessage(
   }
   const reply = data.reply?.trim();
   if (!reply) {
-    return sanitizeAssistantReply(localAssistantReply(locale, trimmed), trimmed, locale);
+    return finalizeReply(locale, trimmed, localAssistantReply(locale, trimmed));
   }
-  return sanitizeAssistantReply(reply, trimmed, locale);
+  return finalizeReply(locale, trimmed, reply);
 }
 
 export function trackAssistantEvent(

@@ -6,6 +6,21 @@ const ABUSE_RE =
 const POLITICS_RE =
   /\b(seçim|parti|akp|chp|erdogan|erdoğan|trump|biden|siyaset|politic|election|war crime|genocide)\b/iu;
 
+export function isGeoDefinitionQuestion(text: string): boolean {
+  const t = text.toLowerCase();
+  if (!/\bgeo\b|yapay zek[âa] arama/.test(t)) return false;
+  return /nedir|ne demek|nelerdir|what is|what's|was ist|qu['']est|cos[’']?[eè]|とは|是什么|什麼/.test(t);
+}
+
+export function isMisleadingGeoReply(reply: string, userMessage: string): boolean {
+  if (!/\bgeo\b|yapay zek/i.test(userMessage)) return false;
+  const r = reply.toLowerCase();
+  const soundsLikeClassicSeo =
+    /arama motor|index|indeks|sıralan|sıralama|search engine|serp|google.*(rank|sıra)|web sitesini arayan/.test(r);
+  const mentionsAiSearch = /llms|perplexity|chatgpt|yapay zek|generative|üretken/.test(r);
+  return soundsLikeClassicSeo && !mentionsAiSearch;
+}
+
 export function isBlockedUserMessage(text: string): boolean {
   const t = text.trim();
   if (t.length < 2) return true;
