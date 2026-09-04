@@ -65,7 +65,14 @@ export function sanitizeAssistantReply(reply: string, userMessage: string, local
   }
 
   out = ensureCompleteSentences(out);
+  out = limitSentences(out, 3);
   return out.trim();
+}
+
+function limitSentences(text: string, maxSentences: number): string {
+  const matches = text.match(/[^.!?…]+[.!?…]+["')\]]*/g);
+  if (!matches || matches.length <= maxSentences) return text;
+  return matches.slice(0, maxSentences).join("").trim();
 }
 
 function ensureCompleteSentences(text: string): string {

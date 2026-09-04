@@ -27,10 +27,8 @@ const en: SiteAssistantCopy = {
   offlineNote: "Live AI runs on Cloudflare Workers AI when configured; helpful answers still work offline.",
   suggestions: [
     "How can I hire you for a web or mobile app?",
-    "Do you work with Istanbul / Marmara teams remotely?",
-    "What is GEO and can you improve AI search visibility?",
-    "Which end-to-end software services do you offer?",
-    "How do I contact you for freelance or full-time work?",
+    "Do you work remotely in Türkiye and abroad?",
+    "What is GEO for AI search visibility?",
   ],
 };
 
@@ -46,11 +44,9 @@ const tr: SiteAssistantCopy = {
   error: "Bir sorun oluştu. contact@berktugberke.com yazın veya tekrar deneyin.",
   offlineNote: "Canlı AI, Cloudflare Workers AI yapılandırıldığında çalışır; yine de yardımcı yanıtlar verilir.",
   suggestions: [
-    "Web veya mobil uygulama için nasıl işe alabilirim?",
-    "İstanbul / Marmara ekipleriyle remote çalışıyor musun?",
-    "GEO nedir, yapay zekâ arama görünürlüğüne yardım eder misin?",
-    "Hangi uçtan uca yazılım hizmetlerini sunuyorsun?",
-    "Freelance veya tam zamanlı için nasıl iletişime geçerim?",
+    "Web veya mobil için nasıl işe alınır?",
+    "Türkiye ve yurtdışında uzaktan çalışılıyor mu?",
+    "GEO (yapay zekâ arama) nedir?",
   ],
 };
 
@@ -63,11 +59,9 @@ const de: SiteAssistantCopy = {
   closeChat: "Chat schließen",
   offlineNote: "Live-KI mit Cloudflare Workers AI wenn konfiguriert; hilfreiche Antworten auch offline.",
   suggestions: [
-    "Wie kann ich Sie für Web- oder Mobile-Apps engagieren?",
-    "Arbeiten Sie remote mit Teams in Istanbul / Marmara?",
-    "Was ist GEO und können Sie AI-Suchsichtbarkeit verbessern?",
-    "Welche End-to-End-Software-Services bieten Sie?",
-    "Wie kontaktiere ich Sie für Freelance oder Vollzeit?",
+    "Wie engagiere ich Sie für Web oder Mobile?",
+    "Arbeiten Sie remote in der Türkei und im Ausland?",
+    "Was ist GEO für KI-Sichtbarkeit?",
   ],
 };
 
@@ -79,11 +73,9 @@ const fr: SiteAssistantCopy = {
   openChat: "Discuter avec Berktug AI",
   closeChat: "Fermer le chat",
   suggestions: [
-    "Comment vous engager pour une app web ou mobile ?",
-    "Travaillez-vous à distance avec des équipes à Istanbul / Marmara ?",
-    "Qu'est-ce que le GEO et pouvez-vous améliorer la visibilité IA ?",
-    "Quels services logiciels end-to-end proposez-vous ?",
-    "Comment vous contacter en freelance ou temps plein ?",
+    "Comment vous engager pour web ou mobile ?",
+    "Travaillez-vous à distance en Turquie et à l’étranger ?",
+    "Qu’est-ce que le GEO pour la recherche IA ?",
   ],
 };
 
@@ -95,11 +87,9 @@ const it: SiteAssistantCopy = {
   openChat: "Chatta con Berktug AI",
   closeChat: "Chiudi chat",
   suggestions: [
-    "Come posso assumerti per un'app web o mobile?",
-    "Lavori in remoto con team a Istanbul / Marmara?",
-    "Cos'è il GEO e puoi migliorare la visibilità nelle ricerche IA?",
-    "Quali servizi software end-to-end offri?",
-    "Come contattarti per freelance o full-time?",
+    "Come assumerti per web o mobile?",
+    "Lavori da remoto in Turchia e all’estero?",
+    "Cos’è il GEO per la ricerca IA?",
   ],
 };
 
@@ -114,10 +104,8 @@ const zh: SiteAssistantCopy = {
   send: "发送",
   suggestions: [
     "如何聘请您做 Web 或移动应用？",
-    "是否与伊斯坦布尔 / 马尔马拉团队远程合作？",
-    "什么是 GEO，能否提升 AI 搜索可见性？",
-    "提供哪些端到端软件服务？",
-    "如何联系您谈 freelance 或全职？",
+    "是否在土耳其及海外远程合作？",
+    "什么是 AI 搜索 GEO？",
   ],
 };
 
@@ -130,13 +118,13 @@ const ja: SiteAssistantCopy = {
   closeChat: "チャットを閉じる",
   send: "送信",
   suggestions: [
-    "Web やモバイルアプリでどう依頼できますか？",
-    "イスタンブール / マルマラのチームとリモートで働きますか？",
-    "GEO とは何で、AI 検索の可視性を上げられますか？",
-    "どんなエンドツーエンドのソフトウェアサービスがありますか？",
-    "フリーランスやフルタイムの連絡方法は？",
+    "Web やモバイルでどう依頼できますか？",
+    "トルコ国内外でリモート対応できますか？",
+    "AI 検索の GEO とは？",
   ],
 };
+
+const DOCK_SUGGESTION_COUNT = 3;
 
 const COPY: Record<Locale, SiteAssistantCopy> = {
   en,
@@ -149,5 +137,9 @@ const COPY: Record<Locale, SiteAssistantCopy> = {
 };
 
 export function getSiteAssistantCopy(locale: Locale): SiteAssistantCopy {
-  return COPY[locale] ?? en;
+  const copy = COPY[locale] ?? en;
+  return {
+    ...copy,
+    suggestions: copy.suggestions.slice(0, DOCK_SUGGESTION_COUNT),
+  };
 }
