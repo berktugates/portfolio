@@ -193,7 +193,6 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
                 </span>
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-[11px] font-medium text-zinc-900 dark:text-zinc-100">{copy.title}</span>
-                  <span className="font-mono text-[10px] text-zinc-400">{copy.modelLabel}</span>
                 </div>
               </div>
               <button

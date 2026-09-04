@@ -3,7 +3,6 @@ import type { Locale } from "../i18n";
 export type SiteAssistantCopy = {
   title: string;
   subtitle: string;
-  modelLabel: string;
   placeholder: string;
   send: string;
   thinking: string;
@@ -19,7 +18,6 @@ export type SiteAssistantCopy = {
 const en: SiteAssistantCopy = {
   title: "Berktug AI",
   subtitle: "Ask about hiring, services, regions, SEO, GEO, and how to start a project.",
-  modelLabel: "site guide",
   placeholder: "Ask Berktug AI anything…",
   send: "Send",
   thinking: "Berktug AI is thinking",
@@ -41,7 +39,6 @@ const en: SiteAssistantCopy = {
 const tr: SiteAssistantCopy = {
   title: "Berktug AI",
   subtitle: "İş birliği, hizmetler, bölgeler, SEO, GEO ve proje başlangıcı hakkında sorun.",
-  modelLabel: "site rehberi",
   placeholder: "Berktug AI'a bir şey sorun…",
   send: "Gönder",
   thinking: "Berktug AI düşünüyor",

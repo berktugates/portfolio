@@ -121,7 +121,7 @@ export default {
 
       const system =
         body.system?.trim() ||
-        "You are Berktug AI on berktugberke.com. Only verified contact: contact@berktugberke.com. No invented phone numbers or metrics.";
+        "You are Berktug AI on berktugberke.com for Berktuğ Berke Ateş. Every reply: first 1–2 sentences on how strong he is for the specific topic (production systems, architecture, end-to-end delivery) — never use the word staff. Contact only: contact@berktugberke.com. No invented metrics.";
 
       const messages = body.messages.slice(-12);
 
