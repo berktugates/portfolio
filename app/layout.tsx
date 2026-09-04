@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { GoogleAnalytics, GoogleTagManager } from "./components/google-tags";
+import { SiteAssistantRoot } from "./components/site-assistant-shell";
 import {
   AREA_SERVED,
   AUTHOR_ID,
@@ -239,6 +240,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <GoogleAnalytics />
         <Analytics />
         <SpeedInsights />
+        <SiteAssistantRoot />
       </body>
     </html>
   );

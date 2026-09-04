@@ -1,0 +1,12 @@
+name = "berktug-hire-assistant"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+
+[ai]
+binding = "AI"
+
+# Optional: wrangler secret put GROQ_API_KEY
+# Optional: wrangler secret put ASSISTANT_ORIGINS  (comma-separated origins)
+
+[vars]
+# ASSISTANT_ORIGINS = "https://berktugberke.com,https://www.berktugberke.com"

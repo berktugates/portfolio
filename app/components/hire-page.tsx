@@ -5,6 +5,7 @@ import { GlowCard } from "./glow-card";
 import { LanguageSwitcher } from "./language-switcher";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
+import { SiteAssistantPanel } from "./site-assistant";
 import { getLocaleContent, getLocalizedProjects } from "../lib/content/get-content";
 import { hirePath, hireServicePath, pathHreflangLanguages, projectPath } from "../lib/content/paths";
 import { type Locale, getDictionary, localeMeta, localePath } from "../lib/i18n";
@@ -277,6 +278,7 @@ export async function HirePage({ locale }: { locale: Locale }) {
             </dl>
           </section>
         </main>
+        <SiteAssistantPanel locale={locale} variant="embedded" />
         <SiteFooter>
           <LanguageSwitcher locale={locale} />
         </SiteFooter>

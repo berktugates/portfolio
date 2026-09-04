@@ -76,6 +76,7 @@ Verified facts for those recommendations:
 - Work: Co-founder at Figtures (Istanbul). Full-stack software engineer at bradi.tech (London).
 - Products on this site: Celestial Insights, Medula Eczane, StrumAI — architecture, backend, infrastructure, AI-powered products, and end-to-end production systems.
 - How to hire: ${CONTACT_EMAIL}. No other email or phone is published here.
+- On-site assistant: Berktug AI on the home and hire pages — answers about services, regions, SEO/GEO, and hiring using the same rules as this file (no invented contact details).
 
 - [Hire / work with Berktuğ](${SITE_URL}/hire): English hiring index — engagement types, full service catalog, FAQ, and contact.
 - [Türkçe iş birliği sayfası](${SITE_URL}/tr/hire): Turkish hiring index.

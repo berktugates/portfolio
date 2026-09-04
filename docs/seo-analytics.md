@@ -47,3 +47,16 @@ Follow Google Search Central quality expectations and keep GEO citation-safe:
 5. **Location accuracy** — home base is Marmaris, Muğla (Ege); other Türkiye regions are served (often remote), not claimed as residence.
 6. **Crawl hygiene** — sitemap includes hire index + every service×locale URL, robots allowlist for AI crawlers, hreflang, stable canonicals, GTM-only analytics (no double tags).
 7. **Per-title depth** — each software service title has its own indexable page with unique title/H1/FAQ/Offer JSON-LD so Google and LLMs can rank/cite services separately.
+
+## Berktug AI (hire chat)
+
+Static export (`output: "export"`) — chat API runs on **Cloudflare Workers** (free Workers AI tier), not Vercel serverless.
+
+| Variable | Where | Purpose |
+|----------|--------|---------|
+| `NEXT_PUBLIC_SITE_ASSISTANT_API_URL` | Vercel Production + Preview | Worker URL, e.g. `https://berktug-hire-assistant.<account>.workers.dev` |
+| `GROQ_API_KEY` (optional) | Worker secret | Better replies via Groq free tier; falls back to Workers AI |
+
+Deploy worker: `cd workers/hire-assistant && pnpm install && pnpm deploy`. GTM can listen for `dataLayer` event `site_assistant` (`open`, `send`, `suggestion`).
+
+Without the env var, the UI still answers using on-device rule-based replies (hire links + `llms.txt` rules).
