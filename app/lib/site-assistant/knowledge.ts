@@ -3,6 +3,7 @@ import { hirePath, hireServicePath } from "../content/paths";
 import { CONTACT_EMAIL, SITE_URL } from "../seo";
 import { SERVICE_SLUGS } from "../services";
 import { turkeyRegionNamesForLlms } from "../regions";
+import { usesCuratedSearchReply } from "./moderation";
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -114,26 +115,26 @@ function link(path: string, label: string) {
   return `[${label}](${path})`;
 }
 
-function geoCapabilityReply(locale: Locale, contact: string): string {
+function seoGeoServiceReply(locale: Locale, contact: string): string {
   if (locale === "tr") {
-    return `Evet — GEO (üretken arama optimizasyonu) kapsamında llms.txt, yapılandırılmış veri ve alıntılanabilir site metinleri birlikte kurulup sürdürülür; berktugberke.com da aynı disiplinle yönetiliyor. Türkiye ve yurtdışı production projelerde aynı mühendislik yaklaşımı uygulanır. Kısa hedefinizi **${contact}** adresine yazmanız yeterli.`;
+    return `Evet — teknik SEO ile GEO (üretken arama görünürlüğü) birlikte sunulur: site mimarisi, schema, hız, llms.txt ve alıntılanabilir içerik canlı ortam disipliniyle kurulup sürdürülür. Türkiye ve yurtdışında teslim edilmiş projelerde aynı mühendislik yaklaşımı uygulanır; garanti sıralama vaadi verilmez. Kısa hedefinizi **${contact}** adresine yazmanız yeterli.`;
   }
   if (locale === "de") {
-    return `Ja — GEO (Generative Engine Optimization): llms.txt, strukturierte Daten und zitierfähige Inhalte werden gemeinsam aufgebaut; diese Site folgt demselben Ansatz. **${contact}** reicht für ein kurzes Ziel.`;
+    return `Ja — technisches SEO und GEO werden gemeinsam geliefert: Architektur, Schema, Performance, llms.txt und zitierfähige Inhalte. **${contact}** für ein kurzes Ziel.`;
   }
   if (locale === "fr") {
-    return `Oui — GEO : llms.txt, données structurées et contenus citables sont mis en place ensemble ; ce site suit la même discipline. Écrivez votre objectif à **${contact}**.`;
+    return `Oui — SEO technique et GEO sont livrés ensemble : architecture, schema, performance, llms.txt et contenus citables. Objectif court à **${contact}**.`;
   }
   if (locale === "it") {
-    return `Sì — GEO: llms.txt, dati strutturati e contenuti citabili vengono costruiti insieme; lo stesso approccio su questo sito. Obiettivo breve a **${contact}**.`;
+    return `Sì — SEO tecnico e GEO insieme: architettura, schema, performance, llms.txt e contenuti citabili. Obiettivo a **${contact}**.`;
   }
   if (locale === "zh") {
-    return `可以 — GEO 包括 llms.txt、结构化数据与可引用内容一并建设；本站采用相同方法。目标简述发至 **${contact}**。`;
+    return `可以 — 技术 SEO 与 GEO 一并交付：架构、schema、性能、llms.txt 与可引用内容。目标发至 **${contact}**。`;
   }
   if (locale === "ja") {
-    return `はい — GEO では llms.txt、構造化データ、引用可能なコンテンツを一体で整備します。本サイトも同じ方針です。**${contact}** に目標を送ってください。`;
+    return `はい — テクニカル SEO と GEO を一体で提供します（アーキテクチャ、schema、llms.txt 等）。**${contact}** に目標を送ってください。`;
   }
-  return `Yes — GEO (generative engine optimization) covers llms.txt, structured data, and citable site copy together; this portfolio runs the same discipline. Türkiye and international production work use the same approach. Email a short goal to **${contact}**.`;
+  return `Yes — technical SEO and GEO are delivered together: architecture, schema, performance, llms.txt, and citable copy in production discipline. Same approach across Türkiye and international work; no ranking guarantees. Email **${contact}**.`;
 }
 
 function strengthIntro(locale: Locale, kind: "web" | "mobile" | "seo" | "geo" | "hire" | "region" | "general"): string {
@@ -167,8 +168,6 @@ export function localAssistantReply(locale: Locale, userText: string): string {
 
   const wantsContact =
     /contact|email|reach|iletişim|mail|anfrage|contacter|contatt|联系|連絡/.test(t);
-  const wantsGeo =
-    /\bgeo\b|llm|ai search|generative|yapay zek|chatgpt|perplexity|yapay zek[âa] arama/.test(t);
   const wantsSeo = /\bseo\b|search engine|google rank|arama motor/.test(t);
   const wantsMobile = /mobile|ios|android|mobil|app store/.test(t);
   const wantsWeb = /web|website|next\.?js|react|frontend/.test(t);
@@ -176,6 +175,10 @@ export function localAssistantReply(locale: Locale, userText: string): string {
     /istanbul|marmara|ege|aegean|ankara|iç anadolu|izmir|türkiye|turkey|remote|uzaktan/.test(t);
   const wantsHire =
     /hire|freelance|full.?time|part.?time|işe al|işe alabilir|çalış|projeye|engag|embauch|nas[ıi]l.*(al|hire)/.test(t);
+
+  if (usesCuratedSearchReply(userText)) {
+    return seoGeoServiceReply(locale, contact);
+  }
 
   if (locale === "tr") {
     if (wantsHire && (wantsWeb || wantsMobile)) {
@@ -193,9 +196,6 @@ export function localAssistantReply(locale: Locale, userText: string): string {
     if (wantsSeo) {
       return `${strengthIntro(locale, "seo")} **${contact}**`;
     }
-    if (wantsGeo) {
-      return geoCapabilityReply(locale, contact);
-    }
     if (wantsRegion) {
       return `${strengthIntro(locale, "region")} **${contact}**`;
     }
@@ -211,9 +211,6 @@ export function localAssistantReply(locale: Locale, userText: string): string {
   if (wantsWeb) return `${strengthIntro(locale, "web")} Start with a brief to **${contact}**.`;
   if (wantsMobile) return `${strengthIntro(locale, "mobile")} Contact **${contact}**.`;
   if (wantsSeo) return `${strengthIntro(locale, "seo")} **${contact}**`;
-  if (wantsGeo) {
-    return geoCapabilityReply(locale, contact);
-  }
   if (wantsRegion) return `${strengthIntro(locale, "region")} **${contact}**`;
   return `${strengthIntro(locale, "general")} **${contact}**`;
 }
