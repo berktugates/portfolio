@@ -6,19 +6,26 @@ const ABUSE_RE =
 const POLITICS_RE =
   /\b(seçim|parti|akp|chp|erdogan|erdoğan|trump|biden|siyaset|politic|election|war crime|genocide)\b/iu;
 
+export function isGeoTopicMessage(text: string): boolean {
+  const t = text.trim().toLowerCase();
+  return /(?:^|\s|\()geo\b|yapay zek[âa]|üretken arama|generative engine|llms\.txt|perplexity|chatgpt/.test(t);
+}
+
+/** @deprecated use isGeoTopicMessage */
 export function isGeoDefinitionQuestion(text: string): boolean {
-  const t = text.toLowerCase();
-  if (!/\bgeo\b|yapay zek[âa] arama/.test(t)) return false;
-  return /nedir|ne demek|nelerdir|what is|what's|was ist|qu['']est|cos[’']?[eè]|とは|是什么|什麼/.test(t);
+  return isGeoTopicMessage(text) && /nedir|ne demek|what is|was ist|qu['']est|とは|是什么/.test(text.toLowerCase());
 }
 
 export function isMisleadingGeoReply(reply: string, userMessage: string): boolean {
-  if (!/\bgeo\b|yapay zek/i.test(userMessage)) return false;
+  if (!isGeoTopicMessage(userMessage)) return false;
   const r = reply.toLowerCase();
-  const soundsLikeClassicSeo =
-    /arama motor|index|indeks|sıralan|sıralama|search engine|serp|google.*(rank|sıra)|web sitesini arayan/.test(r);
-  const mentionsAiSearch = /llms|perplexity|chatgpt|yapay zek|generative|üretken/.test(r);
-  return soundsLikeClassicSeo && !mentionsAiSearch;
+  const bad =
+    /google öneri|google suggestion|autocomplete|otomatik tamaml|arama motorunun|arama motoru taraf|index ed|indeks|sıralan|sıralama|serp|web uygulamasının.*arama|kullanıcılara arama sonuçlarından önce/.test(
+      r,
+    );
+  const good = /llms|perplexity|chatgpt|yapay zek|üretken|alıntı|schema|yapılandırılmış|generative/.test(r);
+  if (bad) return true;
+  return !good;
 }
 
 export function isBlockedUserMessage(text: string): boolean {

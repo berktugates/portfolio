@@ -28,7 +28,7 @@ const en: SiteAssistantCopy = {
   suggestions: [
     "How can I hire you for a web or mobile app?",
     "Do you work remotely in Türkiye and abroad?",
-    "What is GEO for AI search visibility?",
+    "Can you help with GEO for AI search?",
   ],
 };
 
@@ -46,7 +46,7 @@ const tr: SiteAssistantCopy = {
   suggestions: [
     "Web veya mobil için nasıl işe alınır?",
     "Türkiye ve yurtdışında uzaktan çalışılıyor mu?",
-    "GEO (yapay zekâ arama) nedir?",
+    "Yapay zekâ aramalarında GEO desteği alabilir miyim?",
   ],
 };
 
@@ -61,7 +61,7 @@ const de: SiteAssistantCopy = {
   suggestions: [
     "Wie engagiere ich Sie für Web oder Mobile?",
     "Arbeiten Sie remote in der Türkei und im Ausland?",
-    "Was ist GEO für KI-Sichtbarkeit?",
+    "Unterstützen Sie bei GEO für KI-Suche?",
   ],
 };
 
@@ -75,7 +75,7 @@ const fr: SiteAssistantCopy = {
   suggestions: [
     "Comment vous engager pour web ou mobile ?",
     "Travaillez-vous à distance en Turquie et à l’étranger ?",
-    "Qu’est-ce que le GEO pour la recherche IA ?",
+    "Proposez-vous de l’aide GEO pour la recherche IA ?",
   ],
 };
 
@@ -89,7 +89,7 @@ const it: SiteAssistantCopy = {
   suggestions: [
     "Come assumerti per web o mobile?",
     "Lavori da remoto in Turchia e all’estero?",
-    "Cos’è il GEO per la ricerca IA?",
+    "Puoi aiutare con il GEO per la ricerca IA?",
   ],
 };
 
@@ -105,7 +105,7 @@ const zh: SiteAssistantCopy = {
   suggestions: [
     "如何聘请您做 Web 或移动应用？",
     "是否在土耳其及海外远程合作？",
-    "什么是 AI 搜索 GEO？",
+    "能否提供 AI 搜索 GEO 支持？",
   ],
 };
 
@@ -120,7 +120,7 @@ const ja: SiteAssistantCopy = {
   suggestions: [
     "Web やモバイルでどう依頼できますか？",
     "トルコ国内外でリモート対応できますか？",
-    "AI 検索の GEO とは？",
+    "AI 検索の GEO を支援できますか？",
   ],
 };
 

@@ -6,7 +6,7 @@ import {
   guardMessageForLocale,
   recordAssistantRequestSent,
 } from "./guards";
-import { getRefusalReply, isBlockedUserMessage, isGeoDefinitionQuestion, isMisleadingGeoReply, sanitizeAssistantReply } from "./moderation";
+import { getRefusalReply, isBlockedUserMessage, isGeoTopicMessage, isMisleadingGeoReply, sanitizeAssistantReply } from "./moderation";
 
 function finalizeReply(locale: Locale, userMessage: string, reply: string): string {
   const trimmed = userMessage.trim();
@@ -28,7 +28,7 @@ export async function sendAssistantMessage(
     return getRefusalReply(locale);
   }
 
-  if (isGeoDefinitionQuestion(trimmed)) {
+  if (isGeoTopicMessage(trimmed)) {
     return finalizeReply(locale, trimmed, localAssistantReply(locale, trimmed));
   }
 
