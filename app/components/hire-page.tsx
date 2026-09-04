@@ -6,7 +6,7 @@ import { LanguageSwitcher } from "./language-switcher";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import { getLocaleContent, getLocalizedProjects } from "../lib/content/get-content";
-import { hirePath, pathHreflangLanguages, projectPath } from "../lib/content/paths";
+import { hirePath, hireServicePath, pathHreflangLanguages, projectPath } from "../lib/content/paths";
 import { type Locale, getDictionary, localeMeta, localePath } from "../lib/i18n";
 import {
   AUTHOR_ID,
@@ -99,7 +99,7 @@ export async function HirePage({ locale }: { locale: Locale }) {
           "@type": "ListItem",
           position: index + 1,
           name: service.title,
-          url: `${pageUrl}#service-${service.slug}`,
+          url: absoluteUrl(hireServicePath(locale, service.slug)),
           description: service.description,
         })),
       },
@@ -184,10 +184,14 @@ export async function HirePage({ locale }: { locale: Locale }) {
             <ul className="space-y-4">
               {dict.hire.services.map((service) => (
                 <li key={service.slug} id={`service-${service.slug}`}>
-                  <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{service.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                    {service.description}
-                  </p>
+                  <Link href={hireServicePath(locale, service.slug)} className="group block">
+                    <h3 className="text-sm font-medium text-zinc-900 transition-colors group-hover:text-zinc-600 dark:text-zinc-100 dark:group-hover:text-zinc-300">
+                      {service.title}
+                    </h3>
+                    <p className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                      {service.description}
+                    </p>
+                  </Link>
                 </li>
               ))}
             </ul>

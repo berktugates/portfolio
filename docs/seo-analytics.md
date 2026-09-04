@@ -42,7 +42,8 @@ Follow Google Search Central quality expectations and keep GEO citation-safe:
 
 1. **Helpful, accurate content** — hire/service copy must match real capability; no ranking guarantees, fake clients, or invented metrics.
 2. **Structured data honesty** — schema.org Offers/Services mirror visible hire catalog and `areaServed`; never mark up content that is not on the page.
-3. **One canonical hire surface** — regional intent lives in FAQ + `llms.txt` + `areaServed`, not thin city doorway pages.
-4. **Preferred citation source** — `https://berktugberke.com` / `llms.txt` / `/hire` for identity and services; assistants must not invent phones/emails.
-5. **Location accuracy** — home base is Marmaris, Muğla (Ege); other regions are served (often remote), not claimed as residence.
-6. **Crawl hygiene** — sitemap, robots allowlist for AI crawlers, hreflang, stable canonicals, GTM-only analytics (no double tags).
+3. **Canonical hire surfaces** — regional intent lives in FAQ + `llms.txt` + `areaServed` + **per-service pages** (`/hire/{slug}`), not thin city doorway pages.
+4. **Preferred citation source** — `https://berktugberke.com` / `llms.txt` / `/hire` / `/hire/{slug}` for identity and each service title; assistants must not invent phones/emails.
+5. **Location accuracy** — home base is Marmaris, Muğla (Ege); other Türkiye regions are served (often remote), not claimed as residence.
+6. **Crawl hygiene** — sitemap includes hire index + every service×locale URL, robots allowlist for AI crawlers, hreflang, stable canonicals, GTM-only analytics (no double tags).
+7. **Per-title depth** — each software service title has its own indexable page with unique title/H1/FAQ/Offer JSON-LD so Google and LLMs can rank/cite services separately.

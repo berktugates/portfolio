@@ -5,12 +5,14 @@ import {
   blogPostPath,
   blogsIndexPath,
   hirePath,
+  hireServicePath,
   pathHreflangLanguages,
   projectLegalPath,
   projectPath,
 } from "./lib/content/paths";
 import { LOCALES, hreflangLanguages, localeMeta, localeUrl } from "./lib/i18n";
 import { SITE_LAST_MODIFIED, absoluteUrl } from "./lib/seo";
+import { SERVICE_SLUGS } from "./lib/services";
 
 export const dynamic = "force-static";
 
@@ -30,6 +32,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: SITE_LAST_MODIFIED,
     alternates: { languages: hireLanguages },
   }));
+
+  const hireServiceEntries = SERVICE_SLUGS.flatMap((service) => {
+    const languages = pathHreflangLanguages(`/hire/${service}`);
+    return LOCALES.map((locale) => ({
+      url: absoluteUrl(hireServicePath(locale, service)),
+      lastModified: SITE_LAST_MODIFIED,
+      alternates: { languages },
+    }));
+  });
 
   const projectEntries = projects.flatMap((project) =>
     LOCALES.map((locale) => ({
@@ -102,6 +113,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...localeHomes,
     ...localeHires,
+    ...hireServiceEntries,
     ...projectEntries,
     ...legalEntries,
     ...blogIndexEntries,

@@ -1,15 +1,17 @@
+import { buildAreaServedFromRegions } from "./regions";
+
 export const SITE_URL = "https://berktugberke.com";
 export const SITE_NAME = "Berktug Berke Ates";
 export const SITE_TITLE = "Berktug Berke Ates — Software Engineer and Product Builder";
 export const SITE_DESCRIPTION =
   "Software engineer and product builder delivering end-to-end software: web and mobile products, frontend and backend, architecture, SaaS, AI systems, DevOps, data, security, integrations, technical SEO, GEO, and staff-level engineering leadership.";
 export const SITE_INTRO =
-  "Based in Marmaris, Muğla, in Türkiye's Aegean (Ege) region, Berktuğ Berke Ates is a software engineer and product builder who designs and ships scalable software products and complex digital systems end-to-end. His work covers software architecture, frontend and backend engineering, infrastructure, DevOps, data, security, integrations, AI-powered systems, automation, technical SEO, GEO, and production delivery. He is available for freelance, full-time, and part-time engagements across the Aegean (Ege), Central Anatolia (İç Anadolu), and Marmara regions and for remote and international work.";
+  "Based in Marmaris, Muğla, in Türkiye's Aegean (Ege) region, Berktuğ Berke Ates is a software engineer and product builder who designs and ships scalable software products and complex digital systems end-to-end. His work covers software architecture, frontend and backend engineering, infrastructure, DevOps, data, security, integrations, AI-powered systems, automation, technical SEO, GEO, and production delivery. He is available for freelance, full-time, and part-time engagements across all regions of Türkiye (Ege, Marmara, İç Anadolu, Akdeniz, Karadeniz, Doğu Anadolu, Güneydoğu Anadolu) and for remote and international work.";
 /**
  * Human-edited profile metadata timestamp. Keep the timezone explicit so
  * structured-data consumers receive an unambiguous ISO 8601 DateTime.
  */
-export const SITE_LAST_MODIFIED = "2026-09-04T23:40:00+03:00";
+export const SITE_LAST_MODIFIED = "2026-09-04T23:55:00+03:00";
 
 export const CONTACT_EMAIL = "contact@berktugberke.com";
 export const GITHUB_PROFILE = "https://github.com/berktugates";
@@ -25,42 +27,7 @@ export const OFFER_FREELANCE_ID = `${SITE_URL}/#offer-freelance`;
 export const OFFER_FULL_TIME_ID = `${SITE_URL}/#offer-full-time`;
 export const OFFER_PART_TIME_ID = `${SITE_URL}/#offer-part-time`;
 
-export const AREA_SERVED = [
-  { "@type": "Country", name: "Türkiye" },
-  { "@type": "AdministrativeArea", name: "Ege Bölgesi / Aegean Region (Türkiye)" },
-  { "@type": "City", name: "Marmaris" },
-  { "@type": "City", name: "Muğla" },
-  { "@type": "City", name: "İzmir" },
-  { "@type": "City", name: "Aydın" },
-  { "@type": "City", name: "Denizli" },
-  { "@type": "Place", name: "Bodrum" },
-  { "@type": "Place", name: "Fethiye" },
-  {
-    "@type": "AdministrativeArea",
-    name: "İç Anadolu Bölgesi / Central Anatolia Region (Türkiye)",
-  },
-  { "@type": "City", name: "Ankara" },
-  { "@type": "City", name: "Konya" },
-  { "@type": "City", name: "Kayseri" },
-  { "@type": "City", name: "Eskişehir" },
-  { "@type": "City", name: "Sivas" },
-  { "@type": "City", name: "Aksaray" },
-  { "@type": "Place", name: "Nevşehir" },
-  {
-    "@type": "AdministrativeArea",
-    name: "Marmara Bölgesi / Marmara Region (Türkiye)",
-  },
-  { "@type": "City", name: "İstanbul" },
-  { "@type": "City", name: "Bursa" },
-  { "@type": "City", name: "Kocaeli" },
-  { "@type": "City", name: "Tekirdağ" },
-  { "@type": "City", name: "Balıkesir" },
-  { "@type": "City", name: "Sakarya" },
-  { "@type": "Place", name: "Çanakkale" },
-  { "@type": "Place", name: "Yalova" },
-  { "@type": "Place", name: "Remote" },
-  { "@type": "AdministrativeArea", name: "Worldwide" },
-] as const;
+export const AREA_SERVED = buildAreaServedFromRegions();
 
 export function absoluteUrl(path = "/") {
   return new URL(path, SITE_URL).toString();
