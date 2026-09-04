@@ -26,8 +26,8 @@ const en: SiteAssistantCopy = {
   error: "Something went wrong. Email contact@berktugberke.com or try again.",
   offlineNote: "Live AI runs on Cloudflare Workers AI when configured; helpful answers still work offline.",
   suggestions: [
-    "How can I hire you for a web or mobile app?",
-    "Do you work remotely in Türkiye and abroad?",
+    "How do we start a web or mobile project?",
+    "Do you work remotely across Türkiye and internationally?",
     "Do you offer SEO and GEO services?",
   ],
 };
@@ -44,8 +44,8 @@ const tr: SiteAssistantCopy = {
   error: "Bir sorun oluştu. contact@berktugberke.com yazın veya tekrar deneyin.",
   offlineNote: "Canlı AI, Cloudflare Workers AI yapılandırıldığında çalışır; yine de yardımcı yanıtlar verilir.",
   suggestions: [
-    "Web veya mobil için nasıl işe alınır?",
-    "Türkiye ve yurtdışında uzaktan çalışılıyor mu?",
+    "Web veya mobil projeme nasıl başlarız?",
+    "Türkiye ve yurtdışında uzaktan çalışıyor musunuz?",
     "SEO ve GEO hizmeti veriyor musunuz?",
   ],
 };
@@ -59,8 +59,8 @@ const de: SiteAssistantCopy = {
   closeChat: "Chat schließen",
   offlineNote: "Live-KI mit Cloudflare Workers AI wenn konfiguriert; hilfreiche Antworten auch offline.",
   suggestions: [
-    "Wie engagiere ich Sie für Web oder Mobile?",
-    "Arbeiten Sie remote in der Türkei und im Ausland?",
+    "Wie starten wir ein Web- oder Mobilprojekt?",
+    "Arbeiten Sie remote in der Türkei und international?",
     "Bieten Sie SEO- und GEO-Leistungen an?",
   ],
 };
@@ -73,8 +73,8 @@ const fr: SiteAssistantCopy = {
   openChat: "Discuter avec Berktug AI",
   closeChat: "Fermer le chat",
   suggestions: [
-    "Comment vous engager pour web ou mobile ?",
-    "Travaillez-vous à distance en Turquie et à l’étranger ?",
+    "Comment démarrer un projet web ou mobile ?",
+    "Travaillez-vous à distance en Turquie et à l'international ?",
     "Proposez-vous des services SEO et GEO ?",
   ],
 };
@@ -87,8 +87,8 @@ const it: SiteAssistantCopy = {
   openChat: "Chatta con Berktug AI",
   closeChat: "Chiudi chat",
   suggestions: [
-    "Come assumerti per web o mobile?",
-    "Lavori da remoto in Turchia e all’estero?",
+    "Come iniziamo un progetto web o mobile?",
+    "Lavori da remoto in Turchia e a livello internazionale?",
     "Offri servizi SEO e GEO?",
   ],
 };
@@ -103,8 +103,8 @@ const zh: SiteAssistantCopy = {
   closeChat: "关闭对话",
   send: "发送",
   suggestions: [
-    "如何聘请您做 Web 或移动应用？",
-    "是否在土耳其及海外远程合作？",
+    "Web 或移动项目如何启动？",
+    "是否在土耳其及国际远程合作？",
     "是否提供 SEO 和 GEO 服务？",
   ],
 };
@@ -118,7 +118,7 @@ const ja: SiteAssistantCopy = {
   closeChat: "チャットを閉じる",
   send: "送信",
   suggestions: [
-    "Web やモバイルでどう依頼できますか？",
+    "Web やモバイルのプロジェクトはどう始めますか？",
     "トルコ国内外でリモート対応できますか？",
     "SEO と GEO のサービスはありますか？",
   ],
