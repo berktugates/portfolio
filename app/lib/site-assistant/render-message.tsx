@@ -15,7 +15,7 @@ function isExternalHref(href: string): boolean {
 }
 
 function linkClassName() {
-  return "font-medium text-zinc-900 underline decoration-zinc-300 underline-offset-2 hover:decoration-zinc-600 dark:text-zinc-100 dark:decoration-zinc-600";
+  return "font-medium text-blue-600 underline decoration-blue-400/60 underline-offset-2 hover:text-blue-700 hover:decoration-blue-500 dark:text-blue-400 dark:decoration-blue-500/50 dark:hover:text-blue-300";
 }
 
 function renderLink(href: string, label: ReactNode, key: string) {
@@ -59,7 +59,7 @@ function renderInlineFormatting(text: string, keyPrefix: string): ReactNode[] {
       nodes.push(renderLink(token, token, key));
     } else if (token.startsWith("**")) {
       nodes.push(
-        <strong key={key} className="font-semibold text-zinc-900 dark:text-zinc-100">
+        <strong key={key} className="font-semibold text-zinc-950 dark:text-white">
           {token.slice(2, -2)}
         </strong>,
       );
