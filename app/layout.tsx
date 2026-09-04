@@ -111,8 +111,10 @@ const structuredData = {
     {
       "@type": "ProfessionalService",
       "@id": PROFESSIONAL_SERVICE_ID,
-      name: "Software engineering by Berktug Berke Ates",
+      name: "End-to-end software engineering by Berktug Berke Ates",
       url: `${SITE_URL}/hire`,
+      description:
+        "Freelance, full-time, and part-time software engineering across product, platform, and growth work — web, mobile, architecture, AI, DevOps, data, security, integrations, SEO, and GEO.",
       provider: { "@id": AUTHOR_ID },
       areaServed: AREA_SERVED,
       serviceType: [

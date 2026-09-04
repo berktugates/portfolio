@@ -178,6 +178,9 @@ export async function HirePage({ locale }: { locale: Locale }) {
               {dict.hire.servicesHeading}
             </h2>
             <p className="mb-6 leading-relaxed text-zinc-700 dark:text-zinc-300">{dict.hire.servicesIntro}</p>
+            <p className="mb-6 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+              {dict.hire.servicesScopeNote}
+            </p>
             <ul className="space-y-4">
               {dict.hire.services.map((service) => (
                 <li key={service.slug} id={`service-${service.slug}`}>

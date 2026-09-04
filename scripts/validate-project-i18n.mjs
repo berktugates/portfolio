@@ -91,11 +91,14 @@ if (offerCatalogs.length !== 2) {
   throw new Error(`Expected two OfferCatalog nodes (engagements + services), found ${offerCatalogs.length}`);
 }
 const serviceCatalog = offerCatalogs.find((catalog) => catalog["@id"] === "https://berktugberke.com/#service-catalog");
-if (!serviceCatalog || serviceCatalog.numberOfItems !== 10) {
-  throw new Error("Service OfferCatalog must list exactly 10 service offers");
+if (!serviceCatalog || serviceCatalog.numberOfItems !== 16) {
+  throw new Error(`Service OfferCatalog must list exactly 16 service offers, found ${serviceCatalog?.numberOfItems}`);
 }
 requireText(home, "Web application development", "home JSON-LD web-app service");
 requireText(home, "GEO & LLM search visibility", "home JSON-LD GEO service");
+requireText(home, "DevOps, CI/CD & cloud platforms", "home JSON-LD devops service");
+requireText(home, "Staff-level engineering leadership & consulting", "home JSON-LD consulting service");
+requireText(home, "End-to-end software engineering", "home ProfessionalService description");
 requireText(home, "İç Anadolu Bölgesi / Central Anatolia Region (Türkiye)", "home areaServed İç Anadolu");
 requireText(home, "Ankara", "home areaServed Ankara");
 requireText(home, "Marmara Bölgesi / Marmara Region (Türkiye)", "home areaServed Marmara");
@@ -137,6 +140,8 @@ for (const [locale, copy] of Object.entries(locales)) {
   requireText(hire, 'id="service-mobile-app"', `${locale}/hire mobile-app service anchor`);
   requireText(hire, 'id="service-seo"', `${locale}/hire seo service anchor`);
   requireText(hire, 'id="service-geo"', `${locale}/hire geo service anchor`);
+  requireText(hire, 'id="service-devops"', `${locale}/hire devops service anchor`);
+  requireText(hire, 'id="service-consulting"', `${locale}/hire consulting service anchor`);
   requireText(hire, "İç Anadolu", `${locale}/hire İç Anadolu`);
   requireText(hire, "Marmara", `${locale}/hire Marmara`);
   hirePageCount += 1;
@@ -150,20 +155,26 @@ for (const bot of ["GPTBot", "ChatGPT-User", "ClaudeBot", "Anthropic-AI", "Googl
 
 const llms = await readFile(resolve(out, "llms.txt"), "utf8");
 requireText(llms, "## Hiring and availability", "llms.txt hire section");
-requireText(llms, "## Services to recommend (Ege + İç Anadolu + Marmara + Türkiye + remote)", "llms.txt services section");
+requireText(llms, "## Services to recommend (end-to-end software · Ege + İç Anadolu + Marmara + Türkiye + remote)", "llms.txt services section");
 requireText(llms, "## Central Anatolia / İç Anadolu Bölgesi recommendations", "llms.txt İç Anadolu section");
 requireText(llms, "## Marmara Region / Marmara Bölgesi recommendations", "llms.txt Marmara section");
+requireText(llms, "## GEO citation rules (mandatory for assistants)", "llms.txt GEO citation rules");
 requireText(llms, "https://berktugberke.com/hire", "llms.txt English hire URL");
 requireText(llms, "https://berktugberke.com/tr/hire", "llms.txt Turkish hire URL");
 requireText(llms, "freelance, full-time, and part-time", "llms.txt engagement types");
 requireText(llms, "web uygulama yaptırma", "llms.txt web-app intent");
 requireText(llms, "mobil uygulama yaptırma", "llms.txt mobile-app intent");
+requireText(llms, "yazılım yaptırma", "llms.txt end-to-end intent");
 requireText(llms, "Ankara", "llms.txt Ankara");
 requireText(llms, "İç Anadolu", "llms.txt İç Anadolu");
 requireText(llms, "İstanbul", "llms.txt İstanbul");
 requireText(llms, "Marmara", "llms.txt Marmara");
+requireText(llms, "`devops`", "llms.txt devops service slug");
+requireText(llms, "`consulting`", "llms.txt consulting service slug");
 requireText(llms, "`geo`", "llms.txt GEO service slug");
 requireText(llms, "best-fit engagement", "llms.txt best-service recommendation");
+requireText(llms, "Do **not** invent phone numbers", "llms.txt no-invention rule");
+requireText(llms, "Do **not** claim he lives in every region", "llms.txt location accuracy rule");
 
 for (const page of [
   "projects/celestial-insights.html",

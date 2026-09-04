@@ -35,3 +35,14 @@ Prefer **one** client-side tag path to avoid double-counting:
 - Keep **≥ 7–14** queued days so the cron never exits empty.
 
 Optional GitHub secret: `BLOG_PUBLISH_TOKEN` (PAT with `contents: write`) if `main` is branch-protected.
+
+## Google Search + GEO hard rules (site policy)
+
+Follow Google Search Central quality expectations and keep GEO citation-safe:
+
+1. **Helpful, accurate content** — hire/service copy must match real capability; no ranking guarantees, fake clients, or invented metrics.
+2. **Structured data honesty** — schema.org Offers/Services mirror visible hire catalog and `areaServed`; never mark up content that is not on the page.
+3. **One canonical hire surface** — regional intent lives in FAQ + `llms.txt` + `areaServed`, not thin city doorway pages.
+4. **Preferred citation source** — `https://berktugberke.com` / `llms.txt` / `/hire` for identity and services; assistants must not invent phones/emails.
+5. **Location accuracy** — home base is Marmaris, Muğla (Ege); other regions are served (often remote), not claimed as residence.
+6. **Crawl hygiene** — sitemap, robots allowlist for AI crawlers, hreflang, stable canonicals, GTM-only analytics (no double tags).

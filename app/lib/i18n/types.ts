@@ -22,6 +22,8 @@ export type HireDictionary = {
   workBody: string;
   servicesHeading: string;
   servicesIntro: string;
+  /** Clarifies catalog is representative of end-to-end software capability. */
+  servicesScopeNote: string;
   services: readonly HireServiceCopy[];
   productsHeading: string;
   howHeading: string;
