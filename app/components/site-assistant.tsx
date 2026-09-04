@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { ArrowUp, Mic, Sparkles, X } from "lucide-react";
+import { ArrowUp, Mic, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -185,29 +185,19 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
 
       <div className="fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-3xl flex-col px-3 pb-3 md:px-5 md:pb-5">
         {chatOpen ? (
-          <div className="pointer-events-auto mb-2 flex max-h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-lg shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40">
-            <div className="flex items-center justify-between gap-2 border-b border-zinc-100 px-3 py-2 dark:border-zinc-800">
-              <div className="flex items-center gap-2">
-                <span className="flex size-6 items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-800">
-                  <Sparkles className="size-3.5 text-zinc-700 dark:text-zinc-200" aria-hidden />
-                </span>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-[11px] font-medium text-zinc-900 dark:text-zinc-100">{copy.title}</span>
-                </div>
-              </div>
-              <button
-                type="button"
-                className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800"
-                aria-label={copy.closeChat}
-                onClick={() => {
-                  setExpanded(false);
-                  setMessages([]);
-                }}
-              >
-                <X className="size-4" />
-              </button>
-            </div>
-            <div ref={listRef} className="flex flex-1 flex-col gap-2 overflow-y-auto px-3 py-3" role="log" aria-live="polite">
+          <div className="pointer-events-auto relative mb-2 flex max-h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-lg shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40">
+            <button
+              type="button"
+              className="absolute right-2 top-2 z-10 rounded-lg p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800"
+              aria-label={copy.closeChat}
+              onClick={() => {
+                setExpanded(false);
+                setMessages([]);
+              }}
+            >
+              <X className="size-4" />
+            </button>
+            <div ref={listRef} className="flex flex-1 flex-col gap-2 overflow-y-auto px-3 pb-3 pt-3" role="log" aria-live="polite">
               {messages.map((msg, i) => (
                 <div
                   key={`${msg.role}-${i}`}
