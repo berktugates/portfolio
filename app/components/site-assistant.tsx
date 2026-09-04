@@ -12,6 +12,8 @@ import { AssistantTypingIndicator } from "./assistant-typing-indicator";
 const MIN_TYPING_MS = 520;
 const DOCK_INPUT_MIN_PX = 36;
 const DOCK_INPUT_MAX_PX = 120;
+const STORAGE_KEY = "site-assistant-messages";
+const PANEL_CLOSE_DURATION_MS = 280;
 
 type SpeechRecognitionCtor = new () => {
   lang: string;
@@ -50,6 +52,32 @@ function syncDockInputHeight(el: HTMLTextAreaElement | null) {
   el.style.height = `${next}px`;
 }
 
+function loadStoredMessages(): ChatMessage[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const stored = sessionStorage.getItem(STORAGE_KEY);
+    if (!stored) return [];
+    const parsed = JSON.parse(stored);
+    if (Array.isArray(parsed)) return parsed as ChatMessage[];
+  } catch {
+    /* ignore */
+  }
+  return [];
+}
+
+function saveMessages(messages: ChatMessage[]) {
+  if (typeof window === "undefined") return;
+  try {
+    if (messages.length === 0) {
+      sessionStorage.removeItem(STORAGE_KEY);
+    } else {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
 function MicIcon() {
   return (
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -76,15 +104,29 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
   const [thinking, setThinking] = useState(false);
   const [inputFocused, setInputFocused] = useState(false);
   const [listening, setListening] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+  const [panelVisible, setPanelVisible] = useState(false);
+  const [panelClosing, setPanelClosing] = useState(false);
+
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const recognitionRef = useRef<InstanceType<SpeechRecognitionCtor> | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<ChatMessage[]>([]);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
+  // Load stored messages on mount
+  useEffect(() => {
+    const stored = loadStoredMessages();
+    if (stored.length > 0) {
+      setMessages(stored);
+    }
+  }, []);
+
+  // Save messages to storage when they change
   useEffect(() => {
     messagesRef.current = messages;
+    saveMessages(messages);
   }, [messages]);
 
   useEffect(() => {
@@ -100,9 +142,27 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, thinking]);
 
+  // Show panel when focused and has messages, or when thinking
   useEffect(() => {
-    if (messages.length > 0) setExpanded(true);
-  }, [messages.length]);
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+
+    const shouldShow = (inputFocused || thinking) && (messages.length > 0 || thinking);
+
+    if (shouldShow && !panelVisible) {
+      setPanelClosing(false);
+      setPanelVisible(true);
+    } else if (!shouldShow && panelVisible && !thinking) {
+      // Start closing animation
+      setPanelClosing(true);
+      closeTimer.current = setTimeout(() => {
+        setPanelVisible(false);
+        setPanelClosing(false);
+      }, PANEL_CLOSE_DURATION_MS);
+    }
+  }, [inputFocused, messages.length, thinking, panelVisible]);
 
   const showSuggestions = inputFocused && !thinking && messages.length === 0;
   const canSend = Boolean(prompt.trim()) && !thinking;
@@ -115,12 +175,12 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
       if (!trimmed || thinking || submitInFlight.current) return;
       submitInFlight.current = true;
       setPrompt("");
-      setInputFocused(false);
       const historyBefore = messagesRef.current;
       const userMsg: ChatMessage = { role: "user", content: trimmed };
       setMessages((prev) => [...prev, userMsg]);
       setThinking(true);
-      setExpanded(true);
+      setPanelVisible(true);
+      setPanelClosing(false);
       trackAssistantEvent("send", { locale });
       try {
         const [reply] = await Promise.all([
@@ -174,12 +234,17 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
 
   const handleFocus = () => {
     if (blurTimer.current) clearTimeout(blurTimer.current);
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+      setPanelClosing(false);
+    }
     setInputFocused(true);
     trackAssistantEvent("open", { locale });
   };
 
   const handleBlur = () => {
-    blurTimer.current = setTimeout(() => setInputFocused(false), 180);
+    blurTimer.current = setTimeout(() => setInputFocused(false), 200);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -189,7 +254,19 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
     }
   };
 
-  const chatOpen = expanded && (messages.length > 0 || thinking);
+  const handleClearChat = () => {
+    setMessages([]);
+    setPanelVisible(false);
+    setPanelClosing(false);
+    sessionStorage.removeItem(STORAGE_KEY);
+  };
+
+  const handlePanelMouseDown = (e: React.MouseEvent) => {
+    // Prevent blur when clicking inside panel
+    e.preventDefault();
+  };
+
+  const chatOpen = panelVisible && (messages.length > 0 || thinking);
 
   return (
     <>
@@ -200,15 +277,16 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
 
       <div className="site-assistant-dock-host fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-[720px] flex-col px-3 pb-2.5 sm:px-5 sm:pb-3">
         {chatOpen ? (
-          <div className="site-assistant-chat-panel pointer-events-auto relative mb-2 flex w-full max-h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-lg shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40">
+          <div
+            ref={panelRef}
+            className={`site-assistant-chat-panel pointer-events-auto relative mb-2 flex w-full max-h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-lg shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40 ${panelClosing ? "site-assistant-chat-panel--closing" : ""}`}
+            onMouseDown={handlePanelMouseDown}
+          >
             <button
               type="button"
               className="absolute right-2 top-2 z-10 rounded-lg p-1 text-zinc-400 dark:text-zinc-500"
               aria-label={copy.closeChat}
-              onClick={() => {
-                setExpanded(false);
-                setMessages([]);
-              }}
+              onClick={handleClearChat}
             >
               <X className="size-4" />
             </button>
