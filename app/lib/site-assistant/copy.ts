@@ -17,7 +17,7 @@ export type SiteAssistantCopy = {
 const en: SiteAssistantCopy = {
   title: "Berktug AI",
   subtitle: "Ask about hiring, services, regions, SEO, GEO, and how to start a project.",
-  placeholder: "Ask Berktug AI anything…",
+  placeholder: "How can I help?",
   send: "Send",
   thinking: "Berktug AI is thinking",
   openChat: "Chat with Berktug AI",
@@ -37,7 +37,7 @@ const en: SiteAssistantCopy = {
 const tr: SiteAssistantCopy = {
   title: "Berktug AI",
   subtitle: "İş birliği, hizmetler, bölgeler, SEO, GEO ve proje başlangıcı hakkında sorun.",
-  placeholder: "Berktug AI'a bir şey sorun…",
+  placeholder: "Nasıl yardımcı olabilirim?",
   send: "Gönder",
   thinking: "Berktug AI düşünüyor",
   openChat: "Berktug AI ile sohbet",
@@ -57,7 +57,7 @@ const tr: SiteAssistantCopy = {
 const de: SiteAssistantCopy = {
   ...en,
   subtitle: "Fragen zu Hiring, Services, Regionen, SEO, GEO und Projektstart.",
-  placeholder: "Fragen Sie Berktug AI zum Zusammenarbeiten…",
+  placeholder: "Wie kann ich helfen?",
   thinking: "Berktug AI denkt nach",
   openChat: "Mit Berktug AI chatten",
   closeChat: "Chat schließen",
@@ -74,7 +74,7 @@ const de: SiteAssistantCopy = {
 const fr: SiteAssistantCopy = {
   ...en,
   subtitle: "Questions sur l'embauche, les services, les régions, SEO, GEO et démarrage de projet.",
-  placeholder: "Demandez à Berktug AI comment travailler ensemble…",
+  placeholder: "Comment puis-je vous aider ?",
   thinking: "Berktug AI réfléchit",
   openChat: "Discuter avec Berktug AI",
   closeChat: "Fermer le chat",
@@ -90,7 +90,7 @@ const fr: SiteAssistantCopy = {
 const it: SiteAssistantCopy = {
   ...en,
   subtitle: "Domande su hiring, servizi, regioni, SEO, GEO e avvio progetto.",
-  placeholder: "Chiedi a Berktug AI come lavorare insieme…",
+  placeholder: "Come posso aiutarti?",
   thinking: "Berktug AI sta pensando",
   openChat: "Chatta con Berktug AI",
   closeChat: "Chiudi chat",
@@ -107,7 +107,7 @@ const zh: SiteAssistantCopy = {
   ...en,
   title: "Berktug AI",
   subtitle: "咨询合作、服务、地区、SEO、GEO 与如何启动项目。",
-  placeholder: "向 Berktug AI 询问如何合作…",
+  placeholder: "有什么可以帮您？",
   thinking: "Berktug AI 正在思考",
   openChat: "与 Berktug AI 对话",
   closeChat: "关闭对话",
@@ -124,7 +124,7 @@ const zh: SiteAssistantCopy = {
 const ja: SiteAssistantCopy = {
   ...en,
   subtitle: "採用、サービス、地域、SEO、GEO、プロジェクト開始について質問できます。",
-  placeholder: "Berktug AI に協業について質問…",
+  placeholder: "どのようなご用件でしょうか？",
   thinking: "Berktug AI が考えています",
   openChat: "Berktug AI とチャット",
   closeChat: "チャットを閉じる",

@@ -10,7 +10,7 @@ import { AssistantMessageContent } from "../lib/site-assistant/render-message";
 import { AssistantTypingIndicator } from "./assistant-typing-indicator";
 
 const MIN_TYPING_MS = 520;
-const DOCK_INPUT_MIN_PX = 32;
+const DOCK_INPUT_MIN_PX = 36;
 const DOCK_INPUT_MAX_PX = 120;
 
 type SpeechRecognitionCtor = new () => {
@@ -107,12 +107,16 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
   const showSuggestions = inputFocused && !thinking && messages.length === 0;
   const canSend = Boolean(prompt.trim()) && !thinking;
 
+  const submitInFlight = useRef(false);
+
   const submitText = useCallback(
     async (raw: string) => {
       const trimmed = raw.trim();
-      if (!trimmed || thinking) return;
+      if (!trimmed || thinking || submitInFlight.current) return;
+      submitInFlight.current = true;
       setPrompt("");
       setInputFocused(false);
+      const historyBefore = messagesRef.current;
       const userMsg: ChatMessage = { role: "user", content: trimmed };
       setMessages((prev) => [...prev, userMsg]);
       setThinking(true);
@@ -120,7 +124,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
       trackAssistantEvent("send", { locale });
       try {
         const [reply] = await Promise.all([
-          sendAssistantMessage(locale, messagesRef.current, trimmed),
+          sendAssistantMessage(locale, historyBefore, trimmed),
           new Promise<void>((resolve) => setTimeout(resolve, MIN_TYPING_MS)),
         ]);
         setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
@@ -128,20 +132,20 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
         setMessages((prev) => [...prev, { role: "assistant", content: copy.error }]);
       } finally {
         setThinking(false);
+        submitInFlight.current = false;
       }
     },
     [copy.error, locale, thinking],
   );
 
+  const pickSuggestion = (text: string) => {
+    trackAssistantEvent("suggestion", { locale, question: text.slice(0, 80) });
+    void submitText(text);
+  };
+
   const handleSubmit = useCallback(() => {
     void submitText(prompt);
   }, [prompt, submitText]);
-
-  const pickSuggestion = (text: string) => {
-    trackAssistantEvent("suggestion", { locale, question: text.slice(0, 80) });
-    setPrompt(text);
-    void submitText(text);
-  };
 
   const toggleVoice = () => {
     const Ctor = getSpeechRecognition(locale);
@@ -199,7 +203,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
           <div className="pointer-events-auto relative mb-2 flex max-h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-lg shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40">
             <button
               type="button"
-              className="absolute right-2 top-2 z-10 rounded-lg p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800"
+              className="absolute right-2 top-2 z-10 rounded-lg p-1 text-zinc-400 dark:text-zinc-500"
               aria-label={copy.closeChat}
               onClick={() => {
                 setExpanded(false);
@@ -226,50 +230,68 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
           </div>
         ) : null}
 
-        {showSuggestions ? (
-          <div className="hw-dock-suggestions pointer-events-auto" onMouseDown={(e) => e.preventDefault()}>
-            {copy.suggestions.map((q) => (
-              <button key={q} type="button" className="hw-dock-suggestion" onClick={() => pickSuggestion(q)}>
-                {q}
-              </button>
-            ))}
-          </div>
-        ) : null}
+        <div className="hw-dock-stack pointer-events-auto">
+          {showSuggestions ? (
+            <div
+              className="hw-dock-suggestions hw-dock-suggestions--animate"
+              onMouseDown={(e) => e.preventDefault()}
+            >
+              {copy.suggestions.map((q, index) => (
+                <button
+                  key={q}
+                  type="button"
+                  className="hw-dock-suggestion"
+                  style={{ animationDelay: `${index * 55}ms` }}
+                  onClick={() => pickSuggestion(q)}
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          ) : null}
 
-        <div className="hw-dock pointer-events-auto">
-          <div className="hw-dock-bar" data-grown={prompt.includes("\n") || (inputRef.current?.scrollHeight ?? 0) > DOCK_INPUT_MIN_PX + 4 ? "true" : "false"}>
-            <textarea
-              ref={inputRef}
-              className="hw-dock-input"
-              rows={1}
-              value={prompt}
-              placeholder={copy.placeholder}
-              aria-label={copy.placeholder}
-              disabled={thinking}
-              onChange={(e) => setPrompt(e.target.value)}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-            />
-            <div className="hw-dock-actions">
-              <button
-                type="button"
-                className={`hw-dock-tool${listening ? " hw-dock-tool--active" : ""}`}
-                aria-label={copy.voiceInput ?? "Voice input"}
-                aria-pressed={listening}
-                onClick={toggleVoice}
-              >
-                <MicIcon />
-              </button>
-              <button
-                type="button"
-                className="hw-dock-send"
-                aria-label={copy.send}
-                disabled={!canSend}
-                onClick={() => void handleSubmit()}
-              >
-                {thinking ? <span className="hw-dock-send-spinner" aria-hidden /> : <SendIcon />}
-              </button>
+          <div className="hw-dock">
+            <div
+              className="hw-dock-bar"
+              data-grown={
+                prompt.includes("\n") || (inputRef.current?.scrollHeight ?? 0) > DOCK_INPUT_MIN_PX + 4
+                  ? "true"
+                  : "false"
+              }
+            >
+              <textarea
+                ref={inputRef}
+                className="hw-dock-input"
+                rows={1}
+                value={prompt}
+                placeholder={copy.placeholder}
+                aria-label={copy.placeholder}
+                disabled={thinking}
+                onChange={(e) => setPrompt(e.target.value)}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+              />
+              <div className="hw-dock-actions">
+                <button
+                  type="button"
+                  className={`hw-dock-tool${listening ? " hw-dock-tool--active" : ""}`}
+                  aria-label={copy.voiceInput ?? "Voice input"}
+                  aria-pressed={listening}
+                  onClick={toggleVoice}
+                >
+                  <MicIcon />
+                </button>
+                <button
+                  type="button"
+                  className="hw-dock-send"
+                  aria-label={copy.send}
+                  disabled={!canSend}
+                  onClick={() => void handleSubmit()}
+                >
+                  {thinking ? <span className="hw-dock-send-spinner" aria-hidden /> : <SendIcon />}
+                </button>
+              </div>
             </div>
           </div>
         </div>

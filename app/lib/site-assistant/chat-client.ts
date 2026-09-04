@@ -6,13 +6,20 @@ import {
   guardMessageForLocale,
   recordAssistantRequestSent,
 } from "./guards";
+import { getRefusalReply, isBlockedUserMessage, sanitizeAssistantReply } from "./moderation";
 
 export async function sendAssistantMessage(
   locale: Locale,
   history: ChatMessage[],
   userMessage: string,
 ): Promise<string> {
-  const guard = guardAssistantRequest(userMessage, history.length);
+  const trimmed = userMessage.trim();
+
+  if (isBlockedUserMessage(trimmed)) {
+    return getRefusalReply(locale);
+  }
+
+  const guard = guardAssistantRequest(trimmed, history.length);
   if (!guard.ok) {
     return guardMessageForLocale(locale, guard.code);
   }
@@ -20,7 +27,7 @@ export async function sendAssistantMessage(
   const apiUrl = getAssistantApiUrl();
 
   if (!apiUrl) {
-    return localAssistantReply(locale, userMessage);
+    return sanitizeAssistantReply(localAssistantReply(locale, trimmed), trimmed);
   }
 
   recordAssistantRequestSent();
@@ -30,8 +37,8 @@ export async function sendAssistantMessage(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       locale,
-      messages: history.concat({ role: "user", content: userMessage }),
-      system: buildSystemPrompt(locale, userMessage),
+      messages: history.concat({ role: "user", content: trimmed }),
+      system: buildSystemPrompt(locale, trimmed),
     }),
   });
 
@@ -40,15 +47,18 @@ export async function sendAssistantMessage(
   }
 
   if (!res.ok) {
-    return localAssistantReply(locale, userMessage);
+    return sanitizeAssistantReply(localAssistantReply(locale, trimmed), trimmed);
   }
 
-  const data = (await res.json()) as { reply?: string };
+  const data = (await res.json()) as { reply?: string; refused?: boolean };
+  if (data.refused) {
+    return getRefusalReply(locale);
+  }
   const reply = data.reply?.trim();
   if (!reply) {
-    return localAssistantReply(locale, userMessage);
+    return sanitizeAssistantReply(localAssistantReply(locale, trimmed), trimmed);
   }
-  return reply;
+  return sanitizeAssistantReply(reply, trimmed);
 }
 
 export function trackAssistantEvent(

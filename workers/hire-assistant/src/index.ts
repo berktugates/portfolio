@@ -1,4 +1,5 @@
 import { checkAssistantRateLimit, isQuotaExhaustedError } from "./rate-limit";
+import { isBlockedUserMessage, refusalReply } from "./moderation";
 
 export interface Env {
   AI: Ai;
@@ -83,7 +84,7 @@ async function runGroq(env: Env, system: string, messages: ChatPayload["messages
     },
     body: JSON.stringify({
       model: "llama-3.1-8b-instant",
-      temperature: 0.35,
+      temperature: 0.25,
       max_tokens: 700,
       messages: [{ role: "system", content: system }, ...messages],
     }),
@@ -119,7 +120,7 @@ async function runWorkersAiModel(
   const result = await env.AI.run(model, {
     messages: chatMessages,
     max_tokens: 512,
-    temperature: 0.35,
+    temperature: 0.25,
   });
   return extractAiText(result);
 }
@@ -177,6 +178,11 @@ export default {
       const validationError = validatePayload(body);
       if (validationError) {
         return jsonResponse({ error: validationError }, 400, headers);
+      }
+
+      const lastUser = [...body.messages].reverse().find((m) => m.role === "user")?.content ?? "";
+      if (isBlockedUserMessage(lastUser)) {
+        return jsonResponse({ reply: refusalReply(body.locale), refused: true }, 200, headers);
       }
 
       const rate = await checkAssistantRateLimit(request, parseLimits(env));

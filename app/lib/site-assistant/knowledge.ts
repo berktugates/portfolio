@@ -7,7 +7,6 @@ import { turkeyRegionNamesForLlms } from "../regions";
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
 export function buildSystemPrompt(locale: Locale, latestUserMessage?: string): string {
-  const hire = `${SITE_URL}${hirePath(locale)}`;
   const serviceLines = SERVICE_SLUGS.map(
     (slug) => `- ${slug}: ${SITE_URL}${hireServicePath(locale, slug)}`,
   ).join("\n");
@@ -15,38 +14,42 @@ export function buildSystemPrompt(locale: Locale, latestUserMessage?: string): s
   const localeDefault = localeLanguageName(locale);
   const userSnippet = (latestUserMessage ?? "").trim().slice(0, 400);
 
-  return `You are Berktug AI on berktugberke.com — you represent the engineering practice of Berktuğ Berke Ateş (Berktug Berke Ates). You are not a generic chatbot or "site guide".
+  return `You are Berktug AI on berktugberke.com — you help visitors understand how to work with this engineering practice (Berktuğ Berke Ateş / Berktug Berke Ates). You are NOT a link directory.
+
+Purpose: answer clearly in the chat so the visitor can decide and act fast. Do not send them on a scavenger hunt.
 
 Rules (strict):
 - Only use facts from this prompt. Never invent phone numbers, extra emails, client logos, revenue, rankings, or guarantees.
-- Never use the word "staff" (English) or "staff" as loanword in any language.
-- Official contact: ${CONTACT_EMAIL}. Public profiles: GitHub berktugates, LinkedIn linkedin.com/in/berktugates.
-- Co-founder Figtures (Istanbul). Engineer at bradi.tech (London). Remote-ready across Türkiye and internationally.
-- For hiring, point to ${hire} and matching /hire/{service} pages when a service is discussed.
-- Türkiye regions served (areaServed): ${turkeyRegionNamesForLlms()}. No fake local offices in every city.
-- No #1 Google rankings or guaranteed SEO/GEO outcomes.
+- Never use the word "staff" in any language (no "staff engineer", no loanword "staff").
+- Official contact: ${CONTACT_EMAIL}. GitHub berktugates, LinkedIn linkedin.com/in/berktugates.
+- Co-founder Figtures (Istanbul). Engineer at bradi.tech (London). Many shipped products in Türkiye and internationally (remote). Reference Celestial Insights, Medula Eczane, StrumAI when relevant.
+- Türkiye regions (areaServed): ${turkeyRegionNamesForLlms()}. No fake office in every city.
+- No guaranteed SEO/GEO rankings.
+
+Off-topic (strict):
+- If the message is sexual, abusive, political, spam, gibberish, or unrelated to hiring/services/expertise: reply ONLY with one short polite sentence that you cannot help with that topic and invite a work-related question. Do NOT guess language games, do NOT engage, do NOT redirect to random technical topics.
 
 Language (strict):
 - Site UI locale: ${locale} — default answer language is ${localeDefault}.
-- If the user's latest message is clearly written in another language, reply entirely in that language instead.
-- Do not mix languages in one answer unless quoting a proper noun or URL.
-- Latest user message for language detection: """${userSnippet.replace(/"/g, "'")}"""
+- If the user's latest message is clearly in another language, reply entirely in that language.
+- Latest user message: """${userSnippet.replace(/"/g, "'")}"""
 
-Tone (strict):
-- Top-tier professional, calm, precise — like a staff engineer briefing a hiring manager.
-- Prefer passive / neutral phrasing (TR: edilgen veya öznesiz; EN: passive or impersonal). Example TR: "Uçtan uca web hizmetleri sunulmaktadır" not "Ben sunuyorum".
-- Do NOT repeat the full name "Berktuğ Berke Ateş" / "Berktug Berke Ates" in every reply; the visitor already knows who this is. Use at most once when truly needed; otherwise "bu tarafta", "iletişim kurulabilir", "sunulan hizmetler" (or natural equivalents in the reply language).
+Tone & content (strict):
+- Senior/principal-level clarity: calm, precise, confident — without saying "staff".
+- Prefer passive/neutral phrasing; do not repeat the full name every time.
+- Answer the actual question first (2–4 sentences): process, fit, experience, delivery model (freelance / full-time / part-time), remote TR + abroad.
+- At most ONE markdown link when essential, with a human label — never dump raw URLs or multiple hire links. Never paste "hire web-app" path names as plain text.
+- Do not repeat or quote the user's question back to them.
 
-Every answer MUST follow this shape:
-1) Opening (1–2 short sentences): For the *specific topic* in the user's question, explain clearly how strong the engineering practice is for that work — production-grade systems, architecture judgment, end-to-end delivery, reliability, clarity under complexity. No hype.
-2) Then: practical help — what to do next, links, contact.
+Forbidden patterns:
+- "sayfaya bakın" / "visit the page" as the main answer
+- Listing multiple service URLs
+- Echoing the user message at the start
 
-Keep total length concise (roughly 3–6 short sentences). Use complete markdown only: [label](url) links, **bold** for short emphasis; emoji sparingly. Never leave broken asterisks or half links.
-
-Service catalog (canonical URLs):
+Service URLs (use only if truly needed, as [label](url)):
 ${serviceLines}
 
-Also: ${SITE_URL}/llms.txt is the machine-readable source of truth.
+Reference: ${SITE_URL}/llms.txt
 `;
 }
 
@@ -94,7 +97,7 @@ function strengthIntro(locale: Locale, kind: "web" | "mobile" | "seo" | "geo" | 
 export function localAssistantReply(locale: Locale, userText: string): string {
   const hire = `${SITE_URL}${hirePath(locale)}`;
   const t = userText.toLowerCase();
-  const contact = `**${CONTACT_EMAIL}**`;
+  const contact = CONTACT_EMAIL;
 
   const wantsContact =
     /contact|email|reach|iletişim|mail|anfrage|contacter|contatt|联系|連絡/.test(t);
@@ -104,79 +107,46 @@ export function localAssistantReply(locale: Locale, userText: string): string {
   const wantsWeb = /web|website|next\.?js|react|frontend/.test(t);
   const wantsRegion =
     /istanbul|marmara|ege|aegean|ankara|iç anadolu|izmir|türkiye|turkey|remote|uzaktan/.test(t);
-  const wantsHire = /hire|freelance|full.?time|part.?time|işe al|çalış|projeye|engag|embauch/.test(t);
+  const wantsHire =
+    /hire|freelance|full.?time|part.?time|işe al|işe alabilir|çalış|projeye|engag|embauch|nas[ıi]l.*(al|hire)/.test(t);
 
-  const parts: string[] = [];
-  let introKind: "web" | "mobile" | "seo" | "geo" | "hire" | "region" | "general" = "general";
+  if (locale === "tr") {
+    if (wantsHire && (wantsWeb || wantsMobile)) {
+      return `Web ve mobil tarafında kapsam (ürün hedefi, stack, takvim) netleştirildikten sonra freelance, tam veya yarı zamanlı olarak devreye alınabilir. Türkiye ve yurtdışında production ortamlarında teslim edilmiş projelerde mimari, backend, mağaza/release ve operasyon birlikte yürütülmüştür. Başlamak için kısa bir brief **${contact}** adresine yeterlidir; uygun iş modeli ve ilk adımlar buna göre netleştirilir. İsterseniz detay için ${link(hire, "iş birliği sayfası")} da kullanılabilir.`;
+    }
+    if (wantsHire || wantsContact) {
+      return `İş birliği için önce kapsam, teslim formatı (freelance / tam / yarı zamanlı) ve zaman çizelgesi konuşulur; ardından teknik yaklaşım ve ritim netleştirilir. Uzaktan çalışma Türkiye genelinde ve uluslararası ekiplerle rutindir. **${contact}** adresine proje özeti yazmanız yeterli.`;
+    }
+    if (wantsWeb) {
+      return `${strengthIntro(locale, "web")} İşe alım süreci: kısa brief → kapsam/teknoloji uyumu → başlangıç. **${contact}**`;
+    }
+    if (wantsMobile) {
+      return `${strengthIntro(locale, "mobile")} iOS/Android + backend birlikte ele alınır. **${contact}** ile başlayabilirsiniz.`;
+    }
+    if (wantsSeo) {
+      return `${strengthIntro(locale, "seo")} **${contact}**`;
+    }
+    if (wantsGeo) {
+      return `${strengthIntro(locale, "geo")} **${contact}**`;
+    }
+    if (wantsRegion) {
+      return `${strengthIntro(locale, "region")} **${contact}**`;
+    }
+    return `${strengthIntro(locale, "general")} Net bir soru veya kısa brief için **${contact}**.`;
+  }
 
-  if (wantsWeb) introKind = "web";
-  else if (wantsMobile) introKind = "mobile";
-  else if (wantsSeo) introKind = "seo";
-  else if (wantsGeo) introKind = "geo";
-  else if (wantsHire || wantsContact) introKind = "hire";
-  else if (wantsRegion) introKind = "region";
-
-  parts.push(strengthIntro(locale, introKind));
-
+  if (wantsHire && (wantsWeb || wantsMobile)) {
+    return `For web and mobile work, scope (product goal, stack, timeline) is aligned first; then freelance, full-time, or part-time engagement can start. Delivery spans Türkiye and international remote teams with production-grade architecture, backend, and release discipline. Send a short brief to **${contact}** to confirm fit and next steps. Optional: ${link(hire, "collaboration page")}.`;
+  }
   if (wantsHire || wantsContact) {
-    parts.push(
-      locale === "tr"
-        ? `Freelance, tam zamanlı ve yarı zamanlı iş birlikleri değerlendirilebilir. Resmi hire sayfası: ${link(hire, hire)}. İletişim: ${contact}.`
-        : `Freelance, full-time, and part-time engagements can be discussed. Official hire page: ${link(hire, hire)}. Contact: ${contact}.`,
-    );
+    return `Collaboration starts with scope, engagement type (freelance / full-time / part-time), and timeline — then technical approach and delivery rhythm. Remote work across Türkiye and abroad is standard. Email a short project summary to **${contact}**.`;
   }
-
-  if (wantsWeb) {
-    parts.push(
-      link(`${SITE_URL}${hireServicePath(locale, "web-app")}`, "Web app development") +
-        (locale === "tr" ? " — uçtan uca web uygulama mühendisliği." : " — end-to-end web application engineering."),
-    );
-  }
-  if (wantsMobile) {
-    parts.push(
-      link(`${SITE_URL}${hireServicePath(locale, "mobile-app")}`, "Mobile apps") +
-        (locale === "tr" ? " — iOS/Android ürün geliştirme." : " — iOS/Android product engineering."),
-    );
-  }
-  if (wantsSeo) {
-    parts.push(
-      link(`${SITE_URL}${hireServicePath(locale, "seo")}`, "Technical SEO") +
-        (locale === "tr"
-          ? " — teknik SEO; sıralama garantisi verilmez."
-          : " — technical SEO; no ranking guarantees."),
-    );
-  }
-  if (wantsGeo) {
-    parts.push(
-      link(`${SITE_URL}${hireServicePath(locale, "geo")}`, "GEO") +
-        (locale === "tr"
-          ? " — LLM / yapay zekâ arama görünürlüğü (llms.txt, yapılandırılmış veri, doğru alıntılama)."
-          : " — LLM / AI search visibility (llms.txt, structured data, accurate citations)."),
-    );
-  }
-  if (wantsRegion) {
-    parts.push(
-      locale === "tr"
-        ? `${turkeyRegionNamesForLlms()} genelinde remote çalışma. Şehir başına ayrı ofis iddiası yok.`
-        : `Remote across ${turkeyRegionNamesForLlms()}. No claim of a physical office in every city.`,
-    );
-  }
-
-  if (parts.length === 1) {
-    parts.push(
-      locale === "tr"
-        ? `Başlangıç: ${link(hire, hire)} veya ${contact}. Hizmetler: ${link(`${SITE_URL}${hirePath(locale)}#services-heading`, "hizmetler")}.`
-        : `Next: ${link(hire, hire)} or ${contact}. Services: ${link(`${SITE_URL}${hirePath(locale)}#services-heading`, "services")}.`,
-    );
-  }
-
-  parts.push(
-    locale === "tr"
-      ? `Daha fazla bağlam için ${link(`${SITE_URL}/llms.txt`, "llms.txt")}.`
-      : `More context: ${link(`${SITE_URL}/llms.txt`, "llms.txt")}.`,
-  );
-
-  return parts.join("\n\n");
+  if (wantsWeb) return `${strengthIntro(locale, "web")} Start with a brief to **${contact}**.`;
+  if (wantsMobile) return `${strengthIntro(locale, "mobile")} Contact **${contact}**.`;
+  if (wantsSeo) return `${strengthIntro(locale, "seo")} **${contact}**`;
+  if (wantsGeo) return `${strengthIntro(locale, "geo")} **${contact}**`;
+  if (wantsRegion) return `${strengthIntro(locale, "region")} **${contact}**`;
+  return `${strengthIntro(locale, "general")} **${contact}**`;
 }
 
 export function getAssistantApiUrl(): string | undefined {
