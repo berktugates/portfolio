@@ -16,6 +16,15 @@ export function usesCuratedSearchReply(text: string): boolean {
   return false;
 }
 
+export function usesCuratedHireReply(text: string): boolean {
+  const t = text.trim().toLowerCase();
+  const wantsHire = /hire|freelance|full.?time|part.?time|işe al|işe alabilir|çalış|projeye|engag|embauch|nas[ıi]l.*(al|hire)|how.*(hire|work)|wie.*einstell/.test(t);
+  const wantsWebOrMobile = /web|mobile|mobil|ios|android|app|uygulama|frontend|backend/.test(t);
+  if (wantsHire && wantsWebOrMobile) return true;
+  if (wantsHire && /hizmet|servis|service|remote|uzak|yurt|abroad|international/.test(t)) return true;
+  return false;
+}
+
 export function isGeoTopicMessage(text: string): boolean {
   return usesCuratedSearchReply(text);
 }

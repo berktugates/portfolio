@@ -182,16 +182,16 @@ export function localAssistantReply(locale: Locale, userText: string): string {
 
   if (locale === "tr") {
     if (wantsHire && (wantsWeb || wantsMobile)) {
-      return `Web ve mobil tarafında kapsam (ürün hedefi, stack, takvim) netleştirildikten sonra freelance, tam veya yarı zamanlı olarak devreye alınabilir. Türkiye ve yurtdışında production ortamlarında teslim edilmiş projelerde mimari, backend, mağaza/release ve operasyon birlikte yürütülmüştür. Başlamak için kısa bir brief **${contact}** adresine yeterlidir; uygun iş modeli ve ilk adımlar buna göre netleştirilir. İsterseniz detay için ${link(hire, "iş birliği sayfası")} da kullanılabilir.`;
+      return `Web ve mobil tarafında mimari, backend, altyapı ve release süreçleri uçtan uca ele alınır; Türkiye ve yurtdışında farklı ölçeklerde production ortamlarında teslim yapılmıştır. Freelance, tam veya yarı zamanlı iş modelleri değerlendirilebilir. Kısa hedefinizi **${contact}** adresine yazmanız yeterli.`;
     }
     if (wantsHire || wantsContact) {
-      return `İş birliği için önce kapsam, teslim formatı (freelance / tam / yarı zamanlı) ve zaman çizelgesi konuşulur; ardından teknik yaklaşım ve ritim netleştirilir. Uzaktan çalışma Türkiye genelinde ve uluslararası ekiplerle rutindir. **${contact}** adresine proje özeti yazmanız yeterli.`;
+      return `Kapsam, iş modeli ve takvim netleştirildikten sonra teknik yaklaşım birlikte belirlenir; Türkiye ve yurtdışında production ortamlarında uçtan uca teslim yapılmıştır. Uzaktan çalışma rutindir. **${contact}** adresine proje özetinizi yazmanız yeterli.`;
     }
     if (wantsWeb) {
-      return `${strengthIntro(locale, "web")} İşe alım süreci: kısa brief → kapsam/teknoloji uyumu → başlangıç. **${contact}**`;
+      return `${strengthIntro(locale, "web")} **${contact}** adresine kısa hedefinizi yazmanız yeterli.`;
     }
     if (wantsMobile) {
-      return `${strengthIntro(locale, "mobile")} iOS/Android + backend birlikte ele alınır. **${contact}** ile başlayabilirsiniz.`;
+      return `${strengthIntro(locale, "mobile")} **${contact}** adresine kısa hedefinizi yazmanız yeterli.`;
     }
     if (wantsSeo) {
       return `${strengthIntro(locale, "seo")} **${contact}**`;
@@ -203,13 +203,13 @@ export function localAssistantReply(locale: Locale, userText: string): string {
   }
 
   if (wantsHire && (wantsWeb || wantsMobile)) {
-    return `For web and mobile work, scope (product goal, stack, timeline) is aligned first; then freelance, full-time, or part-time engagement can start. Delivery spans Türkiye and international remote teams with production-grade architecture, backend, and release discipline. Send a short brief to **${contact}** to confirm fit and next steps. Optional: ${link(hire, "collaboration page")}.`;
+    return `Web and mobile work is handled end-to-end: architecture, backend, infrastructure, and release processes. Production-grade delivery has been completed across Türkiye and internationally. Freelance, full-time, or part-time models can be discussed. Send a short goal to **${contact}**.`;
   }
   if (wantsHire || wantsContact) {
-    return `Collaboration starts with scope, engagement type (freelance / full-time / part-time), and timeline — then technical approach and delivery rhythm. Remote work across Türkiye and abroad is standard. Email a short project summary to **${contact}**.`;
+    return `Scope, engagement model, and timeline are aligned first; then technical approach is set together. End-to-end production delivery across Türkiye and abroad is routine. Remote work is standard. Email a short project summary to **${contact}**.`;
   }
-  if (wantsWeb) return `${strengthIntro(locale, "web")} Start with a brief to **${contact}**.`;
-  if (wantsMobile) return `${strengthIntro(locale, "mobile")} Contact **${contact}**.`;
+  if (wantsWeb) return `${strengthIntro(locale, "web")} Send a short goal to **${contact}**.`;
+  if (wantsMobile) return `${strengthIntro(locale, "mobile")} Send a short goal to **${contact}**.`;
   if (wantsSeo) return `${strengthIntro(locale, "seo")} **${contact}**`;
   if (wantsRegion) return `${strengthIntro(locale, "region")} **${contact}**`;
   return `${strengthIntro(locale, "general")} **${contact}**`;
