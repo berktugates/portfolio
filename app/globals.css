@@ -145,6 +145,9 @@ body.has-site-assistant-dock #main-content { padding-bottom: 4.5rem; }
 
 /* Chat panel open animation */
 .site-assistant-chat-panel {
+  width: 100%;
+  max-width: 100%;
+  align-self: stretch;
   animation: site-assistant-panel-open 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
   transform-origin: bottom center;
 }
