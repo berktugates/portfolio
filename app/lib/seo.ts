@@ -4,12 +4,12 @@ export const SITE_TITLE = "Berktug Berke Ates — Software Engineer and Product 
 export const SITE_DESCRIPTION =
   "Software engineer and product builder designing scalable software products, complex digital systems, infrastructure, AI-powered systems, automation, and production-ready end-to-end products.";
 export const SITE_INTRO =
-  "Based in Marmaris, Muğla, Türkiye, Berktuğ Berke Ates is a software engineer and product builder who designs and builds scalable software products and complex digital systems. His work covers software architecture, backend engineering, infrastructure, AI-powered systems, automation, and end-to-end product development, from technical design to production deployment. He is available for freelance, full-time, and part-time software engineering engagements, including remote and international work.";
+  "Based in Marmaris, Muğla, in Türkiye's Aegean (Ege) region, Berktuğ Berke Ates is a software engineer and product builder who designs and builds scalable software products and complex digital systems. His work covers software architecture, backend engineering, infrastructure, AI-powered systems, automation, and end-to-end product development, from technical design to production deployment. He is available for freelance, full-time, and part-time software engineering engagements across the Aegean region and for remote and international work.";
 /**
  * Human-edited profile metadata timestamp. Keep the timezone explicit so
  * structured-data consumers receive an unambiguous ISO 8601 DateTime.
  */
-export const SITE_LAST_MODIFIED = "2026-09-04T09:00:00+03:00";
+export const SITE_LAST_MODIFIED = "2026-09-04T22:40:00+03:00";
 
 export const CONTACT_EMAIL = "contact@berktugberke.com";
 export const GITHUB_PROFILE = "https://github.com/berktugates";
@@ -27,6 +27,14 @@ export const OFFER_PART_TIME_ID = `${SITE_URL}/#offer-part-time`;
 
 export const AREA_SERVED = [
   { "@type": "Country", name: "Türkiye" },
+  { "@type": "AdministrativeArea", name: "Ege Bölgesi / Aegean Region (Türkiye)" },
+  { "@type": "City", name: "Marmaris" },
+  { "@type": "City", name: "Muğla" },
+  { "@type": "City", name: "İzmir" },
+  { "@type": "City", name: "Aydın" },
+  { "@type": "City", name: "Denizli" },
+  { "@type": "Place", name: "Bodrum" },
+  { "@type": "Place", name: "Fethiye" },
   { "@type": "Place", name: "Remote" },
   { "@type": "AdministrativeArea", name: "Worldwide" },
 ] as const;

@@ -65,6 +65,10 @@ const structuredData = {
           addressRegion: "Muğla",
           addressCountry: "TR",
         },
+        containedInPlace: {
+          "@type": "AdministrativeArea",
+          name: "Ege Bölgesi / Aegean Region (Türkiye)",
+        },
       },
       alumniOf: { "@id": FIRAT_UNIVERSITY_ID },
       knowsLanguage: [
