@@ -1,8 +1,60 @@
 @import "tailwindcss";
 @import "react-github-calendar/tooltips.css";
 @custom-variant dark (&:where(.dark, .dark *));
-:root { color-scheme: light; }
-.dark { color-scheme: dark; }
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+:root {
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #09090b;
+  --popover: #ffffff;
+  --popover-foreground: #09090b;
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted-foreground: #71717a;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --input: #e4e4e7;
+  --ring: #a1a1aa;
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+}
+.dark {
+  color-scheme: dark;
+  --background: #09090b;
+  --foreground: #fafafa;
+  --popover: #09090b;
+  --popover-foreground: #fafafa;
+  --primary: #fafafa;
+  --primary-foreground: #18181b;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted-foreground: #a1a1aa;
+  --accent: #27272a;
+  --accent-foreground: #fafafa;
+  --input: #3f3f46;
+  --ring: #71717a;
+  --destructive: #7f1d1d;
+  --destructive-foreground: #fafafa;
+}
 html { scroll-behavior: smooth; }
 body { @apply bg-white text-zinc-950 antialiased selection:bg-zinc-900 selection:text-white dark:bg-zinc-950 dark:text-zinc-50 dark:selection:bg-zinc-100 dark:selection:text-zinc-950; }
 a, button { @apply outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-950; }
@@ -86,4 +138,8 @@ a, button { @apply outline-none focus-visible:ring-2 focus-visible:ring-zinc-500
 @keyframes blog-page-in { from { opacity: 0; } to { opacity: 1; } }
 #main-content { transition: opacity 200ms ease-out; }
 body.blog-route-leaving #main-content { opacity: 0; }
+body.has-site-assistant-dock #main-content { padding-bottom: 7.5rem; }
+@media (min-width: 768px) {
+  body.has-site-assistant-dock #main-content { padding-bottom: 8.5rem; }
+}
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } ::view-transition-old(*), ::view-transition-new(*), ::view-transition-group(*) { animation-duration: 0s !important; animation-delay: 0s !important; } }

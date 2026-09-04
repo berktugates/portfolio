@@ -10,6 +10,7 @@ export type SiteAssistantCopy = {
   emptyHint: string;
   openChat: string;
   closeChat: string;
+  voiceInput: string;
   error: string;
   offlineNote: string;
   suggestions: string[];
@@ -19,12 +20,13 @@ const en: SiteAssistantCopy = {
   title: "Berktug AI",
   subtitle: "Ask about hiring, services, regions, SEO, GEO, and how to start a project.",
   modelLabel: "site guide",
-  placeholder: "Ask Berktug AI anything about working together…",
+  placeholder: "Ask Berktug AI anything…",
   send: "Send",
   thinking: "Berktug AI is thinking",
   emptyHint: "Pick a question below or describe your project.",
   openChat: "Chat with Berktug AI",
   closeChat: "Close chat",
+  voiceInput: "Voice input",
   error: "Something went wrong. Email contact@berktugberke.com or try again.",
   offlineNote: "Live AI runs on Cloudflare Workers AI when configured; helpful answers still work offline.",
   suggestions: [
@@ -40,12 +42,13 @@ const tr: SiteAssistantCopy = {
   title: "Berktug AI",
   subtitle: "İş birliği, hizmetler, bölgeler, SEO, GEO ve proje başlangıcı hakkında sorun.",
   modelLabel: "site rehberi",
-  placeholder: "Berktug AI'a birlikte çalışma hakkında sorun…",
+  placeholder: "Berktug AI'a bir şey sorun…",
   send: "Gönder",
   thinking: "Berktug AI düşünüyor",
-  emptyHint: "Aşağıdan bir soru seçin veya projenizi yazın.",
+  emptyHint: "Bir soru seçin veya projenizi yazın.",
   openChat: "Berktug AI ile sohbet",
   closeChat: "Sohbeti kapat",
+  voiceInput: "Sesle yaz",
   error: "Bir sorun oluştu. contact@berktugberke.com yazın veya tekrar deneyin.",
   offlineNote: "Canlı AI, Cloudflare Workers AI yapılandırıldığında çalışır; yine de yardımcı yanıtlar verilir.",
   suggestions: [

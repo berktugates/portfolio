@@ -9,7 +9,6 @@ import { LanguageSwitcher } from "./language-switcher";
 import { ProjectsCarousel } from "./projects-carousel";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
-import { SiteAssistantPanel } from "./site-assistant";
 import { getLocalizedBlogPosts, getLocalizedProjects } from "../lib/content/get-content";
 import { blogPostPath, blogsIndexPath, projectPath } from "../lib/content/paths";
 import {
@@ -305,7 +304,6 @@ export async function HomePage({ locale }: { locale: Locale }) {
             </BlogTransitionLink>
           </section>
         </main>
-        <SiteAssistantPanel locale={locale} variant="embedded" />
         <SiteFooter>
           <LanguageSwitcher locale={locale} />
         </SiteFooter>

@@ -1,14 +1,21 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { MessageCircle, Send, Sparkles, X } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { ArrowUp, Mic, Sparkles, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  PromptInput,
+  PromptInputAction,
+  PromptInputActions,
+  PromptInputTextarea,
+} from "@/components/ui/prompt-input";
+import { PromptSuggestion } from "@/components/ui/prompt-suggestion";
 import type { Locale } from "../lib/i18n";
 import { getSiteAssistantCopy } from "../lib/site-assistant/copy";
 import { sendAssistantMessage, trackAssistantEvent } from "../lib/site-assistant/chat-client";
 import type { ChatMessage } from "../lib/site-assistant/knowledge";
-import { getAssistantApiUrl } from "../lib/site-assistant/knowledge";
 
 function renderAssistantMarkdown(text: string) {
   const nodes: ReactNode[] = [];
@@ -24,7 +31,7 @@ function renderAssistantMarkdown(text: string) {
       <Link
         key={key++}
         href={m[2]}
-        className="font-medium text-zinc-900 underline decoration-zinc-300 underline-offset-2 hover:decoration-zinc-600 dark:text-zinc-100 dark:decoration-zinc-600"
+        className="font-medium text-zinc-900 underline decoration-zinc-300 underline-offset-2 hover:decoration-zinc-600 dark:text-zinc-100"
       >
         {m[1]}
       </Link>,
@@ -37,220 +44,271 @@ function renderAssistantMarkdown(text: string) {
   return nodes.length ? nodes : text;
 }
 
-type SiteAssistantPanelProps = {
-  locale: Locale;
-  variant?: "embedded" | "floating";
-  onClose?: () => void;
+type SpeechRecognitionCtor = new () => {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  onresult: ((event: { results: { 0: { 0: { transcript: string } } } }) => void) | null;
+  onerror: (() => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
 };
 
-export function SiteAssistantPanel({ locale, variant = "embedded", onClose }: SiteAssistantPanelProps) {
+function getSpeechRecognition(locale: Locale): SpeechRecognitionCtor | null {
+  if (typeof window === "undefined") return null;
+  const w = window as Window & {
+    SpeechRecognition?: SpeechRecognitionCtor;
+    webkitSpeechRecognition?: SpeechRecognitionCtor;
+  };
+  return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
+}
+
+function speechLang(locale: Locale) {
+  if (locale === "tr") return "tr-TR";
+  if (locale === "de") return "de-DE";
+  if (locale === "fr") return "fr-FR";
+  if (locale === "it") return "it-IT";
+  if (locale === "zh") return "zh-CN";
+  if (locale === "ja") return "ja-JP";
+  return "en-US";
+}
+
+export function SiteAssistantDock({ locale }: { locale: Locale }) {
   const copy = getSiteAssistantCopy(locale);
-  const titleId = useId();
+  const [prompt, setPrompt] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
+  const [listening, setListening] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const recognitionRef = useRef<InstanceType<SpeechRecognitionCtor> | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const hasLiveApi = Boolean(getAssistantApiUrl());
+  const messagesRef = useRef<ChatMessage[]>([]);
+
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
+
+  useEffect(() => {
+    document.body.classList.add("has-site-assistant-dock");
+    return () => document.body.classList.remove("has-site-assistant-dock");
+  }, []);
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, thinking]);
 
-  const submit = useCallback(
-    async (text: string) => {
-      const trimmed = text.trim();
+  useEffect(() => {
+    if (messages.length > 0) setExpanded(true);
+  }, [messages.length]);
+
+  const showSuggestions = inputFocused && !thinking && messages.length === 0;
+
+  const submitText = useCallback(
+    async (raw: string) => {
+      const trimmed = raw.trim();
       if (!trimmed || thinking) return;
-      setInput("");
+      setPrompt("");
+      setInputFocused(false);
       const userMsg: ChatMessage = { role: "user", content: trimmed };
       setMessages((prev) => [...prev, userMsg]);
       setThinking(true);
+      setExpanded(true);
       trackAssistantEvent("send", { locale });
       try {
-        const history = messages;
-        const reply = await sendAssistantMessage(locale, history, trimmed);
+        const reply = await sendAssistantMessage(locale, messagesRef.current, trimmed);
         setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
       } catch {
-        setMessages((prev) => [
-          ...prev,
-          { role: "assistant", content: copy.error },
-        ]);
+        setMessages((prev) => [...prev, { role: "assistant", content: copy.error }]);
       } finally {
         setThinking(false);
       }
     },
-    [copy.error, locale, messages, thinking],
+    [copy.error, locale, thinking],
   );
 
-  const shellClass =
-    variant === "floating"
-      ? "flex max-h-[min(70vh,520px)] flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-2xl shadow-zinc-900/10 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40"
-      : "flex flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900";
+  const handleSubmit = useCallback(() => {
+    void submitText(prompt);
+  }, [prompt, submitText]);
 
-  return (
-    <section
-      aria-labelledby={titleId}
-      className={variant === "embedded" ? "mt-16 scroll-mt-24" : undefined}
-    >
-      {variant === "embedded" ? (
-        <div className="mb-4">
-          <h2 id={titleId} className="text-lg font-medium text-zinc-950 dark:text-zinc-50">
-            {copy.title}
-          </h2>
-          <p className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-            {copy.subtitle}
-          </p>
-        </div>
-      ) : null}
+  const pickSuggestion = (text: string) => {
+    trackAssistantEvent("suggestion", { locale, question: text.slice(0, 80) });
+    setPrompt(text);
+    void submitText(text);
+  };
 
-      <div className={shellClass}>
-        <div className="flex items-center justify-between gap-2 border-b border-zinc-100 px-3 py-2.5 dark:border-zinc-800">
-          <div className="flex items-center gap-2">
-            <span className="flex size-7 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800">
-              <Sparkles className="size-3.5 text-zinc-700 dark:text-zinc-200" aria-hidden />
-            </span>
-            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0">
-              <span className="text-xs font-medium text-zinc-900 dark:text-zinc-100">{copy.title}</span>
-              <span className="font-mono text-[10px] text-zinc-400">{copy.modelLabel}</span>
-            </div>
-          </div>
-          {onClose ? (
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-lg p-1.5 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-              aria-label={copy.closeChat}
-            >
-              <X className="size-4" aria-hidden />
-            </button>
-          ) : null}
-        </div>
+  const toggleVoice = () => {
+    const Ctor = getSpeechRecognition(locale);
+    if (!Ctor) return;
 
-        <div
-          ref={listRef}
-          className="flex min-h-[200px] flex-1 flex-col gap-3 overflow-y-auto px-3 py-3 sm:min-h-[240px]"
-          role="log"
-          aria-live="polite"
-          aria-relevant="additions"
-        >
-          {messages.length === 0 ? (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">{copy.emptyHint}</p>
-          ) : null}
-          {messages.map((msg, i) => (
-            <div
-              key={`${msg.role}-${i}`}
-              className={
-                msg.role === "user"
-                  ? "ml-8 rounded-xl bg-zinc-100 px-3 py-2 text-sm text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100"
-                  : "mr-4 rounded-xl border border-zinc-100 bg-zinc-50/80 px-3 py-2 text-sm leading-relaxed text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950/60 dark:text-zinc-300"
-              }
-            >
-              {msg.role === "assistant" ? renderAssistantMarkdown(msg.content) : msg.content}
-            </div>
-          ))}
-          {thinking ? (
-            <div className="flex items-center gap-2 text-xs text-zinc-500">
-              <span className="flex gap-1" aria-hidden>
-                <span className="size-1.5 animate-pulse rounded-full bg-zinc-400" />
-                <span className="size-1.5 animate-pulse rounded-full bg-zinc-400 [animation-delay:120ms]" />
-                <span className="size-1.5 animate-pulse rounded-full bg-zinc-400 [animation-delay:240ms]" />
-              </span>
-              {copy.thinking}
-            </div>
-          ) : null}
-        </div>
+    if (listening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setListening(false);
+      return;
+    }
 
-        <div className="border-t border-zinc-100 px-3 py-2 dark:border-zinc-800">
-          <div className="mb-2 flex flex-wrap gap-1.5">
-            {copy.suggestions.map((q) => (
-              <button
-                key={q}
-                type="button"
-                disabled={thinking}
-                onClick={() => {
-                  trackAssistantEvent("suggestion", { locale, question: q.slice(0, 80) });
-                  void submit(q);
-                }}
-                className="max-w-full rounded-full border border-zinc-200/80 bg-zinc-50 px-2.5 py-1 text-left text-[11px] leading-snug text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-white disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-300 dark:hover:border-zinc-600"
-              >
-                {q}
-              </button>
-            ))}
-          </div>
-          <form
-            className="flex items-end gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              void submit(input);
-            }}
-          >
-            <label className="sr-only" htmlFor={`${titleId}-input`}>
-              {copy.placeholder}
-            </label>
-            <textarea
-              id={`${titleId}-input`}
-              ref={inputRef}
-              rows={1}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  void submit(input);
-                }
-              }}
-              placeholder={copy.placeholder}
-              className="max-h-24 min-h-[40px] flex-1 resize-none rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
-              disabled={thinking}
-            />
-            <button
-              type="submit"
-              disabled={thinking || !input.trim()}
-              className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-zinc-900 text-white transition-opacity hover:opacity-90 disabled:opacity-40 dark:bg-zinc-100 dark:text-zinc-900"
-              aria-label={copy.send}
-            >
-              <Send className="size-4" aria-hidden />
-            </button>
-          </form>
-          {!hasLiveApi ? (
-            <p className="mt-2 text-[10px] leading-snug text-zinc-400">{copy.offlineNote}</p>
-          ) : null}
-        </div>
-      </div>
-    </section>
-  );
-}
+    const recognition = new Ctor();
+    recognition.lang = speechLang(locale);
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setPrompt((prev) => (prev ? `${prev} ${transcript}` : transcript));
+    };
+    recognition.onerror = () => setListening(false);
+    recognition.onend = () => setListening(false);
+    recognitionRef.current = recognition;
+    setListening(true);
+    recognition.start();
+  };
 
-type SiteAssistantLauncherProps = {
-  locale: Locale;
-};
+  const handleFocus = () => {
+    if (blurTimer.current) clearTimeout(blurTimer.current);
+    setInputFocused(true);
+    trackAssistantEvent("open", { locale });
+  };
 
-export function SiteAssistantLauncher({ locale }: SiteAssistantLauncherProps) {
-  const copy = getSiteAssistantCopy(locale);
-  const [open, setOpen] = useState(false);
+  const handleBlur = () => {
+    blurTimer.current = setTimeout(() => setInputFocused(false), 180);
+  };
+
+  const chatOpen = expanded && (messages.length > 0 || thinking);
 
   return (
     <>
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-end p-4 sm:p-5">
-        {open ? (
-          <div className="pointer-events-auto w-full max-w-md">
-            <SiteAssistantPanel locale={locale} variant="floating" onClose={() => setOpen(false)} />
+      <div
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-50 h-28 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-zinc-950 dark:via-zinc-950/80"
+        aria-hidden
+      />
+
+      <div className="fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-3xl flex-col px-3 pb-3 md:px-5 md:pb-5">
+        {chatOpen ? (
+          <div className="pointer-events-auto mb-2 flex max-h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-lg shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40">
+            <div className="flex items-center justify-between gap-2 border-b border-zinc-100 px-3 py-2 dark:border-zinc-800">
+              <div className="flex items-center gap-2">
+                <span className="flex size-6 items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-800">
+                  <Sparkles className="size-3.5 text-zinc-700 dark:text-zinc-200" aria-hidden />
+                </span>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-[11px] font-medium text-zinc-900 dark:text-zinc-100">{copy.title}</span>
+                  <span className="font-mono text-[10px] text-zinc-400">{copy.modelLabel}</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800"
+                aria-label={copy.closeChat}
+                onClick={() => {
+                  setExpanded(false);
+                  setMessages([]);
+                }}
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+            <div ref={listRef} className="flex flex-1 flex-col gap-2 overflow-y-auto px-3 py-3" role="log" aria-live="polite">
+              {messages.map((msg, i) => (
+                <div
+                  key={`${msg.role}-${i}`}
+                  className={
+                    msg.role === "user"
+                      ? "ml-6 rounded-xl bg-zinc-100 px-3 py-2 text-sm text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100"
+                      : "mr-2 rounded-xl border border-zinc-100 bg-zinc-50/90 px-3 py-2 text-sm leading-relaxed text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-300"
+                  }
+                >
+                  {msg.role === "assistant" ? renderAssistantMarkdown(msg.content) : msg.content}
+                </div>
+              ))}
+              {thinking ? (
+                <div className="flex items-center gap-2 px-1 text-[10px] text-zinc-500">
+                  <span className="flex gap-1" aria-hidden>
+                    <span className="size-1.5 animate-pulse rounded-full bg-zinc-400" />
+                    <span className="size-1.5 animate-pulse rounded-full bg-zinc-400 [animation-delay:120ms]" />
+                    <span className="size-1.5 animate-pulse rounded-full bg-zinc-400 [animation-delay:240ms]" />
+                  </span>
+                  {copy.thinking}
+                </div>
+              ) : null}
+            </div>
           </div>
         ) : null}
-      </div>
-      {!open ? (
-        <button
-          type="button"
-          onClick={() => {
-            setOpen(true);
-            trackAssistantEvent("open", { locale });
-          }}
-          className="fixed bottom-4 right-4 z-40 inline-flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-zinc-900/20 transition-transform hover:scale-[1.02] dark:bg-zinc-100 dark:text-zinc-900 sm:bottom-5 sm:right-5"
+
+        {showSuggestions ? (
+          <div
+            className="pointer-events-auto mb-2 overflow-hidden rounded-2xl border border-black/[0.07] bg-white p-1.5 shadow-md shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900"
+            onMouseDown={(e) => e.preventDefault()}
+          >
+            {copy.suggestions.map((q) => (
+              <PromptSuggestion
+                key={q}
+                type="button"
+                highlight={prompt}
+                className="text-sm"
+                onClick={() => pickSuggestion(q)}
+              >
+                {q}
+              </PromptSuggestion>
+            ))}
+          </div>
+        ) : null}
+
+        <PromptInput
+          isLoading={thinking}
+          value={prompt}
+          onValueChange={setPrompt}
+          onSubmit={() => void handleSubmit()}
+          className="pointer-events-auto border-input bg-popover relative z-10 w-full rounded-3xl border p-0 pt-1 shadow-xs dark:bg-zinc-900"
         >
-          <MessageCircle className="size-4" aria-hidden />
-          <span className="max-w-[40vw] truncate sm:max-w-none">{copy.openChat}</span>
-        </button>
-      ) : null}
+          <div className="flex flex-col">
+            <PromptInputTextarea
+              placeholder={copy.placeholder}
+              className="min-h-[44px] pt-3 pl-4 text-base leading-[1.3] sm:text-base md:text-base"
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+            />
+
+            <PromptInputActions className="mt-5 flex w-full items-center justify-between gap-2 px-3 pb-3">
+              <div className="flex min-h-9 items-center">
+                {!inputFocused && messages.length === 0 ? (
+                  <p className="text-[11px] text-muted-foreground">{copy.emptyHint}</p>
+                ) : null}
+              </div>
+              <div className="flex items-center gap-2">
+                <PromptInputAction tooltip={copy.voiceInput ?? "Voice input"}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className={`size-9 rounded-full ${listening ? "border-zinc-900 bg-zinc-100 dark:border-zinc-100 dark:bg-zinc-800" : ""}`}
+                    onClick={toggleVoice}
+                    aria-pressed={listening}
+                    aria-label={copy.voiceInput ?? "Voice input"}
+                  >
+                    <Mic size={18} />
+                  </Button>
+                </PromptInputAction>
+
+                <Button
+                  type="button"
+                  size="icon"
+                  disabled={!prompt.trim() || thinking}
+                  onClick={() => void handleSubmit()}
+                  className="size-9 rounded-full"
+                  aria-label={copy.send}
+                >
+                  {!thinking ? (
+                    <ArrowUp size={18} />
+                  ) : (
+                    <span className="size-3 animate-pulse rounded-sm bg-primary-foreground" />
+                  )}
+                </Button>
+              </div>
+            </PromptInputActions>
+          </div>
+        </PromptInput>
+      </div>
     </>
   );
 }
