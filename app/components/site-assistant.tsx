@@ -1,7 +1,5 @@
 "use client";
 
-import type { ReactNode } from "react";
-import Link from "next/link";
 import { ArrowUp, Mic, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -16,33 +14,7 @@ import type { Locale } from "../lib/i18n";
 import { getSiteAssistantCopy } from "../lib/site-assistant/copy";
 import { sendAssistantMessage, trackAssistantEvent } from "../lib/site-assistant/chat-client";
 import type { ChatMessage } from "../lib/site-assistant/knowledge";
-
-function renderAssistantMarkdown(text: string) {
-  const nodes: ReactNode[] = [];
-  const linkRe = /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g;
-  let last = 0;
-  let m: RegExpExecArray | null;
-  let key = 0;
-  while ((m = linkRe.exec(text)) !== null) {
-    if (m.index > last) {
-      nodes.push(<span key={key++}>{text.slice(last, m.index)}</span>);
-    }
-    nodes.push(
-      <Link
-        key={key++}
-        href={m[2]}
-        className="font-medium text-zinc-900 underline decoration-zinc-300 underline-offset-2 hover:decoration-zinc-600 dark:text-zinc-100"
-      >
-        {m[1]}
-      </Link>,
-    );
-    last = m.index + m[0].length;
-  }
-  if (last < text.length) {
-    nodes.push(<span key={key++}>{text.slice(last)}</span>);
-  }
-  return nodes.length ? nodes : text;
-}
+import { AssistantMessageContent } from "../lib/site-assistant/render-message";
 
 type SpeechRecognitionCtor = new () => {
   lang: string;
@@ -207,7 +179,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
                       : "mr-2 rounded-xl border border-zinc-100 bg-zinc-50/90 px-3 py-2 text-sm leading-relaxed text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-300"
                   }
                 >
-                  {msg.role === "assistant" ? renderAssistantMarkdown(msg.content) : msg.content}
+                  {msg.role === "assistant" ? <AssistantMessageContent text={msg.content} /> : msg.content}
                 </div>
               ))}
               {thinking ? (
