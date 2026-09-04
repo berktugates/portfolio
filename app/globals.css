@@ -142,4 +142,44 @@ body.has-site-assistant-dock #main-content { padding-bottom: 5.75rem; }
 @media (min-width: 640px) {
   body.has-site-assistant-dock #main-content { padding-bottom: 6.25rem; }
 }
+.assistant-typing-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.assistant-typing-dots span {
+  display: block;
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 9999px;
+  background: rgb(161 161 170);
+  animation: assistant-typing-dot 0.85s ease-in-out infinite;
+}
+.dark .assistant-typing-dots span {
+  background: rgb(113 113 122);
+}
+.assistant-typing-dots span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.assistant-typing-dots span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+@keyframes assistant-typing-dot {
+  0%,
+  70%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  35% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .assistant-typing-dots span {
+    animation: none;
+    opacity: 0.6;
+  }
+}
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } ::view-transition-old(*), ::view-transition-new(*), ::view-transition-group(*) { animation-duration: 0s !important; animation-delay: 0s !important; } }

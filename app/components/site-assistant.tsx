@@ -15,6 +15,9 @@ import { getSiteAssistantCopy } from "../lib/site-assistant/copy";
 import { sendAssistantMessage, trackAssistantEvent } from "../lib/site-assistant/chat-client";
 import type { ChatMessage } from "../lib/site-assistant/knowledge";
 import { AssistantMessageContent } from "../lib/site-assistant/render-message";
+import { AssistantTypingIndicator } from "./assistant-typing-indicator";
+
+const MIN_TYPING_MS = 520;
 
 type SpeechRecognitionCtor = new () => {
   lang: string;
@@ -90,7 +93,10 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
       setExpanded(true);
       trackAssistantEvent("send", { locale });
       try {
-        const reply = await sendAssistantMessage(locale, messagesRef.current, trimmed);
+        const [reply] = await Promise.all([
+          sendAssistantMessage(locale, messagesRef.current, trimmed),
+          new Promise<void>((resolve) => setTimeout(resolve, MIN_TYPING_MS)),
+        ]);
         setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
       } catch {
         setMessages((prev) => [...prev, { role: "assistant", content: copy.error }]);
@@ -182,16 +188,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
                   {msg.role === "assistant" ? <AssistantMessageContent text={msg.content} /> : msg.content}
                 </div>
               ))}
-              {thinking ? (
-                <div className="flex items-center gap-2 px-1 text-[10px] text-zinc-500">
-                  <span className="flex gap-1" aria-hidden>
-                    <span className="size-1.5 animate-pulse rounded-full bg-zinc-400" />
-                    <span className="size-1.5 animate-pulse rounded-full bg-zinc-400 [animation-delay:120ms]" />
-                    <span className="size-1.5 animate-pulse rounded-full bg-zinc-400 [animation-delay:240ms]" />
-                  </span>
-                  {copy.thinking}
-                </div>
-              ) : null}
+              {thinking ? <AssistantTypingIndicator label={copy.thinking} /> : null}
             </div>
           </div>
         ) : null}
