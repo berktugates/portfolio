@@ -6,7 +6,6 @@ export type SiteAssistantCopy = {
   placeholder: string;
   send: string;
   thinking: string;
-  emptyHint: string;
   openChat: string;
   closeChat: string;
   voiceInput: string;
@@ -21,7 +20,6 @@ const en: SiteAssistantCopy = {
   placeholder: "Ask Berktug AI anything…",
   send: "Send",
   thinking: "Berktug AI is thinking",
-  emptyHint: "Pick a question below or describe your project.",
   openChat: "Chat with Berktug AI",
   closeChat: "Close chat",
   voiceInput: "Voice input",
@@ -42,7 +40,6 @@ const tr: SiteAssistantCopy = {
   placeholder: "Berktug AI'a bir şey sorun…",
   send: "Gönder",
   thinking: "Berktug AI düşünüyor",
-  emptyHint: "Bir soru seçin veya projenizi yazın.",
   openChat: "Berktug AI ile sohbet",
   closeChat: "Sohbeti kapat",
   voiceInput: "Sesle yaz",
