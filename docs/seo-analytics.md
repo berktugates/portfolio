@@ -54,9 +54,10 @@ Static export (`output: "export"`) — chat API runs on **Cloudflare Workers** (
 
 | Variable | Where | Purpose |
 |----------|--------|---------|
-| `NEXT_PUBLIC_SITE_ASSISTANT_API_URL` | Vercel Production + Preview | Worker URL, e.g. `https://berktug-hire-assistant.<account>.workers.dev` |
-| `GROQ_API_KEY` (optional) | Worker secret | Better replies via Groq free tier; falls back to Workers AI |
+| `NEXT_PUBLIC_SITE_ASSISTANT_API_URL` | Vercel Production + Preview | `https://berktug-hire-assistant.berktugates.workers.dev` |
+| `GROQ_API_KEY` (optional) | Worker secret | Only used when `ASSISTANT_USE_GROQ=true` (default **false**) |
+| `ASSISTANT_DAILY_IP_LIMIT` / `ASSISTANT_HOURLY_IP_LIMIT` | Worker vars | Per-IP caps (defaults 30/day, 8/hour); client-side guards also apply |
 
-Deploy worker: `cd workers/hire-assistant && pnpm install && pnpm deploy`. GTM can listen for `dataLayer` event `site_assistant` (`open`, `send`, `suggestion`).
+Deploy worker: `cd workers/hire-assistant && pnpm install && pnpm exec wrangler deploy`. GTM can listen for `dataLayer` event `site_assistant` (`open`, `send`, `suggestion`).
 
 Without the env var, the UI still answers using on-device rule-based replies (hire links + `llms.txt` rules).

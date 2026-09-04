@@ -1,15 +1,7 @@
 "use client";
 
-import { ArrowUp, Mic, X } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  PromptInput,
-  PromptInputAction,
-  PromptInputActions,
-  PromptInputTextarea,
-} from "@/components/ui/prompt-input";
-import { PromptSuggestion } from "@/components/ui/prompt-suggestion";
+import { X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import type { Locale } from "../lib/i18n";
 import { getSiteAssistantCopy } from "../lib/site-assistant/copy";
 import { sendAssistantMessage, trackAssistantEvent } from "../lib/site-assistant/chat-client";
@@ -18,6 +10,8 @@ import { AssistantMessageContent } from "../lib/site-assistant/render-message";
 import { AssistantTypingIndicator } from "./assistant-typing-indicator";
 
 const MIN_TYPING_MS = 520;
+const DOCK_INPUT_MIN_PX = 32;
+const DOCK_INPUT_MAX_PX = 120;
 
 type SpeechRecognitionCtor = new () => {
   lang: string;
@@ -49,6 +43,32 @@ function speechLang(locale: Locale) {
   return "en-US";
 }
 
+function syncDockInputHeight(el: HTMLTextAreaElement | null) {
+  if (!el) return;
+  el.style.height = `${DOCK_INPUT_MIN_PX}px`;
+  const next = Math.min(Math.max(el.scrollHeight, DOCK_INPUT_MIN_PX), DOCK_INPUT_MAX_PX);
+  el.style.height = `${next}px`;
+}
+
+function MicIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M12 3.5a3 3 0 0 1 3 3v4.5a3 3 0 0 1-6 0V6.5a3 3 0 0 1 3-3Z" />
+      <path d="M5.5 11v.5a6.5 6.5 0 0 0 13 0V11" />
+      <path d="M12 18v3" />
+    </svg>
+  );
+}
+
+function SendIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M12 5V20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6 10L12 4L18 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function SiteAssistantDock({ locale }: { locale: Locale }) {
   const copy = getSiteAssistantCopy(locale);
   const [prompt, setPrompt] = useState("");
@@ -61,6 +81,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
   const recognitionRef = useRef<InstanceType<SpeechRecognitionCtor> | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<ChatMessage[]>([]);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     messagesRef.current = messages;
@@ -72,6 +93,10 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
   }, []);
 
   useEffect(() => {
+    syncDockInputHeight(inputRef.current);
+  }, [prompt]);
+
+  useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, thinking]);
 
@@ -80,6 +105,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
   }, [messages.length]);
 
   const showSuggestions = inputFocused && !thinking && messages.length === 0;
+  const canSend = Boolean(prompt.trim()) && !thinking;
 
   const submitText = useCallback(
     async (raw: string) => {
@@ -152,16 +178,23 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
     blurTimer.current = setTimeout(() => setInputFocused(false), 180);
   };
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (canSend) void handleSubmit();
+    }
+  };
+
   const chatOpen = expanded && (messages.length > 0 || thinking);
 
   return (
     <>
       <div
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-50 h-20 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-zinc-950 dark:via-zinc-950/80"
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-50 h-14 bg-gradient-to-t from-white via-white/70 to-transparent dark:from-zinc-950 dark:via-zinc-950/70"
         aria-hidden
       />
 
-      <div className="fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-3xl flex-col px-2.5 pb-2 sm:px-5 sm:pb-4">
+      <div className="site-assistant-dock-host fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-[720px] flex-col px-3 pb-2.5 sm:px-5 sm:pb-3">
         {chatOpen ? (
           <div className="pointer-events-auto relative mb-2 flex max-h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-lg shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40">
             <button
@@ -194,74 +227,52 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
         ) : null}
 
         {showSuggestions ? (
-          <div
-            className="pointer-events-auto mb-1.5 flex max-h-[min(26vh,168px)] flex-col gap-0 overflow-y-auto px-0.5 sm:max-h-[min(22vh,152px)]"
-            onMouseDown={(e) => e.preventDefault()}
-          >
+          <div className="hw-dock-suggestions pointer-events-auto" onMouseDown={(e) => e.preventDefault()}>
             {copy.suggestions.map((q) => (
-              <PromptSuggestion
-                key={q}
-                type="button"
-                highlight={prompt}
-                className="h-auto min-h-0 w-full justify-start rounded-md bg-transparent px-1.5 py-1 text-left text-[11px] leading-snug font-normal text-zinc-600 shadow-none hover:bg-transparent hover:text-zinc-950 sm:px-2 sm:py-1.5 sm:text-xs dark:text-zinc-400 dark:hover:text-zinc-100"
-                onClick={() => pickSuggestion(q)}
-              >
+              <button key={q} type="button" className="hw-dock-suggestion" onClick={() => pickSuggestion(q)}>
                 {q}
-              </PromptSuggestion>
+              </button>
             ))}
           </div>
         ) : null}
 
-        <PromptInput
-          isLoading={thinking}
-          value={prompt}
-          onValueChange={setPrompt}
-          onSubmit={() => void handleSubmit()}
-          maxHeight={120}
-          className="pointer-events-auto border-input bg-popover relative z-10 w-full rounded-2xl border p-0 shadow-xs sm:rounded-3xl dark:bg-zinc-900"
-        >
-          <div className="flex flex-col">
-            <PromptInputTextarea
+        <div className="hw-dock pointer-events-auto">
+          <div className="hw-dock-bar" data-grown={prompt.includes("\n") || (inputRef.current?.scrollHeight ?? 0) > DOCK_INPUT_MIN_PX + 4 ? "true" : "false"}>
+            <textarea
+              ref={inputRef}
+              className="hw-dock-input"
+              rows={1}
+              value={prompt}
               placeholder={copy.placeholder}
-              className="min-h-[36px] max-h-[120px] py-2 pl-3 pr-2 text-sm leading-snug sm:min-h-[40px] sm:pl-4 sm:text-[15px]"
+              aria-label={copy.placeholder}
+              disabled={thinking}
+              onChange={(e) => setPrompt(e.target.value)}
               onFocus={handleFocus}
               onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
             />
-
-            <PromptInputActions className="mt-0.5 flex w-full items-center justify-end gap-1.5 px-2 pb-2 sm:px-2.5 sm:pb-2.5">
-              <div className="flex items-center gap-1.5">
-                <PromptInputAction tooltip={copy.voiceInput ?? "Voice input"}>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    className={`size-8 rounded-full sm:size-9 ${listening ? "border-zinc-900 bg-zinc-100 dark:border-zinc-100 dark:bg-zinc-800" : ""}`}
-                    onClick={toggleVoice}
-                    aria-pressed={listening}
-                    aria-label={copy.voiceInput ?? "Voice input"}
-                  >
-                    <Mic className="size-4 sm:size-[18px]" />
-                  </Button>
-                </PromptInputAction>
-
-                <Button
-                  type="button"
-                  size="icon"
-                  disabled={!prompt.trim() || thinking}
-                  onClick={() => void handleSubmit()}
-                  className="size-8 rounded-full sm:size-9"
-                  aria-label={copy.send}
-                >
-                  {!thinking ? (
-                    <ArrowUp className="size-4 sm:size-[18px]" />
-                  ) : (
-                    <span className="size-2.5 animate-pulse rounded-sm bg-primary-foreground sm:size-3" />
-                  )}
-                </Button>
-              </div>
-            </PromptInputActions>
+            <div className="hw-dock-actions">
+              <button
+                type="button"
+                className={`hw-dock-tool${listening ? " hw-dock-tool--active" : ""}`}
+                aria-label={copy.voiceInput ?? "Voice input"}
+                aria-pressed={listening}
+                onClick={toggleVoice}
+              >
+                <MicIcon />
+              </button>
+              <button
+                type="button"
+                className="hw-dock-send"
+                aria-label={copy.send}
+                disabled={!canSend}
+                onClick={() => void handleSubmit()}
+              >
+                {thinking ? <span className="hw-dock-send-spinner" aria-hidden /> : <SendIcon />}
+              </button>
+            </div>
           </div>
-        </PromptInput>
+        </div>
       </div>
     </>
   );

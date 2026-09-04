@@ -7,6 +7,9 @@ binding = "AI"
 
 # Optional: wrangler secret put GROQ_API_KEY
 # Optional: wrangler secret put ASSISTANT_ORIGINS  (comma-separated origins)
+# Groq is OFF by default — set ASSISTANT_USE_GROQ=true only if you accept extra provider quota.
+# ASSISTANT_DAILY_IP_LIMIT / ASSISTANT_HOURLY_IP_LIMIT (defaults 30 / 8 per IP)
 
 [vars]
+ASSISTANT_USE_GROQ = "false"
 # ASSISTANT_ORIGINS = "https://berktugberke.com,https://www.berktugberke.com"

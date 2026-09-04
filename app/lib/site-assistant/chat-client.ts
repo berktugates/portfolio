@@ -1,17 +1,29 @@
 import type { Locale } from "../i18n";
 import type { ChatMessage } from "./knowledge";
 import { buildSystemPrompt, getAssistantApiUrl, localAssistantReply } from "./knowledge";
+import {
+  guardAssistantRequest,
+  guardMessageForLocale,
+  recordAssistantRequestSent,
+} from "./guards";
 
 export async function sendAssistantMessage(
   locale: Locale,
   history: ChatMessage[],
   userMessage: string,
 ): Promise<string> {
+  const guard = guardAssistantRequest(userMessage, history.length);
+  if (!guard.ok) {
+    return guardMessageForLocale(locale, guard.code);
+  }
+
   const apiUrl = getAssistantApiUrl();
 
   if (!apiUrl) {
     return localAssistantReply(locale, userMessage);
   }
+
+  recordAssistantRequestSent();
 
   const res = await fetch(apiUrl, {
     method: "POST",
@@ -19,9 +31,13 @@ export async function sendAssistantMessage(
     body: JSON.stringify({
       locale,
       messages: history.concat({ role: "user", content: userMessage }),
-      system: buildSystemPrompt(locale),
+      system: buildSystemPrompt(locale, userMessage),
     }),
   });
+
+  if (res.status === 429) {
+    return guardMessageForLocale(locale, "rate");
+  }
 
   if (!res.ok) {
     return localAssistantReply(locale, userMessage);

@@ -1,9 +1,50 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 
+const SITE_HOSTS = new Set(["berktugberke.com", "www.berktugberke.com"]);
+
+function isExternalHref(href: string): boolean {
+  if (href.startsWith("/") || href.startsWith("#")) return false;
+  try {
+    const url = new URL(href);
+    if (url.protocol !== "http:" && url.protocol !== "https:") return true;
+    return !SITE_HOSTS.has(url.hostname.toLowerCase());
+  } catch {
+    return false;
+  }
+}
+
+function linkClassName() {
+  return "font-medium text-zinc-900 underline decoration-zinc-300 underline-offset-2 hover:decoration-zinc-600 dark:text-zinc-100 dark:decoration-zinc-600";
+}
+
+function renderLink(href: string, label: ReactNode, key: string) {
+  if (isExternalHref(href)) {
+    return (
+      <a
+        key={key}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={linkClassName()}
+      >
+        {label}
+      </a>
+    );
+  }
+
+  const path = href.startsWith("http") ? new URL(href).pathname + new URL(href).search + new URL(href).hash : href;
+
+  return (
+    <Link key={key} href={path} className={linkClassName()}>
+      {label}
+    </Link>
+  );
+}
+
 function renderInlineFormatting(text: string, keyPrefix: string): ReactNode[] {
   const nodes: ReactNode[] = [];
-  const re = /(\*\*[^*]+\*\*|\*[^*\n]+\*|`[^`\n]+`)/g;
+  const re = /(\*\*[^*]+\*\*|\*[^*\n]+\*|`[^`\n]+`|https?:\/\/[^\s<]+[^\s<.,;:!?)"])/g;
   let last = 0;
   let match: RegExpExecArray | null;
   let i = 0;
@@ -14,7 +55,9 @@ function renderInlineFormatting(text: string, keyPrefix: string): ReactNode[] {
     }
     const token = match[0];
     const key = `${keyPrefix}-f${i++}`;
-    if (token.startsWith("**")) {
+    if (token.startsWith("http://") || token.startsWith("https://")) {
+      nodes.push(renderLink(token, token, key));
+    } else if (token.startsWith("**")) {
       nodes.push(
         <strong key={key} className="font-semibold text-zinc-900 dark:text-zinc-100">
           {token.slice(2, -2)}
@@ -48,7 +91,7 @@ function renderInlineFormatting(text: string, keyPrefix: string): ReactNode[] {
 
 function renderInlineWithLinks(text: string, keyPrefix: string): ReactNode[] {
   const nodes: ReactNode[] = [];
-  const linkRe = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g;
+  const linkRe = /\[([^\]]+)\]\(([^)\s]+)\)/g;
   let last = 0;
   let match: RegExpExecArray | null;
   let i = 0;
@@ -57,15 +100,8 @@ function renderInlineWithLinks(text: string, keyPrefix: string): ReactNode[] {
     if (match.index > last) {
       nodes.push(...renderInlineFormatting(text.slice(last, match.index), `${keyPrefix}-t${i}`));
     }
-    nodes.push(
-      <Link
-        key={`${keyPrefix}-l${i++}`}
-        href={match[2]}
-        className="font-medium text-zinc-900 underline decoration-zinc-300 underline-offset-2 hover:decoration-zinc-600 dark:text-zinc-100 dark:decoration-zinc-600"
-      >
-        {renderInlineFormatting(match[1], `${keyPrefix}-lt${i}`)}
-      </Link>,
-    );
+    const href = match[2];
+    nodes.push(renderLink(href, renderInlineFormatting(match[1], `${keyPrefix}-lt${i}`), `${keyPrefix}-l${i++}`));
     last = match.index + match[0].length;
   }
 
