@@ -42,7 +42,7 @@ function PromptSuggestion({
       <Button
         variant={variant || "ghost"}
         size={size || "sm"}
-        className={cn("h-auto w-full cursor-pointer justify-start rounded-xl py-2.5 text-left font-normal", "hover:bg-accent", className)}
+        className={cn("h-auto w-full cursor-pointer justify-start rounded-md bg-transparent py-1 text-left font-normal hover:bg-transparent", className)}
         {...props}
       >
         {children}
@@ -60,8 +60,8 @@ function PromptSuggestion({
       variant={variant || "ghost"}
       size={size || "sm"}
       className={cn(
-        "h-auto w-full cursor-pointer justify-start gap-0 rounded-xl py-2.5 text-left font-normal",
-        "hover:bg-accent",
+        "h-auto w-full cursor-pointer justify-start gap-0 rounded-md py-1 text-left font-normal",
+        "bg-transparent hover:bg-transparent",
         className,
       )}
       {...props}

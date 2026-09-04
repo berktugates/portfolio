@@ -138,8 +138,8 @@ a, button { @apply outline-none focus-visible:ring-2 focus-visible:ring-zinc-500
 @keyframes blog-page-in { from { opacity: 0; } to { opacity: 1; } }
 #main-content { transition: opacity 200ms ease-out; }
 body.blog-route-leaving #main-content { opacity: 0; }
-body.has-site-assistant-dock #main-content { padding-bottom: 7.5rem; }
-@media (min-width: 768px) {
-  body.has-site-assistant-dock #main-content { padding-bottom: 8.5rem; }
+body.has-site-assistant-dock #main-content { padding-bottom: 5.75rem; }
+@media (min-width: 640px) {
+  body.has-site-assistant-dock #main-content { padding-bottom: 6.25rem; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } ::view-transition-old(*), ::view-transition-new(*), ::view-transition-group(*) { animation-duration: 0s !important; animation-delay: 0s !important; } }

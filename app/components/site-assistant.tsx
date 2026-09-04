@@ -151,11 +151,11 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
   return (
     <>
       <div
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-50 h-28 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-zinc-950 dark:via-zinc-950/80"
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-50 h-20 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-zinc-950 dark:via-zinc-950/80"
         aria-hidden
       />
 
-      <div className="fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-3xl flex-col px-3 pb-3 md:px-5 md:pb-5">
+      <div className="fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-3xl flex-col px-2.5 pb-2 sm:px-5 sm:pb-4">
         {chatOpen ? (
           <div className="pointer-events-auto relative mb-2 flex max-h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-lg shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40">
             <button
@@ -198,7 +198,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
 
         {showSuggestions ? (
           <div
-            className="pointer-events-auto mb-2 overflow-hidden rounded-2xl border border-black/[0.07] bg-white p-1.5 shadow-md shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900"
+            className="pointer-events-auto mb-1.5 flex max-h-[min(26vh,168px)] flex-col gap-0 overflow-y-auto px-0.5 sm:max-h-[min(22vh,152px)]"
             onMouseDown={(e) => e.preventDefault()}
           >
             {copy.suggestions.map((q) => (
@@ -206,7 +206,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
                 key={q}
                 type="button"
                 highlight={prompt}
-                className="text-sm"
+                className="h-auto min-h-0 w-full justify-start rounded-md bg-transparent px-1.5 py-1 text-left text-[11px] leading-snug font-normal text-zinc-600 shadow-none hover:bg-transparent hover:text-zinc-950 sm:px-2 sm:py-1.5 sm:text-xs dark:text-zinc-400 dark:hover:text-zinc-100"
                 onClick={() => pickSuggestion(q)}
               >
                 {q}
@@ -220,34 +220,30 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
           value={prompt}
           onValueChange={setPrompt}
           onSubmit={() => void handleSubmit()}
-          className="pointer-events-auto border-input bg-popover relative z-10 w-full rounded-3xl border p-0 pt-1 shadow-xs dark:bg-zinc-900"
+          maxHeight={120}
+          className="pointer-events-auto border-input bg-popover relative z-10 w-full rounded-2xl border p-0 shadow-xs sm:rounded-3xl dark:bg-zinc-900"
         >
           <div className="flex flex-col">
             <PromptInputTextarea
               placeholder={copy.placeholder}
-              className="min-h-[44px] pt-3 pl-4 text-base leading-[1.3] sm:text-base md:text-base"
+              className="min-h-[36px] max-h-[120px] py-2 pl-3 pr-2 text-sm leading-snug sm:min-h-[40px] sm:pl-4 sm:text-[15px]"
               onFocus={handleFocus}
               onBlur={handleBlur}
             />
 
-            <PromptInputActions className="mt-5 flex w-full items-center justify-between gap-2 px-3 pb-3">
-              <div className="flex min-h-9 items-center">
-                {!inputFocused && messages.length === 0 ? (
-                  <p className="text-[11px] text-muted-foreground">{copy.emptyHint}</p>
-                ) : null}
-              </div>
-              <div className="flex items-center gap-2">
+            <PromptInputActions className="mt-0.5 flex w-full items-center justify-end gap-1.5 px-2 pb-2 sm:px-2.5 sm:pb-2.5">
+              <div className="flex items-center gap-1.5">
                 <PromptInputAction tooltip={copy.voiceInput ?? "Voice input"}>
                   <Button
                     type="button"
                     variant="outline"
                     size="icon"
-                    className={`size-9 rounded-full ${listening ? "border-zinc-900 bg-zinc-100 dark:border-zinc-100 dark:bg-zinc-800" : ""}`}
+                    className={`size-8 rounded-full sm:size-9 ${listening ? "border-zinc-900 bg-zinc-100 dark:border-zinc-100 dark:bg-zinc-800" : ""}`}
                     onClick={toggleVoice}
                     aria-pressed={listening}
                     aria-label={copy.voiceInput ?? "Voice input"}
                   >
-                    <Mic size={18} />
+                    <Mic className="size-4 sm:size-[18px]" />
                   </Button>
                 </PromptInputAction>
 
@@ -256,13 +252,13 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
                   size="icon"
                   disabled={!prompt.trim() || thinking}
                   onClick={() => void handleSubmit()}
-                  className="size-9 rounded-full"
+                  className="size-8 rounded-full sm:size-9"
                   aria-label={copy.send}
                 >
                   {!thinking ? (
-                    <ArrowUp size={18} />
+                    <ArrowUp className="size-4 sm:size-[18px]" />
                   ) : (
-                    <span className="size-3 animate-pulse rounded-sm bg-primary-foreground" />
+                    <span className="size-2.5 animate-pulse rounded-sm bg-primary-foreground sm:size-3" />
                   )}
                 </Button>
               </div>
