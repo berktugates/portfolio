@@ -1,0 +1,401 @@
+{
+  "slug": "progressive-delivery-for-multi-tenant-saas",
+  "title": "Progressive Delivery for Multi-Tenant SaaS",
+  "excerpt": "Shipping the same binary to every tenant at once is a blast-radius choice. Progressive delivery lets you prove change on the right cohorts before the whole fleet feels it.",
+  "description": "How staff engineers run progressive delivery in multi-tenant SaaS: tenant cohorts, ring deployments, flag-based exposure, per-tenant rollback, and guardrail metrics that respect isolation.",
+  "readingMinutes": 7,
+  "keywords": [
+    "progressive delivery",
+    "multi-tenant SaaS",
+    "canary releases",
+    "feature flags",
+    "ring deployment",
+    "release engineering"
+  ],
+  "socialThreadTr": [
+    "Aynı binary'yi tüm tenant'lara birden göndermek bir blast-radius seçimidir. Progressive delivery, doğru kohortlarda kanıtlayıp filoyu riske atmadan yayınlar. 🧵",
+    "Ring, flag, tenant rollback ve izolasyonlu guardrail. Detay: https://berktugberke.com/tr/blogs/progressive-delivery-for-multi-tenant-saas"
+  ],
+  "sections": [
+    {
+      "heading": "Tenants are not interchangeable canaries",
+      "paragraphs": [
+        "A random 5% of traffic can hide failures that only appear for enterprise SSO, custom data residency, or high-cardinality configs. In multi-tenant SaaS, progressive delivery must reason about tenant identity, plan tier, region, and risk profile—not only request percentage.",
+        "Build explicit rings: internal dogfood, friendly design partners, low-risk self-serve cohorts, then strategic accounts. Promotion between rings is a decision with owners and metrics, not an automatic timer that ignores support load."
+      ]
+    },
+    {
+      "heading": "Separate deploy from expose",
+      "paragraphs": [
+        "Ship inactive code behind flags so you can soak infrastructure without changing customer-visible behavior. Then expose by tenant cohort, with sticky assignment so a user does not bounce between experiences mid-session. For data-path changes, prefer dual-write or shadow-read windows before cutting reads.",
+        "Per-tenant kill and rollback matter more than fleet-wide revert when only a slice is unhealthy. Practice restoring a single noisy neighbor without undoing a good rollout for everyone else."
+      ],
+      "points": [
+        "Tag metrics and logs with tenant and ring identity",
+        "Gate promotion on error budget, latency, and tenant-critical journeys",
+        "Keep schema migrations backward compatible across rings",
+        "Document which changes cannot be flagged and need darker launches"
+      ]
+    },
+    {
+      "heading": "Guardrails must respect isolation",
+      "paragraphs": [
+        "Aggregate dashboards can look healthy while one tenant burns. Alert on per-tenant SLO burn for critical paths, and on cross-tenant symptoms that suggest noisy-neighbor or shared-resource contention. Progressive delivery without tenant-aware observability just slows the blast radius discovery.",
+        "Compliance and contract constraints also shape rings. Some customers cannot receive experimental AI features; encode those exclusions in the targeting system so sales promises and engineering exposure stay aligned."
+      ]
+    },
+    {
+      "heading": "Make promotion boring and reversible",
+      "paragraphs": [
+        "A mature multi-tenant release feels like traffic control: clear rings, measured promotion, fast per-tenant escape hatches, and post-promotion review. The goal is not slower shipping—it is shipping more often with blast radius you chose on purpose.",
+        "When AI features enter the same pipeline, add quality and cost guardrails alongside classic reliability. Progressive delivery is how SaaS products absorb continuous change without treating every tenant as an unpaid beta tester."
+      ],
+      "links": [
+        {
+          "label": "LaunchDarkly — Progressive delivery",
+          "url": "https://docs.launchdarkly.com/guides/progressive-delivery"
+        },
+        {
+          "label": "Microsoft — Deployment rings",
+          "url": "https://learn.microsoft.com/en-us/azure/devops/migrate/phase-rollout-with-rings"
+        },
+        {
+          "label": "Google SRE — Canarying releases",
+          "url": "https://sre.google/workbook/canarying-releases/"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Multi-Tenant SaaS için Progressive Delivery",
+      "excerpt": "Aynı binary'yi tüm tenant'lara birden göndermek bir blast-radius seçimidir. Progressive delivery, değişikliği tüm filo hissetmeden önce doğru kohortlarda kanıtlatır.",
+      "description": "Staff mühendisler multi-tenant SaaS'ta progressive delivery'yi nasıl işletir: tenant kohortları, ring deploy, flag tabanlı açılış, tenant başına rollback ve izolasyona saygılı guardrail metrikleri.",
+      "sections": [
+        {
+          "heading": "Tenant'lar birbirinin yerine geçen canary değildir",
+          "paragraphs": [
+            "Rastgele %5 trafik, yalnızca kurumsal SSO, özel veri ikameti veya yüksek kardinaliteli config'lerde görünen hataları gizleyebilir. Multi-tenant SaaS'ta progressive delivery yalnızca istek yüzdesini değil; tenant kimliği, plan katmanı, bölge ve risk profilini de hesaba katmalıdır.",
+            "Açık ring'ler kurun: iç dogfood, dost design partner'lar, düşük riskli self-serve kohortlar, sonra stratejik hesaplar. Ring'ler arası yükseltme, destek yükünü yok sayan otomatik zamanlayıcı değil; sahipleri ve metrikleri olan bir karardır."
+          ]
+        },
+        {
+          "heading": "Deploy ile expose'u ayırın",
+          "paragraphs": [
+            "Müşteriye görünür davranışı değiştirmeden altyapıyı soak etmek için kodu flag arkasında pasif yayınlayın. Sonra tenant kohortuna göre açın; kullanıcı oturum ortasında deneyimler arasında zıplamasın diye sticky atama kullanın. Veri yolu değişikliklerinde okumaları kesmeden önce dual-write veya shadow-read pencereleri tercih edin.",
+            "Yalnızca bir dilim sağlıksızken filo geneli geri almak yerine tenant başına kill ve rollback daha önemlidir. İyi bir yayını herkes için geri almadan tek bir noisy neighbor'ı geri yüklemeyi prova edin."
+          ],
+          "points": [
+            "Metrik ve logları tenant ve ring kimliğiyle etiketleyin",
+            "Yükseltmeyi hata bütçesi, gecikme ve tenant-kritik yolculuklara bağlayın",
+            "Şema migrasyonlarını ring'ler arasında geriye uyumlu tutun",
+            "Flag'lenemeyen ve daha karanlık lansman isteyen değişiklikleri belgelendirin"
+          ]
+        },
+        {
+          "heading": "Guardrail'ler izolasyona saygı göstermelidir",
+          "paragraphs": [
+            "Toplu paneller bir tenant yanarken sağlıklı görünebilir. Kritik yollar için tenant başına SLO yanmasına ve noisy-neighbor veya paylaşılan kaynak çekişmesini düşündüren çapraz-tenant belirtilere alarm kurun. Tenant-farkındalıklı observability olmadan progressive delivery yalnızca blast radius keşfini yavaşlatır.",
+            "Uyumluluk ve sözleşme kısıtları da ring'leri şekillendirir. Bazı müşteriler deneysel AI özellikleri alamaz; satış vaatleri ile mühendislik açılışının hizalı kalması için bu istisnaları targeting sistemine kodlayın."
+          ]
+        },
+        {
+          "heading": "Yükseltmeyi sıkıcı ve geri alınabilir kılın",
+          "paragraphs": [
+            "Olgun multi-tenant yayın trafik kontrolü gibi hissettirir: net ring'ler, ölçülü yükseltme, hızlı tenant başına kaçış kapakları ve yükseltme sonrası inceleme. Amaç daha yavaş yayın değil; bilinçli seçtiğiniz blast radius ile daha sık yayınlamaktır.",
+            "AI özellikleri aynı pipeline'a girdiğinde klasik güvenilirliğin yanına kalite ve maliyet guardrail'leri ekleyin. Progressive delivery, SaaS ürünlerinin her tenant'ı ücretsiz beta testçisi yapmadan sürekli değişimi emme yoludur."
+          ],
+          "links": [
+            {
+              "label": "LaunchDarkly — Progressive delivery",
+              "url": "https://docs.launchdarkly.com/guides/progressive-delivery"
+            },
+            {
+              "label": "Microsoft — Deployment rings",
+              "url": "https://learn.microsoft.com/en-us/azure/devops/migrate/phase-rollout-with-rings"
+            },
+            {
+              "label": "Google SRE — Canarying releases",
+              "url": "https://sre.google/workbook/canarying-releases/"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Progressive Delivery für Multi-Tenant-SaaS",
+      "excerpt": "Dasselbe Binary an alle Tenants gleichzeitig zu shippen ist eine Blast-Radius-Entscheidung. Progressive Delivery beweist Change zuerst auf den richtigen Kohorten.",
+      "description": "So betreiben Staff Engineers Progressive Delivery in Multi-Tenant-SaaS: Tenant-Kohorten, Ring Deployments, Flag-basierte Exposure, Per-Tenant-Rollback und Guardrail-Metriken die Isolation respektieren.",
+      "sections": [
+        {
+          "heading": "Tenants sind keine austauschbaren Canaries",
+          "paragraphs": [
+            "Zufällige 5% Traffic können Failures verstecken die nur bei Enterprise-SSO, Custom Data Residency oder High-Cardinality-Configs erscheinen. In Multi-Tenant-SaaS muss Progressive Delivery Tenant-Identität, Plan-Tier, Region und Risk Profile einbeziehen—nicht nur Request-Prozent.",
+            "Bauen Sie explizite Rings: internes Dogfood, freundliche Design Partner, Low-Risk Self-Serve-Kohorten, dann strategische Accounts. Promotion zwischen Rings ist eine Entscheidung mit Ownern und Metriken—kein automatischer Timer der Support-Last ignoriert."
+          ]
+        },
+        {
+          "heading": "Deploy von Expose trennen",
+          "paragraphs": [
+            "Shippen Sie inaktiven Code hinter Flags um Infrastruktur zu soaken ohne kunden sichtbares Verhalten zu ändern. Dann exposen Sie nach Tenant-Kohorte mit sticky Assignment damit Nutzer nicht mitten in der Session zwischen Experiences springen. Für Data-Path-Changes bevorzugen Sie Dual-Write oder Shadow-Read-Fenster vor dem Read-Cutover.",
+            "Per-Tenant-Kill und Rollback zählen mehr als Fleet-wide Revert wenn nur ein Slice ungesund ist. Üben Sie einen noisy Neighbor wiederherzustellen ohne einen guten Rollout für alle anderen rückgängig zu machen."
+          ],
+          "points": [
+            "Metriken und Logs mit Tenant- und Ring-Identität taggen",
+            "Promotion an Error Budget, Latenz und tenant-kritische Journeys koppeln",
+            "Schema-Migrationen über Rings hinweg rückwärtskompatibel halten",
+            "Dokumentieren welche Changes nicht geflagt werden können und dunklere Launches brauchen"
+          ]
+        },
+        {
+          "heading": "Guardrails müssen Isolation respektieren",
+          "paragraphs": [
+            "Aggregierte Dashboards können gesund aussehen während ein Tenant brennt. Alerten Sie auf Per-Tenant-SLO-Burn für kritische Pfade und auf Cross-Tenant-Symptome die Noisy-Neighbor oder Shared-Resource-Contention nahelegen. Progressive Delivery ohne tenant-aware Observability verlangsamt nur die Blast-Radius-Entdeckung.",
+            "Compliance- und Vertragsconstraints formen Rings ebenfalls. Manche Kunden dürfen keine experimentellen AI-Features erhalten; kodieren Sie diese Ausschlüsse im Targeting-System damit Sales-Promises und Engineering-Exposure aligned bleiben."
+          ]
+        },
+        {
+          "heading": "Promotion langweilig und reversibel machen",
+          "paragraphs": [
+            "Ein reifes Multi-Tenant-Release fühlt sich wie Traffic Control an: klare Rings, gemessene Promotion, schnelle Per-Tenant-Escape-Hatches und Post-Promotion-Review. Das Ziel ist nicht langsameres Shipping—es ist häufigeres Shipping mit bewusst gewähltem Blast Radius.",
+            "Wenn AI-Features dieselbe Pipeline betreten, ergänzen Sie Quality- und Cost-Guardrails neben klassischer Reliability. Progressive Delivery ist wie SaaS-Produkte kontinuierlichen Change aufnehmen ohne jeden Tenant zum unbezahlten Beta-Tester zu machen."
+          ],
+          "links": [
+            {
+              "label": "LaunchDarkly — Progressive delivery",
+              "url": "https://docs.launchdarkly.com/guides/progressive-delivery"
+            },
+            {
+              "label": "Microsoft — Deployment rings",
+              "url": "https://learn.microsoft.com/en-us/azure/devops/migrate/phase-rollout-with-rings"
+            },
+            {
+              "label": "Google SRE — Canarying releases",
+              "url": "https://sre.google/workbook/canarying-releases/"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Progressive delivery pour le SaaS multi-tenant",
+      "excerpt": "Envoyer le même binaire à tous les tenants d'un coup est un choix de blast radius. La progressive delivery prouve le changement sur les bonnes cohortes avant que toute la flotte le sente.",
+      "description": "Comment les staff engineers mènent la progressive delivery en SaaS multi-tenant : cohortes de tenants, ring deployments, exposition par flags, rollback par tenant et métriques guardrail qui respectent l'isolation.",
+      "sections": [
+        {
+          "heading": "Les tenants ne sont pas des canaries interchangeables",
+          "paragraphs": [
+            "5% de trafic aléatoire peut cacher des échecs qui n'apparaissent qu'avec SSO entreprise, résidence de données custom ou configs à haute cardinalité. En SaaS multi-tenant, la progressive delivery doit raisonner sur l'identité tenant, le plan, la région et le profil de risque—pas seulement le pourcentage de requêtes.",
+            "Construisez des rings explicites : dogfood interne, design partners amis, cohortes self-serve à faible risque, puis comptes stratégiques. La promotion entre rings est une décision avec owners et métriques, pas un timer automatique qui ignore la charge support."
+          ]
+        },
+        {
+          "heading": "Séparer deploy et expose",
+          "paragraphs": [
+            "Shippez du code inactif derrière des flags pour soaker l'infra sans changer le comportement visible. Puis exposez par cohorte de tenants, avec assignation sticky pour qu'un utilisateur ne bascule pas d'expérience en milieu de session. Pour les changements data-path, préférez dual-write ou fenêtres shadow-read avant de couper les reads.",
+            "Kill et rollback par tenant comptent plus qu'un revert flotte entière quand seule une tranche est malsaine. Entraînez-vous à restaurer un noisy neighbor sans annuler un bon rollout pour les autres."
+          ],
+          "points": [
+            "Taguer métriques et logs avec identité tenant et ring",
+            "Conditionner la promotion au budget d'erreur, latence et parcours tenant-critiques",
+            "Garder les migrations de schéma rétrocompatibles entre rings",
+            "Documenter les changements non flaguables qui demandent des launches plus sombres"
+          ]
+        },
+        {
+          "heading": "Les guardrails doivent respecter l'isolation",
+          "paragraphs": [
+            "Des dashboards agrégés peuvent paraître sains pendant qu'un tenant brûle. Alertez sur le burn SLO par tenant pour les chemins critiques, et sur les symptômes cross-tenant qui suggèrent noisy-neighbor ou contention de ressource partagée. Sans observability tenant-aware, la progressive delivery ne fait que ralentir la découverte du blast radius.",
+            "Contraintes de conformité et de contrat façonnent aussi les rings. Certains clients ne peuvent pas recevoir de features IA expérimentales ; encodez ces exclusions dans le targeting pour aligner promesses sales et exposition engineering."
+          ]
+        },
+        {
+          "heading": "Rendre la promotion ennuyeuse et réversible",
+          "paragraphs": [
+            "Une release multi-tenant mature ressemble au contrôle de trafic : rings clairs, promotion mesurée, escape hatches rapides par tenant et revue post-promotion. Le but n'est pas de shipper plus lentement—c'est de shipper plus souvent avec un blast radius choisi exprès.",
+            "Quand des features IA entrent dans le même pipeline, ajoutez guardrails qualité et coût à côté de la fiabilité classique. La progressive delivery est la façon dont les produits SaaS absorbent le changement continu sans traiter chaque tenant comme un bêta-testeur non payé."
+          ],
+          "links": [
+            {
+              "label": "LaunchDarkly — Progressive delivery",
+              "url": "https://docs.launchdarkly.com/guides/progressive-delivery"
+            },
+            {
+              "label": "Microsoft — Deployment rings",
+              "url": "https://learn.microsoft.com/en-us/azure/devops/migrate/phase-rollout-with-rings"
+            },
+            {
+              "label": "Google SRE — Canarying releases",
+              "url": "https://sre.google/workbook/canarying-releases/"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Progressive delivery per SaaS multi-tenant",
+      "excerpt": "Inviare lo stesso binary a tutti i tenant insieme è una scelta di blast radius. La progressive delivery prova il cambiamento sulle coorti giuste prima che l'intera flotta lo senta.",
+      "description": "Come gli staff engineer gestiscono la progressive delivery nel SaaS multi-tenant: coorti di tenant, ring deployment, esposizione via flag, rollback per tenant e metriche guardrail che rispettano l'isolamento.",
+      "sections": [
+        {
+          "heading": "I tenant non sono canary intercambiabili",
+          "paragraphs": [
+            "Il 5% di traffico casuale può nascondere failure che compaiono solo con SSO enterprise, data residency custom o config ad alta cardinalità. Nel SaaS multi-tenant la progressive delivery deve ragionare su identità tenant, piano, regione e profilo di rischio—non solo sulla percentuale di richieste.",
+            "Costruite ring espliciti: dogfood interno, design partner amici, coorti self-serve a basso rischio, poi account strategici. La promozione tra ring è una decisione con owner e metriche, non un timer automatico che ignora il carico del support."
+          ]
+        },
+        {
+          "heading": "Separare deploy ed expose",
+          "paragraphs": [
+            "Shippare codice inattivo dietro flag per soakare l'infra senza cambiare il comportamento visibile. Poi esporre per coorte di tenant, con assegnazione sticky così un utente non salta tra esperienze a metà sessione. Per cambi sul data-path preferite dual-write o finestre shadow-read prima di tagliare le read.",
+            "Kill e rollback per tenant contano più di un revert flotta intera quando solo una fetta è malsana. Esercitatevi a ripristinare un noisy neighbor senza annullare un buon rollout per tutti gli altri."
+          ],
+          "points": [
+            "Taggare metriche e log con identità tenant e ring",
+            "Vincolare la promozione a error budget, latenza e journey tenant-critici",
+            "Mantenere le migrazioni di schema retrocompatibili tra ring",
+            "Documentare i cambi non flaggabili che richiedono launch più scuri"
+          ]
+        },
+        {
+          "heading": "I guardrail devono rispettare l'isolamento",
+          "paragraphs": [
+            "Dashboard aggregate possono sembrare sane mentre un tenant brucia. Allertate sul burn SLO per tenant sui path critici e su sintomi cross-tenant che suggeriscono noisy-neighbor o contention su risorse condivise. Senza observability tenant-aware la progressive delivery rallenta solo la scoperta del blast radius.",
+            "Vincoli di compliance e contratto modellano anche i ring. Alcuni clienti non possono ricevere feature IA sperimentali; codificate queste esclusioni nel targeting così promesse sales ed esposizione engineering restano allineate."
+          ]
+        },
+        {
+          "heading": "Rendere la promozione noiosa e reversibile",
+          "paragraphs": [
+            "Una release multi-tenant matura sembra controllo del traffico: ring chiari, promozione misurata, escape hatch rapidi per tenant e review post-promozione. L'obiettivo non è shippare più lentamente—è shippare più spesso con un blast radius scelto di proposito.",
+            "Quando le feature IA entrano nella stessa pipeline, aggiungete guardrail di qualità e costo accanto alla reliability classica. La progressive delivery è come i prodotti SaaS assorbono il cambiamento continuo senza trattare ogni tenant come beta tester non pagato."
+          ],
+          "links": [
+            {
+              "label": "LaunchDarkly — Progressive delivery",
+              "url": "https://docs.launchdarkly.com/guides/progressive-delivery"
+            },
+            {
+              "label": "Microsoft — Deployment rings",
+              "url": "https://learn.microsoft.com/en-us/azure/devops/migrate/phase-rollout-with-rings"
+            },
+            {
+              "label": "Google SRE — Canarying releases",
+              "url": "https://sre.google/workbook/canarying-releases/"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "面向多租户 SaaS 的渐进式交付",
+      "excerpt": "把同一二进制一次发给所有租户是爆炸半径的选择。渐进式交付让你在整支舰队感知之前，先在正确人群上证明变更。",
+      "description": "Staff 工程师如何在多租户 SaaS 中运行渐进式交付：租户人群、环形部署、基于开关的暴露、按租户回滚，以及尊重隔离的护栏指标。",
+      "sections": [
+        {
+          "heading": "租户不是可互换的金丝雀",
+          "paragraphs": [
+            "随机 5% 流量可能掩盖只在企业 SSO、自定义数据驻留或高基数配置下出现的失败。在多租户 SaaS 中，渐进式交付必须考虑租户身份、套餐层级、区域与风险画像——不只是请求百分比。",
+            "建立明确的环：内部试用、友好设计伙伴、低风险自助人群，再到战略客户。环间晋升是有负责人与指标的决策，不是忽略支持负载的自动计时器。"
+          ]
+        },
+        {
+          "heading": "把部署与暴露分开",
+          "paragraphs": [
+            "把未激活代码放在开关后发布，以便在不改变客户可见行为下浸泡基础设施。再按租户人群暴露，并用粘性分配避免用户在会话中途在体验间跳动。对数据路径变更，在切断读之前优先双写或影子读窗口。",
+            "当只有一片不健康时，按租户熔断与回滚比全舰队回退更重要。练习在不撤销对其余人的良好放量时，恢复单个嘈杂邻居。"
+          ],
+          "points": [
+            "用租户与环身份标记指标与日志",
+            "用错误预算、延迟与租户关键旅程门禁晋升",
+            "跨环保持 schema 迁移向后兼容",
+            "记录无法用开关、需要更暗发布的变更"
+          ]
+        },
+        {
+          "heading": "护栏必须尊重隔离",
+          "paragraphs": [
+            "聚合看板可能在某个租户燃烧时仍显健康。对关键路径做按租户 SLO 燃烧告警，并对暗示嘈杂邻居或共享资源争用的跨租户症状告警。没有租户感知可观测性的渐进式交付，只会拖慢爆炸半径发现。",
+            "合规与合同约束也塑造环。有些客户不能接收实验性 AI 功能；把这些排除写入定向系统，使销售承诺与工程暴露对齐。"
+          ]
+        },
+        {
+          "heading": "让晋升无聊且可逆",
+          "paragraphs": [
+            "成熟的多租户发布像交通管制：清晰的环、可度量的晋升、快速的按租户逃生舱与晋升后复盘。目标不是更慢上线——而是更频繁上线，并带有刻意选择的爆炸半径。",
+            "当 AI 功能进入同一流水线时，在经典可靠性旁加上质量与成本护栏。渐进式交付是 SaaS 产品在不把每个租户当无偿测试员的情况下吸收持续变更的方式。"
+          ],
+          "links": [
+            {
+              "label": "LaunchDarkly — Progressive delivery",
+              "url": "https://docs.launchdarkly.com/guides/progressive-delivery"
+            },
+            {
+              "label": "Microsoft — Deployment rings",
+              "url": "https://learn.microsoft.com/en-us/azure/devops/migrate/phase-rollout-with-rings"
+            },
+            {
+              "label": "Google SRE — Canarying releases",
+              "url": "https://sre.google/workbook/canarying-releases/"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "マルチテナントSaaSのプログレッシブデリバリー",
+      "excerpt": "同じバイナリを全テナントに一度に出すのはブラスト半径の選択です。プログレッシブデリバリーは、艦隊全体が感じる前に正しいコホートで変更を証明します。",
+      "description": "スタッフエンジニアがマルチテナントSaaSでプログレッシブデリバリーを回す方法：テナントコホート、リングデプロイ、フラグ露出、テナント単位ロールバック、隔離を尊重するガードレール指標。",
+      "sections": [
+        {
+          "heading": "テナントは交換可能なカナリアではない",
+          "paragraphs": [
+            "ランダムな5%トラフィックは、エンタープライズSSO、カスタムデータ居住、高カーディナリティ設定でのみ現れる失敗を隠せます。マルチテナントSaaSでは、リクエスト割合だけでなく、テナントID・プラン階層・リージョン・リスクプロファイルで考える必要があります。",
+            "明示的なリングを作ります：内部ドッグフード、友好的なデザインパートナー、低リスクのセルフサーブコホート、その後戦略アカウント。リング間の昇格は、サポート負荷を無視する自動タイマーではなく、オーナーと指標付きの決定です。"
+          ]
+        },
+        {
+          "heading": "デプロイと露出を分ける",
+          "paragraphs": [
+            "顧客に見える振る舞いを変えずにインフラをソークするため、非アクティブなコードをフラグの後ろで出します。その後テナントコホートで露出し、セッション途中で体験が跳ねないようスティッキー割り当てを使います。データパス変更では、読み取りを切る前にデュアルライトやシャドウリード窓を好みます。",
+            "一片だけが不健全なとき、全艦隊リバートよりテナント単位のキルとロールバックが重要です。他の全員の良いロールアウトを取り消さずに、うるさい隣人を復旧する練習をします。"
+          ],
+          "points": [
+            "メトリクスとログにテナントとリングIDを付ける",
+            "エラーバジェット・レイテンシ・テナント重要ジャーニーで昇格をゲートする",
+            "リング横断でスキーマ移行を後方互換に保つ",
+            "フラグ化できずより暗いローンチが必要な変更を文書化する"
+          ]
+        },
+        {
+          "heading": "ガードレールは隔離を尊重する必要がある",
+          "paragraphs": [
+            "集約ダッシュボードは、あるテナントが燃えていても健全に見えます。重要経路のテナント別SLO燃焼と、うるさい隣人や共有リソース競合を示唆するクロステナント症状にアラートします。テナント認識の可観測性なしのプログレッシブデリバリーは、ブラスト半径の発見を遅らせるだけです。",
+            "コンプライアンスと契約制約もリングを形作ります。実験的AI機能を受けられない顧客もいます。販売約束とエンジニアリング露出が揃うよう、その除外をターゲティングに符号化します。"
+          ]
+        },
+        {
+          "heading": "昇格を退屈で可逆にする",
+          "paragraphs": [
+            "成熟したマルチテナントリリースは交通管制のように感じます：明確なリング、測定された昇格、高速なテナント別脱出ハッチ、昇格後レビュー。目標は遅い出荷ではなく、意図して選んだブラスト半径でより頻繁に出すことです。",
+            "AI機能が同じパイプラインに入るとき、古典的信頼性の横に品質とコストのガードレールを足します。プログレッシブデリバリーは、各テナントを無給ベータテスターにせず継続的変更を吸収する方法です。"
+          ],
+          "links": [
+            {
+              "label": "LaunchDarkly — Progressive delivery",
+              "url": "https://docs.launchdarkly.com/guides/progressive-delivery"
+            },
+            {
+              "label": "Microsoft — Deployment rings",
+              "url": "https://learn.microsoft.com/en-us/azure/devops/migrate/phase-rollout-with-rings"
+            },
+            {
+              "label": "Google SRE — Canarying releases",
+              "url": "https://sre.google/workbook/canarying-releases/"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

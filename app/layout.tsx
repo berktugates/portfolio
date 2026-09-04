@@ -3,6 +3,7 @@ import { Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
+import { GoogleAnalytics, GoogleTagManager } from "./components/google-tags";
 import {
   AREA_SERVED,
   AUTHOR_ID,
@@ -186,6 +187,13 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: SITE_TITLE, description: SITE_DESCRIPTION, images: ["/opengraph-image"] },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
   category: "technology",
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? {
+        verification: {
+          google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+        },
+      }
+    : {}),
 };
 export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: [{ media: "(prefers-color-scheme: light)", color: "#ffffff" }, { media: "(prefers-color-scheme: dark)", color: "#09090b" }] };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -206,10 +214,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
       </head>
       <body className={`${geistMono.className} tracking-tight`}>
+        <GoogleTagManager />
         <a href="#main-content" className="sr-only focus:not-sr-only">
           Skip to content
         </a>
         <div id="main-content">{children}</div>
+        <GoogleAnalytics />
         <Analytics />
         <SpeedInsights />
       </body>

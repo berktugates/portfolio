@@ -1,0 +1,401 @@
+{
+  "slug": "permission-models-for-multi-tenant-ai-copilots",
+  "title": "Permission Models for Multi-Tenant AI Copilots",
+  "excerpt": "A multi-tenant AI copilot that inherits chat permissions but ignores data ACLs will confidently quote the wrong tenant. Tool calls need the same authorization path as your APIs—scoped per tenant, role, and resource.",
+  "description": "Staff-level permission models for multi-tenant AI copilots: tenant isolation, tool-level authz, retrieval filters, delegated credentials, and audit trails that survive agent fan-out.",
+  "readingMinutes": 7,
+  "keywords": [
+    "multi-tenant AI",
+    "AI copilot permissions",
+    "authorization",
+    "RBAC ABAC",
+    "tool calling security",
+    "tenant isolation"
+  ],
+  "socialThreadTr": [
+    "Çok kiracılı AI copilotta sohbet izni var diye veri ACL'sini atlamak yanlış tenant'ı alıntılatır. Tool çağrıları API ile aynı authz yolunu kullanmalı. 🧵",
+    "Tenant izolasyonu, tool yetkisi ve denetim izi. Detay: https://berktugberke.com/tr/blogs/permission-models-for-multi-tenant-ai-copilots"
+  ],
+  "sections": [
+    {
+      "heading": "Chat access is not data access",
+      "paragraphs": [
+        "Users who can open a copilot panel must not automatically read every document the model can retrieve. Separate conversation membership from resource entitlements. The model sees only what a server-side policy allows for that principal in that tenant—never what a prompt claims the user needs.",
+        "Cross-tenant leakage often starts in retrieval: embeddings indexed without tenant predicates, or shared vector collections queried by similarity alone. Put tenant id in every index partition and every tool argument validation."
+      ]
+    },
+    {
+      "heading": "Authorize tools like public APIs",
+      "paragraphs": [
+        "Every tool invocation should pass through the same authz middleware as your REST or gRPC handlers: authenticate the user (or service identity), resolve tenant context, check RBAC/ABAC, then execute with least privilege. Agents must not hold long-lived god tokens that bypass row-level checks.",
+        "Prefer short-lived, scoped credentials issued per session or per tool call. When agents fan out, propagate subject and tenant claims—do not widen scope because a planner step 'needs more context.'"
+      ],
+      "points": [
+        "Enforce tenant predicates on retrieval indexes and tool arguments",
+        "Reuse API authz middleware for every tool call; no shadow permission path",
+        "Issue short-lived scoped credentials instead of shared service gods",
+        "Audit principal, tenant, tool, resource, and decision for each call"
+      ]
+    },
+    {
+      "heading": "Model the principal the agent acts as",
+      "paragraphs": [
+        "Decide whether the copilot acts as the end user, as a constrained assistant role, or as a break-glass operator with separate approval. Document the difference for support and compliance. Impersonation without audit is a security incident waiting to happen.",
+        "Prompt injection can try to elevate tools. Defense is policy enforcement outside the model: deny lists, allow lists of tools per role, and output filters that cannot grant new permissions."
+      ]
+    },
+    {
+      "heading": "Prove isolation continuously",
+      "paragraphs": [
+        "Add automated tests that attempt cross-tenant retrieval and tool calls with stolen conversation ids. Monitor denial rates and unexpected allow spikes after prompt or index changes. Multi-tenant copilots fail loudly in demos and quietly in production—instrument for the quiet failures.",
+        "Permissions are product surface. Design them with the same care as the model that speaks behind them."
+      ],
+      "links": [
+        {
+          "label": "OWASP — LLM Top 10",
+          "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+        },
+        {
+          "label": "OpenAI — Safety best practices",
+          "url": "https://platform.openai.com/docs/guides/safety-best-practices"
+        },
+        {
+          "label": "Auth0 — Authorization patterns",
+          "url": "https://auth0.com/docs/manage-users/access-control/rbac"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Çok Kiracılı AI Copilot'lar için İzin Modelleri",
+      "excerpt": "Sohbet iznini miras alıp veri ACL'sini yok sayan çok kiracılı AI copilott yanlış tenant'ı kendinden emin alıntılar. Tool çağrıları API'lerinizle aynı yetkilendirme yolunu kullanmalı—tenant, rol ve kaynak başına scoped.",
+      "description": "Çok kiracılı AI copilottlar için staff seviyesi izin modelleri: tenant izolasyonu, tool-level authz, retrieval filtreleri, delegasyon kimlik bilgileri ve ajan fan-out'unda ayakta kalan denetim izleri.",
+      "sections": [
+        {
+          "heading": "Sohbet erişimi veri erişimi değildir",
+          "paragraphs": [
+            "Copilot panelini açabilen kullanıcılar modelin retrieve edebileceği her dokümanı otomatik okumamalıdır. Konuşma üyeliğini kaynak entitlement'larından ayırın. Model yalnızca o tenant'ta o principal için sunucu tarafı politikanın izin verdiğini görür—prompt'un kullanıcının 'ihtiyacı var' dediğini değil.",
+            "Çapraz-tenant sızıntısı çoğu zaman retrieval'da başlar: tenant predicate'siz indekslenmiş embedding'ler veya yalnızca similarity ile sorgulanan paylaşılan vector koleksiyonları. Her index partition'ına ve her tool argüman doğrulamasına tenant id koyun."
+          ]
+        },
+        {
+          "heading": "Tool'ları public API gibi yetkilendirin",
+          "paragraphs": [
+            "Her tool çağrısı REST veya gRPC handler'larınızla aynı authz middleware'inden geçmeli: kullanıcıyı (veya servis kimliğini) doğrula, tenant bağlamını çöz, RBAC/ABAC kontrol et, sonra least privilege ile çalıştır. Ajanlar satır düzeyi kontrolleri bypass eden uzun ömürlü tanrı token'ları tutmamalıdır.",
+            "Oturum veya tool çağrısı başına verilen kısa ömürlü, scoped kimlik bilgilerini tercih edin. Ajanlar fan-out yaptığında subject ve tenant claim'lerini iletin—planner adımı 'daha fazla bağlam istiyor' diye kapsamı genişletmeyin."
+          ],
+          "points": [
+            "Retrieval index'lerinde ve tool argümanlarında tenant predicate zorunlu tutun",
+            "Her tool çağrısı için API authz middleware'ini yeniden kullanın; gölge izin yolu yok",
+            "Paylaşılan servis tanrıları yerine kısa ömürlü scoped kimlik bilgisi verin",
+            "Her çağrı için principal, tenant, tool, kaynak ve kararı denetleyin"
+          ]
+        },
+        {
+          "heading": "Ajanın hareket ettiği principal'ı modelleyin",
+          "paragraphs": [
+            "Copilot'un son kullanıcı olarak mı, kısıtlı asistan rolü olarak mı, yoksa ayrı onaylı break-glass operatör olarak mı hareket ettiğine karar verin. Destek ve uyumluluk için farkı belgelendirin. Denetimsiz impersonation bekleyen bir güvenlik olaydır.",
+            "Prompt injection tool'ları yükseltmeye çalışabilir. Savunma modelin dışında politika uygulamaktır: deny list, role başına tool allow list ve yeni izin veremeyen çıktı filtreleri."
+          ]
+        },
+        {
+          "heading": "İzolasyonu sürekli kanıtlayın",
+          "paragraphs": [
+            "Çalınmış conversation id ile çapraz-tenant retrieval ve tool çağrılarını deneyen otomatik testler ekleyin. Prompt veya index değişimlerinden sonra deny oranlarını ve beklenmeyen allow sıçramalarını izleyin. Çok kiracılı copilottlar demoda gürültülü, production'da sessizce başarısız olur—sessiz başarısızlıklara instrument edin.",
+            "İzinler ürün yüzeyidir. Arkalarında konuşan modelle aynı özenle tasarlayın."
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenAI — Safety best practices",
+              "url": "https://platform.openai.com/docs/guides/safety-best-practices"
+            },
+            {
+              "label": "Auth0 — Authorization patterns",
+              "url": "https://auth0.com/docs/manage-users/access-control/rbac"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Berechtigungsmodelle für Multi-Tenant-AI-Copilots",
+      "excerpt": "Ein Multi-Tenant-AI-Copilot der Chat-Permissions erbt aber Data-ACLs ignoriert, zitiert selbstbewusst den falschen Tenant. Tool-Calls brauchen denselben Authorization-Pfad wie Ihre APIs—scoped pro Tenant, Rolle und Resource.",
+      "description": "Staff-Level Permission Models für Multi-Tenant-AI-Copilots: Tenant-Isolation, Tool-Level-Authz, Retrieval-Filter, delegierte Credentials und Audit-Trails die Agent-Fan-out überleben.",
+      "sections": [
+        {
+          "heading": "Chat-Zugang ist kein Data-Zugang",
+          "paragraphs": [
+            "Nutzer die ein Copilot-Panel öffnen können, dürfen nicht automatisch jedes Dokument lesen das das Modell retrieve kann. Trennen Sie Conversation-Membership von Resource-Entitlements. Das Modell sieht nur was eine server-seitige Policy für diesen Principal in diesem Tenant erlaubt—nie was ein Prompt behauptet der User brauche.",
+            "Cross-Tenant-Leakage beginnt oft im Retrieval: Embeddings ohne Tenant-Predicates indexiert, oder shared Vector-Collections nur per Similarity abgefragt. Tenant-Id in jede Index-Partition und jede Tool-Argument-Validation setzen."
+          ]
+        },
+        {
+          "heading": "Tools wie öffentliche APIs autorisieren",
+          "paragraphs": [
+            "Jeder Tool-Aufruf sollte dieselbe Authz-Middleware wie Ihre REST- oder gRPC-Handler durchlaufen: User (oder Service-Identity) authentifizieren, Tenant-Context resolven, RBAC/ABAC prüfen, dann least privilege ausführen. Agents dürfen keine langlebigen God-Tokens halten die Row-Level-Checks bypassen.",
+            "Kurzlebige, scoped Credentials pro Session oder Tool-Call bevorzugen. Bei Agent-Fan-out Subject- und Tenant-Claims propagieren—Scope nicht weiten weil ein Planner-Schritt 'mehr Context braucht.'"
+          ],
+          "points": [
+            "Tenant-Predicates auf Retrieval-Indexes und Tool-Argumenten erzwingen",
+            "API-Authz-Middleware für jeden Tool-Call wiederverwenden; kein Shadow-Permission-Pfad",
+            "Kurzlebige scoped Credentials statt shared Service-Gods ausstellen",
+            "Principal, Tenant, Tool, Resource und Decision pro Call auditieren"
+          ]
+        },
+        {
+          "heading": "Den Principal modellieren als den der Agent handelt",
+          "paragraphs": [
+            "Entscheiden ob der Copilot als Endnutzer, als constrained Assistant-Rolle oder als Break-Glass-Operator mit separater Freigabe handelt. Unterschied für Support und Compliance dokumentieren. Impersonation ohne Audit ist ein Security-Incident der wartet.",
+            "Prompt Injection kann Tools elevaten wollen. Defense ist Policy-Enforcement außerhalb des Modells: Deny-Lists, Allow-Lists von Tools pro Rolle und Output-Filter die keine neuen Permissions gewähren können."
+          ]
+        },
+        {
+          "heading": "Isolation kontinuierlich beweisen",
+          "paragraphs": [
+            "Automatisierte Tests hinzufügen die Cross-Tenant-Retrieval und Tool-Calls mit gestohlenen Conversation-Ids versuchen. Denial-Rates und unerwartete Allow-Spikes nach Prompt- oder Index-Änderungen monitoren. Multi-Tenant-Copilots scheitern laut in Demos und leise in Production—instrumentieren Sie für die leisen Failures.",
+            "Permissions sind Produkt-Surface. Designen Sie sie mit derselben Sorgfalt wie das Modell das dahinter spricht."
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenAI — Safety best practices",
+              "url": "https://platform.openai.com/docs/guides/safety-best-practices"
+            },
+            {
+              "label": "Auth0 — Authorization patterns",
+              "url": "https://auth0.com/docs/manage-users/access-control/rbac"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Modèles de permissions pour copilotes IA multi-tenant",
+      "excerpt": "Un copilote IA multi-tenant qui hérite des permissions de chat mais ignore les ACL données citera avec assurance le mauvais tenant. Les appels d'outils doivent suivre le même chemin d'autorisation que vos API—scoped par tenant, rôle et ressource.",
+      "description": "Modèles de permissions staff pour copilotes IA multi-tenant : isolation tenant, authz au niveau outil, filtres de retrieval, credentials délégués et pistes d'audit qui survivent au fan-out d'agents.",
+      "sections": [
+        {
+          "heading": "L'accès chat n'est pas l'accès données",
+          "paragraphs": [
+            "Les utilisateurs qui peuvent ouvrir un panneau copilote ne doivent pas lire automatiquement chaque document que le modèle peut récupérer. Séparez l'appartenance à la conversation des entitlements de ressource. Le modèle ne voit que ce qu'une politique côté serveur autorise pour ce principal dans ce tenant—jamais ce qu'un prompt prétend que l'utilisateur a besoin.",
+            "Les fuites cross-tenant commencent souvent dans le retrieval : embeddings indexés sans prédicats tenant, ou collections vectorielles partagées interrogées par similarité seule. Mettez l'id tenant dans chaque partition d'index et chaque validation d'argument d'outil."
+          ]
+        },
+        {
+          "heading": "Autoriser les outils comme des API publiques",
+          "paragraphs": [
+            "Chaque invocation d'outil doit passer par le même middleware authz que vos handlers REST ou gRPC : authentifier l'utilisateur (ou l'identité service), résoudre le contexte tenant, vérifier RBAC/ABAC, puis exécuter en least privilege. Les agents ne doivent pas détenir de tokens dieux longue durée qui contournent les contrôles row-level.",
+            "Préférez des credentials courts et scoped émis par session ou par appel d'outil. Quand les agents fan-out, propagez claims subject et tenant—n'élargissez pas le scope parce qu'une étape planner 'a besoin de plus de contexte.'"
+          ],
+          "points": [
+            "Imposer des prédicats tenant sur indexes de retrieval et arguments d'outils",
+            "Réutiliser le middleware authz API pour chaque appel d'outil ; pas de chemin d'permission fantôme",
+            "Émettre des credentials courts scoped au lieu de dieux de service partagés",
+            "Auditer principal, tenant, outil, ressource et décision pour chaque appel"
+          ]
+        },
+        {
+          "heading": "Modéliser le principal pour lequel l'agent agit",
+          "paragraphs": [
+            "Décidez si le copilote agit comme l'utilisateur final, comme un rôle assistant contraint, ou comme un opérateur break-glass avec approbation séparée. Documentez la différence pour support et conformité. L'impersonation sans audit est un incident de sécurité en attente.",
+            "L'injection de prompt peut tenter d'élever les outils. La défense est l'application de politiques hors du modèle : deny lists, allow lists d'outils par rôle et filtres de sortie qui ne peuvent pas accorder de nouvelles permissions."
+          ]
+        },
+        {
+          "heading": "Prouver l'isolation en continu",
+          "paragraphs": [
+            "Ajoutez des tests automatisés qui tentent retrieval et appels d'outils cross-tenant avec des conversation ids volés. Surveillez les taux de refus et les pics d'allow inattendus après changements de prompt ou d'index. Les copilotes multi-tenant échouent bruyamment en démo et silencieusement en production—instrumentez pour les échecs silencieux.",
+            "Les permissions sont une surface produit. Concevez-les avec le même soin que le modèle qui parle derrière."
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenAI — Safety best practices",
+              "url": "https://platform.openai.com/docs/guides/safety-best-practices"
+            },
+            {
+              "label": "Auth0 — Authorization patterns",
+              "url": "https://auth0.com/docs/manage-users/access-control/rbac"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Modelli di permesso per copiloti AI multi-tenant",
+      "excerpt": "Un copilota AI multi-tenant che eredita i permessi chat ma ignora le ACL dati citerà con sicurezza il tenant sbagliato. Le tool call devono usare lo stesso percorso di autorizzazione delle vostre API—scoped per tenant, ruolo e risorsa.",
+      "description": "Modelli di permesso staff per copiloti AI multi-tenant: isolamento tenant, authz a livello tool, filtri di retrieval, credenziali delegate e audit trail che sopravvivono al fan-out degli agent.",
+      "sections": [
+        {
+          "heading": "L'accesso chat non è accesso ai dati",
+          "paragraphs": [
+            "Gli utenti che possono aprire un pannello copilota non devono leggere automaticamente ogni documento che il modello può recuperare. Separate l'appartenenza alla conversazione dagli entitlement di risorsa. Il modello vede solo ciò che una policy lato server consente per quel principal in quel tenant—mai ciò che un prompt afferma che l'utente 'abbia bisogno'.",
+            "Il leak cross-tenant spesso inizia nel retrieval: embedding indicizzati senza predicati tenant, o collezioni vettoriali condivise interrogate solo per similarità. Mettete il tenant id in ogni partizione di indice e in ogni validazione di argomenti tool."
+          ]
+        },
+        {
+          "heading": "Autorizzare i tool come API pubbliche",
+          "paragraphs": [
+            "Ogni invocazione tool deve passare dallo stesso middleware authz dei vostri handler REST o gRPC: autenticare l'utente (o l'identità di servizio), risolvere il contesto tenant, controllare RBAC/ABAC, poi eseguire con least privilege. Gli agent non devono trattenere token dio di lunga durata che bypassano i controlli row-level.",
+            "Preferire credenziali short-lived e scoped emesse per sessione o per tool call. Quando gli agent fan-out, propagare claim subject e tenant—non ampliare lo scope perché uno step del planner 'ha bisogno di più contesto.'"
+          ],
+          "points": [
+            "Applicare predicati tenant su indici di retrieval e argomenti tool",
+            "Riutilizzare il middleware authz API per ogni tool call; nessun percorso di permesso ombra",
+            "Emettere credenziali short-lived scoped invece di dei di servizio condivisi",
+            "Auditare principal, tenant, tool, risorsa e decisione per ogni chiamata"
+          ]
+        },
+        {
+          "heading": "Modellare il principal per cui agisce l'agent",
+          "paragraphs": [
+            "Decidere se il copilota agisce come utente finale, come ruolo assistente vincolato, o come operatore break-glass con approvazione separata. Documentare la differenza per support e compliance. Impersonation senza audit è un incident di sicurezza in attesa.",
+            "Il prompt injection può tentare di elevare i tool. La difesa è enforcement di policy fuori dal modello: deny list, allow list di tool per ruolo e filtri di output che non possono concedere nuovi permessi."
+          ]
+        },
+        {
+          "heading": "Dimostrare l'isolamento in continuo",
+          "paragraphs": [
+            "Aggiungere test automatici che tentano retrieval e tool call cross-tenant con conversation id rubati. Monitorare tassi di denial e spike di allow inattesi dopo cambi di prompt o indice. I copiloti multi-tenant falliscono rumorosamente in demo e silenziosamente in produzione—strumentate per i fallimenti silenziosi.",
+            "I permessi sono superficie di prodotto. Progettateli con la stessa cura del modello che parla dietro di essi."
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenAI — Safety best practices",
+              "url": "https://platform.openai.com/docs/guides/safety-best-practices"
+            },
+            {
+              "label": "Auth0 — Authorization patterns",
+              "url": "https://auth0.com/docs/manage-users/access-control/rbac"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "多租户 AI 副驾驶的权限模型",
+      "excerpt": "继承聊天权限却忽略数据 ACL 的多租户 AI 副驾驶会自信地引用错误租户。工具调用需要与你们的 API 走同一条授权路径——按租户、角色与资源限定范围。",
+      "description": "多租户 AI 副驾驶的 staff 级权限模型：租户隔离、工具级授权、检索过滤、委托凭证，以及能撑过智能体扇出的审计轨迹。",
+      "sections": [
+        {
+          "heading": "聊天访问不等于数据访问",
+          "paragraphs": [
+            "能打开副驾驶面板的用户，不得自动读取模型可检索的每份文档。把会话成员与资源权益分开。模型只看到该租户下该主体经服务端策略允许的内容——绝不是提示词声称用户「需要」的内容。",
+            "跨租户泄漏常始于检索：无租户谓词的嵌入索引，或仅按相似度查询的共享向量集合。把租户 id 放进每个索引分区与每次工具参数校验。"
+          ]
+        },
+        {
+          "heading": "像公共 API 一样授权工具",
+          "paragraphs": [
+            "每次工具调用都应经过与 REST 或 gRPC 处理器相同的授权中间件：认证用户（或服务身份）、解析租户上下文、检查 RBAC/ABAC，再以最小权限执行。智能体不得持有绕过行级检查的长期上帝令牌。",
+            "优先使用按会话或按工具调用签发的短时、限定范围凭证。智能体扇出时传播主体与租户声明——不要因为规划步骤「需要更多上下文」就扩大范围。"
+          ],
+          "points": [
+            "在检索索引与工具参数上强制租户谓词",
+            "每次工具调用复用 API 授权中间件；没有影子权限路径",
+            "签发短时限定凭证，而非共享服务上帝账号",
+            "审计每次调用的主体、租户、工具、资源与决策"
+          ]
+        },
+        {
+          "heading": "建模智能体所扮演的主体",
+          "paragraphs": [
+            "决定副驾驶是以终端用户、受限助理角色，还是需单独审批的紧急操作者身份行事。为支持与合规记录差异。无审计的冒充是迟早的安全事件。",
+            "提示注入可能试图提升工具。防御是在模型外执行策略：拒绝列表、按角色的工具允许列表，以及无法授予新权限的输出过滤。"
+          ]
+        },
+        {
+          "heading": "持续证明隔离",
+          "paragraphs": [
+            "加入自动化测试，用窃取的会话 id 尝试跨租户检索与工具调用。监控提示或索引变更后的拒绝率与意外允许尖峰。多租户副驾驶在演示中吵闹失败、在生产中安静失败——为安静失败做埋点。",
+            "权限是产品表面。用与背后说话的模型同等用心来设计。"
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenAI — Safety best practices",
+              "url": "https://platform.openai.com/docs/guides/safety-best-practices"
+            },
+            {
+              "label": "Auth0 — Authorization patterns",
+              "url": "https://auth0.com/docs/manage-users/access-control/rbac"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "マルチテナントAIコパイロットの権限モデル",
+      "excerpt": "チャット権限を継承しつつデータACLを無視するマルチテナントAIコパイロットは、誤ったテナントを自信満々に引用します。ツール呼び出しはAPIと同じ認可パスを使うべきです—テナント・役割・リソースごとにスコープ。",
+      "description": "マルチテナントAIコパイロット向けスタッフ級権限モデル：テナント分離、ツール級認可、検索フィルタ、委任クレデンシャル、エージェントのファンアウトでも耐える監査証跡。",
+      "sections": [
+        {
+          "heading": "チャットアクセスはデータアクセスではない",
+          "paragraphs": [
+            "コパイロットパネルを開けるユーザーが、モデルが取得できるすべての文書を自動で読めてはいけません。会話メンバーシップとリソース権利を分離します。モデルは、そのテナントでそのプリンシパルにサーバー側ポリシーが許すものだけを見ます—プロンプトがユーザーに「必要」と主張するものではありません。",
+            "クロステナント漏洩はしばしば検索で始まります：テナント述語なしで索引付けされた埋め込み、または類似度だけで問い合わせる共有ベクトルコレクション。すべてのインデックスパーティションとツール引数検証にテナントIDを入れてください。"
+          ]
+        },
+        {
+          "heading": "ツールを公開APIのように認可する",
+          "paragraphs": [
+            "すべてのツール呼び出しはRESTまたはgRPCハンドラと同じ認可ミドルウェアを通すべきです：ユーザー（またはサービス身元）を認証し、テナント文脈を解決し、RBAC/ABACを確認し、最小権限で実行。エージェントは行レベル検査を迂回する長期の神トークンを持ってはいけません。",
+            "セッションまたはツール呼び出しごとに発行する短命・スコープ付きクレデンシャルを好みます。エージェントがファンアウトするときは subject とテナントクレームを伝播し、プランナー段が「もっと文脈が要る」からスコープを広げないでください。"
+          ],
+          "points": [
+            "検索インデックスとツール引数にテナント述語を強制する",
+            "すべてのツール呼び出しでAPI認可ミドルウェアを再利用；影の権限パスなし",
+            "共有サービス神の代わりに短命スコープ付きクレデンシャルを発行",
+            "各呼び出しでプリンシパル、テナント、ツール、リソース、決定を監査"
+          ]
+        },
+        {
+          "heading": "エージェントが代理するプリンシパルをモデル化する",
+          "paragraphs": [
+            "コパイロットがエンドユーザーとして動くか、制約付きアシスタント役割か、別承認のブレイクグラスオペレーターかを決めます。サポートとコンプライアンス向けに差を文書化します。監査なしのなりすましは待ち構えるセキュリティ事故です。",
+            "プロンプトインジェクションはツール昇格を試みます。防御はモデル外のポリシー執行です：拒否リスト、役割ごとのツール許可リスト、新しい権限を付与できない出力フィルタ。"
+          ]
+        },
+        {
+          "heading": "分離を継続的に証明する",
+          "paragraphs": [
+            "盗まれた会話IDでクロステナント検索とツール呼び出しを試みる自動テストを追加します。プロンプトやインデックス変更後の拒否率と予期せぬ許可スパイクを監視します。マルチテナントコパイロットはデモでは騒がしく、本番では静かに失敗します—静かな失敗に計装してください。",
+            "権限はプロダクト面です。背後で話すモデルと同じ注意で設計してください。"
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenAI — Safety best practices",
+              "url": "https://platform.openai.com/docs/guides/safety-best-practices"
+            },
+            {
+              "label": "Auth0 — Authorization patterns",
+              "url": "https://auth0.com/docs/manage-users/access-control/rbac"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

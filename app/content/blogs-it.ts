@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"release-trains-for-ai-assisted-products": {
+    title: "Release train per prodotti assistiti dall'IA",
+    excerpt: "Le feature IA cambiano ogni settimana. I release train mantengono prodotto, modello e valutazione su un ritmo prevedibile senza trasformare ogni modifica di prompt in un deploy di emergenza.",
+    description: "Come gli staff engineer progettano release train per prodotti assistiti dall'IA: cadenza fissa, gate di valutazione, versioning di modello e prompt, kill switch e coordinamento tra product e platform.",
+    sections: [
+      {
+        heading: "Il cambio settimanale del modello non è un processo di release",
+        paragraphs: [
+          "I prodotti assistiti dall'IA accumulano cambiamenti da tre direzioni insieme: comportamento di prodotto, default dei provider di modelli e suite di valutazione che decidono se la qualità è accettabile. I team che trattano ciascuno come hotfix ad hoc scoprono che «shippare l'IA» diventa una coda di interruzioni permanente per gli engineer e una sorpresa permanente per il support.",
+          "Il release train è l'antidoto. Non rallenta l'apprendimento; raggruppa il cambiamento dietro una finestra prevedibile così product, platform, trust e support possono prepararsi. Il treno parte in orario anche se non ogni ticket è pronto. Il lavoro incompleto aspetta la partenza successiva invece di forzare un deploy non pianificato.",
+        ],
+      },
+      {
+        heading: "Versionate insieme le tre superfici",
+        paragraphs: [
+          "Prompt, configurazione di retrieval, schemi degli strumenti e fixture di valutazione sono un unico sistema. Shippare un prompt senza la suite che ne dimostra le proprietà non è iterazione; è rischio non misurato. Allo stesso modo, alzare una versione di modello senza fissare costo, latenza e comportamento di rifiuto trasforma i changelog del provider in incidenti di produzione.",
+          "Tenete un unico artefatto di release che nomina route del modello, package di prompt, revisione dell'indice di retrieval e hash della suite di eval. Quello entra in canary, fa rollback e si discute nei postmortem. Se non potete ricostruire quei quattro valori per una cattiva risposta, non avete un processo di release.",
+        ],
+        points: [
+          "Fissate model ID e temperature; non shippate mai su «latest»",
+          "Co-versionate i prompt con golden case e grader",
+          "Registrate le revisioni di indice retrieval e schemi tool su ogni train",
+          "Rifiutate merge che cambiano il comportamento IA senza delta di eval",
+        ],
+      },
+      {
+        heading: "I gate devono riflettere il rischio di prodotto, non il polish della demo",
+        paragraphs: [
+          "Un train che controlla solo se il modello risponde ancora è teatro. Mettete gate sulle proprietà che utenti e business non possono perdere: groundedness per le feature di conoscenza, validità di schema per output strutturati, rifiuti di policy per intent ad alto rischio, costo per outcome di successo e latenza p95 sotto carico realistico.",
+          "Classificate le feature sul train per rischio. Gli aiuti di drafting tollerano barre più morbide e canary più ampi. Le azioni che scrivono dati cliente, spendono denaro o inviano messaggi esterni richiedono eval più rigorosi, passi di esposizione più piccoli e un go/no-go umano esplicito. Il calendario è condiviso; la barra no.",
+        ],
+      },
+      {
+        heading: "Coordinate le persone intorno alla cadenza",
+        paragraphs: [
+          "I release train falliscono quando sono un rituale di engineering senza controparte di prodotto. Pubblicate il calendario di partenza, le finestre di freeze per feature ad alto impatto e date al support un brief breve su cosa cambia per gli utenti. Le regressioni IA spesso sembrano «il prodotto è peggiorato» piuttosto che «il deploy è fallito»; la comunicazione fa parte dell'affidabilità.",
+          "Usate il train anche per assorbire il cambiamento guidato dai provider. Quando un vendor aggiorna i default, programmate l'adattamento sul prossimo train invece di un hot-patch a mezzanotte. La prevedibilità è il risultato staff: meno deploy di emergenza, ownership più chiara e un prodotto che può muoversi settimanalmente senza scommettere il brand su ogni modifica di prompt.",
+        ],
+        links: [
+          {
+            label: "Google SRE — Continuous Delivery",
+            url: "https://sre.google/workbook/continuous-delivery/",
+          },
+          {
+            label: "LaunchDarkly — Progressive delivery overview",
+            url: "https://docs.launchdarkly.com/guides/progressive-delivery",
+          },
+          {
+            label: "OpenAI — Production best practices",
+            url: "https://platform.openai.com/docs/guides/production-best-practices",
+          },
+        ],
+      },
+    ],
+  },
   "ai-crawler-control-is-now-web-infrastructure": {
     title: "Il controllo dei crawler AI è diventato infrastruttura web",
     excerpt: "La policy dei crawler AI è passata da una nota in robots.txt a un piano di controllo di produzione per visibilità, costi, licenze e fiducia.",

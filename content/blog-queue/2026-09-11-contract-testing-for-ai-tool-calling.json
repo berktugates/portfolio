@@ -1,0 +1,401 @@
+{
+  "slug": "contract-testing-for-ai-tool-calling",
+  "title": "Contract Testing for AI Tool Calling",
+  "excerpt": "When models invent arguments or skip required fields, unit tests on the prompt are not enough. Contract tests turn tool schemas into enforceable boundaries between the model and your systems.",
+  "description": "How staff engineers apply contract testing to AI tool calling: schema fixtures, golden request/response pairs, provider drift checks, and CI gates that catch unsafe tool invocations before production.",
+  "readingMinutes": 7,
+  "keywords": [
+    "contract testing",
+    "AI tool calling",
+    "function calling",
+    "LLM tools",
+    "API contracts",
+    "schema validation"
+  ],
+  "socialThreadTr": [
+    "Model zorunlu alanları atlayınca prompt unit testi yetmez. Contract test, tool şemasını model ile sisteminiz arasında zorlayıcı sınır yapar. 🧵",
+    "Golden fixture, CI kapıları ve fail-closed kurtarma. Detay: https://berktugberke.com/tr/blogs/contract-testing-for-ai-tool-calling"
+  ],
+  "sections": [
+    {
+      "heading": "Treat tool schemas as product APIs",
+      "paragraphs": [
+        "Tool calling looks soft because the model produces natural language, but the side effects are hard: payments, tickets, emails, and database writes. If the tool contract is only documented in a prompt paragraph, every model upgrade becomes a silent breaking change.",
+        "Publish tools as versioned schemas with required fields, enums, idempotency keys, and explicit deny lists. Contract tests assert that both the model adapter and the tool executor agree on that shape—before a user session pays the cost of disagreement."
+      ]
+    },
+    {
+      "heading": "Test the boundary, not the poetry",
+      "paragraphs": [
+        "Golden fixtures should include valid calls, near-miss malformed calls, and adversarial payloads that try to smuggle extra fields or confuse nested objects. Replay recorded production failures into the suite so the next provider bump cannot reintroduce the same bug class.",
+        "Separate model-output contracts from tool-executor contracts. The first verifies that parsing and validation reject unsafe shapes; the second verifies that the executor still behaves correctly when given a valid, versioned payload. Mixing them hides whether the model or the backend regressed."
+      ],
+      "points": [
+        "Pin tool schema versions and fail CI on undeclared breaking changes",
+        "Assert required fields, type coercion rules, and unknown-field rejection",
+        "Include multi-tool sequences and partial-failure recovery paths",
+        "Shadow-run new model routes against frozen contract fixtures"
+      ]
+    },
+    {
+      "heading": "Make drift visible in release gates",
+      "paragraphs": [
+        "Provider SDKs, JSON mode quirks, and tool-choice policies drift over time. Add a scheduled contract suite that hits staging with the same fixtures used in PR CI, and alert when pass rates drop even if product metrics still look fine.",
+        "Track contract pass rate, top failing tools, and argument-shape histograms per model route. A green dashboard with a red contract suite is how you ship a regression that only appears under real tool pressure."
+      ]
+    },
+    {
+      "heading": "Recover like a product, not a parser",
+      "paragraphs": [
+        "When a contract fails, prefer fail-closed for irreversible tools and fail-soft for read-only assistance. Surface structured repair hints to the model—missing field names, allowed enums—instead of opaque 500s that encourage retry loops.",
+        "Contract testing is how AI products keep tool calling boring: schemas evolve deliberately, and models are guests of the API—not its authors."
+      ],
+      "links": [
+        {
+          "label": "Pact — Contract testing",
+          "url": "https://docs.pact.io/"
+        },
+        {
+          "label": "OpenAI — Function calling",
+          "url": "https://platform.openai.com/docs/guides/function-calling"
+        },
+        {
+          "label": "JSON Schema — Specification",
+          "url": "https://json-schema.org/specification"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "AI Tool Calling için Contract Testing",
+      "excerpt": "Model zorunlu alanları atladığında veya argüman uydurduğunda prompt unit testi yetmez. Contract test, tool şemalarını model ile sisteminiz arasında zorlayıcı sınırlara çevirir.",
+      "description": "Staff mühendisler AI tool calling'e contract testing'i nasıl uygular: şema fixture'ları, golden istek/yanıt çiftleri, sağlayıcı drift kontrolleri ve güvensiz tool çağrılarını production'dan önce yakalayan CI kapıları.",
+      "sections": [
+        {
+          "heading": "Tool şemalarını ürün API'si gibi ele alın",
+          "paragraphs": [
+            "Tool calling doğal dil ürettiği için yumuşak görünür; yan etkiler ise serttir: ödemeler, ticket'lar, e-postalar ve veritabanı yazmaları. Tool sözleşmesi yalnızca prompt paragrafında belgelenmişse her model yükseltmesi sessiz bir breaking change olur.",
+            "Tool'ları zorunlu alanlar, enum'lar, idempotency anahtarları ve açık deny list'lerle versiyonlu şema olarak yayınlayın. Contract testler, kullanıcı oturumu anlaşmazlığın bedelini ödemeden önce hem model adapter'ın hem tool executor'ın bu şekil üzerinde anlaştığını doğrular."
+          ]
+        },
+        {
+          "heading": "Şiiri değil sınırı test edin",
+          "paragraphs": [
+            "Golden fixture'lar geçerli çağrıları, neredeyse-hatalı malformed çağrıları ve ekstra alan kaçırmaya veya iç içe nesneleri karıştırmaya çalışan adversarial payload'ları içermelidir. Kayıtlı production hatalarını suite'e yeniden oynatın ki sonraki sağlayıcı yükseltmesi aynı hata sınıfını geri getiremesin.",
+            "Model-çıktı sözleşmelerini tool-executor sözleşmelerinden ayırın. İlki parsing ve validation'ın güvensiz şekilleri reddettiğini; ikincisi geçerli, versiyonlu payload verildiğinde executor'ın hâlâ doğru davrandığını doğrular. Karıştırmak model mi backend mi regress ettiğini gizler."
+          ],
+          "points": [
+            "Tool şema sürümlerini sabitleyin; beyan edilmemiş breaking change'de CI'ı düşürün",
+            "Zorunlu alanları, tip coercion kurallarını ve unknown-field reddini assert edin",
+            "Çoklu-tool dizilerini ve kısmi-hata kurtarma yollarını dahil edin",
+            "Yeni model route'larını dondurulmuş contract fixture'lara karşı shadow-run edin"
+          ]
+        },
+        {
+          "heading": "Drift'i yayın kapılarında görünür kılın",
+          "paragraphs": [
+            "Sağlayıcı SDK'ları, JSON mode tuhaflıkları ve tool-choice politikaları zamanla kayar. PR CI'daki aynı fixture'larla staging'e vuran zamanlanmış bir contract suite ekleyin; ürün metrikleri hâlâ iyi görünse bile pass rate düşünce alarm verin.",
+            "Contract pass rate, en çok başarısız tool'lar ve model route başına argüman şekli histogramlarını izleyin. Yeşil dashboard ve kırmızı contract suite, yalnızca gerçek tool baskısında görünen regresyonu yayınlamanın yoludur."
+          ]
+        },
+        {
+          "heading": "Parser değil ürün gibi kurtarın",
+          "paragraphs": [
+            "Sözleşme bozulunca geri dönüşsüz tool'larda fail-closed, salt okunur yardımda fail-soft tercih edin. Opak 500'ler yerine modele yapılandırılmış onarım ipuçları verin—eksik alan adları, izinli enum'lar—retry döngüsünü teşvik etmesin.",
+            "Contract testing, AI ürünlerinin tool calling'i sıkıcı tutma yoludur: şemalar bilinçli evrilir ve modeller API'nin yazarı değil konuğudur."
+          ],
+          "links": [
+            {
+              "label": "Pact — Contract testing",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "OpenAI — Function calling",
+              "url": "https://platform.openai.com/docs/guides/function-calling"
+            },
+            {
+              "label": "JSON Schema — Specification",
+              "url": "https://json-schema.org/specification"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Contract Testing für AI Tool Calling",
+      "excerpt": "Wenn Modelle Argumente erfinden oder Pflichtfelder auslassen, reichen Unit Tests am Prompt nicht. Contract Tests machen Tool-Schemas zu durchsetzbaren Grenzen zwischen Modell und Systemen.",
+      "description": "So wenden Staff Engineers Contract Testing auf AI Tool Calling an: Schema-Fixtures, Golden Request/Response-Paare, Provider-Drift-Checks und CI-Gates die unsichere Tool-Aufrufe vor Production fangen.",
+      "sections": [
+        {
+          "heading": "Tool-Schemas wie Produkt-APIs behandeln",
+          "paragraphs": [
+            "Tool Calling wirkt weich weil das Modell natürliche Sprache erzeugt, aber Side Effects sind hart: Payments, Tickets, Emails und DB-Writes. Steht der Tool-Contract nur in einem Prompt-Absatz, wird jedes Model-Upgrade zu einem stillen Breaking Change.",
+            "Veröffentlichen Sie Tools als versionierte Schemas mit Required Fields, Enums, Idempotency Keys und expliziten Deny Lists. Contract Tests prüfen dass Model-Adapter und Tool-Executor die Form teilen—bevor eine User-Session den Preis der Uneinigkeit zahlt."
+          ]
+        },
+        {
+          "heading": "Die Grenze testen, nicht die Poesie",
+          "paragraphs": [
+            "Golden Fixtures sollten gültige Calls, Near-Miss-Malformed-Calls und adversariale Payloads enthalten die Extra-Fields einschmuggeln oder Nested Objects verwirren. Spielen Sie aufgezeichnete Production-Failures in die Suite ein damit der nächste Provider-Bump dieselbe Bug-Klasse nicht zurückbringt.",
+            "Trennen Sie Model-Output-Contracts von Tool-Executor-Contracts. Erstere prüfen dass Parsing und Validation unsichere Formen ablehnen; letztere dass der Executor bei gültigem versioniertem Payload korrekt bleibt. Vermischen versteckt ob Modell oder Backend regressiert hat."
+          ],
+          "points": [
+            "Tool-Schema-Versionen pinnen und CI bei undeclared Breaking Changes failen",
+            "Required Fields, Type-Coercion-Regeln und Unknown-Field-Rejection asserten",
+            "Multi-Tool-Sequenzen und Partial-Failure-Recovery-Pfade einbeziehen",
+            "Neue Model-Routes gegen frozen Contract-Fixtures shadow-runnen"
+          ]
+        },
+        {
+          "heading": "Drift in Release-Gates sichtbar machen",
+          "paragraphs": [
+            "Provider-SDKs, JSON-Mode-Eigenheiten und Tool-Choice-Policies driften. Ergänzen Sie eine geplante Contract-Suite die Staging mit denselben Fixtures wie PR-CI trifft und alertet wenn Pass Rates fallen obwohl Produktmetriken noch gut wirken.",
+            "Tracken Sie Contract-Pass-Rate, Top-Failing-Tools und Argument-Shape-Histogramme pro Model-Route. Ein grünes Dashboard mit roter Contract-Suite ist der Weg zu Regressionen die nur unter echtem Tool-Druck sichtbar werden."
+          ]
+        },
+        {
+          "heading": "Wie ein Produkt recoveren, nicht wie ein Parser",
+          "paragraphs": [
+            "Bei Contract-Failure fail-closed für irreversible Tools und fail-soft für Read-only Assistance. Geben Sie dem Modell strukturierte Repair-Hints—fehlende Feldnamen, erlaubte Enums—statt opaker 500er die Retry-Loops fördern.",
+            "Contract Testing hält Tool Calling langweilig: Schemas evolvieren absichtlich und Modelle sind Gäste der API—nicht ihre Autoren."
+          ],
+          "links": [
+            {
+              "label": "Pact — Contract testing",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "OpenAI — Function calling",
+              "url": "https://platform.openai.com/docs/guides/function-calling"
+            },
+            {
+              "label": "JSON Schema — Specification",
+              "url": "https://json-schema.org/specification"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Contract testing pour l'appel d'outils IA",
+      "excerpt": "Quand le modèle invente des arguments ou saute des champs requis, les tests unitaires du prompt ne suffisent pas. Les contract tests font des schémas d'outils des frontières exécutoires.",
+      "description": "Comment les staff engineers appliquent le contract testing à l'appel d'outils IA : fixtures de schéma, paires golden requête/réponse, contrôles de drift fournisseur et portes CI qui attrapent les invocations dangereuses avant la production.",
+      "sections": [
+        {
+          "heading": "Traiter les schémas d'outils comme des API produit",
+          "paragraphs": [
+            "L'appel d'outils paraît doux car le modèle produit du langage naturel, mais les effets de bord sont durs : paiements, tickets, emails et écritures DB. Si le contrat d'outil n'est documenté que dans un paragraphe de prompt, chaque upgrade de modèle devient un breaking change silencieux.",
+            "Publiez les outils comme schémas versionnés avec champs requis, enums, clés d'idempotence et deny lists explicites. Les contract tests affirment que l'adaptateur modèle et l'exécuteur d'outil s'accordent sur cette forme—avant qu'une session utilisateur paie le coût du désaccord."
+          ]
+        },
+        {
+          "heading": "Tester la frontière, pas la poésie",
+          "paragraphs": [
+            "Les fixtures golden doivent inclure appels valides, appels malformés near-miss et payloads adversariaux qui tentent de contrebande des champs extra ou de brouiller des objets imbriqués. Rejouez les échecs production enregistrés dans la suite pour qu'un bump fournisseur ne réintroduise pas la même classe de bug.",
+            "Séparez contrats de sortie modèle et contrats d'exécuteur d'outil. Les premiers vérifient que parsing et validation rejettent les formes dangereuses ; les seconds que l'exécuteur se comporte encore correctement avec un payload valide versionné. Les mélanger cache si le modèle ou le backend a régressé."
+          ],
+          "points": [
+            "Épingler les versions de schéma d'outil et faire échouer la CI sur breaking changes non déclarés",
+            "Asserter champs requis, règles de coercion de type et rejet des champs inconnus",
+            "Inclure séquences multi-outils et chemins de récupération d'échec partiel",
+            "Shadow-run les nouvelles routes modèle contre des fixtures de contrat gelées"
+          ]
+        },
+        {
+          "heading": "Rendre le drift visible dans les portes de release",
+          "paragraphs": [
+            "SDK fournisseurs, bizarreries JSON mode et politiques tool-choice dérivent. Ajoutez une suite contract planifiée qui frappe le staging avec les mêmes fixtures que la CI PR, et alertez quand les pass rates chutent même si les métriques produit restent belles.",
+            "Suivez le pass rate contract, les outils qui échouent le plus et les histogrammes de forme d'arguments par route modèle. Un dashboard vert avec une suite contract rouge est comment vous shippez une régression visible seulement sous vraie pression d'outils."
+          ]
+        },
+        {
+          "heading": "Récupérer comme un produit, pas comme un parseur",
+          "paragraphs": [
+            "Quand un contrat échoue, préférez fail-closed pour les outils irréversibles et fail-soft pour l'assistance en lecture seule. Donnez au modèle des indices de réparation structurés—noms de champs manquants, enums autorisés—au lieu de 500 opaques qui encouragent les boucles de retry.",
+            "Le contract testing rend l'appel d'outils ennuyeux : les schémas évoluent exprès, et les modèles sont invités de l'API—pas ses auteurs."
+          ],
+          "links": [
+            {
+              "label": "Pact — Contract testing",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "OpenAI — Function calling",
+              "url": "https://platform.openai.com/docs/guides/function-calling"
+            },
+            {
+              "label": "JSON Schema — Specification",
+              "url": "https://json-schema.org/specification"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Contract testing per il tool calling IA",
+      "excerpt": "Quando il modello inventa argomenti o salta campi obbligatori, i unit test sul prompt non bastano. I contract test trasformano gli schemi tool in confini vincolanti tra modello e sistemi.",
+      "description": "Come gli staff engineer applicano il contract testing al tool calling IA: fixture di schema, coppie golden request/response, check di drift del provider e gate CI che intercettano invocazioni non sicure prima della produzione.",
+      "sections": [
+        {
+          "heading": "Trattare gli schemi tool come API di prodotto",
+          "paragraphs": [
+            "Il tool calling sembra morbido perché il modello produce linguaggio naturale, ma gli effetti collaterali sono duri: pagamenti, ticket, email e scritture DB. Se il contratto tool è documentato solo in un paragrafo di prompt, ogni upgrade del modello diventa un breaking change silenzioso.",
+            "Pubblicate i tool come schemi versionati con campi obbligatori, enum, chiavi di idempotenza e deny list esplicite. I contract test affermano che adapter del modello ed esecutore tool concordano sulla forma—prima che una sessione utente paghi il costo del disaccordo."
+          ]
+        },
+        {
+          "heading": "Testare il confine, non la poesia",
+          "paragraphs": [
+            "Le fixture golden devono includere chiamate valide, chiamate malformed near-miss e payload avversari che tentano di contrabbandare campi extra o confondere oggetti annidati. Riproducete i failure di produzione registrati nella suite così il prossimo bump del provider non reintroduce la stessa classe di bug.",
+            "Separate i contratti di output del modello dai contratti dell'esecutore tool. I primi verificano che parsing e validation rifiutino forme non sicure; i secondi che l'esecutore si comporti ancora correttamente con un payload valido e versionato. Mischiarli nasconde se ha regressato il modello o il backend."
+          ],
+          "points": [
+            "Fissare le versioni dello schema tool e far fallire la CI su breaking change non dichiarati",
+            "Asserire campi obbligatori, regole di type coercion e rifiuto dei campi sconosciuti",
+            "Includere sequenze multi-tool e path di recovery da failure parziali",
+            "Shadow-run delle nuove route modello contro fixture di contratto congelate"
+          ]
+        },
+        {
+          "heading": "Rendere il drift visibile nei gate di release",
+          "paragraphs": [
+            "SDK dei provider, bizzarrie JSON mode e policy tool-choice driftano. Aggiungete una suite contract schedulata che colpisce lo staging con le stesse fixture della CI PR e allertate quando i pass rate calano anche se le metriche prodotto sembrano ancora buone.",
+            "Tracciate pass rate dei contratti, tool che falliscono di più e istogrammi della forma degli argomenti per route modello. Una dashboard verde con suite contract rossa è come spedite una regressione visibile solo sotto vera pressione dei tool."
+          ]
+        },
+        {
+          "heading": "Recuperare come prodotto, non come parser",
+          "paragraphs": [
+            "Quando un contratto fallisce, preferite fail-closed per tool irreversibili e fail-soft per assistenza in sola lettura. Fornite al modello hint di repair strutturati—nomi campi mancanti, enum consentiti—invece di 500 opachi che incoraggiano loop di retry.",
+            "Il contract testing rende il tool calling noioso: gli schemi evolvono di proposito e i modelli sono ospiti dell'API—non i suoi autori."
+          ],
+          "links": [
+            {
+              "label": "Pact — Contract testing",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "OpenAI — Function calling",
+              "url": "https://platform.openai.com/docs/guides/function-calling"
+            },
+            {
+              "label": "JSON Schema — Specification",
+              "url": "https://json-schema.org/specification"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "面向 AI 工具调用的契约测试",
+      "excerpt": "当模型编造参数或跳过必填字段时，针对提示词的单元测试不够。契约测试把工具 schema 变成模型与系统之间可强制执行的边界。",
+      "description": "Staff 工程师如何把契约测试用于 AI 工具调用：schema fixture、黄金请求/响应对、提供商漂移检查，以及在生产前拦截不安全工具调用的 CI 门禁。",
+      "sections": [
+        {
+          "heading": "把工具 schema 当作产品 API",
+          "paragraphs": [
+            "工具调用因模型产出自然语言而显得柔软，但副作用是硬的：支付、工单、邮件与数据库写入。若工具契约只写在提示段落里，每次模型升级都变成静默破坏性变更。",
+            "以带必填字段、枚举、幂等键与明确拒绝列表的版本化 schema 发布工具。契约测试断言模型适配器与工具执行器在该形状上达成一致——在用户会话为分歧买单之前。"
+          ]
+        },
+        {
+          "heading": "测试边界，而不是文采",
+          "paragraphs": [
+            "黄金 fixture 应包含有效调用、近似错误的畸形调用，以及试图夹带额外字段或混淆嵌套对象的对抗载荷。把记录的生产失败回放到套件中，使下一次提供商升级无法重引入同类缺陷。",
+            "将模型输出契约与工具执行器契约分开。前者验证解析与校验会拒绝不安全形状；后者验证在给定有效、版本化载荷时执行器仍行为正确。混在一起会掩盖是模型还是后端回归。"
+          ],
+          "points": [
+            "固定工具 schema 版本，未声明的破坏性变更让 CI 失败",
+            "断言必填字段、类型强制规则与未知字段拒绝",
+            "包含多工具序列与部分失败恢复路径",
+            "对新模型路由对冻结契约 fixture 做影子运行"
+          ]
+        },
+        {
+          "heading": "让漂移在发布门禁中可见",
+          "paragraphs": [
+            "提供商 SDK、JSON mode 怪癖与 tool-choice 策略会漂移。加入用与 PR CI 相同 fixture 打 staging 的定时契约套件，并在通过率下降（即使产品指标仍好看）时告警。",
+            "跟踪契约通过率、最常失败的工具，以及按模型路由的参数形状直方图。绿色看板配红色契约套件，正是你在真实工具压力下才会发现的回归上线方式。"
+          ]
+        },
+        {
+          "heading": "像产品一样恢复，而不是像解析器",
+          "paragraphs": [
+            "契约失败时，对不可逆工具优先 fail-closed，对只读协助 fail-soft。向模型提供结构化修复提示——缺失字段名、允许的枚举——而不是助长重试循环的不透明 500。",
+            "契约测试让 AI 产品把工具调用变得无聊：schema 有意演进，模型是 API 的客人——不是作者。"
+          ],
+          "links": [
+            {
+              "label": "Pact — Contract testing",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "OpenAI — Function calling",
+              "url": "https://platform.openai.com/docs/guides/function-calling"
+            },
+            {
+              "label": "JSON Schema — Specification",
+              "url": "https://json-schema.org/specification"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "AIツール呼び出しの契約テスト",
+      "excerpt": "モデルが引数を捏造したり必須フィールドを飛ばしたりするとき、プロンプトの単体テストでは足りません。契約テストはツールスキーマをモデルとシステム間の強制境界にします。",
+      "description": "スタッフエンジニアがAIツール呼び出しに契約テストを適用する方法：スキーマフィクスチャ、ゴールデン要求/応答ペア、プロバイダドリフト検査、本番前に危険なツール呼び出しを捕まえるCIゲート。",
+      "sections": [
+        {
+          "heading": "ツールスキーマをプロダクトAPIとして扱う",
+          "paragraphs": [
+            "ツール呼び出しは自然言語を出すため柔らかく見えますが、副作用は硬いです：支払い、チケット、メール、DB書き込み。ツール契約がプロンプト段落だけなら、モデルアップグレードはすべて静かな破壊的変更になります。",
+            "必須フィールド、列挙、冪等キー、明示的な拒否リスト付きの版付きスキーマとしてツールを公開します。契約テストは、ユーザーセッションが不一致の代償を払う前に、モデルアダプタとツール実行器がその形で合意していることを断言します。"
+          ]
+        },
+        {
+          "heading": "詩ではなく境界をテストする",
+          "paragraphs": [
+            "ゴールデンフィクスチャには有効な呼び出し、ニアミスの不正呼び出し、追加フィールドを密輸したりネストオブジェクトを混乱させたりする敵対ペイロードを含めます。記録した本番失敗をスイートに再生し、次のプロバイダバンプが同じバグクラスを再導入できないようにします。",
+            "モデル出力契約とツール実行器契約を分けます。前者はパースと検証が危険な形を拒否することを、後者は有効な版付きペイロードで実行器が正しく動くことを検証します。混ぜるとモデルかバックエンドのどちらの回帰か隠れます。"
+          ],
+          "points": [
+            "ツールスキーマ版を固定し、未宣言の破壊的変更でCIを落とす",
+            "必須フィールド、型強制ルール、未知フィールド拒否をアサートする",
+            "マルチツール系列と部分失敗リカバリ経路を含める",
+            "新しいモデルルートを凍結契約フィクスチャに対してシャドウ実行する"
+          ]
+        },
+        {
+          "heading": "リリースゲートでドリフトを見える化する",
+          "paragraphs": [
+            "プロバイダSDK、JSONモードの癖、tool-choiceポリシーはドリフトします。PR CIと同じフィクスチャでステージングを打つ定期契約スイートを追加し、プロダクト指標がまだ良く見えても合格率が落ちたらアラートします。",
+            "契約合格率、失敗が多いツール、モデルルート別の引数形状ヒストグラムを追跡します。緑のダッシュボードと赤い契約スイートは、本当のツール圧下でのみ見える回帰を出荷する経路です。"
+          ]
+        },
+        {
+          "heading": "パーサーではなくプロダクトとしてリカバーする",
+          "paragraphs": [
+            "契約失敗時は不可逆ツールはfail-closed、読み取り専用支援はfail-softを好みます。不透明な500ではなく、欠落フィールド名や許可列挙など構造化された修復ヒントをモデルに渡し、リトライループを促さないようにします。",
+            "契約テストはツール呼び出しを退屈に保ちます：スキーマは意図して進化し、モデルはAPIの著者ではなく客人です。"
+          ],
+          "links": [
+            {
+              "label": "Pact — Contract testing",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "OpenAI — Function calling",
+              "url": "https://platform.openai.com/docs/guides/function-calling"
+            },
+            {
+              "label": "JSON Schema — Specification",
+              "url": "https://json-schema.org/specification"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

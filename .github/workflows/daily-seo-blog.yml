@@ -1,0 +1,91 @@
+name: Daily SEO blog
+
+on:
+  schedule:
+    # 06:00 UTC ≈ 09:00 Europe/Istanbul
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    inputs:
+      publish_date:
+        description: "Optional YYYY-MM-DD override (defaults to Istanbul today)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-seo-blog
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish next queued blog
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.BLOG_PUBLISH_TOKEN || github.token }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.8.1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Inventory check
+        run: |
+          set -euo pipefail
+          COUNT=$(find content/blog-queue -maxdepth 1 -name '*.json' | wc -l | tr -d ' ')
+          echo "Queued posts remaining: $COUNT"
+          if [ "$COUNT" -lt 3 ]; then
+            echo "::warning::Blog queue is low ($COUNT). Top up content/blog-queue/ within a few days."
+          fi
+
+      - name: Publish next blog from queue
+        id: publish
+        run: |
+          set -euo pipefail
+          DATE_ARG="${{ inputs.publish_date }}"
+          if [ -n "$DATE_ARG" ]; then
+            node scripts/publish-daily-blog.mjs "$DATE_ARG"
+          else
+            node scripts/publish-daily-blog.mjs
+          fi
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate build after publish
+        if: steps.publish.outputs.changed == 'true'
+        run: pnpm build
+
+      - name: Commit and push
+        if: steps.publish.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/data/blogs.ts app/content/blogs-*.ts app/lib/seo.ts content/blog-queue public/blogs/feed.json
+          # feed.json may only change on deploy prebuild; stage if present
+          git add -u public/blogs/feed.json 2>/dev/null || true
+          git commit -m "$(cat <<'EOF'
+          content: publish daily SEO blog
+
+          Automated queue publish for continuous technical SEO coverage.
+          EOF
+          )"
+          git push

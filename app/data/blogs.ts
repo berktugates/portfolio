@@ -21,6 +21,76 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "release-trains-for-ai-assisted-products",
+    title: "Release Trains for AI-Assisted Products",
+    excerpt: "AI features change weekly. Release trains keep product, model, and evaluation changes shipping on a predictable cadence without turning every prompt edit into an emergency deploy.",
+    description: "How staff engineers design release trains for AI-assisted products: fixed cadence, evaluation gates, model and prompt versioning, kill switches, and coordination between product and platform teams.",
+    publishedAt: "2026-09-04",
+    readingMinutes: 7,
+    keywords: [
+      "release trains",
+      "AI product engineering",
+      "release engineering",
+      "LLM deployment",
+      "feature flags",
+      "continuous delivery",
+    ],
+    socialThreadTr: [
+      "AI özelliklerinde haftalık değişiklik normal; her prompt düzenlemesini acil deploy yapmak değil. Release train, model/prompt/eval değişikliklerini sabit ritme bağlar ve kalite kapılarını ürün takviminden koparmaz. 🧵",
+      "Pratik bar: sabit cadence, sürüm kontrolü, eval gate, kademeli açılış ve kill switch. Detay: https://berktugberke.com/tr/blogs/release-trains-for-ai-assisted-products",
+    ],
+    sections: [
+      {
+        heading: "Weekly model change is not a release process",
+        paragraphs: [
+          "AI-assisted products accumulate change from three directions at once: product behavior, model provider defaults, and the evaluation suites that decide whether quality is acceptable. Teams that treat each of those as an ad-hoc hotfix discover that 'shipping AI' becomes a permanent interrupt queue for engineers and a permanent surprise for support.",
+          "A release train is the antidote. It does not slow learning; it batches change behind a predictable window so product, platform, trust, and support can prepare. The train leaves on schedule whether or not every ticket is ready. Incomplete work waits for the next departure instead of forcing an unplanned deploy.",
+        ],
+      },
+      {
+        heading: "Version the three surfaces together",
+        paragraphs: [
+          "Prompts, retrieval configuration, tool schemas, and evaluation fixtures are one system. Shipping a prompt without the suite that proves its properties is not iteration; it is unmeasured risk. Likewise, bumping a model version without pinning expected cost, latency, and refusal behavior turns provider changelogs into production incidents.",
+          "Keep a single release artifact that names the model route, prompt package, retrieval index revision, and eval suite hash. That artifact is what enters canary, what rolls back, and what gets discussed in postmortems. If you cannot reconstruct those four values for a bad answer, you do not have a release process.",
+        ],
+        points: [
+          "Pin model IDs and temperature; never ship on 'latest'",
+          "Co-version prompts with golden cases and graders",
+          "Record retrieval index and tool schema revisions on every train",
+          "Reject merges that change AI behavior without an eval delta",
+        ],
+      },
+      {
+        heading: "Gates must reflect product risk, not demo polish",
+        paragraphs: [
+          "A train that only checks that the model still answers is theater. Gate on the properties users and the business cannot lose: groundedness for knowledge features, schema validity for structured outputs, policy refusals for high-risk intents, cost per successful outcome, and p95 latency under realistic load.",
+          "Risk-tier the features on the train. Drafting aids can tolerate softer bars and broader canaries. Actions that write to customer data, spend money, or send external messages need stricter evals, smaller exposure steps, and an explicit human-owned go/no-go. The calendar is shared; the bar is not.",
+        ],
+      },
+      {
+        heading: "Coordinate humans around the cadence",
+        paragraphs: [
+          "Release trains fail when they are an engineering ritual with no product counterpart. Publish the departure schedule, freeze windows for high-stakes features, and give support a short brief of what changes for users. AI regressions often look like 'the product got worse' rather than 'the deploy failed', so communication is part of reliability.",
+          "Use the train to absorb provider-driven change as well. When a model vendor updates defaults, schedule the adaptation on the next train instead of hot-patching production at midnight. Predictability is the staff-level outcome: fewer emergency deploys, clearer ownership, and a product that can still move weekly without gambling the brand on every prompt edit.",
+        ],
+        links: [
+          {
+            label: "Google SRE — Continuous Delivery",
+            url: "https://sre.google/workbook/continuous-delivery/",
+          },
+          {
+            label: "LaunchDarkly — Progressive delivery overview",
+            url: "https://docs.launchdarkly.com/guides/progressive-delivery",
+          },
+          {
+            label: "OpenAI — Production best practices",
+            url: "https://platform.openai.com/docs/guides/production-best-practices",
+          },
+        ],
+      },
+    ],
+  },
+    {
     slug: "ai-crawler-control-is-now-web-infrastructure",
     title: "AI Crawler Control Is Now Web Infrastructure",
     excerpt: "AI crawler policy has moved from a side note in robots.txt to a production control plane for visibility, cost, licensing, and trust.",

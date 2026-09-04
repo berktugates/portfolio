@@ -1,0 +1,401 @@
+{
+  "slug": "ownership-models-for-shared-platform-code",
+  "title": "Ownership Models for Shared Platform Code",
+  "excerpt": "Shared libraries without clear owners become everyone's dependency and nobody's incident. Pick an ownership model that matches blast radius, change rate, and who gets paged.",
+  "description": "Staff guidance on ownership models for shared platform code: CODEOWNERS, platform teams vs federated maintainers, interface stability, and operating shared packages without orphaned risk.",
+  "readingMinutes": 7,
+  "keywords": [
+    "code ownership",
+    "platform engineering",
+    "shared libraries",
+    "CODEOWNERS",
+    "internal platforms",
+    "engineering org design"
+  ],
+  "socialThreadTr": [
+    "Sahibi belirsiz paylaşılan kütüphane herkesin bağımlılığı, kimsenin olayıdır. Blast radius, değişim hızı ve kim page alır sahiplik modelini belirler. 🧵",
+    "CODEOWNERS, arayüz SLA'sı ve on-call gerçekliği hizalanmalı. Detay: https://berktugberke.com/tr/blogs/ownership-models-for-shared-platform-code"
+  ],
+  "sections": [
+    {
+      "heading": "Shared means accountable, not anonymous",
+      "paragraphs": [
+        "Platform packages, design systems, auth SDKs, and data access layers concentrate leverage and risk. When ownership is 'the team that last touched it,' upgrades stall, security patches wait for volunteers, and production breakages bounce between product squads that did not design the abstraction.",
+        "Write ownership as an operating contract: who reviews changes, who sets compatibility policy, who is on-call for failures attributable to the shared layer, and who can deprecate. A README badge is not enough; the contract must show up in CODEOWNERS, on-call rotations, and roadmap capacity."
+      ]
+    },
+    {
+      "heading": "Choose a model that fits the blast radius",
+      "paragraphs": [
+        "Central platform ownership works when the surface is stable, expertise is scarce, and consistency matters more than local speed—identity, payments plumbing, observability agents. Federated ownership with a steward works when domains diverge and a central team would become a bottleneck, provided each domain names maintainers and agrees on shared interface tests.",
+        "Avoid the worst hybrid: everyone can merge, nobody is scheduled to maintain. If product teams contribute, require contribution guidelines, review SLAs, and a steward with veto on breaking changes. Contribution without stewardship recreates the orphan problem with more committers."
+      ],
+      "points": [
+        "Map each shared package to a primary owner and a backup",
+        "Align on-call with the packages that can page production",
+        "Publish compatibility and deprecation windows in one place",
+        "Budget platform work in planning—not only feature demand"
+      ]
+    },
+    {
+      "heading": "Interfaces are the product of platform code",
+      "paragraphs": [
+        "Consumers experience your ownership through APIs, error semantics, upgrade cost, and documentation freshness. Prefer narrow, versioned interfaces over grab-bag utilities. Measure adoption, breakages per release, and time-to-upgrade across consumer repos—those metrics tell you whether the shared layer is earning its keep.",
+        "For AI and data platforms, shared retrieval clients, prompt registries, and evaluation harnesses need the same rigor as auth SDKs. A 'helpful' shared prompt helper without an owner becomes the silent source of quality drift across every product that imports it."
+      ]
+    },
+    {
+      "heading": "Make ownership visible in the delivery path",
+      "paragraphs": [
+        "Require owner approval on interface changes, run consumer contract tests in the platform CI, and announce breaking changes on a known channel with dates. When incidents involve shared code, the postmortem should name the owning team and the remediation capacity they need—not a vague 'improve communication.'",
+        "Healthy platform ownership feels slightly boring: predictable upgrades, clear escalation, and fewer heroics. That boredom is the signal that shared code is infrastructure, not a commons that decays until the next outage."
+      ],
+      "links": [
+        {
+          "label": "GitHub Docs — CODEOWNERS",
+          "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"
+        },
+        {
+          "label": "Team Topologies — Platform team",
+          "url": "https://teamtopologies.com/key-concepts"
+        },
+        {
+          "label": "Google — Software Engineering at Google (excerpt on ownership)",
+          "url": "https://abseil.io/resources/swe-book"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Paylaşılan Platform Kodu için Sahiplik Modelleri",
+      "excerpt": "Net sahibi olmayan paylaşılan kütüphaneler herkesin bağımlılığı ve kimsenin olayı olur. Blast radius, değişim hızı ve kim page alır ile uyumlu bir sahiplik modeli seçin.",
+      "description": "Paylaşılan platform kodu için staff rehberi: CODEOWNERS, platform ekipleri ve federated maintainer'lar, arayüz istikrarı ve yetim risk olmadan paylaşılan paketleri işletmek.",
+      "sections": [
+        {
+          "heading": "Paylaşılan, anonim değil hesap verebilir demektir",
+          "paragraphs": [
+            "Platform paketleri, tasarım sistemleri, auth SDK'ları ve veri erişim katmanları kaldıraç ve riski yoğunlaştırır. Sahiplik 'son dokunan ekip' olduğunda yükseltmeler durur, güvenlik yamaları gönüllü bekler ve üretim kırılmaları soyutlamayı tasarlamayan ürün ekipleri arasında seker.",
+            "Sahipliği işletim sözleşmesi olarak yazın: değişiklikleri kim inceler, uyumluluk politikasını kim koyar, paylaşılan kata atfedilen hatalar için kim on-call'dır ve kim deprecate edebilir. README rozeti yetmez; sözleşme CODEOWNERS, on-call rotasyonu ve roadmap kapasitesinde görünmelidir."
+          ]
+        },
+        {
+          "heading": "Blast radius'a uyan modeli seçin",
+          "paragraphs": [
+            "Merkezi platform sahipliği yüzey istikrarlı, uzmanlık kıt ve tutarlılık yerel hızdan önemliyse işe yarar—kimlik, ödemeler altyapısı, observability agent'ları. Federated sahiplik bir steward ile, alanlar ayrışıyorsa ve merkezi ekip darboğaz olacaksa işe yarar; her alan maintainer adlandırmalı ve paylaşılan arayüz testlerinde anlaşmalıdır.",
+            "En kötü hibritten kaçının: herkes merge edebilir, kimse bakım için planlanmamıştır. Ürün ekipleri katkı yapıyorsa katkı rehberi, inceleme SLA'sı ve breaking change'de veto yetkili steward gerekir. Stewardship'suz katkı, daha fazla committer ile yetim sorununu yeniden üretir."
+          ],
+          "points": [
+            "Her paylaşılan paketi birincil sahip ve yedekle eşleştirin",
+            "On-call'ı production'ı page edebilen paketlerle hizalayın",
+            "Uyumluluk ve deprecation pencerelerini tek yerde yayınlayın",
+            "Platform işini planlamada bütçeleyin—yalnızca feature talebi değil"
+          ]
+        },
+        {
+          "heading": "Arayüzler platform kodunun ürünüdür",
+          "paragraphs": [
+            "Tüketiciler sahipliğinizi API'ler, hata semantiği, yükseltme maliyeti ve dokümantasyon tazeliği üzerinden yaşar. Grab-bag utility'ler yerine dar, sürümlenmiş arayüzleri tercih edin. Benimsemeyi, yayın başına kırılmayı ve tüketici repolarında yükseltme süresini ölçün—bu metrikler paylaşılan katmanın karşılığını verip vermediğini söyler.",
+            "AI ve veri platformlarında paylaşılan retrieval client'ları, prompt registry'leri ve evaluation harness'ları auth SDK'ları kadar titizlik ister. Sahibi olmayan 'yararlı' paylaşılan prompt yardımcısı, onu import eden her üründe sessiz kalite kaymasının kaynağı olur."
+          ]
+        },
+        {
+          "heading": "Sahipliği teslimat yolunda görünür kılın",
+          "paragraphs": [
+            "Arayüz değişikliklerinde sahip onayı zorunlu kılın, platform CI'da tüketici sözleşme testlerini çalıştırın ve breaking change'leri bilinen bir kanalda tarihlerle duyurun. Olaylar paylaşılan kodu içerdiğinde postmortem sahip ekibi ve ihtiyaç duydukları remediation kapasitesini adlandırmalıdır—belirsiz 'iletişimi iyileştir' değil.",
+            "Sağlıklı platform sahipliği biraz sıkıcı hissettirir: öngörülebilir yükseltmeler, net yükseltme yolu ve daha az kahramanlık. Bu sıkıcılık, paylaşılan kodun bir sonraki kesintiye kadar çürüyen commons değil altyapı olduğunun sinyalidir."
+          ],
+          "links": [
+            {
+              "label": "GitHub Docs — CODEOWNERS",
+              "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"
+            },
+            {
+              "label": "Team Topologies — Platform team",
+              "url": "https://teamtopologies.com/key-concepts"
+            },
+            {
+              "label": "Google — Software Engineering at Google (excerpt on ownership)",
+              "url": "https://abseil.io/resources/swe-book"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Ownership-Modelle für geteilten Platform-Code",
+      "excerpt": "Geteilte Libraries ohne klare Owner werden jedermanns Dependency und niemandes Incident. Wählen Sie ein Ownership-Modell das zu Blast Radius, Änderungsrate und Paging passt.",
+      "description": "Staff-Guidance zu Ownership für Shared Platform Code: CODEOWNERS, Platform Teams vs. föderierte Maintainer, Interface-Stabilität und Betrieb ohne verwaistes Risiko.",
+      "sections": [
+        {
+          "heading": "Shared heißt accountable, nicht anonym",
+          "paragraphs": [
+            "Platform-Packages, Design Systems, Auth-SDKs und Data-Access-Layer bündeln Hebel und Risiko. Ist Ownership 'das Team das zuletzt angefasst hat', stocken Upgrades, Security-Patches warten auf Freiwillige und Produktionsbrüche springen zwischen Product Squads die die Abstraktion nicht entworfen haben.",
+            "Schreiben Sie Ownership als Operating Contract: wer Changes reviewed, wer Compatibility Policy setzt, wer für Failures der Shared Layer on-call ist und wer deprecaten darf. Ein README-Badge reicht nicht; der Contract muss in CODEOWNERS, On-Call-Rotationen und Roadmap-Kapazität erscheinen."
+          ]
+        },
+        {
+          "heading": "Wählen Sie ein Modell das zum Blast Radius passt",
+          "paragraphs": [
+            "Zentrale Platform-Ownership funktioniert wenn die Surface stabil ist, Expertise knapp und Konsistenz wichtiger als lokale Speed—Identity, Payments-Plumbing, Observability-Agents. Föderierte Ownership mit Steward funktioniert wenn Domains divergieren und ein zentrales Team Bottleneck würde—sofern jede Domain Maintainer nennt und Shared Interface Tests vereinbart.",
+            "Vermeiden Sie den schlechtesten Hybrid: jeder kann mergen, niemand ist für Maintain eingeplant. Wenn Product Teams beitragen, brauchen Sie Contribution Guidelines, Review-SLAs und einen Steward mit Veto bei Breaking Changes. Contribution ohne Stewardship reproduziert das Orphan-Problem mit mehr Committern."
+          ],
+          "points": [
+            "Jedes Shared Package einem Primary Owner und Backup zuordnen",
+            "On-Call an Packages ausrichten die Production paget können",
+            "Compatibility- und Deprecation-Fenster an einem Ort veröffentlichen",
+            "Platform-Arbeit in der Planung budgetieren—nicht nur Feature-Demand"
+          ]
+        },
+        {
+          "heading": "Interfaces sind das Produkt von Platform-Code",
+          "paragraphs": [
+            "Consumer erleben Ownership über APIs, Error-Semantics, Upgrade-Kosten und Doc-Freshness. Bevorzugen Sie schmale, versionierte Interfaces statt Grab-Bag-Utilities. Messen Sie Adoption, Breakages pro Release und Time-to-Upgrade über Consumer-Repos—diese Metriken zeigen ob die Shared Layer sich lohnt.",
+            "Für AI- und Data-Platforms brauchen Shared Retrieval Clients, Prompt Registries und Evaluation Harnesses dieselbe Strenge wie Auth-SDKs. Ein 'hilfreicher' Shared Prompt Helper ohne Owner wird zur stillen Quelle von Quality Drift in jedem Produkt das ihn importiert."
+          ]
+        },
+        {
+          "heading": "Ownership im Delivery Path sichtbar machen",
+          "paragraphs": [
+            "Verlangen Sie Owner-Approval bei Interface-Changes, laufen Sie Consumer Contract Tests in der Platform-CI und kündigen Sie Breaking Changes auf einem bekannten Kanal mit Daten an. Wenn Incidents Shared Code betreffen, sollte das Postmortem das Owning Team und die nötige Remediation-Kapazität nennen—nicht vages 'Kommunikation verbessern.'",
+            "Gesunde Platform-Ownership fühlt sich leicht langweilig an: vorhersehbare Upgrades, klare Eskalation, weniger Heroics. Diese Langeweile signalisiert dass Shared Code Infrastruktur ist, kein Commons das bis zum nächsten Outage verfällt."
+          ],
+          "links": [
+            {
+              "label": "GitHub Docs — CODEOWNERS",
+              "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"
+            },
+            {
+              "label": "Team Topologies — Platform team",
+              "url": "https://teamtopologies.com/key-concepts"
+            },
+            {
+              "label": "Google — Software Engineering at Google (excerpt on ownership)",
+              "url": "https://abseil.io/resources/swe-book"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Modèles d'ownership pour le code plateforme partagé",
+      "excerpt": "Les libraries partagées sans owners clairs deviennent la dépendance de tous et l'incident de personne. Choisissez un modèle d'ownership aligné sur le blast radius, le rythme de change et qui est pagé.",
+      "description": "Guidance staff sur l'ownership du code plateforme partagé : CODEOWNERS, équipes plateforme vs mainteneurs fédérés, stabilité d'interface et exploitation sans risque orphelin.",
+      "sections": [
+        {
+          "heading": "Partagé veut dire accountable, pas anonyme",
+          "paragraphs": [
+            "Packages plateforme, design systems, SDK auth et couches d'accès données concentrent levier et risque. Quand l'ownership est 'l'équipe qui a touché en dernier', les upgrades stallent, les patches sécu attendent des volontaires, et les casses prod rebondissent entre squads produit qui n'ont pas conçu l'abstraction.",
+            "Écrivez l'ownership comme contrat d'exploitation : qui review, qui fixe la politique de compatibilité, qui est on-call pour les échecs attribuables à la couche partagée, et qui peut déprécier. Un badge README ne suffit pas ; le contrat doit apparaître dans CODEOWNERS, rotations on-call et capacité roadmap."
+          ]
+        },
+        {
+          "heading": "Choisissez un modèle qui colle au blast radius",
+          "paragraphs": [
+            "L'ownership plateforme central marche quand la surface est stable, l'expertise rare et la cohérence plus importante que la vitesse locale—identité, plumbing paiements, agents d'observabilité. L'ownership fédéré avec steward marche quand les domaines divergent et qu'une équipe centrale serait un goulot, à condition que chaque domaine nomme des mainteneurs et s'accorde sur des tests d'interface partagés.",
+            "Évitez le pire hybride : tout le monde peut merger, personne n'est planifié pour maintenir. Si les équipes produit contribuent, exigez guidelines, SLA de review et un steward avec veto sur les breaking changes. Contribuer sans stewardship recrée le problème orphelin avec plus de committers."
+          ],
+          "points": [
+            "Mapper chaque package partagé à un owner primaire et un backup",
+            "Aligner l'on-call sur les packages qui peuvent pager la prod",
+            "Publier fenêtres de compatibilité et de dépréciation au même endroit",
+            "Budgéter le travail plateforme dans le planning—pas seulement la demande feature"
+          ]
+        },
+        {
+          "heading": "Les interfaces sont le produit du code plateforme",
+          "paragraphs": [
+            "Les consommateurs vivent votre ownership via APIs, sémantique d'erreur, coût d'upgrade et fraîcheur doc. Préférez des interfaces étroites et versionnées aux utilitaires fourre-tout. Mesurez adoption, cassures par release et time-to-upgrade dans les repos consommateurs—ces métriques disent si la couche partagée vaut le coup.",
+            "Pour plateformes IA et data, clients de retrieval partagés, registres de prompts et harnesses d'évaluation demandent la même rigueur que les SDK auth. Un helper de prompt 'utile' sans owner devient la source silencieuse de dérive qualité dans chaque produit qui l'importe."
+          ]
+        },
+        {
+          "heading": "Rendre l'ownership visible dans le chemin de livraison",
+          "paragraphs": [
+            "Exigez l'approbation owner sur les changements d'interface, lancez des contract tests consommateurs dans la CI plateforme, et annoncez les breaking changes sur un canal connu avec dates. Quand un incident implique du code partagé, le postmortem doit nommer l'équipe owner et la capacité de remédiation nécessaire—pas un vague 'améliorer la communication.'",
+            "Une ownership plateforme saine paraît un peu ennuyeuse : upgrades prévisibles, escalade claire, moins d'héroïsme. Cet ennui signale que le code partagé est de l'infrastructure, pas un commons qui pourrit jusqu'à la prochaine panne."
+          ],
+          "links": [
+            {
+              "label": "GitHub Docs — CODEOWNERS",
+              "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"
+            },
+            {
+              "label": "Team Topologies — Platform team",
+              "url": "https://teamtopologies.com/key-concepts"
+            },
+            {
+              "label": "Google — Software Engineering at Google (excerpt on ownership)",
+              "url": "https://abseil.io/resources/swe-book"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Modelli di ownership per codice platform condiviso",
+      "excerpt": "Le library condivise senza owner chiari diventano la dipendenza di tutti e l'incidente di nessuno. Scegliete un modello di ownership allineato a blast radius, ritmo di change e chi viene paginato.",
+      "description": "Guida staff sull'ownership del codice platform condiviso: CODEOWNERS, team platform vs maintainer federati, stabilità delle interfacce e gestione senza rischio orfano.",
+      "sections": [
+        {
+          "heading": "Condiviso significa accountable, non anonimo",
+          "paragraphs": [
+            "Package platform, design system, SDK auth e layer di accesso dati concentrano leva e rischio. Quando l'ownership è 'il team che ha toccato per ultimo', gli upgrade si fermano, le patch di sicurezza aspettano volontari e i break di produzione rimbalzano tra squad prodotto che non hanno progettato l'astrazione.",
+            "Scrivete l'ownership come contratto operativo: chi fa review, chi imposta la policy di compatibilità, chi è on-call per i failure attribuibili al layer condiviso e chi può deprecare. Un badge README non basta; il contratto deve comparire in CODEOWNERS, rotazioni on-call e capacità di roadmap."
+          ]
+        },
+        {
+          "heading": "Scegliete un modello che calzi al blast radius",
+          "paragraphs": [
+            "L'ownership platform centrale funziona quando la superficie è stabile, l'expertise è scarsa e la coerenza conta più della velocità locale—identity, plumbing pagamenti, agent di observability. L'ownership federata con steward funziona quando i domini divergono e un team centrale diventerebbe collo di bottiglia, purché ogni dominio nomini maintainer e concordi test di interfaccia condivisi.",
+            "Evitate il peggior ibrido: tutti possono mergiare, nessuno è schedulato per mantenere. Se i team prodotto contribuiscono, servono guideline di contributo, SLA di review e uno steward con veto sui breaking change. Contribuire senza stewardship ricrea il problema orfano con più committer."
+          ],
+          "points": [
+            "Mappare ogni package condiviso a un owner primario e un backup",
+            "Allineare l'on-call ai package che possono paginare la produzione",
+            "Pubblicare finestre di compatibilità e deprecazione in un solo posto",
+            "Budgettare il lavoro platform nella pianificazione—non solo la domanda di feature"
+          ]
+        },
+        {
+          "heading": "Le interfacce sono il prodotto del codice platform",
+          "paragraphs": [
+            "I consumer vivono la vostra ownership tramite API, semantica degli errori, costo di upgrade e freschezza della documentazione. Preferite interfacce strette e versionate alle utility grab-bag. Misurate adozione, break per release e time-to-upgrade nei repo consumer—quelle metriche dicono se il layer condiviso vale il costo.",
+            "Per platform AI e data, client di retrieval condivisi, registry di prompt e harness di valutazione richiedono lo stesso rigore degli SDK auth. Un helper di prompt 'utile' senza owner diventa la fonte silenziosa di quality drift in ogni prodotto che lo importa."
+          ]
+        },
+        {
+          "heading": "Rendere l'ownership visibile nel percorso di delivery",
+          "paragraphs": [
+            "Richiedete approval dell'owner sui cambi di interfaccia, eseguite contract test dei consumer nella CI platform e annunciate i breaking change su un canale noto con date. Quando gli incidenti coinvolgono codice condiviso, il postmortem deve nominare il team owner e la capacità di remediation necessaria—non un vago 'migliorare la comunicazione.'",
+            "Un'ownership platform sana sembra un po' noiosa: upgrade prevedibili, escalation chiara, meno eroismi. Quella noia segnala che il codice condiviso è infrastruttura, non un commons che decade fino al prossimo outage."
+          ],
+          "links": [
+            {
+              "label": "GitHub Docs — CODEOWNERS",
+              "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"
+            },
+            {
+              "label": "Team Topologies — Platform team",
+              "url": "https://teamtopologies.com/key-concepts"
+            },
+            {
+              "label": "Google — Software Engineering at Google (excerpt on ownership)",
+              "url": "https://abseil.io/resources/swe-book"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "共享平台代码的归属模型",
+      "excerpt": "没有明确负责人的共享库会成为所有人的依赖、无人的事故。选择与爆炸半径、变更速率以及谁被呼叫相匹配的归属模型。",
+      "description": "关于共享平台代码归属的 Staff 指南：CODEOWNERS、平台团队与联邦维护者、接口稳定性，以及在无孤儿风险下运营共享包。",
+      "sections": [
+        {
+          "heading": "共享意味着可问责，而不是匿名",
+          "paragraphs": [
+            "平台包、设计系统、认证 SDK 与数据访问层集中杠杆与风险。当归属是「最后碰过的团队」时，升级停滞、安全补丁等志愿者，生产故障在未设计该抽象的产品小队之间弹跳。",
+            "把归属写成运营合约：谁审变更、谁定兼容策略、谁对共享层导致的故障 on-call、谁能废弃。README 徽章不够；合约必须出现在 CODEOWNERS、on-call 轮值与路线图容量中。"
+          ]
+        },
+        {
+          "heading": "选择匹配爆炸半径的模型",
+          "paragraphs": [
+            "当表面稳定、专长稀缺、一致性重于本地速度时，中央平台归属有效——身份、支付管道、可观测 agent。当领域分化且中央团队会成为瓶颈时，带 steward 的联邦归属有效，前提是每个领域点名维护者并就共享接口测试达成一致。",
+            "避免最差混合：人人可合并、无人排期维护。若产品团队贡献，需要贡献指南、审阅 SLA，以及 breaking change 上有否决权的 steward。没有 steward 的贡献只是用更多 committer 重造孤儿问题。"
+          ],
+          "points": [
+            "把每个共享包映射到主负责人与备份",
+            "让 on-call 与能呼叫生产的包对齐",
+            "在一处发布兼容与废弃窗口",
+            "在规划中为平台工作留预算——不只是功能需求"
+          ]
+        },
+        {
+          "heading": "接口是平台代码的产品",
+          "paragraphs": [
+            "消费者通过 API、错误语义、升级成本与文档新鲜度体验你的归属。宁可窄且有版本的接口，也不要杂物袋工具。度量采用率、每次发布的破坏、跨消费仓库的升级时间——这些指标告诉你共享层是否物有所值。",
+            "对 AI 与数据平台，共享检索客户端、提示词注册表与评估 harness 需要与认证 SDK 同等严谨。没有负责人的「有用」共享提示词助手，会成为每个导入它的产品中静默质量漂移的来源。"
+          ]
+        },
+        {
+          "heading": "让归属在交付路径上可见",
+          "paragraphs": [
+            "接口变更要求负责人批准，在平台 CI 跑消费者合约测试，并在已知频道按日期宣布破坏性变更。当事故涉及共享代码时，事后复盘应点名负责团队及其所需修复容量——不是含糊的「改善沟通」。",
+            "健康的平台归属略显无聊：可预期升级、清晰升级路径、更少英雄主义。这种无聊说明共享代码是基础设施，而不是拖到下次中断才腐烂的公地。"
+          ],
+          "links": [
+            {
+              "label": "GitHub Docs — CODEOWNERS",
+              "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"
+            },
+            {
+              "label": "Team Topologies — Platform team",
+              "url": "https://teamtopologies.com/key-concepts"
+            },
+            {
+              "label": "Google — Software Engineering at Google (excerpt on ownership)",
+              "url": "https://abseil.io/resources/swe-book"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "共有プラットフォームコードのオーナーシップモデル",
+      "excerpt": "明確なオーナーのない共有ライブラリは全員の依存関係であり誰のインシデントでもありません。ブラスト半径、変更速度、誰がページされるかに合うモデルを選んでください。",
+      "description": "共有プラットフォームコードのオーナーシップに関するスタッフ指針：CODEOWNERS、プラットフォームチーム対連合メンテナ、インターフェース安定性、孤児リスクなしでの共有パッケージ運用。",
+      "sections": [
+        {
+          "heading": "共有は匿名ではなく説明責任を意味する",
+          "paragraphs": [
+            "プラットフォームパッケージ、デザインシステム、認証SDK、データアクセス層はレバレッジとリスクを集中させます。オーナーシップが「最後に触ったチーム」だと、アップグレードは停滞し、セキュリティパッチはボランティア待ちになり、本番の破綻は抽象を設計していないプロダクト小隊の間で跳ね返ります。",
+            "オーナーシップを運用契約として書いてください：誰が変更をレビューし、誰が互換方針を決め、共有層に起因する失敗のオンコールは誰で、誰が非推奨にできるか。READMEバッジでは足りません。契約はCODEOWNERS、オンコールローテーション、ロードマップ容量に現れなければなりません。"
+          ]
+        },
+        {
+          "heading": "ブラスト半径に合うモデルを選ぶ",
+          "paragraphs": [
+            "サーフェスが安定し、専門性が希少で、一貫性がローカル速度より重要なとき—ID、決済配管、オブザーバビリティエージェント—中央プラットフォームオーナーシップが効きます。ドメインが分岐し中央チームがボトルネックになるときは、スチュワード付き連合オーナーシップが効きます。各ドメインがメンテナを指名し、共有インターフェーステストに合意することが条件です。",
+            "最悪のハイブリッドを避けてください：誰でもマージでき、誰も保守に予定されていない。プロダクトチームが貢献するなら、貢献ガイド、レビューSLA、破壊的変更に拒否権を持つスチュワードが必要です。スチュワードシップなしの貢献は、コミッタを増やして孤児問題を再現します。"
+          ],
+          "points": [
+            "各共有パッケージを主オーナーとバックアップに対応づける",
+            "本番をページしうるパッケージにオンコールを揃える",
+            "互換と非推奨ウィンドウを一箇所で公開する",
+            "計画でプラットフォーム作業を予算化する—機能需要だけではない"
+          ]
+        },
+        {
+          "heading": "インターフェースはプラットフォームコードの製品である",
+          "paragraphs": [
+            "消費者はAPI、エラー意味論、アップグレードコスト、ドキュメント鮮度を通じてオーナーシップを体験します。雑多ユーティリティより狭く版管理されたインターフェースを好みます。採用、リリースあたりの破壊、消費者リポジトリ横断のアップグレード時間を測ってください—その指標が共有層が元を取っているかを示します。",
+            "AIとデータプラットフォームでは、共有検索クライアント、プロンプト登録、評価ハーネスも認証SDKと同じ厳密さが必要です。オーナーのいない「便利な」共有プロンプトヘルパーは、それをインポートするすべての製品で静かな品質ドリフトの源になります。"
+          ]
+        },
+        {
+          "heading": "デリバリー経路でオーナーシップを見える化する",
+          "paragraphs": [
+            "インターフェース変更にオーナー承認を求め、プラットフォームCIで消費者契約テストを回し、破壊的変更を既知チャネルで日付付き告知します。インシデントが共有コードを含むとき、ポストモーテムは担当チームと必要な是正容量を名指しすべきです—曖昧な「コミュニケーション改善」ではなく。",
+            "健全なプラットフォームオーナーシップは少し退屈に感じます：予測可能なアップグレード、明確なエスカレーション、ヒーロー行為の減少。その退屈さは、共有コードが次の障害まで腐るコモンズではなくインフラである信号です。"
+          ],
+          "links": [
+            {
+              "label": "GitHub Docs — CODEOWNERS",
+              "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"
+            },
+            {
+              "label": "Team Topologies — Platform team",
+              "url": "https://teamtopologies.com/key-concepts"
+            },
+            {
+              "label": "Google — Software Engineering at Google (excerpt on ownership)",
+              "url": "https://abseil.io/resources/swe-book"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

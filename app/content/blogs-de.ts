@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"release-trains-for-ai-assisted-products": {
+    title: "Release Trains für KI-gestützte Produkte",
+    excerpt: "KI-Features ändern sich wöchentlich. Release Trains halten Produkt-, Modell- und Evaluierungsänderungen in einem vorhersehbaren Takt — ohne jede Prompt-Änderung zum Notfall-Deploy zu machen.",
+    description: "So gestalten Staff Engineers Release Trains für KI-gestützte Produkte: fester Takt, Evaluierungstore, Modell- und Prompt-Versionierung, Kill-Switches und Abstimmung zwischen Produkt- und Plattformteams.",
+    sections: [
+      {
+        heading: "Wöchentliche Modelländerungen sind kein Release-Prozess",
+        paragraphs: [
+          "KI-gestützte Produkte ändern sich gleichzeitig aus drei Richtungen: Produktverhalten, Provider-Defaults und die Evaluierungssuites, die entscheiden, ob Qualität akzeptabel ist. Teams, die jedes davon als Ad-hoc-Hotfix behandeln, verwandeln „KI shippen“ in eine permanente Interrupt-Queue für Engineers und eine permanente Überraschung für den Support.",
+          "Ein Release Train ist das Gegenmittel. Er verlangsamt Lernen nicht; er bündelt Änderungen hinter einem vorhersehbaren Fenster, damit Produkt, Plattform, Trust und Support vorbereiten können. Der Zug fährt planmäßig ab, auch wenn nicht jedes Ticket fertig ist. Unfertige Arbeit wartet auf die nächste Abfahrt statt eines ungeplanten Deploys.",
+        ],
+      },
+      {
+        heading: "Versionieren Sie die drei Oberflächen gemeinsam",
+        paragraphs: [
+          "Prompts, Retrieval-Konfiguration, Tool-Schemas und Evaluierungs-Fixtures sind ein System. Einen Prompt ohne die Suite zu shippen, die seine Eigenschaften beweist, ist keine Iteration — es ist ungemessenes Risiko. Ebenso macht ein Modell-Bump ohne feste Erwartungen zu Kosten, Latenz und Ablehnungsverhalten Provider-Changelogs zu Produktionsvorfällen.",
+          "Halten Sie ein einziges Release-Artefakt, das Model-Route, Prompt-Paket, Retrieval-Index-Revision und Eval-Suite-Hash benennt. Das ist, was in den Canary geht, was zurückgerollt wird und was in Postmortems diskutiert wird. Können Sie diese vier Werte für eine schlechte Antwort nicht rekonstruieren, haben Sie keinen Release-Prozess.",
+        ],
+        points: [
+          "Model-IDs und Temperature pinnen; nie auf „latest“ shippen",
+          "Prompts zusammen mit Golden Cases und Gradern versionieren",
+          "Retrieval-Index- und Tool-Schema-Revisionen in jedem Train erfassen",
+          "Merges ablehnen, die KI-Verhalten ohne Eval-Delta ändern",
+        ],
+      },
+      {
+        heading: "Tore müssen Produktrisiko widerspiegeln, nicht Demo-Politur",
+        paragraphs: [
+          "Ein Train, der nur prüft, ob das Modell noch antwortet, ist Theater. Gate auf Eigenschaften, die Nutzer und Business nicht verlieren dürfen: Groundedness für Wissensfeatures, Schema-Validität für strukturierte Outputs, Policy-Ablehnungen für risikoreiche Intents, Kosten pro erfolgreichem Outcome und p95-Latenz unter realistischer Last.",
+          "Risiko-tiern Sie Features im Train. Drafting-Aids vertragen weichere Bars und breitere Canaries. Aktionen, die Kundendaten schreiben, Geld ausgeben oder externe Nachrichten senden, brauchen strengere Evals, kleinere Exposure-Schritte und ein explizites menschliches Go/No-Go. Der Kalender ist geteilt; die Bar nicht.",
+        ],
+      },
+      {
+        heading: "Menschen um den Takt koordinieren",
+        paragraphs: [
+          "Release Trains scheitern, wenn sie ein Engineering-Ritual ohne Produktgegenstück sind. Veröffentlichen Sie den Abfahrtsplan, Freeze-Fenster für risikoreiche Features und geben Sie dem Support ein kurzes Briefing, was sich für Nutzer ändert. KI-Regressionen wirken oft wie „das Produkt wurde schlechter“ statt „der Deploy ist fehlgeschlagen“ — Kommunikation ist Teil der Zuverlässigkeit.",
+          "Nutzen Sie den Train auch für providergetriebene Änderungen. Wenn ein Modell-Vendor Defaults aktualisiert, planen Sie die Anpassung für den nächsten Train statt Mitternacht-Hotfixes. Vorhersehbarkeit ist das Staff-Ergebnis: weniger Notfall-Deploys, klarere Ownership und ein Produkt, das wöchentlich bewegen kann, ohne die Marke bei jeder Prompt-Änderung zu verspielen.",
+        ],
+        links: [
+          {
+            label: "Google SRE — Continuous Delivery",
+            url: "https://sre.google/workbook/continuous-delivery/",
+          },
+          {
+            label: "LaunchDarkly — Progressive delivery overview",
+            url: "https://docs.launchdarkly.com/guides/progressive-delivery",
+          },
+          {
+            label: "OpenAI — Production best practices",
+            url: "https://platform.openai.com/docs/guides/production-best-practices",
+          },
+        ],
+      },
+    ],
+  },
   "ai-crawler-control-is-now-web-infrastructure": {
     title: "KI-Crawler-Kontrolle ist jetzt Web-Infrastruktur",
     excerpt: "KI-Crawler-Policy ist von einer Randnotiz in robots.txt zu einer Produktionskontrolle für Sichtbarkeit, Kosten, Lizenzierung und Vertrauen geworden.",

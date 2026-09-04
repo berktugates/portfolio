@@ -1,8 +1,30 @@
 {
   "version": 1,
   "site": "https://berktugberke.com",
-  "generatedAt": "2026-08-30T09:16:05.550Z",
+  "generatedAt": "2026-09-04T19:13:06.757Z",
   "posts": [
+    {
+      "id": "release-trains-for-ai-assisted-products",
+      "slug": "release-trains-for-ai-assisted-products",
+      "title": "Release Trains for AI-Assisted Products",
+      "url": "https://berktugberke.com/blogs/release-trains-for-ai-assisted-products",
+      "publishedAt": "2026-09-04",
+      "tags": [
+        "release trains",
+        "AI product engineering",
+        "release engineering",
+        "LLM deployment",
+        "feature flags",
+        "continuous delivery"
+      ],
+      "excerpt": "AI features change weekly. Release trains keep product, model, and evaluation changes shipping on a predictable cadence without turning every prompt edit into an emergency deploy.",
+      "bodyPlain": "AI-assisted products accumulate change from three directions at once: product behavior, model provider defaults, and the evaluation suites that decide whether quality is acceptable. Teams that treat each of those as an ad-hoc hotfix discover that 'shipping AI' becomes a permanent interrupt queue for engineers and a permanent surprise for support.\n\nA release train is the antidote. It does not slow learning; it batches change behind a predictable window so product, platform, trust, and support can prepare. The train leaves on schedule whether or not every ticket is ready. Incomplete work waits for the next departure instead of forcing an unplanned deploy.\n\nPrompts, retrieval configuration, tool schemas, and evaluation fixtures are one system. Shipping a prompt without the suite that proves its properties is not iteration; it is unmeasured risk. Likewise, bumping a model version without pinning expected cost, latency, and refusal behavior turns provider changelogs into production incidents.\n\nKeep a single release artifact that names the model route, prompt package, retrieval index revision, and eval suite hash. That artifact is what enters canary, what rolls back, and what gets discussed in postmortems. If you cannot reconstruct those four values for a bad answer, you do not have a release process.\n\nPin model IDs and temperature; never ship on 'latest'\n\nCo-version prompts with golden cases and graders\n\nRecord retrieval index and tool schema revisions on every train\n\nReject merges that change AI behavior without an eval delta\n\nA train that only checks that the model still answers is theater. Gate on the properties users and the business cannot lose: groundedness for knowledge features, schema validity for structured outputs, policy refusals for high-risk intents, cost per successful outcome, and p95 latency under realistic load.\n\nRisk-tier the features on the train. Drafting aids can tolerate softer bars and broader canaries. Actions that write to customer data, spend money, or send external messages need stricter evals, smaller exposure steps, and an explicit human-owned go/no-go. The calendar is shared; the bar is not.\n\nRelease trains fail when they are an engineering ritual with no product counterpart. Publish the departure schedule, freeze windows for high-stakes features, and give support a short brief of what changes for users. AI regressions often look like 'the product got worse' rather than 'the deploy failed', so communication is part of reliability.\n\nUse the train to absorb provider-driven change as well. When a model vendor updates defaults, schedule the adaptation on the next train instead of hot-patching production at midnight. Predictability is the staff-level outcome: fewer emergency deploys, clearer ownership, and a product that can still move weekly without gambling the brand on every prompt edit.",
+      "contentHash": "8a7aa425232a6820",
+      "socialThreadTr": [
+        "AI özelliklerinde haftalık değişiklik normal; her prompt düzenlemesini acil deploy yapmak değil. Release train, model/prompt/eval değişikliklerini sabit ritme bağlar ve kalite kapılarını ürün takviminden koparmaz. 🧵",
+        "Pratik bar: sabit cadence, sürüm kontrolü, eval gate, kademeli açılış ve kill switch. Detay: https://berktugberke.com/tr/blogs/release-trains-for-ai-assisted-products"
+      ]
+    },
     {
       "id": "ai-crawler-control-is-now-web-infrastructure",
       "slug": "ai-crawler-control-is-now-web-infrastructure",

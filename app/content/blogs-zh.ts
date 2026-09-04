@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"release-trains-for-ai-assisted-products": {
+    title: "面向 AI 辅助产品的发布列车",
+    excerpt: "AI 功能每周都在变。发布列车把产品、模型与评估变更放在可预期的节奏上，而不是把每次提示词修改都变成紧急上线。",
+    description: "Staff 工程师如何为 AI 辅助产品设计发布列车：固定节奏、评估门禁、模型与提示词版本化、熔断开关，以及产品与平台团队的协同。",
+    sections: [
+      {
+        heading: "每周改模型不等于有发布流程",
+        paragraphs: [
+          "AI 辅助产品同时从三个方向积累变更：产品行为、模型供应商默认值，以及判定质量是否可接受的评估套件。把每一项都当成临时热修的团队会发现，「上线 AI」变成工程师的永久打断队列，也变成支持团队的永久意外。",
+          "发布列车是解药。它并不拖慢学习；它把变更收进可预期的窗口，让产品、平台、信任与支持能提前准备。列车按时发车，无论每个工单是否就绪。未完成的工作等下一班，而不是逼出一次计划外部署。",
+        ],
+      },
+      {
+        heading: "把三个表面一起版本化",
+        paragraphs: [
+          "提示词、检索配置、工具 schema 与评估夹具是同一套系统。没有能证明其属性的套件就上线提示词，不是迭代，而是未度量的风险。同样，不固定成本、延迟与拒答预期就抬模型版本，会把供应商 changelog 变成生产事故。",
+          "保留一份发布产物，明确模型路由、提示词包、检索索引修订与评估套件哈希。进入金丝雀、回滚与事后复盘的都是它。若无法为一次坏回答重建这四个值，你就没有发布流程。",
+        ],
+        points: [
+          "固定模型 ID 与 temperature；切勿用 latest 上线",
+          "提示词与金标用例、评分器一并版本化",
+          "每次列车记录检索索引与工具 schema 修订",
+          "拒绝无评估增量却改变 AI 行为的合并",
+        ],
+      },
+      {
+        heading: "门禁要反映产品风险，而不是演示光泽",
+        paragraphs: [
+          "只检查模型还能回答的列车是做戏。门禁应盯住用户与业务不能丢的属性：知识类功能的 grounding、结构化输出的 schema 有效性、高风险意图的策略拒答、每次成功结果的成本，以及真实负载下的 p95 延迟。",
+          "按风险分层列车上的功能。草稿助手可接受更软的门槛与更宽的金丝雀。写入客户数据、花钱或发外部消息的动作需要更严的评估、更小的放量步长，以及明确的人工 go/no-go。日历共享，门槛不共享。",
+        ],
+      },
+      {
+        heading: "围绕节奏协调人",
+        paragraphs: [
+          "发布列车若只是工程仪式而没有产品对应物，就会失败。公布发车日程、高风险功能的冻结窗口，并向支持给出用户侧变更的短简报。AI 回归往往看起来像「产品变差了」而不是「部署失败」，沟通是可靠性的一部分。",
+          "也用列车吸收供应商驱动的变更。当模型厂商更新默认值时，安排在下一班列车适配，而不是半夜热修生产。可预期性是 staff 级结果：更少紧急部署、更清晰的归属，以及产品仍能每周前进，却不必在每次改提示词时拿品牌赌博。",
+        ],
+        links: [
+          {
+            label: "Google SRE — Continuous Delivery",
+            url: "https://sre.google/workbook/continuous-delivery/",
+          },
+          {
+            label: "LaunchDarkly — Progressive delivery overview",
+            url: "https://docs.launchdarkly.com/guides/progressive-delivery",
+          },
+          {
+            label: "OpenAI — Production best practices",
+            url: "https://platform.openai.com/docs/guides/production-best-practices",
+          },
+        ],
+      },
+    ],
+  },
   "ai-crawler-control-is-now-web-infrastructure": {
     title: "AI 爬虫控制已经成为 Web 基础设施",
     excerpt: "AI 爬虫策略已经从 robots.txt 里的附注，变成影响可见性、成本、许可和信任的生产控制面。",

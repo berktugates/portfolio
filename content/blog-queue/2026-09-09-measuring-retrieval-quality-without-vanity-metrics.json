@@ -1,0 +1,401 @@
+{
+  "slug": "measuring-retrieval-quality-without-vanity-metrics",
+  "title": "Measuring Retrieval Quality Without Vanity Metrics",
+  "excerpt": "Embedding similarity and click-through on demos do not prove retrieval helps users. Measure task success, grounded answer rates, and hard negatives that should return nothing.",
+  "description": "A staff engineer playbook for retrieval quality: offline labels, online task metrics, abstention correctness, slice-based evals, and avoiding vanity RAG dashboards.",
+  "readingMinutes": 7,
+  "keywords": [
+    "retrieval quality",
+    "RAG evaluation",
+    "information retrieval",
+    "LLM grounding",
+    "search metrics",
+    "AI product analytics"
+  ],
+  "socialThreadTr": [
+    "Embedding benzerliği ve demo tıklaması retrieval'ın kullanıcıya yardım ettiğini kanıtlamaz. Görev başarısı, grounded yanıt oranı ve 'hiçbir şey dönmeli' hard negative'ler ölçülür. 🧵",
+    "Vanity RAG panellerini bırakın; dilimlenmiş eval ve online görev metriklerine geçin. Detay: https://berktugberke.com/tr/blogs/measuring-retrieval-quality-without-vanity-metrics"
+  ],
+  "sections": [
+    {
+      "heading": "Similarity is not usefulness",
+      "paragraphs": [
+        "Cosine similarity between query and chunk tells you the index retrieved something nearby in vector space. It does not tell you whether the chunk contains the fact needed to complete the user task, whether citations are faithful, or whether the system should have retrieved nothing. Optimizing for similarity alone rewards fluent irrelevance.",
+        "Staff-level measurement starts from product promises. If the feature claims grounded answers from your corpus, the metric is correct grounding under realistic queries—not how pretty the nearest neighbors look in a notebook."
+      ]
+    },
+    {
+      "heading": "Build an evaluation set that can fail you",
+      "paragraphs": [
+        "Label query sets with expected document IDs or answer properties, including adversarial cases: synonyms, outdated entities, partial identifiers, multilingual phrasing, and questions whose answer is absent. Track recall@k for must-find docs, precision of citations, and abstention accuracy when nothing should match.",
+        "Refresh the set as the product changes. A frozen golden set from launch week becomes vanity once content and user language drift. Version the dataset with the index and chunking strategy so regressions are attributable."
+      ],
+      "points": [
+        "Report metrics by slice: tenant, language, content type, and risk tier",
+        "Include 'should retrieve nothing' cases in every release gate",
+        "Pair offline scores with human review on production samples",
+        "Separate retrieval failures from generation failures in incident review"
+      ]
+    },
+    {
+      "heading": "Online metrics must connect to outcomes",
+      "paragraphs": [
+        "Instrument whether users complete the job after an AI answer, how often they regenerate, escalate to search or support, or correct citations. A high thumbs-up rate on stylistic answers can coexist with rising ticket volume when facts are wrong. Prefer outcome-linked rates over isolated engagement vanity.",
+        "When you change chunking, embeddings, or rerankers, run paired experiments with clear success criteria. Guard against regressions in latency and cost per successful grounded answer—cheaper retrieval that forces five regenerations is not cheaper."
+      ]
+    },
+    {
+      "heading": "Operate retrieval like a production dependency",
+      "paragraphs": [
+        "Index freshness, permission filters, and empty-result rates belong on the same dashboard as API availability. A silent drop in recall after a crawler or ACL change is a product incident, even if the model still produces confident prose.",
+        "Vanity metrics make teams feel busy. Useful metrics make teams decide: ship, roll back, or invest in content and chunking. That decision quality is the point of measuring retrieval at all."
+      ],
+      "links": [
+        {
+          "label": "NIST — AI RMF",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        },
+        {
+          "label": "OpenAI — Evaluation best practices",
+          "url": "https://platform.openai.com/docs/guides/evaluation"
+        },
+        {
+          "label": "Anthropic — Measuring faithfulness",
+          "url": "https://www.anthropic.com/research"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Gösteriş Metrikleri Olmadan Retrieval Kalitesini Ölçmek",
+      "excerpt": "Embedding benzerliği ve demoda tıklama, retrieval'ın kullanıcıya yardım ettiğini kanıtlamaz. Görev başarısını, grounded yanıt oranını ve hiçbir şey dönmesi gereken hard negative'leri ölçün.",
+      "description": "Retrieval kalitesi için staff playbook: çevrimdışı etiketler, online görev metrikleri, doğru abstention, dilimlenmiş eval ve vanity RAG panellerinden kaçınma.",
+      "sections": [
+        {
+          "heading": "Benzerlik yararlılık değildir",
+          "paragraphs": [
+            "Sorgu ile chunk arasındaki cosine benzerliği, indeksin vektör uzayında yakından bir şey getirdiğini söyler. Chunk'ın kullanıcı görevini tamamlamak için gereken gerçeği içerip içermediğini, atıfların sadık olup olmadığını veya sistemin hiçbir şey getirmemesi gerekip gerekmediğini söylemez. Yalnızca benzerliği optimize etmek akıcı ilgisizliği ödüllendirir.",
+            "Staff seviye ölçüm ürün vaatlerinden başlar. Özellik korpusunuzdan grounded yanıt iddia ediyorsa metrik, notebook'ta en yakın komşuların ne kadar şık göründüğü değil; gerçekçi sorgular altında doğru grounding'dir."
+          ]
+        },
+        {
+          "heading": "Sizi fail ettirebilecek bir değerlendirme seti kurun",
+          "paragraphs": [
+            "Sorgu setlerini beklenen belge ID'leri veya yanıt özellikleriyle etiketleyin; adversariyal durumları dahil edin: eş anlamlılar, güncel olmayan varlıklar, kısmi tanımlayıcılar, çok dilli ifade ve cevabı olmayan sorular. Bulunması zorunlu dokümanlar için recall@k, atıf precision'ı ve hiçbir şey eşleşmemeliyken abstention doğruluğunu izleyin.",
+            "Ürün değiştikçe seti yenileyin. Lansman haftasından donmuş golden set, içerik ve kullanıcı dili kayınca vanity olur. Regresyonlar atfedilebilsin diye veri setini indeks ve chunking stratejisiyle sürümleyin."
+          ],
+          "points": [
+            "Metrikleri dilime göre raporlayın: tenant, dil, içerik tipi ve risk katmanı",
+            "Her yayın kapısına 'hiçbir şey getirmemeli' vakaları ekleyin",
+            "Çevrimdışı skorları üretim örneklerinde insan incelemesiyle eşleştirin",
+            "Olay incelemesinde retrieval hatalarını generation hatalarından ayırın"
+          ]
+        },
+        {
+          "heading": "Online metrikler sonuçlara bağlanmalı",
+          "paragraphs": [
+            "Kullanıcıların AI yanıtından sonra işi bitirip bitirmediğini, ne sıklıkla yeniden ürettiklerini, aramaya veya desteğe yükselttiklerini veya atıfları düzelttiklerini ölçün. Stilistik yanıtlarda yüksek beğeni, gerçekler yanlışken artan ticket hacmiyle bir arada olabilir. İzole etkileşim vanity'si yerine sonuca bağlı oranları tercih edin.",
+            "Chunking, embedding veya reranker değiştirdiğinizde net başarı kriterleriyle eşli deneyler yürütün. Gecikme ve başarılı grounded yanıt başına maliyet regresyonlarına karşı koruyun—beş yeniden üretim zorlayan ucuz retrieval ucuz değildir."
+          ]
+        },
+        {
+          "heading": "Retrieval'ı üretim bağımlılığı gibi işletin",
+          "paragraphs": [
+            "İndeks tazeliği, izin filtreleri ve boş sonuç oranları API erişilebilirliğiyle aynı panelde olmalıdır. Crawler veya ACL değişikliğinden sonra recall'da sessiz düşüş, model hâlâ kendinden emin düzyazı üretsen bile ürün olayıdır.",
+            "Vanity metrikler ekipleri meşgul hissettirir. Yararlı metrikler karar verdirir: yayınla, geri al veya içerik ile chunking'e yatırım yap. Bu karar kalitesi retrieval ölçmenin bütün noktasıdır."
+          ],
+          "links": [
+            {
+              "label": "NIST — AI RMF",
+              "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+            },
+            {
+              "label": "OpenAI — Evaluation best practices",
+              "url": "https://platform.openai.com/docs/guides/evaluation"
+            },
+            {
+              "label": "Anthropic — Measuring faithfulness",
+              "url": "https://www.anthropic.com/research"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Retrieval-Qualität ohne Vanity Metrics messen",
+      "excerpt": "Embedding-Ähnlichkeit und Demo-Klicks beweisen nicht, dass Retrieval Nutzern hilft. Messen Sie Task-Erfolg, Grounded-Answer-Raten und Hard Negatives die nichts zurückgeben sollten.",
+      "description": "Staff-Playbook für Retrieval-Qualität: Offline-Labels, Online-Task-Metriken, korrekte Abstention, Slice-Evals und Vermeidung von Vanity-RAG-Dashboards.",
+      "sections": [
+        {
+          "heading": "Ähnlichkeit ist nicht Nützlichkeit",
+          "paragraphs": [
+            "Cosine Similarity zwischen Query und Chunk sagt, dass der Index etwas nahe im Vektorraum geholt hat. Sie sagt nicht, ob der Chunk die für den User-Task nötige Tatsache enthält, ob Zitationen treu sind oder ob das System nichts hätte holen sollen. Nur Similarity zu optimieren belohnt fluente Irrelevanz.",
+            "Staff-Messung startet bei Produktversprechen. Behauptet das Feature Grounded Answers aus Ihrem Corpus, ist die Metrik korrektes Grounding unter realistischen Queries—nicht wie hübsch die Nearest Neighbors im Notebook aussehen."
+          ]
+        },
+        {
+          "heading": "Bauen Sie ein Eval-Set das Sie failen kann",
+          "paragraphs": [
+            "Labeln Sie Query-Sets mit erwarteten Document-IDs oder Answer-Properties inkl. adversarialer Fälle: Synonyme, veraltete Entities, partielle Identifier, mehrsprachige Formulierungen und Fragen ohne Antwort. Tracken Sie Recall@k für Must-Find-Docs, Precision von Citations und Abstention-Accuracy wenn nichts matchen soll.",
+            "Aktualisieren Sie das Set wenn das Produkt sich ändert. Ein eingefrorenes Golden Set aus der Launch-Woche wird Vanity sobald Content und User-Sprache driften. Versionieren Sie Dataset mit Index und Chunking-Strategie damit Regressionen zuordenbar sind."
+          ],
+          "points": [
+            "Metriken nach Slice reporten: Tenant, Sprache, Content-Typ und Risk Tier",
+            "'Should retrieve nothing'-Fälle in jedes Release-Gate aufnehmen",
+            "Offline-Scores mit Human Review auf Production Samples koppeln",
+            "Retrieval-Failures von Generation-Failures in Incident Reviews trennen"
+          ]
+        },
+        {
+          "heading": "Online-Metriken müssen an Outcomes hängen",
+          "paragraphs": [
+            "Instrumentieren Sie ob Nutzer den Job nach einer AI-Antwort abschließen, wie oft sie regenerieren, zu Search oder Support eskalieren oder Citations korrigieren. Hohe Thumbs-up auf stilistische Answers können mit steigendem Ticket-Volumen koexistieren wenn Fakten falsch sind. Preferieren Sie outcome-linked Rates über isolierte Engagement-Vanity.",
+            "Wenn Sie Chunking, Embeddings oder Reranker ändern, laufen Sie Paired Experiments mit klaren Success Criteria. Schützen Sie vor Regressionen in Latenz und Cost per erfolgreicher Grounded Answer—billigeres Retrieval das fünf Regenerationen erzwingt ist nicht billiger."
+          ]
+        },
+        {
+          "heading": "Retrieval wie eine Production Dependency betreiben",
+          "paragraphs": [
+            "Index Freshness, Permission Filters und Empty-Result-Rates gehören auf dasselbe Dashboard wie API Availability. Ein stiller Recall-Drop nach Crawler- oder ACL-Change ist ein Produktincident—auch wenn das Modell weiter selbstbewusstes Prosa produziert.",
+            "Vanity Metrics lassen Teams beschäftigt wirken. Nützliche Metrics lassen Teams entscheiden: shippen, rollbacken oder in Content und Chunking investieren. Diese Entscheidungsqualität ist der Sinn von Retrieval-Messung."
+          ],
+          "links": [
+            {
+              "label": "NIST — AI RMF",
+              "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+            },
+            {
+              "label": "OpenAI — Evaluation best practices",
+              "url": "https://platform.openai.com/docs/guides/evaluation"
+            },
+            {
+              "label": "Anthropic — Measuring faithfulness",
+              "url": "https://www.anthropic.com/research"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Mesurer la qualité de retrieval sans vanity metrics",
+      "excerpt": "La similarité d'embedding et le clic en démo ne prouvent pas que le retrieval aide les utilisateurs. Mesurez le succès de tâche, les taux de réponses ancrées et les hard negatives qui ne doivent rien renvoyer.",
+      "description": "Playbook staff pour la qualité de retrieval : labels offline, métriques de tâche online, abstention correcte, evals par tranche et éviter les dashboards RAG de vanité.",
+      "sections": [
+        {
+          "heading": "La similarité n'est pas l'utilité",
+          "paragraphs": [
+            "La similarité cosinus entre requête et chunk dit que l'index a ramené quelque chose de proche dans l'espace vectoriel. Elle ne dit pas si le chunk contient le fait nécessaire pour finir la tâche, si les citations sont fidèles, ou si le système n'aurait rien dû récupérer. Optimiser la seule similarité récompense l'irrelevance fluide.",
+            "La mesure staff part des promesses produit. Si la feature revendique des réponses ancrées dans votre corpus, la métrique est le grounding correct sous requêtes réalistes—pas la beauté des nearest neighbors dans un notebook."
+          ]
+        },
+        {
+          "heading": "Construisez un jeu d'évaluation qui peut vous faire échouer",
+          "paragraphs": [
+            "Étiquetez des jeux de requêtes avec IDs de documents attendus ou propriétés de réponse, y compris cas adversariaux : synonymes, entités obsolètes, identifiants partiels, formulations multilingues et questions sans réponse. Suivez recall@k pour les docs must-find, précision des citations et exactitude d'abstention quand rien ne doit matcher.",
+            "Rafraîchissez le jeu quand le produit change. Un golden set figé de la semaine de lancement devient vanity dès que contenu et langage utilisateur dérivent. Versionnez le dataset avec l'index et la stratégie de chunking pour attribuer les régressions."
+          ],
+          "points": [
+            "Reporter les métriques par tranche : tenant, langue, type de contenu et niveau de risque",
+            "Inclure les cas « ne doit rien récupérer » dans chaque porte de release",
+            "Coupler scores offline et revue humaine sur échantillons prod",
+            "Séparer échecs de retrieval et de génération dans la revue d'incident"
+          ]
+        },
+        {
+          "heading": "Les métriques online doivent se lier aux outcomes",
+          "paragraphs": [
+            "Instrumentez si les utilisateurs terminent le job après une réponse IA, à quelle fréquence ils régénèrent, escaladent vers search ou support, ou corrigent des citations. Un fort taux de thumbs-up sur des réponses stylistiques peut coexister avec une hausse de tickets quand les faits sont faux. Préférez des taux liés aux outcomes à la vanity d'engagement isolée.",
+            "Quand vous changez chunking, embeddings ou rerankers, lancez des expériences appariées avec critères de succès clairs. Gardez-vous des régressions de latence et de coût par réponse ancrée réussie—un retrieval moins cher qui force cinq régénérations n'est pas moins cher."
+          ]
+        },
+        {
+          "heading": "Opérer le retrieval comme une dépendance de production",
+          "paragraphs": [
+            "Fraîcheur d'index, filtres de permission et taux de résultats vides appartiennent au même dashboard que la disponibilité API. Une chute silencieuse de recall après un changement crawler ou ACL est un incident produit, même si le modèle produit encore une prose confiante.",
+            "Les vanity metrics font sentir les équipes occupées. Les métriques utiles font décider : shipper, rollback, ou investir dans contenu et chunking. Cette qualité de décision est tout l'intérêt de mesurer le retrieval."
+          ],
+          "links": [
+            {
+              "label": "NIST — AI RMF",
+              "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+            },
+            {
+              "label": "OpenAI — Evaluation best practices",
+              "url": "https://platform.openai.com/docs/guides/evaluation"
+            },
+            {
+              "label": "Anthropic — Measuring faithfulness",
+              "url": "https://www.anthropic.com/research"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Misurare la qualità del retrieval senza vanity metric",
+      "excerpt": "La similarità di embedding e il click in demo non provano che il retrieval aiuti gli utenti. Misurate il successo del task, i tassi di risposte grounded e gli hard negative che non devono restituire nulla.",
+      "description": "Playbook staff per la qualità del retrieval: label offline, metriche di task online, abstention corretta, eval a slice ed evitare dashboard RAG di vanità.",
+      "sections": [
+        {
+          "heading": "La similarità non è utilità",
+          "paragraphs": [
+            "La similarità coseno tra query e chunk dice che l'indice ha recuperato qualcosa di vicino nello spazio vettoriale. Non dice se il chunk contiene il fatto necessario a completare il task, se le citazioni sono fedeli o se il sistema non avrebbe dovuto recuperare nulla. Ottimizzare solo la similarità premia l'irrilevanza fluente.",
+            "La misura staff parte dalle promesse di prodotto. Se la feature rivendica risposte grounded dal vostro corpus, la metrica è il grounding corretto sotto query realistiche—non quanto sono belli i nearest neighbor in un notebook."
+          ]
+        },
+        {
+          "heading": "Costruite un set di valutazione che possa farvi fallire",
+          "paragraphs": [
+            "Etichettate set di query con ID documento attesi o proprietà di risposta, inclusi casi avversariali: sinonimi, entità obsolete, identificatori parziali, formulazioni multilingue e domande senza risposta. Tracciate recall@k per i doc must-find, precision delle citazioni e accuratezza di abstention quando niente deve matchare.",
+            "Aggiornate il set quando il prodotto cambia. Un golden set congelato dalla settimana di launch diventa vanity quando contenuto e linguaggio utente driftano. Versionate il dataset con indice e strategia di chunking così le regressioni sono attribuibili."
+          ],
+          "points": [
+            "Riportare le metriche per slice: tenant, lingua, tipo di contenuto e risk tier",
+            "Includere casi «non deve recuperare nulla» in ogni gate di release",
+            "Abbinare score offline e review umana su sample di produzione",
+            "Separare failure di retrieval e di generation nella review di incidente"
+          ]
+        },
+        {
+          "heading": "Le metriche online devono collegarsi agli outcome",
+          "paragraphs": [
+            "Strumentate se gli utenti completano il lavoro dopo una risposta IA, quanto spesso rigenerano, escalano a search o support o correggono citazioni. Un alto thumbs-up su risposte stilistiche può coesistere con ticket in aumento quando i fatti sono sbagliati. Preferite tassi legati agli outcome alla vanity di engagement isolata.",
+            "Quando cambiate chunking, embedding o reranker, eseguite esperimenti appaiati con criteri di successo chiari. Proteggetevi da regressioni di latenza e costo per risposta grounded di successo—un retrieval più economico che forza cinque rigenerazioni non è più economico."
+          ]
+        },
+        {
+          "heading": "Operare il retrieval come una dipendenza di produzione",
+          "paragraphs": [
+            "Freschezza dell'indice, filtri di permesso e tassi di risultato vuoto appartengono allo stesso dashboard della disponibilità API. Un calo silenzioso di recall dopo un cambio crawler o ACL è un incidente di prodotto, anche se il modello produce ancora prosa sicura di sé.",
+            "Le vanity metric fanno sentire i team impegnati. Le metriche utili fanno decidere: shippare, fare rollback o investire in contenuto e chunking. Quella qualità decisionale è il punto di misurare il retrieval."
+          ],
+          "links": [
+            {
+              "label": "NIST — AI RMF",
+              "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+            },
+            {
+              "label": "OpenAI — Evaluation best practices",
+              "url": "https://platform.openai.com/docs/guides/evaluation"
+            },
+            {
+              "label": "Anthropic — Measuring faithfulness",
+              "url": "https://www.anthropic.com/research"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "不用虚荣指标衡量检索质量",
+      "excerpt": "向量相似度与演示点击不能证明检索对用户有帮助。衡量任务成功、有依据回答率，以及本应返回空的 hard negative。",
+      "description": "检索质量的 Staff 手册：离线标注、在线任务指标、正确弃答、分片评估，以及避开虚荣 RAG 看板。",
+      "sections": [
+        {
+          "heading": "相似不等于有用",
+          "paragraphs": [
+            "查询与 chunk 的余弦相似度只说明索引在向量空间取回了附近的东西。它不说明 chunk 是否含有完成用户任务所需的事实、引用是否忠实，或系统是否本应什么都不取。只优化相似度会奖励流畅的无关。",
+            "Staff 级度量从产品承诺出发。若功能声称基于你们语料的有依据回答，指标是在真实查询下的正确 grounding——不是 notebook 里近邻有多好看。"
+          ]
+        },
+        {
+          "heading": "构建能让你失败的评估集",
+          "paragraphs": [
+            "用期望文档 ID 或回答属性标注查询集，并包含对抗用例：同义词、过时实体、部分标识符、多语表述，以及答案不存在的问题。跟踪必找文档的 recall@k、引用 precision，以及本应无匹配时的弃答准确率。",
+            "随产品变化刷新集合。上线周冻结的金标集在内容与用户语言漂移后会变成虚荣。把数据集与索引、切块策略一起版本化，以便归因回归。"
+          ],
+          "points": [
+            "按分片报告指标：租户、语言、内容类型与风险层级",
+            "每个发布门禁都包含「应检索为空」用例",
+            "把离线分数与生产样本的人工审阅配对",
+            "事故复盘中把检索失败与生成失败分开"
+          ]
+        },
+        {
+          "heading": "在线指标必须连到结果",
+          "paragraphs": [
+            "度量用户在 AI 回答后是否完成工作、多久重新生成、升级到搜索或支持，或修正引用。风格化回答的高点赞可与事实错误时工单上升并存。宁可要结果挂钩比率，也不要孤立的互动虚荣。",
+            "更改切块、嵌入或重排时，用清晰成功标准做配对实验。防范延迟与每次成功有依据回答成本的回归——逼出五次重新生成的更便宜检索并不更便宜。"
+          ]
+        },
+        {
+          "heading": "把检索当作生产依赖来运营",
+          "paragraphs": [
+            "索引新鲜度、权限过滤与空结果率应与 API 可用性同看板。爬虫或 ACL 变更后 recall 静默下降是产品事故，即使模型仍产出自信散文。",
+            "虚荣指标让团队感觉忙碌。有用指标让团队决策：上线、回滚，或投资内容与切块。这种决策质量才是衡量检索的意义。"
+          ],
+          "links": [
+            {
+              "label": "NIST — AI RMF",
+              "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+            },
+            {
+              "label": "OpenAI — Evaluation best practices",
+              "url": "https://platform.openai.com/docs/guides/evaluation"
+            },
+            {
+              "label": "Anthropic — Measuring faithfulness",
+              "url": "https://www.anthropic.com/research"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "虚栄指標なしで検索品質を測る",
+      "excerpt": "埋め込み類似度とデモのクリックは、検索がユーザーの助けになっていることを証明しません。タスク成功、根拠付き回答率、何も返すべきハードネガティブを測ってください。",
+      "description": "検索品質のスタッフ向けプレイブック：オフラインラベル、オンラインタスク指標、正しい棄権、スライス評価、虚栄RAGダッシュボードの回避。",
+      "sections": [
+        {
+          "heading": "類似は有用ではない",
+          "paragraphs": [
+            "クエリとチャンクのコサイン類似度は、インデックスがベクトル空間で近いものを取ったとしか言いません。チャンクがユーザータスク完了に必要な事実を含むか、引用が忠実か、システムが何も取るべきでなかったかは言いません。類似だけを最適化すると流暢な無関係を報います。",
+            "スタッフ級の測定はプロダクト約束から始まります。機能がコーパスからの根拠付き回答を主張するなら、指標はノートブックの近傍の美しさではなく、現実的クエリ下の正しいグラウンディングです。"
+          ]
+        },
+        {
+          "heading": "あなたを失敗させうる評価セットを作る",
+          "paragraphs": [
+            "期待ドキュメントIDや回答属性でクエリセットをラベルし、敵対ケースも含めます：同義語、古いエンティティ、部分識別子、多言語表現、答えのない質問。必須ドキュメントのrecall@k、引用のprecision、何もマッチすべきでないときの棄権精度を追跡します。",
+            "プロダクトが変わるたびにセットを刷新します。ローンチ週の凍結ゴールデンセットは、コンテンツとユーザー言語がドリフトすると虚栄になります。回帰を帰属できるよう、データセットをインデックスとチャンク戦略と共に版管理します。"
+          ],
+          "points": [
+            "テナント・言語・コンテンツ種別・リスク階層でスライス報告する",
+            "各リリースゲートに「何も取得すべきでない」ケースを含める",
+            "オフラインスコアを本番サンプルの人手レビューと組む",
+            "インシデントレビューで検索失敗と生成失敗を分ける"
+          ]
+        },
+        {
+          "heading": "オンライン指標は成果に結びつく必要がある",
+          "paragraphs": [
+            "AI回答後にユーザーが仕事を終えるか、再生成の頻度、検索やサポートへのエスカレーション、引用訂正を計測します。文体への高評価は、事実が誤っているときのチケット増と共存し得ます。孤立したエンゲージメント虚栄より成果連動率を好みます。",
+            "チャンク、埋め込み、リランカーを変えるときは、明確な成功基準でペア実験を回します。レイテンシと成功した根拠付き回答あたりコストの回帰を防ぎます—五回の再生成を強いる安い検索は安くありません。"
+          ]
+        },
+        {
+          "heading": "検索を本番依存として運用する",
+          "paragraphs": [
+            "インデックス鮮度、権限フィルタ、空結果率はAPI可用性と同じダッシュボードに属します。クローラやACL変更後のサイレントなrecall低下は、モデルが自信ある散文を出していてもプロダクトインシデントです。",
+            "虚栄指標はチームを忙しそうに見せます。有用な指標は決定させます：出す、戻す、またはコンテンツとチャンクに投資する。その決定品質こそ検索を測る意味です。"
+          ],
+          "links": [
+            {
+              "label": "NIST — AI RMF",
+              "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+            },
+            {
+              "label": "OpenAI — Evaluation best practices",
+              "url": "https://platform.openai.com/docs/guides/evaluation"
+            },
+            {
+              "label": "Anthropic — Measuring faithfulness",
+              "url": "https://www.anthropic.com/research"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

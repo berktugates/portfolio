@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"release-trains-for-ai-assisted-products": {
+    title: "Yapay Zeka Destekli Ürünler için Release Train'ler",
+    excerpt: "Yapay zeka özellikleri haftalık değişir. Release train, model ve değerlendirme değişikliklerini öngörülebilir bir ritme bağlar; her prompt düzenlemesini acil deploy'a çevirmez.",
+    description: "Staff mühendisler yapay zeka destekli ürünlerde release train'i nasıl kurar: sabit cadence, değerlendirme kapıları, model ve prompt sürümleme, kill switch ve ürün-platform koordinasyonu.",
+    sections: [
+      {
+        heading: "Haftalık model değişikliği bir yayın süreci değildir",
+        paragraphs: [
+          "Yapay zeka destekli ürünler aynı anda üç yönden değişir: ürün davranışı, model sağlayıcı varsayılanları ve kalitenin kabul edilebilir olup olmadığına karar veren değerlendirme paketleri. Bunların her birini ad-hoc hotfix gibi ele alan ekipler, 'AI yayınlamak'ı mühendisler için sürekli kesinti kuyruğuna ve destek için sürekli sürprize dönüştürür.",
+          "Release train panzehiridir. Öğrenmeyi yavaşlatmaz; değişikliği öngörülebilir bir pencereye toplar ki ürün, platform, güven ve destek hazırlanabilsin. Tren, her ticket hazır olmasa da saatinde kalkar. Eksik iş plansız deploy zorlamak yerine bir sonraki kalkışı bekler.",
+        ],
+      },
+      {
+        heading: "Üç yüzeyi birlikte sürümleyin",
+        paragraphs: [
+          "Promptlar, retrieval yapılandırması, araç şemaları ve değerlendirme fixture'ları tek bir sistemdir. Özelliklerini kanıtlayan suite olmadan prompt yayınlamak iterasyon değil; ölçülmemiş risktir. Aynı şekilde maliyet, gecikme ve red davranışını sabitlemeden model sürümü yükseltmek, sağlayıcı changelog'larını üretim olayına çevirir.",
+          "Model route, prompt paketi, retrieval indeks revizyonu ve eval suite hash'ini adlandıran tek bir yayın artefaktı tutun. Canary'ye giren, geri alınan ve postmortem'de tartışılan budur. Kötü bir yanıt için bu dört değeri yeniden kuramıyorsanız yayın süreciniz yoktur.",
+        ],
+        points: [
+          "Model ID ve temperature sabitleyin; 'latest' ile yayınlamayın",
+          "Promptları golden case ve grader'larla birlikte sürümleyin",
+          "Her trende retrieval indeks ve tool schema revizyonunu kaydedin",
+          "Eval deltası olmadan AI davranışını değiştiren merge'leri reddedin",
+        ],
+      },
+      {
+        heading: "Kapılar demo cilasını değil ürün riskini yansıtmalı",
+        paragraphs: [
+          "Yalnızca modelin hâlâ yanıt verdiğini kontrol eden tren tiyatrodur. Kullanıcıların ve işin kaybedemeyeceği özelliklere kapı koyun: bilgi özellikleri için groundedness, yapılandırılmış çıktılar için şema geçerliliği, yüksek riskli niyetler için politika redleri, başarılı sonuç başına maliyet ve gerçekçi yük altında p95 gecikme.",
+          "Trendeki özellikleri risk katmanına ayırın. Taslak yardımcıları daha yumuşak bar ve geniş canary tolere eder. Müşteri verisine yazan, para harcayan veya dış mesaj gönderen eylemler daha sıkı eval, daha küçük açılış adımları ve açık insan go/no-go ister. Takvim ortaktır; bar ortak değildir.",
+        ],
+      },
+      {
+        heading: "İnsanları cadence etrafında koordine edin",
+        paragraphs: [
+          "Release train yalnızca mühendislik ritüeli olup ürün karşılığı yoksa başarısız olur. Kalkış takvimini yayınlayın, yüksek riskli özellikler için freeze pencereleri tanımlayın ve desteğe kullanıcı için neyin değiştiğine dair kısa brifing verin. AI regresyonları çoğu zaman 'deploy başarısız' değil 'ürün kötüleşti' gibi görünür; iletişim güvenilirliğin parçasıdır.",
+          "Treni sağlayıcı kaynaklı değişikliği emmek için de kullanın. Model satıcısı varsayılanları güncellediğinde gece yarısı hot-patch yerine bir sonraki trende uyarlayın. Staff seviyesindeki sonuç öngörülebilirliktir: daha az acil deploy, net sahiplik ve her prompt düzenlemesinde markayı riske atmadan haftalık ilerleme.",
+        ],
+        links: [
+          {
+            label: "Google SRE — Continuous Delivery",
+            url: "https://sre.google/workbook/continuous-delivery/",
+          },
+          {
+            label: "LaunchDarkly — Progressive delivery overview",
+            url: "https://docs.launchdarkly.com/guides/progressive-delivery",
+          },
+          {
+            label: "OpenAI — Production best practices",
+            url: "https://platform.openai.com/docs/guides/production-best-practices",
+          },
+        ],
+      },
+    ],
+  },
   "ai-crawler-control-is-now-web-infrastructure": {
     title: "AI Crawler Kontrolü Artık Web Altyapısıdır",
     excerpt: "AI crawler politikası robots.txt içindeki küçük bir nottan; görünürlük, maliyet, lisanslama ve güven için üretim kontrol düzlemine dönüştü.",

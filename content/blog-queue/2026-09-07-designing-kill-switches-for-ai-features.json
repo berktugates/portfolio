@@ -1,0 +1,401 @@
+{
+  "slug": "designing-kill-switches-for-ai-features",
+  "title": "Designing Kill Switches for AI Features",
+  "excerpt": "If you cannot disable an AI capability within minutes without taking down the product, you are not ready to expose it to irreversible actions.",
+  "description": "How to design kill switches for AI features: blast-radius scopes, soft degrade versus hard stop, propagation SLAs, tripwires, and user-facing fallbacks that preserve critical work.",
+  "readingMinutes": 7,
+  "keywords": [
+    "AI kill switch",
+    "feature flags",
+    "AI incident response",
+    "production AI",
+    "progressive delivery",
+    "LLM safety"
+  ],
+  "socialThreadTr": [
+    "AI özelliğini dakikalar içinde ürünü düşürmeden kapatamıyorsanız, geri dönüşsüz eylemlere açmaya hazır değilsiniz. Kill switch buton gizleme değil; yetenek yolunu kesmektir. 🧵",
+    "Kapsam, soft degrade, hard stop, SLA ve kullanıcı yolu birlikte tasarlanır. Detay: https://berktugberke.com/tr/blogs/designing-kill-switches-for-ai-features"
+  ],
+  "sections": [
+    {
+      "heading": "A flag is not a kill switch until it stops the blast radius",
+      "paragraphs": [
+        "Feature flags that only hide a button leave model calls, tool invocations, and queued side effects running. A true kill switch for AI features disables the capability path: no new generations, no tool writes, no outbound messages, and a deterministic product path that still lets users finish critical work.",
+        "Design the switch before launch, not during the first incident. Name the owner, the default safe state, the propagation SLA, and the user-facing copy when AI is off. If turning the switch requires a redeploy, you do not have a kill switch—you have a hope."
+      ]
+    },
+    {
+      "heading": "Scope by risk, not by vanity granularity",
+      "paragraphs": [
+        "Prefer a small number of well-tested switches over dozens of half-wired toggles. Useful scopes include: all AI for a tenant, a single high-stakes action type, model route A versus fallback B, and tool writes versus read-only assistance. Each switch should map to a clear blast radius you can explain in an incident channel.",
+        "Separate soft degrade from hard stop. Soft degrade may increase refusal rate, force retrieval-only answers, or route to a smaller model. Hard stop removes AI from the critical path entirely. Operators under stress need both, with defaults that fail toward safety for irreversible actions."
+      ],
+      "points": [
+        "Propagate kill state to edge, workers, and clients within a defined SLA",
+        "Make switches independent of the model provider status page",
+        "Keep a non-AI path for checkout, auth, and data export flows",
+        "Log who flipped what, when, and why for auditability"
+      ]
+    },
+    {
+      "heading": "Test the dark path like a release gate",
+      "paragraphs": [
+        "Staging should regularly run with AI killed. Verify empty states, support macros, analytics still make sense, and that in-flight jobs do not complete dangerous work after the switch flips. Chaos days that only test latency misses the failure mode customers actually fear: confident wrong actions.",
+        "Pair kill switches with automatic tripwires: cost burn, groundedness collapse, policy violation spikes, or elevated human escalation. Automation can propose or even execute a soft degrade; hard stops for customer-facing write actions usually deserve a human confirm unless the risk is catastrophic."
+      ]
+    },
+    {
+      "heading": "Communicate the outage as product, not apology spam",
+      "paragraphs": [
+        "When AI is off, say what still works and how to complete the task. Vague 'assistant unavailable' copy drives retries that hammer an already stressed system. Internal runbooks should include customer messaging, support scripts, and criteria for re-enabling after eval health returns.",
+        "Kill switches are staff-level infrastructure for AI products. They turn model uncertainty into an operable control plane: you can ship ambitious features because you can stop them cleanly when reality diverges from the demo."
+      ],
+      "links": [
+        {
+          "label": "LaunchDarkly — Kill switches",
+          "url": "https://docs.launchdarkly.com/guides/flags/kill-switch"
+        },
+        {
+          "label": "Google SRE — Managing risk",
+          "url": "https://sre.google/sre-book/managing-risk/"
+        },
+        {
+          "label": "OWASP — LLM Top 10",
+          "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Yapay Zeka Özellikleri için Kill Switch Tasarımı",
+      "excerpt": "Geri dönüşsüz eylemlere açmadan önce, AI yeteneğini ürünü düşürmeden dakikalar içinde kapatabilmelisiniz.",
+      "description": "AI özellikleri için kill switch tasarımı: etki yarıçapı kapsamları, soft degrade ile hard stop, yayılım SLA'ları, tripwire'lar ve kritik işi koruyan kullanıcı fallback'leri.",
+      "sections": [
+        {
+          "heading": "Bayrak, patlama yarıçapını durdurana kadar kill switch değildir",
+          "paragraphs": [
+            "Yalnızca düğmeyi gizleyen feature flag'ler model çağrılarını, tool invocation'ları ve kuyruktaki yan etkileri çalıştırmaya devam eder. AI için gerçek kill switch yetenek yolunu keser: yeni üretim yok, tool yazması yok, dış mesaj yok ve kullanıcıların kritik işi bitirmesine izin veren deterministik ürün yolu.",
+            "Anahtarı ilk olay sırasında değil lansmandan önce tasarlayın. Sahibi, varsayılan güvenli durumu, yayılım SLA'sını ve AI kapalıyken kullanıcıya dönük metni adlandırın. Anahtarı çevirmek redeploy gerektiriyorsa kill switch'iniz yok—umudunuz var."
+          ]
+        },
+        {
+          "heading": "Vanity granülerlik değil riske göre kapsam",
+          "paragraphs": [
+            "Yarım bağlı onlarca toggle yerine az sayıda iyi test edilmiş anahtar tercih edin. Yararlı kapsamlar: bir tenant için tüm AI, tek bir yüksek riskli eylem tipi, model route A'ya karşı fallback B, tool yazmalarına karşı salt okunur yardım. Her anahtar, olay kanalında açıklayabileceğiniz net bir patlama yarıçapına map olmalıdır.",
+            "Soft degrade ile hard stop'u ayırın. Soft degrade red oranını artırabilir, yalnızca retrieval yanıtlarına zorlayabilir veya daha küçük modele yönlendirebilir. Hard stop AI'yı kritik yoldan tamamen çıkarır. Stres altındaki operatörler ikisine de ihtiyaç duyar; geri dönüşsüz eylemlerde varsayılan güvenlik yönüne fail eder."
+          ],
+          "points": [
+            "Kill durumunu edge, worker ve client'lara tanımlı SLA içinde yayın",
+            "Anahtarları model sağlayıcı status sayfasından bağımsız tut",
+            "Checkout, auth ve veri dışa aktarma için AI'sız yol koru",
+            "Kim neyi ne zaman neden çevirdiğini audit için logla"
+          ]
+        },
+        {
+          "heading": "Karanlık yolu yayın kapısı gibi test edin",
+          "paragraphs": [
+            "Staging düzenli olarak AI kapalı çalışmalıdır. Boş durumları, destek makro'larını, analitiğin hâlâ anlamlı olduğunu ve anahtar çevrildikten sonra uçuştaki job'ların tehlikeli işi tamamlamadığını doğrulayın. Yalnızca gecikmeyi test eden chaos günleri, müşterilerin gerçekten korktuğu başarısızlığı kaçırır: kendinden emin yanlış eylemler.",
+            "Kill switch'leri otomatik tripwire'larla eşleştirin: maliyet yanması, groundedness çöküşü, politika ihlali sıçramaları veya yükselen insan yükseltmesi. Otomasyon soft degrade önerebilir veya uygulayabilir; müşteriye dönük yazma eylemleri için hard stop genellikle felaket riski yoksa insan onayı hak eder."
+          ]
+        },
+        {
+          "heading": "Kesintiyi özür spam'i değil ürün olarak anlatın",
+          "paragraphs": [
+            "AI kapalıyken hâlâ neyin çalıştığını ve görevin nasıl tamamlanacağını söyleyin. Belirsiz 'asistan kullanılamıyor' metni, zaten stresli sistemi döven yeniden denemelere yol açar. İç runbook'lar müşteri mesajlaşması, destek script'leri ve eval sağlığı döndükten sonra yeniden açma kriterlerini içermelidir.",
+            "Kill switch'ler AI ürünleri için staff seviye altyapıdır. Model belirsizliğini işletilebilir bir kontrol düzlemine çevirirler: gerçeklik demodan saptığında temizce durabildiğiniz için iddialı özellikler yayınlayabilirsiniz."
+          ],
+          "links": [
+            {
+              "label": "LaunchDarkly — Kill switches",
+              "url": "https://docs.launchdarkly.com/guides/flags/kill-switch"
+            },
+            {
+              "label": "Google SRE — Managing risk",
+              "url": "https://sre.google/sre-book/managing-risk/"
+            },
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Kill-Switches für KI-Features gestalten",
+      "excerpt": "Wenn Sie eine KI-Fähigkeit nicht innerhalb von Minuten ohne Produktausfall deaktivieren können, sind Sie nicht bereit für irreversible Aktionen.",
+      "description": "Kill-Switches für KI-Features: Blast-Radius-Scopes, Soft Degrade vs. Hard Stop, Propagations-SLAs, Tripwires und nutzerseitige Fallbacks, die kritische Arbeit erhalten.",
+      "sections": [
+        {
+          "heading": "Ein Flag ist kein Kill-Switch, bis er den Blast Radius stoppt",
+          "paragraphs": [
+            "Feature Flags, die nur einen Button verstecken, lassen Modellaufrufe, Tool-Invocations und gequeuete Side Effects weiterlaufen. Ein echter Kill-Switch für KI deaktiviert den Capability-Pfad: keine neuen Generierungen, keine Tool-Writes, keine Outbound-Messages und ein deterministischer Produktpfad, der kritische Arbeit weiter ermöglicht.",
+            "Designen Sie den Switch vor dem Launch, nicht im ersten Incident. Benennen Sie Owner, sicheren Default, Propagations-SLA und nutzerseitigen Copy wenn KI aus ist. Braucht das Umschalten ein Redeploy, haben Sie keinen Kill-Switch—nur Hoffnung."
+          ]
+        },
+        {
+          "heading": "Scope nach Risiko, nicht nach Vanity-Granularität",
+          "paragraphs": [
+            "Lieber wenige gut getestete Switches als Dutzende halb verdrahteter Toggles. Nützliche Scopes: alle KI für einen Tenant, ein einzelner high-stakes Action-Typ, Model-Route A versus Fallback B, Tool-Writes versus read-only Assistance. Jeder Switch sollte auf einen klaren Blast Radius mappen, den Sie im Incident-Channel erklären können.",
+            "Trennen Sie Soft Degrade von Hard Stop. Soft Degrade kann Refusal-Rate erhöhen, retrieval-only Answers erzwingen oder auf ein kleineres Modell routen. Hard Stop entfernt KI vollständig vom kritischen Pfad. Gestresste Operatoren brauchen beides, mit Defaults die bei irreversiblen Aktionen zur Safety failen."
+          ],
+          "points": [
+            "Kill-State an Edge, Worker und Clients innerhalb definierter SLA propagieren",
+            "Switches unabhängig von der Provider-Statusseite halten",
+            "Non-AI-Pfad für Checkout, Auth und Data Export behalten",
+            "Wer was wann warum flipped hat für Audit loggen"
+          ]
+        },
+        {
+          "heading": "Den Dark Path wie ein Release-Gate testen",
+          "paragraphs": [
+            "Staging sollte regelmäßig mit getöteter KI laufen. Prüfen Sie Empty States, Support-Macros, sinnvolle Analytics und dass In-Flight-Jobs nach dem Flip keine gefährliche Arbeit abschließen. Chaos Days die nur Latenz testen verfehlen den Failure Mode den Kunden fürchten: selbstbewusste falsche Aktionen.",
+            "Koppeln Sie Kill-Switches mit automatischen Tripwires: Cost Burn, Groundedness-Collapse, Policy-Violation-Spikes oder erhöhte Human Escalation. Automation kann Soft Degrade vorschlagen oder ausführen; Hard Stops für kundennahe Writes verdienen meist Human Confirm—außer das Risiko ist katastrophal."
+          ]
+        },
+        {
+          "heading": "Den Ausfall als Produkt kommunizieren, nicht als Entschuldigungs-Spam",
+          "paragraphs": [
+            "Wenn KI aus ist, sagen Sie was noch funktioniert und wie die Aufgabe endet. Vages „Assistent nicht verfügbar“ treibt Retries die ein gestresstes System hämmern. Interne Runbooks brauchen Customer Messaging, Support Scripts und Kriterien zum Re-Enable nach Eval-Health.",
+            "Kill-Switches sind Staff-Infrastruktur für KI-Produkte. Sie machen Modell-Unsicherheit zu einer operable Control Plane: Sie können ambitionierte Features shippen, weil Sie sie sauber stoppen können wenn Realität und Demo divergieren."
+          ],
+          "links": [
+            {
+              "label": "LaunchDarkly — Kill switches",
+              "url": "https://docs.launchdarkly.com/guides/flags/kill-switch"
+            },
+            {
+              "label": "Google SRE — Managing risk",
+              "url": "https://sre.google/sre-book/managing-risk/"
+            },
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Concevoir des kill switches pour les fonctionnalités IA",
+      "excerpt": "Si vous ne pouvez pas désactiver une capacité IA en quelques minutes sans faire tomber le produit, vous n'êtes pas prêt pour des actions irréversibles.",
+      "description": "Kill switches pour features IA : portées de blast radius, soft degrade vs hard stop, SLA de propagation, tripwires et fallbacks utilisateur qui préservent le travail critique.",
+      "sections": [
+        {
+          "heading": "Un flag n'est un kill switch que lorsqu'il arrête le blast radius",
+          "paragraphs": [
+            "Les feature flags qui ne font que cacher un bouton laissent tourner appels modèle, invocations d'outils et side effects en file. Un vrai kill switch pour l'IA coupe le chemin de capacité : pas de nouvelles générations, pas d'écritures d'outils, pas de messages sortants, et un chemin produit déterministe qui laisse finir le travail critique.",
+            "Concevez le switch avant le lancement, pas pendant le premier incident. Nommez le owner, l'état sûr par défaut, le SLA de propagation et le copy utilisateur quand l'IA est off. Si basculer exige un redeploy, vous n'avez pas de kill switch—vous avez un espoir."
+          ]
+        },
+        {
+          "heading": "Porter par risque, pas par granularité de vanité",
+          "paragraphs": [
+            "Préférez peu de switches bien testés à des dizaines de toggles à moitié branchés. Portées utiles : toute l'IA pour un tenant, un seul type d'action à fort enjeu, route modèle A versus fallback B, écritures d'outils versus assistance en lecture seule. Chaque switch doit mapper un blast radius clair expliquable dans le canal d'incident.",
+            "Séparez soft degrade et hard stop. Soft degrade peut augmenter le taux de refus, forcer des réponses retrieval-only, ou router vers un plus petit modèle. Hard stop retire l'IA du chemin critique. Les opérateurs sous stress ont besoin des deux, avec des defaults qui failent vers la sécurité pour les actions irréversibles."
+          ],
+          "points": [
+            "Propager l'état kill vers edge, workers et clients dans un SLA défini",
+            "Rendre les switches indépendants de la page de statut du provider",
+            "Garder un chemin non-IA pour checkout, auth et export de données",
+            "Logger qui a basculé quoi, quand et pourquoi pour l'audit"
+          ]
+        },
+        {
+          "heading": "Tester le dark path comme une porte de release",
+          "paragraphs": [
+            "Le staging doit régulièrement tourner avec l'IA tuée. Vérifiez empty states, macros support, analytics encore sensées, et que les jobs in-flight ne terminent pas de travail dangereux après le flip. Les chaos days qui ne testent que la latence ratent le mode de panne que les clients craignent : des actions fausses et confiantes.",
+            "Associez kill switches et tripwires automatiques : cost burn, effondrement de groundedness, pics de violations de politique, ou escalade humaine élevée. L'automation peut proposer ou exécuter un soft degrade ; les hard stops pour écritures client méritent souvent une confirmation humaine sauf risque catastrophique."
+          ]
+        },
+        {
+          "heading": "Communiquer la panne comme produit, pas comme spam d'excuses",
+          "paragraphs": [
+            "Quand l'IA est off, dites ce qui marche encore et comment finir la tâche. Un copy vague « assistant indisponible » provoque des retries qui martèlent un système déjà stressé. Les runbooks internes doivent inclure messaging client, scripts support et critères de réactivation après retour de santé d'eval.",
+            "Les kill switches sont de l'infrastructure staff pour les produits IA. Ils transforment l'incertitude du modèle en plan de contrôle opérable : vous pouvez shipper des features ambitieuses parce que vous pouvez les arrêter proprement quand la réalité diverge de la démo."
+          ],
+          "links": [
+            {
+              "label": "LaunchDarkly — Kill switches",
+              "url": "https://docs.launchdarkly.com/guides/flags/kill-switch"
+            },
+            {
+              "label": "Google SRE — Managing risk",
+              "url": "https://sre.google/sre-book/managing-risk/"
+            },
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Progettare kill switch per le feature IA",
+      "excerpt": "Se non potete disabilitare una capacità IA in pochi minuti senza abbattere il prodotto, non siete pronti per azioni irreversibili.",
+      "description": "Kill switch per feature IA: scope di blast radius, soft degrade vs hard stop, SLA di propagazione, tripwire e fallback utente che preservano il lavoro critico.",
+      "sections": [
+        {
+          "heading": "Un flag non è un kill switch finché non ferma il blast radius",
+          "paragraphs": [
+            "I feature flag che nascondono solo un pulsante lasciano girare chiamate al modello, invocazioni tool e side effect in coda. Un vero kill switch per l'IA disabilita il percorso di capability: niente nuove generazioni, niente scritture tool, niente messaggi outbound e un percorso prodotto deterministico che lascia finire il lavoro critico.",
+            "Progettate lo switch prima del launch, non durante il primo incidente. Nominate owner, stato sicuro di default, SLA di propagazione e copy utente quando l'IA è off. Se girarlo richiede un redeploy, non avete un kill switch—avete una speranza."
+          ]
+        },
+        {
+          "heading": "Scope per rischio, non per granularità di vanità",
+          "paragraphs": [
+            "Preferite pochi switch ben testati a dozzine di toggle a metà collegati. Scope utili: tutta l'IA per un tenant, un singolo tipo di azione ad alto rischio, route modello A versus fallback B, scritture tool versus assistenza in sola lettura. Ogni switch deve mappare un blast radius chiaro spiegabile nel canale di incidente.",
+            "Separate soft degrade e hard stop. Soft degrade può alzare il tasso di rifiuto, forzare risposte solo retrieval o instradare a un modello più piccolo. Hard stop toglie l'IA dal percorso critico. Gli operatori sotto stress hanno bisogno di entrambi, con default che failano verso la sicurezza per azioni irreversibili."
+          ],
+          "points": [
+            "Propagare lo stato kill a edge, worker e client entro uno SLA definito",
+            "Rendere gli switch indipendenti dalla status page del provider",
+            "Mantenere un percorso non-IA per checkout, auth ed export dati",
+            "Loggare chi ha girato cosa, quando e perché per l'audit"
+          ]
+        },
+        {
+          "heading": "Testare il dark path come un gate di release",
+          "paragraphs": [
+            "Lo staging dovrebbe girare regolarmente con l'IA spenta. Verificate empty state, macro di support, analytics ancora sensate e che i job in-flight non completino lavoro pericoloso dopo il flip. I chaos day che testano solo la latenza mancano la failure mode che i clienti temono: azioni sbagliate e sicure di sé.",
+            "Abbinate kill switch e tripwire automatici: cost burn, crollo di groundedness, spike di violazioni di policy o escalation umana elevata. L'automazione può proporre o eseguire soft degrade; gli hard stop per scritture verso il cliente di solito meritano conferma umana salvo rischio catastrofico."
+          ]
+        },
+        {
+          "heading": "Comunicare l'outage come prodotto, non come spam di scuse",
+          "paragraphs": [
+            "Quando l'IA è off, dite cosa funziona ancora e come completare il task. Un copy vago «assistente non disponibile» spinge retry che martellano un sistema già stressato. I runbook interni devono includere messaging cliente, script di support e criteri di riabilitazione dopo il ritorno della salute di eval.",
+            "I kill switch sono infrastruttura staff per prodotti IA. Trasformano l'incertezza del modello in un piano di controllo operabile: potete shippare feature ambiziose perché potete fermarle in modo pulito quando la realtà diverge dalla demo."
+          ],
+          "links": [
+            {
+              "label": "LaunchDarkly — Kill switches",
+              "url": "https://docs.launchdarkly.com/guides/flags/kill-switch"
+            },
+            {
+              "label": "Google SRE — Managing risk",
+              "url": "https://sre.google/sre-book/managing-risk/"
+            },
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "为 AI 功能设计熔断开关",
+      "excerpt": "若无法在几分钟内关闭 AI 能力且不拖垮产品，就还没准备好把它暴露给不可逆操作。",
+      "description": "如何为 AI 功能设计熔断开关：爆炸半径范围、软降级与硬停止、传播 SLA、绊线，以及保留关键工作的用户侧降级。",
+      "sections": [
+        {
+          "heading": "在挡住爆炸半径之前，开关还不算熔断",
+          "paragraphs": [
+            "只藏按钮的功能开关仍会让模型调用、工具调用与排队副作用继续跑。真正的 AI 熔断会切断能力路径：不再生成、不再工具写入、不再外发消息，并保留让用户完成关键工作的确定性产品路径。",
+            "在上线前设计开关，而不是第一次事故时。写明负责人、默认安全态、传播 SLA，以及 AI 关闭时的用户文案。若拨动需要重新部署，你没有熔断——只有希望。"
+          ]
+        },
+        {
+          "heading": "按风险定范围，不是按虚荣粒度",
+          "paragraphs": [
+            "宁可少量充分测试的开关，也不要几十个半接线的拨动。有用范围包括：某租户全部 AI、单一高风险动作类型、模型路由 A 对回退 B、工具写入对只读协助。每个开关应映射到事故频道里能说清的爆炸半径。",
+            "区分软降级与硬停止。软降级可提高拒答率、强制仅检索回答，或切到更小模型。硬停止把 AI 完全移出关键路径。压力下的值班需要两者；对不可逆动作，默认应偏向安全失败。"
+          ],
+          "points": [
+            "在约定 SLA 内把熔断状态传播到边缘、worker 与客户端",
+            "让开关独立于模型供应商状态页",
+            "为结账、认证与数据导出保留非 AI 路径",
+            "记录谁在何时因何拨动了什么，便于审计"
+          ]
+        },
+        {
+          "heading": "把暗路径当发布门禁来测",
+          "paragraphs": [
+            "预发环境应定期在 AI 关闭下运行。验证空状态、支持宏、分析仍合理，以及开关拨动后在途任务不会完成危险工作。只测延迟的混沌日，错过了客户真正害怕的失败模式：自信的错误动作。",
+            "把熔断与自动绊线配对：成本燃烧、grounding 崩塌、策略违规飙升或人工升级升高。自动化可提议甚至执行软降级；面向客户的写入硬停止通常需要人工确认，除非风险是灾难级。"
+          ]
+        },
+        {
+          "heading": "把中断当作产品沟通，而不是道歉刷屏",
+          "paragraphs": [
+            "AI 关闭时，说明仍可用什么以及如何完成任务。含糊的「助手不可用」会驱动重试，冲击已承压系统。内部 runbook 应包含客户话术、支持脚本，以及评估健康恢复后重新开启的标准。",
+            "熔断是 AI 产品的 staff 级基础设施。它把模型不确定性变成可运营的控制面：因为现实偏离演示时能干净停下，你才能上线大胆功能。"
+          ],
+          "links": [
+            {
+              "label": "LaunchDarkly — Kill switches",
+              "url": "https://docs.launchdarkly.com/guides/flags/kill-switch"
+            },
+            {
+              "label": "Google SRE — Managing risk",
+              "url": "https://sre.google/sre-book/managing-risk/"
+            },
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "AI機能のキルスイッチを設計する",
+      "excerpt": "製品を落とさずに数分でAI能力を無効化できないなら、不可逆アクションにさらす準備はできていません。",
+      "description": "AI機能のキルスイッチ設計：ブラスト半径のスコープ、ソフト劣化とハード停止、伝播SLA、トリップワイヤ、重要作業を守るユーザー向けフォールバック。",
+      "sections": [
+        {
+          "heading": "ブラスト半径を止めるまでフラグはキルスイッチではない",
+          "paragraphs": [
+            "ボタンを隠すだけのフィーチャーフラグは、モデル呼び出し、ツール実行、キュー済み副作用を動かしたままにします。AIの真のキルスイッチは能力パスを止めます：新規生成なし、ツール書き込みなし、外向きメッセージなし、そして重要作業を終えられる決定的なプロダクト経路。",
+            "最初のインシデント中ではなくローンチ前にスイッチを設計します。オーナー、安全なデフォルト、伝播SLA、AIオフ時のユーザー向け文面を名付けます。切り替えに再デプロイが必要なら、キルスイッチではなく希望しかありません。"
+          ]
+        },
+        {
+          "heading": "虚栄の粒度ではなくリスクでスコープする",
+          "paragraphs": [
+            "半配線のトグルを何十個も持つより、少数の十分テストされたスイッチを好みます。有用なスコープ：テナントの全AI、単一の高リスクアクション種別、モデルルートA対フォールバックB、ツール書き込み対読み取り専用支援。各スイッチはインシデントチャンネルで説明できる明確なブラスト半径に対応すべきです。",
+            "ソフト劣化とハード停止を分けます。ソフト劣化は拒否率を上げ、検索のみの回答を強制し、より小さいモデルへ回せます。ハード停止はAIを重要経路から完全に外します。ストレス下の運用者には両方が必要で、不可逆アクションでは安全側にフェイルするデフォルトにします。"
+          ],
+          "points": [
+            "定義したSLA内でキル状態をエッジ・ワーカー・クライアントへ伝播",
+            "スイッチをモデル提供者のステータスページから独立させる",
+            "チェックアウト・認証・データエクスポートに非AI経路を残す",
+            "誰が何をいつなぜ切り替えたかを監査用にログ"
+          ]
+        },
+        {
+          "heading": "ダークパスをリリースゲートのようにテストする",
+          "paragraphs": [
+            "ステージングは定期的にAIを殺した状態で動かすべきです。空状態、サポートマクロ、分析が意味をなすこと、スイッチ後に進行中ジョブが危険な作業を完了しないことを確認します。レイテンシだけを見るカオスデーは、顧客が本当に恐れる失敗モード—自信のある誤アクション—を見逃します。",
+            "キルスイッチを自動トリップワイヤと組み合わせます：コスト燃焼、グラウンディング崩壊、ポリシー違反スパイク、人的エスカレーション上昇。自動化はソフト劣化を提案・実行でき、顧客向け書き込みのハード停止は、破局リスクでない限り人の確認を要することが多いです。"
+          ]
+        },
+        {
+          "heading": "障害を謝罪スパムではなくプロダクトとして伝える",
+          "paragraphs": [
+            "AIがオフのとき、何がまだ動き、タスクをどう終えるかを言います。曖昧な「アシスタント利用不可」は、すでに逼迫したシステムを叩く再試行を生みます。内部ランブックは顧客メッセージ、サポートスクリプト、評価健全性復帰後の再有効化基準を含めるべきです。",
+            "キルスイッチはAIプロダクトのスタッフ級インフラです。モデルの不確実性を運用可能なコントロールプレーンに変え、現実がデモから逸れたときにきれいに止められるからこそ、野心的な機能を出せます。"
+          ],
+          "links": [
+            {
+              "label": "LaunchDarkly — Kill switches",
+              "url": "https://docs.launchdarkly.com/guides/flags/kill-switch"
+            },
+            {
+              "label": "Google SRE — Managing risk",
+              "url": "https://sre.google/sre-book/managing-risk/"
+            },
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

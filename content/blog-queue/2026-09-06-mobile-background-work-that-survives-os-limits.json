@@ -1,0 +1,401 @@
+{
+  "slug": "mobile-background-work-that-survives-os-limits",
+  "title": "Mobile Background Work That Survives OS Limits",
+  "excerpt": "Background sync is not a forever daemon. Design mobile work around OS budgets, deferrable tasks, and user-visible outcomes that still complete when the app is frozen.",
+  "description": "Staff-level patterns for mobile background work under iOS and Android limits: WorkManager and BGTaskScheduler, constrained sync, push-driven wakeups, and resilient offline queues.",
+  "readingMinutes": 7,
+  "keywords": [
+    "mobile background tasks",
+    "WorkManager",
+    "BGTaskScheduler",
+    "offline sync",
+    "iOS Android",
+    "mobile architecture"
+  ],
+  "socialThreadTr": [
+    "Mobil arka plan işi sonsuz daemon değil; OS bütçesine, ertelenebilir göreve ve uygulama donduğunda bile tamamlanan kullanıcı sonucuna göre tasarlanır. 🧵",
+    "Kuyrukla, kısıtla, gözlemle, kullanıcıya görünür hale getir. Detay: https://berktugberke.com/tr/blogs/mobile-background-work-that-survives-os-limits"
+  ],
+  "sections": [
+    {
+      "heading": "The OS owns the clock, not your process",
+      "paragraphs": [
+        "Modern mobile platforms aggressively suspend apps to protect battery and privacy. Assuming a long-lived background process will finish uploads, sync CRM state, or process AI jobs is a design that works in the debugger and fails in the field. The durable unit of work is a queued job with constraints, not a hope that your process stays awake.",
+        "Treat background execution as a scarce budget granted under conditions: charging, unmetered network, idle device, or a push wakeup with a short window. Product features that require certainty—payment confirmation, critical message delivery—need a path that does not depend on opportunistic sync alone."
+      ]
+    },
+    {
+      "heading": "Queue locally, reconcile remotely",
+      "paragraphs": [
+        "Persist intended mutations on device with idempotency keys before the network round-trip. When the OS wakes the app, drain the queue under declared constraints and reconcile with server truth. Conflicts belong in product design: last-write-wins is a choice, not a default that should surprise users.",
+        "Separate user-initiated urgent work from deferrable maintenance. A photo the user just took may deserve an immediate upload attempt with a visible progress affordance. Nightly embedding refresh for an on-device search index can wait for Wi-Fi and charging. Mixing those priorities burns battery and trust."
+      ],
+      "points": [
+        "Use platform schedulers (WorkManager, BGTaskScheduler) instead of custom forever loops",
+        "Store job payloads and retry metadata in durable local storage",
+        "Bound retries with jitter; never spin on hard failures",
+        "Surface sync status in UI when user outcomes depend on it"
+      ]
+    },
+    {
+      "heading": "Push and short wakeups are features, not cheats",
+      "paragraphs": [
+        "Silent or data pushes can open a brief execution window for high-value sync, but platforms rate-limit abuse and users revoke notification permission. Design the happy path to work without push, then use push as acceleration. Document what happens if the wakeup never arrives.",
+        "For AI-assisted mobile features—transcription, summarization, retrieval—prefer on-device incremental work with explicit user initiation for expensive cloud calls. Background AI that surprises battery meters becomes a one-star review faster than a missing offline cache."
+      ]
+    },
+    {
+      "heading": "Measure completion, not just enqueue",
+      "paragraphs": [
+        "Instrument job age, success rate by constraint set, battery attribution where available, and user-visible staleness. A queue that grows while the app is backgrounded is an early warning that your constraints are too strict or your payloads too large.",
+        "Staff-level mobile architecture accepts OS limits as product requirements. The winning systems complete the work users care about within those limits, fail loudly when they cannot, and never pretend a suspended process is still serving the customer."
+      ],
+      "links": [
+        {
+          "label": "Android Developers — WorkManager",
+          "url": "https://developer.android.com/topic/libraries/architecture/workmanager"
+        },
+        {
+          "label": "Apple — BGTaskScheduler",
+          "url": "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler"
+        },
+        {
+          "label": "Apple — Background execution",
+          "url": "https://developer.apple.com/documentation/uikit/app_and_environment/scenes/preparing_your_ui_to_run_in_the_background"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "OS Limitlerinden Kurtulan Mobil Arka Plan İşi",
+      "excerpt": "Arka plan senkronizasyonu sonsuz bir daemon değildir. Mobil işi OS bütçelerine, ertelenebilir görevlere ve uygulama donduğunda bile tamamlanan kullanıcı sonuçlarına göre tasarlayın.",
+      "description": "iOS ve Android limitleri altında mobil arka plan işi için staff seviye kalıplar: WorkManager ve BGTaskScheduler, kısıtlı sync, push ile uyandırma ve dayanıklı çevrimdışı kuyruklar.",
+      "sections": [
+        {
+          "heading": "Saati OS yönetir, süreciniz değil",
+          "paragraphs": [
+            "Modern mobil platformlar pil ve gizliliği korumak için uygulamaları agresif şekilde askıya alır. Uzun ömürlü bir arka plan sürecinin yüklemeleri bitireceğini, CRM durumunu senkronize edeceğini veya AI işlerini işleyeceğini varsaymak debugger'da çalışıp sahada kırılan bir tasarımdır. Dayanıklı iş birimi uyanık kalma umudu değil; kısıtları olan kuyruklanmış bir job'dır.",
+            "Arka plan yürütmeyi koşullar altında verilen kıt bir bütçe gibi ele alın: şarj, ölçülmemiş ağ, boşta cihaz veya kısa pencereli push uyandırma. Kesinlik gerektiren özellikler—ödeme onayı, kritik mesaj teslimi—yalnızca fırsatçı sync'e bağlı olmayan bir yol ister."
+          ]
+        },
+        {
+          "heading": "Yerelde kuyruklayın, uzakta uzlaştırın",
+          "paragraphs": [
+            "Ağ gidiş-dönüşünden önce cihaz üzerinde idempotency anahtarlarıyla amaçlanan mutasyonları kalıcılaştırın. OS uygulamayı uyandırdığında bildirilen kısıtlar altında kuyruğu boşaltın ve sunucu gerçeğiyle uzlaştırın. Çatışmalar ürün tasarımına aittir: last-write-wins bir seçimdir, kullanıcıyı şaşırtması gereken bir varsayılan değil.",
+            "Kullanıcı başlatımlı acil işi ertelenebilir bakımdan ayırın. Kullanıcının az önce çektiği fotoğraf görünür ilerleme ile hemen yükleme denemesi hak edebilir. Cihaz içi arama indeksi için gece embedding yenilemesi Wi-Fi ve şarjı bekleyebilir. Bu öncelikleri karıştırmak hem pili hem güveni yakar."
+          ],
+          "points": [
+            "Özel sonsuz döngüler yerine platform scheduler'ları (WorkManager, BGTaskScheduler) kullanın",
+            "Job payload ve retry meta verisini dayanıklı yerel depoda saklayın",
+            "Retry'ları jitter ile sınırlayın; sert hatalarda dönmeyin",
+            "Kullanıcı sonucu buna bağlıysa sync durumunu UI'da gösterin"
+          ]
+        },
+        {
+          "heading": "Push ve kısa uyandırmalar hile değil özelliktir",
+          "paragraphs": [
+            "Sessiz veya data push yüksek değerli sync için kısa bir yürütme penceresi açabilir; ancak platformlar kötüye kullanımı sınırlar ve kullanıcılar bildirim iznini geri alır. Mutlu yolu push olmadan çalışacak şekilde tasarlayın; push'u hızlandırma olarak kullanın. Uyandırma hiç gelmezse ne olacağını belgelendirin.",
+            "AI destekli mobil özellikler—transkripsiyon, özetleme, retrieval—için pahalı bulut çağrılarını açık kullanıcı başlatımıyla, cihaz içi artımlı işi tercih edin. Pil sayacını şaşırtan arka plan AI, eksik çevrimdışı önbellekten daha hızlı bir yıldızlı yoruma dönüşür."
+          ]
+        },
+        {
+          "heading": "Yalnızca enqueue'u değil tamamlanmayı ölçün",
+          "paragraphs": [
+            "Job yaşını, kısıt setine göre başarı oranını, mümkünse pil atıfını ve kullanıcıya görünür bayatlığı ölçün. Uygulama arka plandayken büyüyen kuyruk, kısıtlarınızın çok sıkı veya payload'larınızın çok büyük olduğunun erken uyarısıdır.",
+            "Staff seviye mobil mimari OS limitlerini ürün gereksinimi olarak kabul eder. Kazanan sistemler kullanıcıların önemsediği işi bu limitler içinde tamamlar, yapamadığında sesli fail eder ve askıya alınmış bir sürecin hâlâ müşteriye hizmet ettiğini asla iddia etmez."
+          ],
+          "links": [
+            {
+              "label": "Android Developers — WorkManager",
+              "url": "https://developer.android.com/topic/libraries/architecture/workmanager"
+            },
+            {
+              "label": "Apple — BGTaskScheduler",
+              "url": "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler"
+            },
+            {
+              "label": "Apple — Background execution",
+              "url": "https://developer.apple.com/documentation/uikit/app_and_environment/scenes/preparing_your_ui_to_run_in_the_background"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Mobiler Hintergrundarbeit, die OS-Limits übersteht",
+      "excerpt": "Hintergrund-Sync ist kein ewiger Daemon. Gestalten Sie mobile Arbeit um OS-Budgets, aufschiebbare Tasks und nutzersichtbare Outcomes, die auch bei eingefrorener App abgeschlossen werden.",
+      "description": "Staff-Patterns für mobile Hintergrundarbeit unter iOS- und Android-Limits: WorkManager und BGTaskScheduler, eingeschränkter Sync, Push-Wakeups und robuste Offline-Queues.",
+      "sections": [
+        {
+          "heading": "Das OS besitzt die Uhr, nicht Ihr Prozess",
+          "paragraphs": [
+            "Moderne Mobile-Plattformen suspendieren Apps aggressiv, um Akku und Privatsphäre zu schützen. Die Annahme, ein langlebiger Hintergrundprozess werde Uploads beenden, CRM-State syncen oder AI-Jobs verarbeiten, funktioniert im Debugger und scheitert im Feld. Die dauerhafte Arbeitseinheit ist ein Queue-Job mit Constraints—nicht die Hoffnung, dass Ihr Prozess wach bleibt.",
+            "Behandeln Sie Background-Execution als knappes Budget unter Bedingungen: Laden, unmetered Network, Idle-Gerät oder Push-Wakeup mit kurzem Fenster. Features, die Sicherheit brauchen—Zahlungsbestätigung, kritische Nachrichtenzustellung—brauchen einen Pfad, der nicht allein von opportunistischem Sync abhängt."
+          ]
+        },
+        {
+          "heading": "Lokal queuen, remote reconcilen",
+          "paragraphs": [
+            "Persistieren Sie beabsichtigte Mutationen auf dem Gerät mit Idempotency Keys vor dem Network-Roundtrip. Wenn das OS die App weckt, leeren Sie die Queue unter deklarierten Constraints und reconcilen Sie mit Server-Truth. Konflikte gehören ins Produktdesign: Last-write-wins ist eine Wahl, kein Default, der Nutzer überraschen sollte.",
+            "Trennen Sie nutzerinitiierte dringende Arbeit von aufschiebbarer Wartung. Ein gerade aufgenommenes Foto verdient vielleicht einen sofortigen Upload-Versuch mit sichtbarem Progress. Nächtliche Embedding-Refresh für einen On-Device-Suchindex kann auf Wi-Fi und Laden warten. Diese Prioritäten zu mischen verbrennt Akku und Vertrauen."
+          ],
+          "points": [
+            "Platform-Scheduler (WorkManager, BGTaskScheduler) statt eigener Forever-Loops",
+            "Job-Payloads und Retry-Metadaten in durablem lokalem Storage speichern",
+            "Retries mit Jitter begrenzen; bei Hard Failures nicht spinnen",
+            "Sync-Status in der UI zeigen, wenn Nutzer-Outcomes davon abhängen"
+          ]
+        },
+        {
+          "heading": "Push und kurze Wakeups sind Features, keine Tricks",
+          "paragraphs": [
+            "Stille oder Data-Pushes können ein kurzes Ausführungsfenster für hochwertigen Sync öffnen, aber Plattformen rate-limiten Missbrauch und Nutzer widerrufen Notification-Permission. Designen Sie den Happy Path ohne Push, dann Push als Beschleunigung. Dokumentieren Sie, was passiert, wenn der Wakeup nie kommt.",
+            "Für AI-gestützte Mobile-Features—Transkription, Summarization, Retrieval—bevorzugen Sie on-device inkrementelle Arbeit mit expliziter Nutzerinitiation für teure Cloud-Calls. Hintergrund-AI, die Akkumeter überrascht, wird schneller zur Ein-Stern-Review als ein fehlender Offline-Cache."
+          ]
+        },
+        {
+          "heading": "Abschluss messen, nicht nur Enqueue",
+          "paragraphs": [
+            "Instrumentieren Sie Job-Alter, Erfolgsrate nach Constraint-Set, Battery-Attribution wo verfügbar und nutzersichtbare Staleness. Eine Queue, die wächst während die App im Hintergrund ist, warnt früh, dass Constraints zu streng oder Payloads zu groß sind.",
+            "Staff-Mobile-Architektur akzeptiert OS-Limits als Produktanforderungen. Gewinnende Systeme schließen die Arbeit ab, die Nutzern wichtig ist, failen laut wenn sie nicht können, und behaupten nie, ein suspendierter Prozess diene noch dem Kunden."
+          ],
+          "links": [
+            {
+              "label": "Android Developers — WorkManager",
+              "url": "https://developer.android.com/topic/libraries/architecture/workmanager"
+            },
+            {
+              "label": "Apple — BGTaskScheduler",
+              "url": "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler"
+            },
+            {
+              "label": "Apple — Background execution",
+              "url": "https://developer.apple.com/documentation/uikit/app_and_environment/scenes/preparing_your_ui_to_run_in_the_background"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Travail mobile en arrière-plan qui survit aux limites OS",
+      "excerpt": "La sync en arrière-plan n'est pas un daemon éternel. Concevez le travail mobile autour des budgets OS, des tâches différables et des résultats visibles qui se terminent même quand l'app est figée.",
+      "description": "Patterns staff pour le travail mobile en arrière-plan sous les limites iOS et Android : WorkManager et BGTaskScheduler, sync contrainte, wakeups push et files offline résilientes.",
+      "sections": [
+        {
+          "heading": "L'OS possède l'horloge, pas votre processus",
+          "paragraphs": [
+            "Les plateformes mobiles modernes suspendent agressivement les apps pour protéger batterie et vie privée. Supposer qu'un processus arrière-plan long-lived finira uploads, sync CRM ou jobs IA fonctionne dans le debugger et échoue sur le terrain. L'unité durable de travail est un job en file avec contraintes—pas l'espoir que votre processus reste éveillé.",
+            "Traitez l'exécution arrière-plan comme un budget rare accordé sous conditions : charge, réseau non compté, appareil idle, ou wakeup push avec fenêtre courte. Les features qui exigent de la certitude—confirmation de paiement, livraison de message critique—ont besoin d'un chemin qui ne dépend pas seulement de la sync opportuniste."
+          ]
+        },
+        {
+          "heading": "Mettre en file localement, réconcilier à distance",
+          "paragraphs": [
+            "Persistez les mutations prévues sur l'appareil avec des clés d'idempotence avant l'aller-retour réseau. Quand l'OS réveille l'app, videz la file sous les contraintes déclarées et réconciliez avec la vérité serveur. Les conflits appartiennent au design produit : last-write-wins est un choix, pas un défaut qui doit surprendre les utilisateurs.",
+            "Séparez le travail urgent initié par l'utilisateur de la maintenance différable. Une photo venant d'être prise peut mériter une tentative d'upload immédiate avec progrès visible. Un refresh nocturne d'embeddings pour un index de recherche on-device peut attendre Wi-Fi et charge. Mélanger ces priorités brûle batterie et confiance."
+          ],
+          "points": [
+            "Utiliser les schedulers plateforme (WorkManager, BGTaskScheduler) plutôt que des boucles forever custom",
+            "Stocker payloads de jobs et métadonnées de retry en stockage local durable",
+            "Borner les retries avec jitter ; ne jamais tourner en boucle sur les hard failures",
+            "Afficher le statut de sync dans l'UI quand les résultats utilisateur en dépendent"
+          ]
+        },
+        {
+          "heading": "Push et courts wakeups sont des features, pas des triches",
+          "paragraphs": [
+            "Les push silencieux ou data peuvent ouvrir une brève fenêtre d'exécution pour une sync à haute valeur, mais les plateformes limitent l'abus et les utilisateurs révoquent la permission de notification. Concevez le happy path sans push, puis utilisez le push comme accélération. Documentez ce qui se passe si le wakeup n'arrive jamais.",
+            "Pour les features mobiles assistées par IA—transcription, résumé, retrieval—préférez le travail incrémental on-device avec initiation utilisateur explicite pour les appels cloud coûteux. L'IA arrière-plan qui surprend le compteur batterie devient un avis une étoile plus vite qu'un cache offline manquant."
+          ]
+        },
+        {
+          "heading": "Mesurer l'achèvement, pas seulement l'enqueue",
+          "paragraphs": [
+            "Instrumentez l'âge des jobs, le taux de succès par jeu de contraintes, l'attribution batterie si disponible, et la staleness visible. Une file qui grandit pendant que l'app est en arrière-plan est un signal précoce que vos contraintes sont trop strictes ou vos payloads trop gros.",
+            "L'architecture mobile staff accepte les limites OS comme exigences produit. Les systèmes gagnants terminent le travail qui compte pour les utilisateurs dans ces limites, échouent bruyamment quand ils ne peuvent pas, et ne prétendent jamais qu'un processus suspendu sert encore le client."
+          ],
+          "links": [
+            {
+              "label": "Android Developers — WorkManager",
+              "url": "https://developer.android.com/topic/libraries/architecture/workmanager"
+            },
+            {
+              "label": "Apple — BGTaskScheduler",
+              "url": "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler"
+            },
+            {
+              "label": "Apple — Background execution",
+              "url": "https://developer.apple.com/documentation/uikit/app_and_environment/scenes/preparing_your_ui_to_run_in_the_background"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Lavoro in background mobile che sopravvive ai limiti OS",
+      "excerpt": "La sync in background non è un daemon eterno. Progettate il lavoro mobile intorno a budget OS, task differibili e outcome visibili che si completano anche quando l'app è congelata.",
+      "description": "Pattern staff per lavoro in background mobile sotto i limiti iOS e Android: WorkManager e BGTaskScheduler, sync vincolata, wakeup push e code offline resilienti.",
+      "sections": [
+        {
+          "heading": "L'OS possiede l'orologio, non il vostro processo",
+          "paragraphs": [
+            "Le piattaforme mobile moderne sospendono aggressivamente le app per proteggere batteria e privacy. Assumere che un processo background long-lived finisca upload, sync CRM o job IA funziona nel debugger e fallisce sul campo. L'unità durevole di lavoro è un job in coda con vincoli—non la speranza che il processo resti sveglio.",
+            "Trattate l'esecuzione in background come un budget scarso concesso sotto condizioni: carica, rete non a consumo, dispositivo idle o wakeup push con finestra breve. Le feature che richiedono certezza—conferma pagamento, consegna messaggio critica—hanno bisogno di un percorso che non dipenda solo dalla sync opportunistica."
+          ]
+        },
+        {
+          "heading": "Accodare in locale, riconciliare da remoto",
+          "paragraphs": [
+            "Persistete le mutazioni intese sul dispositivo con chiavi di idempotenza prima del round-trip di rete. Quando l'OS sveglia l'app, svuotate la coda sotto i vincoli dichiarati e riconciliate con la verità server. I conflitti appartengono al design di prodotto: last-write-wins è una scelta, non un default che deve sorprendere gli utenti.",
+            "Separate il lavoro urgente iniziato dall'utente dalla manutenzione differibile. Una foto appena scattata può meritare un tentativo di upload immediato con progresso visibile. Il refresh notturno di embedding per un indice di ricerca on-device può aspettare Wi-Fi e carica. Mischiare queste priorità brucia batteria e fiducia."
+          ],
+          "points": [
+            "Usare gli scheduler di piattaforma (WorkManager, BGTaskScheduler) invece di loop forever custom",
+            "Memorizzare payload dei job e metadati di retry in storage locale durevole",
+            "Limitare i retry con jitter; non girare su hard failure",
+            "Mostrare lo stato di sync in UI quando gli outcome utente ne dipendono"
+          ]
+        },
+        {
+          "heading": "Push e brevi wakeup sono feature, non trucchi",
+          "paragraphs": [
+            "Push silenziosi o data possono aprire una breve finestra di esecuzione per sync ad alto valore, ma le piattaforme limitano l'abuso e gli utenti revocano il permesso di notifica. Progettate l'happy path senza push, poi usate il push come accelerazione. Documentate cosa succede se il wakeup non arriva mai.",
+            "Per feature mobile assistite da IA—trascrizione, summarization, retrieval—preferite lavoro incrementale on-device con inizio utente esplicito per chiamate cloud costose. L'IA in background che sorprende il contatore batteria diventa una recensione a una stella più in fretta di una cache offline mancante."
+          ]
+        },
+        {
+          "heading": "Misurate il completamento, non solo l'enqueue",
+          "paragraphs": [
+            "Strumentate età dei job, tasso di successo per set di vincoli, attribuzione batteria dove disponibile e staleness visibile. Una coda che cresce mentre l'app è in background è un allarme precoce che i vincoli sono troppo stretti o i payload troppo grandi.",
+            "L'architettura mobile staff accetta i limiti OS come requisiti di prodotto. I sistemi vincenti completano il lavoro che conta per gli utenti entro quei limiti, falliscono rumorosamente quando non possono e non fingono mai che un processo sospeso stia ancora servendo il cliente."
+          ],
+          "links": [
+            {
+              "label": "Android Developers — WorkManager",
+              "url": "https://developer.android.com/topic/libraries/architecture/workmanager"
+            },
+            {
+              "label": "Apple — BGTaskScheduler",
+              "url": "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler"
+            },
+            {
+              "label": "Apple — Background execution",
+              "url": "https://developer.apple.com/documentation/uikit/app_and_environment/scenes/preparing_your_ui_to_run_in_the_background"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "能在系统限制下存活的移动端后台任务",
+      "excerpt": "后台同步不是永久守护进程。围绕系统预算、可延迟任务，以及应用冻结后仍能完成的用户结果来设计移动端工作。",
+      "description": "在 iOS 与 Android 限制下做移动端后台任务的 Staff 级模式：WorkManager 与 BGTaskScheduler、带约束的同步、推送唤醒，以及可靠的离线队列。",
+      "sections": [
+        {
+          "heading": "时钟由系统掌握，不是你的进程",
+          "paragraphs": [
+            "现代移动平台会积极挂起应用以保护电池与隐私。假设长生命周期后台进程能完成上传、同步 CRM 状态或处理 AI 任务，这种设计在调试器里成立、在现场失败。可靠的工作单元是带约束的排队任务，而不是希望进程一直醒着。",
+            "把后台执行当作在条件下授予的稀缺预算：充电、不计费网络、空闲设备，或带短窗口的推送唤醒。需要确定性的功能——支付确认、关键消息送达——需要不单靠机会主义同步的路径。"
+          ]
+        },
+        {
+          "heading": "本地排队，远端调和",
+          "paragraphs": [
+            "在网络往返前用幂等键把意图变更持久化到设备。当系统唤醒应用时，在声明的约束下排空队列并与服务器真相调和。冲突属于产品设计：last-write-wins 是一种选择，不该成为让用户惊讶的默认。",
+            "把用户发起的紧急工作与可延迟维护分开。用户刚拍的照片可能值得立即上传并显示进度。设备端搜索索引的夜间 embedding 刷新可以等 Wi‑Fi 与充电。混在一起会烧掉电量和信任。"
+          ],
+          "points": [
+            "用平台调度器（WorkManager、BGTaskScheduler）而不是自定义死循环",
+            "把任务载荷与重试元数据存入持久本地存储",
+            "用抖动限制重试；硬失败时不要空转",
+            "当用户结果依赖同步时，在 UI 中展示同步状态"
+          ]
+        },
+        {
+          "heading": "推送与短唤醒是功能，不是作弊",
+          "paragraphs": [
+            "静默或数据推送可为高价值同步打开短暂执行窗口，但平台会限流滥用，用户也会撤销通知权限。把幸福路径设计成不依赖推送，再用推送加速。记录若唤醒永不到来会发生什么。",
+            "对 AI 辅助移动功能——转写、摘要、检索——优先设备端增量工作，昂贵云调用需明确用户发起。让电量表吃惊的后台 AI，比缺失离线缓存更快变成一星评价。"
+          ]
+        },
+        {
+          "heading": "度量完成，而不只是入队",
+          "paragraphs": [
+            "度量任务年龄、按约束集的成功率、可用时的电池归因，以及用户可见的陈旧度。应用在后台时队列仍在增长，是约束过严或载荷过大的早期警告。",
+            "Staff 级移动架构把系统限制当作产品需求。赢家在限制内完成用户在意的工作，做不到时大声失败，且从不假装已挂起的进程仍在服务客户。"
+          ],
+          "links": [
+            {
+              "label": "Android Developers — WorkManager",
+              "url": "https://developer.android.com/topic/libraries/architecture/workmanager"
+            },
+            {
+              "label": "Apple — BGTaskScheduler",
+              "url": "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler"
+            },
+            {
+              "label": "Apple — Background execution",
+              "url": "https://developer.apple.com/documentation/uikit/app_and_environment/scenes/preparing_your_ui_to_run_in_the_background"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "OS制限を生き抜くモバイルのバックグラウンド処理",
+      "excerpt": "バックグラウンド同期は永遠のデーモンではありません。OS予算、延期可能なタスク、アプリが凍結しても完了するユーザー成果の周りにモバイル作業を設計します。",
+      "description": "iOSとAndroidの制限下でのモバイル・バックグラウンド作業のスタッフ級パターン：WorkManagerとBGTaskScheduler、制約付き同期、プッシュ起動、耐障害なオフラインキュー。",
+      "sections": [
+        {
+          "heading": "時計を持つのはOSであり、プロセスではない",
+          "paragraphs": [
+            "現代のモバイル基盤はバッテリーとプライバシーを守るためアプリを積極的にサスペンドします。長寿命のバックグラウンドプロセスがアップロードを終え、CRM状態を同期し、AIジョブを処理すると仮定する設計は、デバッガでは動き現場で壊れます。耐久する作業単位は起き続ける希望ではなく、制約付きのキュージョブです。",
+            "バックグラウンド実行を、充電・非従量ネットワーク・アイドル端末・短い窓のプッシュ起動といった条件下で与えられる希少な予算として扱います。確実性が必要な機能—支払い確認、重要メッセージ配信—は、機会的同期だけに依存しない経路が必要です。"
+          ]
+        },
+        {
+          "heading": "ローカルでキューし、リモートで調停する",
+          "paragraphs": [
+            "ネットワーク往復の前に、意図した変更を冪等キー付きで端末に永続化します。OSがアプリを起こしたら、宣言した制約の下でキューを排水し、サーバーの真実と調停します。衝突はプロダクト設計に属します：last-write-winsは選択であり、ユーザーを驚かせるべきデフォルトではありません。",
+            "ユーザー起動の緊急作業と延期可能な保守を分けます。今撮った写真は可視の進捗付きで即時アップロード試行に値するかもしれません。オンデバイス検索インデックスの夜間埋め込み更新はWi‑Fiと充電を待てます。優先度を混ぜるとバッテリーと信頼を燃やします。"
+          ],
+          "points": [
+            "自前の永久ループではなくプラットフォームスケジューラ（WorkManager、BGTaskScheduler）を使う",
+            "ジョブのペイロードと再試行メタデータを耐久ローカルストレージに保存",
+            "ジッター付きで再試行を上限し、硬失敗で回し続けない",
+            "ユーザー成果が依存するならUIに同期状態を出す"
+          ]
+        },
+        {
+          "heading": "プッシュと短い起床は機能であり、抜け道ではない",
+          "paragraphs": [
+            "サイレントやデータプッシュは高価値同期の短い実行窓を開けますが、基盤は乱用をレート制限し、ユーザーは通知権限を取り消します。プッシュなしでハッピーパスを設計し、プッシュは加速として使います。起床が来ない場合に何が起きるかを文書化します。",
+            "AI支援モバイル機能—書き起こし、要約、検索—では、高コストなクラウド呼び出しは明示的なユーザー開始とし、オンデバイスの増分作業を優先します。バッテリー計を驚かせるバックグラウンドAIは、欠けたオフラインキャッシュより早く★1レビューになります。"
+          ]
+        },
+        {
+          "heading": "エンキューだけでなく完了を測る",
+          "paragraphs": [
+            "ジョブ年齢、制約セット別成功率、可能ならバッテリー帰属、ユーザーに見える陳腐化を計測します。アプリがバックグラウンドの間にキューが伸びるのは、制約が厳しすぎるかペイロードが大きすぎる早期警告です。",
+            "スタッフ級モバイルアーキテクチャはOS制限をプロダクト要件として受け入れます。勝つシステムはユーザーが気にかける仕事をその制限内で完了し、できないときは大きく失敗し、サスペンドされたプロセスがまだ顧客に奉仕しているとは決して装いません。"
+          ],
+          "links": [
+            {
+              "label": "Android Developers — WorkManager",
+              "url": "https://developer.android.com/topic/libraries/architecture/workmanager"
+            },
+            {
+              "label": "Apple — BGTaskScheduler",
+              "url": "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler"
+            },
+            {
+              "label": "Apple — Background execution",
+              "url": "https://developer.apple.com/documentation/uikit/app_and_environment/scenes/preparing_your_ui_to_run_in_the_background"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

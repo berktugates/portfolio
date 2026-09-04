@@ -98,22 +98,51 @@ export async function BlogDetailPage({
   });
   const formattedDate = dateFormatter.format(new Date(post.publishedAt));
 
+  const blogsPath = blogsIndexPath(locale);
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "@id": `${absoluteUrl(path)}#article`,
-    headline: post.title,
-    description: post.description,
-    image: absoluteUrl("/opengraph-image"),
-    datePublished: post.publishedAt,
-    dateModified: post.publishedAt,
-    mainEntityOfPage: { "@type": "WebPage", "@id": absoluteUrl(path) },
-    isPartOf: { "@id": WEBSITE_ID },
-    inLanguage: meta.htmlLang,
-    keywords: post.keywords,
-    timeRequired: `PT${post.readingMinutes}M`,
-    author: { "@id": AUTHOR_ID, "@type": "Person", name: SITE_NAME },
-    publisher: { "@id": AUTHOR_ID, "@type": "Person", name: SITE_NAME },
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${absoluteUrl(path)}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: SITE_NAME,
+            item: absoluteUrl(homeHref),
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: content.ui.blogs,
+            item: absoluteUrl(blogsPath),
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: post.title,
+            item: absoluteUrl(path),
+          },
+        ],
+      },
+      {
+        "@type": "BlogPosting",
+        "@id": `${absoluteUrl(path)}#article`,
+        headline: post.title,
+        description: post.description,
+        image: absoluteUrl("/opengraph-image"),
+        datePublished: post.publishedAt,
+        dateModified: post.publishedAt,
+        mainEntityOfPage: { "@type": "WebPage", "@id": absoluteUrl(path) },
+        isPartOf: { "@id": WEBSITE_ID },
+        inLanguage: meta.htmlLang,
+        keywords: post.keywords,
+        timeRequired: `PT${post.readingMinutes}M`,
+        author: { "@id": AUTHOR_ID, "@type": "Person", name: SITE_NAME },
+        publisher: { "@id": AUTHOR_ID, "@type": "Person", name: SITE_NAME },
+      },
+    ],
   };
 
   return (
