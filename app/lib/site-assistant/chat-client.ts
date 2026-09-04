@@ -27,7 +27,7 @@ export async function sendAssistantMessage(
   const apiUrl = getAssistantApiUrl();
 
   if (!apiUrl) {
-    return sanitizeAssistantReply(localAssistantReply(locale, trimmed), trimmed);
+    return sanitizeAssistantReply(localAssistantReply(locale, trimmed), trimmed, locale);
   }
 
   recordAssistantRequestSent();
@@ -47,7 +47,7 @@ export async function sendAssistantMessage(
   }
 
   if (!res.ok) {
-    return sanitizeAssistantReply(localAssistantReply(locale, trimmed), trimmed);
+    return sanitizeAssistantReply(localAssistantReply(locale, trimmed), trimmed, locale);
   }
 
   const data = (await res.json()) as { reply?: string; refused?: boolean };
@@ -56,9 +56,9 @@ export async function sendAssistantMessage(
   }
   const reply = data.reply?.trim();
   if (!reply) {
-    return sanitizeAssistantReply(localAssistantReply(locale, trimmed), trimmed);
+    return sanitizeAssistantReply(localAssistantReply(locale, trimmed), trimmed, locale);
   }
-  return sanitizeAssistantReply(reply, trimmed);
+  return sanitizeAssistantReply(reply, trimmed, locale);
 }
 
 export function trackAssistantEvent(

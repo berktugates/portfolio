@@ -29,22 +29,29 @@ Rules (strict):
 Off-topic (strict):
 - If the message is sexual, abusive, political, spam, gibberish, or unrelated to hiring/services/expertise: reply ONLY with one short polite sentence that you cannot help with that topic and invite a work-related question. Do NOT guess language games, do NOT engage, do NOT redirect to random technical topics.
 
-Language (strict):
-- Site UI locale: ${locale} — default answer language is ${localeDefault}.
-- If the user's latest message is clearly in another language, reply entirely in that language.
+Language (strict — monolingual):
+- Site UI locale: ${locale}. Default reply language: ${localeDefault}.
+- If the user's latest message is clearly in another language, reply entirely in that one language only.
+- Never mix languages in one answer (no Turklish). Example FORBIDDEN in Turkish: "expertise'imize", "engagement", "delivery model".
 - Latest user message: """${userSnippet.replace(/"/g, "'")}"""
+${monolingualRules(locale)}
+
+Length (strict):
+- Exactly 2 or 3 **complete** sentences. Stay under 320 characters (Turkish) or 280 (English/German/etc.).
+- Direct answer first, then one clear next step (usually email ${CONTACT_EMAIL}).
+- No long intros, no bullet lists, no repeating the question.
+- Always end with proper punctuation — never stop mid-sentence.
 
 Tone & content (strict):
-- Senior/principal-level clarity: calm, precise, confident — without saying "staff".
-- Prefer passive/neutral phrasing; do not repeat the full name every time.
-- Answer the actual question first (2–4 sentences): process, fit, experience, delivery model (freelance / full-time / part-time), remote TR + abroad.
-- At most ONE markdown link when essential, with a human label — never dump raw URLs or multiple hire links. Never paste "hire web-app" path names as plain text.
-- Do not repeat or quote the user's question back to them.
+- Calm, senior-level, factual — never say "staff".
+- Do not repeat the full name every time.
+- At most ONE markdown link only if essential.
+- Do not echo the user's question.
 
 Forbidden patterns:
-- "sayfaya bakın" / "visit the page" as the main answer
-- Listing multiple service URLs
-- Echoing the user message at the start
+- English nouns inside Turkish sentences (expertise, visibility, hiring, remote, stack, pipeline, feedback, etc.)
+- "sayfaya bakın" as the whole answer
+- Multiple URLs or raw URLs
 
 Service URLs (use only if truly needed, as [label](url)):
 ${serviceLines}
@@ -66,6 +73,32 @@ function localeLanguageName(locale: Locale): string {
   return map[locale] ?? "English";
 }
 
+function monolingualRules(locale: Locale): string {
+  if (locale === "tr") {
+    return `- Turkish replies: 100% Turkish words. Use: uzmanlık, işe alım, uzaktan, teslim, kapsam, yapay zekâ arama (for GEO). Allowed Latin: GEO, SEO, API, llms.txt, brand names, email.
+- Forbidden in Turkish: expertise, engagement, delivery, hiring, remote, stack, visibility, feedback, pipeline.`;
+  }
+  if (locale === "en") {
+    return `- English replies: 100% English. No Turkish words.`;
+  }
+  if (locale === "de") {
+    return `- German replies: 100% German. No English or Turkish filler.`;
+  }
+  if (locale === "fr") {
+    return `- French replies: 100% French.`;
+  }
+  if (locale === "it") {
+    return `- Italian replies: 100% Italian.`;
+  }
+  if (locale === "zh") {
+    return `- Chinese replies: 100% Simplified Chinese.`;
+  }
+  if (locale === "ja") {
+    return `- Japanese replies: 100% Japanese.`;
+  }
+  return `- Reply in ${localeLanguageName(locale)} only.`;
+}
+
 function link(path: string, label: string) {
   return `[${label}](${path})`;
 }
@@ -75,7 +108,7 @@ function strengthIntro(locale: Locale, kind: "web" | "mobile" | "seo" | "geo" | 
     web: "Web tarafında Next.js/React’ten API ve deploy’a kadar uçtan uca düşünülür; karmaşık ürünler production’da ayakta kalacak mimari disiplinle ele alınır.",
     mobile: "Mobil işlerde iOS/Android; backend, performans ve release disiplini birlikte yürütülür; prototipten mağaza sürecine kadar sahiplenilir.",
     seo: "Teknik SEO’da yapı, hız, schema ve içerik bütünlüğü mühendislik disipliniyle birleştirilir — sıralama vaadi değil, sürdürülebilir görünürlük hedeflenir.",
-    geo: "GEO’da llms.txt, doğru alıntılanabilir kaynaklar ve yapılandırılmış veriyle LLM aramalarında güvenilir temsil hedeflenir; uydurma metrik kullanılmaz.",
+    geo: "GEO (yapay zekâ arama görünürlüğü) için llms.txt, yapılandırılmış veri ve doğru kaynak metinleri birlikte düzenlenir; uydurma metrik veya garanti verilmez.",
     hire: "İş modeli nettir: freelance, tam ve yarı zamanlı seçenekler değerlendirilebilir; karmaşık sistemlerin uçtan uca teslimi Figtures ve bradi.tech deneyimiyle desteklenir.",
     region: "Türkiye genelinde ve yurtdışında remote ekiplerle çalışılabilir; iletişim ve teslimat ritmi production odaklıdır.",
     general:
@@ -127,7 +160,7 @@ export function localAssistantReply(locale: Locale, userText: string): string {
       return `${strengthIntro(locale, "seo")} **${contact}**`;
     }
     if (wantsGeo) {
-      return `${strengthIntro(locale, "geo")} **${contact}**`;
+      return `GEO, ChatGPT/Perplexity gibi yapay zekâ arama sonuçlarında sitenizin doğru anlatılmasıdır; llms.txt, schema ve tutarlı içerik birlikte ele alınır. Kısa hedefinizi **${contact}** adresine yazmanız yeterli.`;
     }
     if (wantsRegion) {
       return `${strengthIntro(locale, "region")} **${contact}**`;
@@ -144,7 +177,9 @@ export function localAssistantReply(locale: Locale, userText: string): string {
   if (wantsWeb) return `${strengthIntro(locale, "web")} Start with a brief to **${contact}**.`;
   if (wantsMobile) return `${strengthIntro(locale, "mobile")} Contact **${contact}**.`;
   if (wantsSeo) return `${strengthIntro(locale, "seo")} **${contact}**`;
-  if (wantsGeo) return `${strengthIntro(locale, "geo")} **${contact}**`;
+  if (wantsGeo) {
+    return `GEO is accurate representation in AI search (e.g. ChatGPT, Perplexity): llms.txt, structured data, and consistent copy together. Email a one-line goal to **${contact}**.`;
+  }
   if (wantsRegion) return `${strengthIntro(locale, "region")} **${contact}**`;
   return `${strengthIntro(locale, "general")} **${contact}**`;
 }

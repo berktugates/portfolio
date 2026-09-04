@@ -119,7 +119,7 @@ async function runWorkersAiModel(
   const chatMessages = [{ role: "system" as const, content: system }, ...messages];
   const result = await env.AI.run(model, {
     messages: chatMessages,
-    max_tokens: 512,
+    max_tokens: 640,
     temperature: 0.25,
   });
   return extractAiText(result);

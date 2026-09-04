@@ -29,7 +29,7 @@ export function getRefusalReply(locale: Locale): string {
   return REFUSAL[locale] ?? REFUSAL.en;
 }
 
-export function sanitizeAssistantReply(reply: string, userMessage: string): string {
+export function sanitizeAssistantReply(reply: string, userMessage: string, locale?: Locale): string {
   let out = reply.trim();
   const user = userMessage.trim();
   if (user.length > 8) {
@@ -47,5 +47,32 @@ export function sanitizeAssistantReply(reply: string, userMessage: string): stri
       return url;
     }
   });
+
+  if (locale === "tr") {
+    out = out
+      .replace(/\bexpertise['’]?(imize|imiz|e|i|miz|mız)?\b/giu, "uzmanlığımız")
+      .replace(/\bexpertise\b/giu, "uzmanlık")
+      .replace(/\bengagement\b/giu, "iş birliği")
+      .replace(/\bdelivery\b/giu, "teslim")
+      .replace(/\bvisibility\b/giu, "görünürlük")
+      .replace(/\bremote\b/giu, "uzaktan")
+      .replace(/\bhiring\b/giu, "işe alım")
+      .replace(/\bpipeline\b/giu, "süreç")
+      .replace(/\bstack\b/giu, "teknoloji yığını")
+      .replace(/\bfreelance\b/giu, "serbest")
+      .replace(/\bfull-time\b/giu, "tam zamanlı")
+      .replace(/\bpart-time\b/giu, "yarı zamanlı");
+  }
+
+  out = ensureCompleteSentences(out);
   return out.trim();
+}
+
+function ensureCompleteSentences(text: string): string {
+  const t = text.trim();
+  if (!t) return t;
+  if (/[.!?…][)"\]'`]*\s*$/.test(t)) return t;
+  const cut = Math.max(t.lastIndexOf("."), t.lastIndexOf("!"), t.lastIndexOf("?"), t.lastIndexOf("…"));
+  if (cut > 40) return t.slice(0, cut + 1).trim();
+  return t;
 }
