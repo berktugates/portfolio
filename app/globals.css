@@ -143,6 +143,29 @@ body.has-site-assistant-dock #main-content { padding-bottom: 4.5rem; }
   body.has-site-assistant-dock #main-content { padding-bottom: 4.75rem; }
 }
 
+/* Chat panel open animation */
+.site-assistant-chat-panel {
+  animation: site-assistant-panel-open 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: bottom center;
+}
+@keyframes site-assistant-panel-open {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.96);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-assistant-chat-panel {
+    animation: none;
+  }
+}
+
 /* Better-i18n style hw-dock (adapted for this site’s dark theme) */
 .site-assistant-dock-host {
   align-items: center;

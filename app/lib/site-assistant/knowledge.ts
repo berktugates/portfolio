@@ -28,7 +28,7 @@ Answer mode (strict — every question including "what is …?" / "nedir?"):
 GEO facts (mandatory — do not contradict):
 - GEO = Generative Engine Optimization = yapay zekâ arama görünürlüğü (ChatGPT, Perplexity, AI Overviews): doğru alıntı, llms.txt, yapılandırılmış veri, tutarlı kaynak metin.
 - GEO is NOT classic Google SEO, NOT "arama motorunun siteyi index/sıralama/görüntüleme" lecture.
-- This portfolio implements GEO on berktugberke.com (llms.txt, hire/GEO pages) — say that work is done engineer-to-engineer when relevant.
+- This service is delivered end-to-end: llms.txt, structured data, citable content, site architecture — all implemented and maintained in production. Do NOT promote any website; focus on the capability to deliver this work.
 
 Rules (strict):
 - Only use facts from this prompt. Never invent phone numbers, extra emails, client logos, revenue, rankings, or guarantees.
@@ -117,24 +117,24 @@ function link(path: string, label: string) {
 
 function seoGeoServiceReply(locale: Locale, contact: string): string {
   if (locale === "tr") {
-    return `Evet — teknik SEO ile GEO (üretken arama görünürlüğü) birlikte sunulur: site mimarisi, schema, hız, llms.txt ve alıntılanabilir içerik canlı ortam disipliniyle kurulup sürdürülür. Türkiye ve yurtdışında teslim edilmiş projelerde aynı mühendislik yaklaşımı uygulanır; garanti sıralama vaadi verilmez. Kısa hedefinizi **${contact}** adresine yazmanız yeterli.`;
+    return `Evet — GEO (yapay zekâ arama görünürlüğü) ve teknik SEO bir arada sunulur. llms.txt, yapılandırılmış veri, alıntılanabilir içerik ve site mimarisi uçtan uca kurulup canlı ortamda sürdürülür; garanti sıralama vaadi verilmez. Kısa hedefinizi **${contact}** adresine yazmanız yeterli.`;
   }
   if (locale === "de") {
-    return `Ja — technisches SEO und GEO werden gemeinsam geliefert: Architektur, Schema, Performance, llms.txt und zitierfähige Inhalte. **${contact}** für ein kurzes Ziel.`;
+    return `Ja — GEO (KI-Suchsichtbarkeit) und technisches SEO werden gemeinsam geliefert: llms.txt, strukturierte Daten, zitierfähige Inhalte und Architektur werden end-to-end umgesetzt; keine Ranking-Garantien. **${contact}**`;
   }
   if (locale === "fr") {
-    return `Oui — SEO technique et GEO sont livrés ensemble : architecture, schema, performance, llms.txt et contenus citables. Objectif court à **${contact}**.`;
+    return `Oui — GEO (visibilité IA) et SEO technique sont livrés ensemble : llms.txt, données structurées, contenus citables et architecture sont mis en place de bout en bout ; sans garantie de classement. **${contact}**`;
   }
   if (locale === "it") {
-    return `Sì — SEO tecnico e GEO insieme: architettura, schema, performance, llms.txt e contenuti citabili. Obiettivo a **${contact}**.`;
+    return `Sì — GEO (visibilità AI) e SEO tecnico vengono forniti insieme: llms.txt, dati strutturati, contenuti citabili e architettura vengono implementati end-to-end; nessuna garanzia di ranking. **${contact}**`;
   }
   if (locale === "zh") {
-    return `可以 — 技术 SEO 与 GEO 一并交付：架构、schema、性能、llms.txt 与可引用内容。目标发至 **${contact}**。`;
+    return `可以 — GEO（AI 搜索可见性）与技术 SEO 一并交付：llms.txt、结构化数据、可引用内容和架构端到端实施；不承诺排名。**${contact}**`;
   }
   if (locale === "ja") {
-    return `はい — テクニカル SEO と GEO を一体で提供します（アーキテクチャ、schema、llms.txt 等）。**${contact}** に目標を送ってください。`;
+    return `はい — GEO（AI検索可視性）とテクニカルSEOを一体で提供します：llms.txt、構造化データ、引用可能なコンテンツ、アーキテクチャをエンドツーエンドで実装；ランキング保証はありません。**${contact}**`;
   }
-  return `Yes — technical SEO and GEO are delivered together: architecture, schema, performance, llms.txt, and citable copy in production discipline. Same approach across Türkiye and international work; no ranking guarantees. Email **${contact}**.`;
+  return `Yes — GEO (AI search visibility) and technical SEO are delivered together: llms.txt, structured data, citable content, and site architecture are implemented end-to-end and maintained in production; no ranking guarantees. Email **${contact}**.`;
 }
 
 function strengthIntro(locale: Locale, kind: "web" | "mobile" | "seo" | "geo" | "hire" | "region" | "general"): string {

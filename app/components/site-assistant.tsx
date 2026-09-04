@@ -200,7 +200,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
 
       <div className="site-assistant-dock-host fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-[720px] flex-col px-3 pb-2.5 sm:px-5 sm:pb-3">
         {chatOpen ? (
-          <div className="pointer-events-auto relative mb-2 flex max-h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-lg shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40">
+          <div className="site-assistant-chat-panel pointer-events-auto relative mb-2 flex max-h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-lg shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40">
             <button
               type="button"
               className="absolute right-2 top-2 z-10 rounded-lg p-1 text-zinc-400 dark:text-zinc-500"
