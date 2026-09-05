@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"schema-validation-as-a-product-boundary": {
+    title: "La validation de schéma comme frontière produit",
+    excerpt: "Traitez les schémas comme le contrat qui sépare l'intention produit de la dérive d'implémentation—surtout quand modèles, partenaires et services inventent des champs sous pression.",
+    description: "Pourquoi les staff engineers utilisent la validation de schéma comme frontière produit : contrats typés, parsing fail-closed, évolution versionnée et sorties structurées IA plus sûres entre services.",
+    sections: [
+      {
+        heading: "Les contrats sont des décisions produit écrites en code",
+        paragraphs: [
+          "Un schéma n'est pas de la paperasse pour le type checker. C'est la promesse publique du produit sur les champs existants, ceux qui sont requis, la signification des énumérations et ce qui se passe quand un payload est faux. Les équipes qui laissent cette promesse implicite la découvrent en production quand un client envoie null, qu'un partenaire ajoute un champ synonyme ou qu'un modèle invente une clé presque correcte.",
+          "La propriété staff place le contrat à la frontière : ingress clients, egress partenaires, résultats d'outils vers les agents, et sorties structurées du modèle avant la logique métier. À l'intérieur, vous refactorisez librement. Au-delà, le changement est délibéré, versionné et mesurable.",
+        ],
+      },
+      {
+        heading: "Valider une fois, fail-closed, garder la provenance",
+        paragraphs: [
+          "Parsez en bordure et rejetez l'entrée invalide avant qu'elle ne devienne un état semi-traité. La coercion qui 'aide' en devinant les types ou en droppant des champs inconnus cache les bugs produit jusqu'à ce qu'ils soient visibles client. Préférez des erreurs explicites à codes stables à la réparation silencieuse.",
+          "Quand des features IA émettent du JSON structuré, traitez le modèle comme un producteur non fiable. Validez contre le même schéma que le reste du système. En cas d'échec : retry, clarification ou fallback déterministe—jamais d'écritures métier optimistes sur un objet quasi-valide.",
+        ],
+        points: [
+          "Un package de schéma canonique partagé par API, workers et clients quand c'est pratique",
+          "Distinguer la politique unknown-field : reject sur les writes, log sur les adapters de lecture",
+          "Attacher la version de schéma aux events stockés et aux audit logs",
+          "Alerter sur les pics de taux d'échec de validation après releases",
+        ],
+      },
+      {
+        heading: "Évoluer sans briser la confiance",
+        paragraphs: [
+          "Les champs optionnels additifs sont bon marché ; renommer ou restreindre le sens est cher. Publiez une politique de compatibilité : ce qui est additif, ce qui exige une nouvelle version, et combien de temps dure le dual-read. En SaaS multi-tenant, les extensions spécifiques tenant appartiennent derrière des namespaces clairs, pas dans des bag objects libres qui battent la validation.",
+          "Les tests de schéma doivent voyager avec le produit. Payloads golden pour chemins heureux et cas adversariaux—champs en trop, mauvais enums, strings trop longs, clés requises manquantes—appartiennent au CI. Si un changement casse une intégration partenaire ou un contrat d'outil IA, la suite doit échouer avant les clients.",
+        ],
+      },
+      {
+        heading: "Rendre la frontière observable",
+        paragraphs: [
+          "Suivez les résultats de validation comme santé produit : taux d'acceptation, chemins qui échouent le plus, latence de parse, et fréquence de réparation des sorties structurées IA. Un taux d'échec qui monte après une mise à jour modèle ou client est un signal de release, pas une curiosité de logging.",
+          "Le but n'est pas la bureaucratie. Le but est une ligne nette entre 'ceci est notre langage produit' et 'ceci est l'improvisation de quelqu'un d'autre'. La validation de schéma est la façon dont l'ingénierie garde cette ligne applicable pendant que le système grandit.",
+        ],
+        links: [
+          {
+            label: "JSON Schema — Spec",
+            url: "https://json-schema.org/",
+          },
+          {
+            label: "Zod documentation",
+            url: "https://zod.dev/",
+          },
+          {
+            label: "OpenAI — Structured Outputs",
+            url: "https://platform.openai.com/docs/guides/structured-outputs",
+          },
+        ],
+      },
+    ],
+  },
 "release-trains-for-ai-assisted-products": {
     title: "Release trains pour les produits assistés par l'IA",
     excerpt: "Les fonctionnalités IA évoluent chaque semaine. Les release trains maintiennent produit, modèle et évaluations sur un rythme prévisible sans transformer chaque édition de prompt en déploiement d'urgence.",

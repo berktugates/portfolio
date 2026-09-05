@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"schema-validation-as-a-product-boundary": {
+    title: "Validazione dello schema come confine di prodotto",
+    excerpt: "Trattate gli schema come il contratto che separa l'intento di prodotto dalla deriva di implementazione—soprattutto quando modelli, partner e servizi inventano campi sotto pressione.",
+    description: "Perché gli staff engineer usano la validazione dello schema come confine di prodotto: contratti tipizzati, parsing fail-closed, evoluzione versionata e output strutturati IA più sicuri tra i servizi.",
+    sections: [
+      {
+        heading: "I contratti sono decisioni di prodotto scritte in codice",
+        paragraphs: [
+          "Uno schema non è scartoffie per il type checker. È la promessa pubblica del prodotto su quali campi esistono, quali sono required, cosa significano le enumerazioni e cosa succede quando un payload è sbagliato. I team che lasciano quella promessa implicita la scoprono in produzione quando un client invia null, un partner aggiunge un campo sinonimo o un modello inventa una chiave quasi corretta.",
+          "La ownership staff mette il contratto al confine: ingress dai client, egress verso i partner, risultati tool negli agent e output strutturati del modello prima della business logic. Dentro il confine potete rifattorizzare liberamente. Attraverso di esso il cambiamento è deliberato, versionato e misurabile.",
+        ],
+      },
+      {
+        heading: "Validare una volta, restare fail-closed, conservare la provenance",
+        paragraphs: [
+          "Parseate al bordo e rifiutate input invalidi prima che diventino stato semi-processato. La coercion che 'aiuta' indovinando i tipi o droppando campi sconosciuti nasconde i bug di prodotto finché non sono visibili al cliente. Preferite errori espliciti con codici stabili alla riparazione silenziosa.",
+          "Quando le feature IA emettono JSON strutturato, trattate il modello come produttore non affidabile. Validate contro lo stesso schema del resto del sistema. Se fallisce: retry, chiarimento o fallback deterministico—mai scritture business ottimistiche su un oggetto quasi valido.",
+        ],
+        points: [
+          "Un package di schema canonico condiviso da API, worker e client dove pratico",
+          "Distinguere la policy unknown-field: reject sui write, log sugli adapter di lettura",
+          "Allegare la versione dello schema a eventi memorizzati e audit log",
+          "Allertare su spike del tasso di fallimento di validazione dopo i release",
+        ],
+      },
+      {
+        heading: "Evolvere senza rompere la fiducia",
+        paragraphs: [
+          "I campi opzionali additivi sono economici; rinominare o restringere il significato è costoso. Pubblicate una policy di compatibilità: cosa è additivo, cosa richiede una nuova versione e quanto dura il dual-read. Nel SaaS multi-tenant le estensioni tenant-specific appartengono dietro namespace chiari, non in bag object liberi che sconfiggono la validazione.",
+          "I test di schema devono viaggiare con il prodotto. Payload golden per happy path e casi avversariali—campi extra, enum sbagliati, stringhe troppo lunghe, chiavi required mancanti—appartengono alla CI. Se un cambiamento rompe un'integrazione partner o un contratto tool IA, la suite deve fallire prima dei clienti.",
+        ],
+      },
+      {
+        heading: "Rendere osservabile il confine",
+        paragraphs: [
+          "Tracciate gli esiti di validazione come salute di prodotto: acceptance rate, path che falliscono di più, latenza di parse e quanto spesso gli output strutturati IA richiedono riparazione. Un tasso di fallimento in salita dopo un update di modello o client è un segnale di release, non una curiosità di logging.",
+          "L'obiettivo non è la burocrazia. L'obiettivo è una linea netta tra 'questo è il nostro linguaggio di prodotto' e 'questa è l'improvvisazione di qualcun altro'. La validazione dello schema è come l'engineering tiene quella linea applicabile mentre il sistema cresce.",
+        ],
+        links: [
+          {
+            label: "JSON Schema — Spec",
+            url: "https://json-schema.org/",
+          },
+          {
+            label: "Zod documentation",
+            url: "https://zod.dev/",
+          },
+          {
+            label: "OpenAI — Structured Outputs",
+            url: "https://platform.openai.com/docs/guides/structured-outputs",
+          },
+        ],
+      },
+    ],
+  },
 "release-trains-for-ai-assisted-products": {
     title: "Release train per prodotti assistiti dall'IA",
     excerpt: "Le feature IA cambiano ogni settimana. I release train mantengono prodotto, modello e valutazione su un ritmo prevedibile senza trasformare ogni modifica di prompt in un deploy di emergenza.",

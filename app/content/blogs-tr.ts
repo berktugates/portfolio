@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"schema-validation-as-a-product-boundary": {
+    title: "Ürün Sınırı Olarak Şema Doğrulama",
+    excerpt: "Şemaları, ürün niyetini implementasyon kaymasından ayıran sözleşme gibi ele alın—özellikle modeller, partnerler ve servisler baskı altında alan uydurduğunda.",
+    description: "Staff mühendisler şema doğrulamayı neden ürün sınırı olarak kullanır: tipli sözleşmeler, fail-closed parse, sürümli evrim ve servisler arası daha güvenli AI yapılandırılmış çıktılar.",
+    sections: [
+      {
+        heading: "Sözleşmeler kodda yazılmış ürün kararlarıdır",
+        paragraphs: [
+          "Şema tip denetleyicisi için evrak değildir. Hangi alanların var olduğu, hangilerinin zorunlu olduğu, enumerasyonların ne anlama geldiği ve payload yanlış olduğunda ne olacağına dair ürünün kamuya açık vaadidir. Bu vaadi örtük bırakan ekipler onu üretimde keşfeder: client null gönderdiğinde, partner eş anlamlı alan eklediğinde veya model neredeyse doğru görünen bir anahtar uydurduğunda.",
+          "Staff seviyesi sahiplik sözleşmeyi sınıra koyar: client girişleri, partner çıkışları, agent'lara tool sonuçları ve iş mantığına dokunmadan önce yapılandırılmış model çıktıları. Sınırın içinde serbestçe yeniden düzenlersiniz. Sınır boyunca değişiklik bilinçli, sürümli ve ölçülebilirdir.",
+        ],
+      },
+      {
+        heading: "Bir kez doğrulayın, fail-closed kalın, provenance koruyun",
+        paragraphs: [
+          "Kenarda parse edin ve geçersiz girdiyi yarı işlenmiş duruma dönüşmeden reddedin. Tip tahmin ederek veya bilinmeyen alanları düşürerek 'yardım eden' zorlama, ürün hatalarını müşteri görünür olana kadar gizler. Sessiz onarım yerine kararlı kodlu açık hataları tercih edin.",
+          "AI özellikleri yapılandırılmış JSON ürettiğinde modeli güvenilmeyen üretici gibi ele alın. Sistemin geri kalanıyla aynı şemaya karşı doğrulayın. Doğrulama başarısızsa yeniden deneme, netleştirme veya deterministik fallback'e yönlendirin—neredeyse doğru nesneye dayanan iyimser iş yazmalarına asla.",
+        ],
+        points: [
+          "API, worker ve client'ların paylaştığı kanonik bir şema paketi",
+          "Bilinmeyen alan politikasını ayırın: yazma yollarında reddet, okuma adapter'larında logla",
+          "Saklanan olaylara ve audit loglara şema sürümü ekleyin",
+          "Yayın sonrası doğrulama hata oranı sıçramalarına alarm kurun",
+        ],
+      },
+      {
+        heading: "Güveni kırmadan evrimleştirin",
+        paragraphs: [
+          "Eklenen opsiyonel alanlar ucuzdur; yeniden adlandırma veya anlamı daraltma pahalıdır. Uyumluluk politikası yayınlayın: ne eklemelidir, ne yeni sürüm ister, dual-read ne kadar sürer. Multi-tenant SaaS'ta tenant'a özel uzantılar net namespace'lerin ardında olmalı; doğrulamayı bozan serbest bag nesnelerinde değil.",
+          "Şema testleri ürünle birlikte gitmelidir. Mutlu yollar ve adversariyal durumlar için golden payload'lar—fazla alan, yanlış enum, aşırı uzun string, eksik zorunlu anahtar—CI'da yer almalıdır. Değişiklik partner entegrasyonunu veya AI tool sözleşmesini kırıyorsa suite, müşterilerden önce fail etmelidir.",
+        ],
+      },
+      {
+        heading: "Sınırı gözlemlenebilir kılın",
+        paragraphs: [
+          "Doğrulama sonuçlarını ürün sağlığı olarak izleyin: kabul oranı, en çok başarısız olan yollar, parse gecikmesi ve AI yapılandırılmış çıktıların ne sıklıkla onarım istediği. Model veya client güncellemesinden sonra yükselen hata oranı log merakı değil yayın sinyalidir.",
+          "Amaç bürokrasi değildir. Amaç 'bu bizim ürün dilimiz' ile 'bu başkasının doğaçlaması' arasındaki keskin çizgidir. Şema doğrulama, sistem büyürken mühendisliğin bu çizgiyi uygulanabilir tutma yoludur.",
+        ],
+        links: [
+          {
+            label: "JSON Schema — Spec",
+            url: "https://json-schema.org/",
+          },
+          {
+            label: "Zod documentation",
+            url: "https://zod.dev/",
+          },
+          {
+            label: "OpenAI — Structured Outputs",
+            url: "https://platform.openai.com/docs/guides/structured-outputs",
+          },
+        ],
+      },
+    ],
+  },
 "release-trains-for-ai-assisted-products": {
     title: "Yapay Zeka Destekli Ürünler için Release Train'ler",
     excerpt: "Yapay zeka özellikleri haftalık değişir. Release train, model ve değerlendirme değişikliklerini öngörülebilir bir ritme bağlar; her prompt düzenlemesini acil deploy'a çevirmez.",

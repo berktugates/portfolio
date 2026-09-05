@@ -21,6 +21,76 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "schema-validation-as-a-product-boundary",
+    title: "Schema Validation as a Product Boundary",
+    excerpt: "Treat schemas as the contract that separates product intent from implementation drift—especially when models, partners, and services invent fields under pressure.",
+    description: "Why staff engineers use schema validation as a product boundary: typed contracts, fail-closed parsing, versioned evolution, and safer AI structured outputs across services.",
+    publishedAt: "2026-09-05",
+    readingMinutes: 7,
+    keywords: [
+      "schema validation",
+      "API contracts",
+      "TypeScript",
+      "structured outputs",
+      "Zod",
+      "product boundaries",
+    ],
+    socialThreadTr: [
+      "Şema doğrulama sadece tip kontrolü değil; ürün niyeti ile implementasyon kayması arasındaki sınırdır. Model, partner ve servis baskı altında alan uydurduğunda fail-closed sözleşme markayı korur. 🧵",
+      "Sürümle, parse et, reddet, gözlemle. Detay: https://berktugberke.com/tr/blogs/schema-validation-as-a-product-boundary",
+    ],
+    sections: [
+      {
+        heading: "Contracts are product decisions written in code",
+        paragraphs: [
+          "A schema is not paperwork for the type checker. It is the product's public promise about what fields exist, which are required, what enumerations mean, and what happens when a payload is wrong. Teams that leave that promise implicit discover it in production when a client sends null, a partner adds a synonym field, or a model invents a key that looks almost right.",
+          "Staff-level ownership puts the contract at the boundary: ingress from clients, egress to partners, tool results into agents, and structured model outputs before they touch business logic. Inside the boundary you can refactor freely. Across it, change is deliberate, versioned, and measurable.",
+        ],
+      },
+      {
+        heading: "Validate once, fail closed, keep provenance",
+        paragraphs: [
+          "Parse at the edge and reject invalid input before it becomes half-processed state. Coercion that 'helps' by guessing types or dropping unknown fields hides product bugs until they become customer-visible. Prefer explicit errors with stable codes over silent repair.",
+          "When AI features emit structured JSON, treat the model as an untrusted producer. Validate against the same schema the rest of the system uses. If validation fails, route to retry, clarification, or a deterministic fallback—never to optimistic business writes based on a near-miss object.",
+        ],
+        points: [
+          "One canonical schema package shared by API, workers, and clients where practical",
+          "Distinguish unknown-field policy: reject on write paths, log on read adapters",
+          "Attach schema version to stored events and audit logs",
+          "Alert on validation failure rate spikes after releases",
+        ],
+      },
+      {
+        heading: "Evolve without breaking trust",
+        paragraphs: [
+          "Additive optional fields are cheap; renaming or narrowing meaning is expensive. Publish a compatibility policy: what is additive, what requires a new version, and how long dual-read lasts. For multi-tenant SaaS, tenant-specific extensions belong behind clear namespaces, not free-form bag objects that defeat validation.",
+          "Schema tests should travel with the product. Golden payloads for happy paths and adversarial cases—extra fields, wrong enums, oversized strings, missing required keys—belong in CI. If a change breaks a partner integration or an AI tool contract, the suite should fail before customers do.",
+        ],
+      },
+      {
+        heading: "Make the boundary observable",
+        paragraphs: [
+          "Track validation outcomes as product health: acceptance rate, top failing paths, latency of parse, and how often AI structured outputs need repair. A rising failure rate after a model or client update is a release signal, not a logging curiosity.",
+          "The goal is not bureaucracy. The goal is a sharp line between 'this is our product language' and 'this is someone else's improvisation.' Schema validation is how engineering keeps that line enforceable while the system grows.",
+        ],
+        links: [
+          {
+            label: "JSON Schema — Spec",
+            url: "https://json-schema.org/",
+          },
+          {
+            label: "Zod documentation",
+            url: "https://zod.dev/",
+          },
+          {
+            label: "OpenAI — Structured Outputs",
+            url: "https://platform.openai.com/docs/guides/structured-outputs",
+          },
+        ],
+      },
+    ],
+  },
+    {
     slug: "release-trains-for-ai-assisted-products",
     title: "Release Trains for AI-Assisted Products",
     excerpt: "AI features change weekly. Release trains keep product, model, and evaluation changes shipping on a predictable cadence without turning every prompt edit into an emergency deploy.",

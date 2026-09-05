@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"schema-validation-as-a-product-boundary": {
+    title: "Schema-Validierung als Produktgrenze",
+    excerpt: "Behandeln Sie Schemas als den Vertrag, der Produktabsicht von Implementierungsdrift trennt—besonders wenn Modelle, Partner und Services unter Druck Felder erfinden.",
+    description: "Warum Staff Engineers Schema-Validierung als Produktgrenze nutzen: typisierte Verträge, fail-closed Parsing, versionierte Evolution und sicherere strukturierte AI-Outputs über Services hinweg.",
+    sections: [
+      {
+        heading: "Verträge sind in Code geschriebene Produktentscheidungen",
+        paragraphs: [
+          "Ein Schema ist kein Papierkram für den Type Checker. Es ist das öffentliche Versprechen des Produkts darüber, welche Felder existieren, welche required sind, was Enumerationen bedeuten und was bei falschem Payload passiert. Teams, die dieses Versprechen implizit lassen, entdecken es in Produktion—wenn ein Client null sendet, ein Partner ein Synonymfeld hinzufügt oder ein Modell einen fast richtigen Key erfindet.",
+          "Staff-Ownership setzt den Vertrag an die Grenze: Ingress von Clients, Egress zu Partnern, Tool-Ergebnisse in Agents und strukturierte Modellausgaben bevor sie Business-Logik berühren. Innerhalb der Grenze dürfen Sie frei refaktorieren. Darüber hinaus ist Änderung bewusst, versioniert und messbar.",
+        ],
+      },
+      {
+        heading: "Einmal validieren, fail-closed bleiben, Provenance behalten",
+        paragraphs: [
+          "Parsen Sie am Edge und lehnen Sie ungültige Eingaben ab, bevor sie halbverarbeiteten Zustand werden. Coercion, die durch Typ-Raten oder Droppen unbekannter Felder 'hilft', versteckt Produktbugs bis sie kundensichtbar werden. Bevorzugen Sie explizite Fehler mit stabilen Codes statt stiller Reparatur.",
+          "Wenn AI-Features strukturiertes JSON ausgeben, behandeln Sie das Modell als untrusted Producer. Validieren Sie gegen dasselbe Schema wie der Rest des Systems. Bei Fehlschlag: Retry, Klärung oder deterministischer Fallback—niemals optimistische Business-Writes auf Basis eines Near-Miss-Objekts.",
+        ],
+        points: [
+          "Ein kanonisches Schema-Paket für API, Worker und Clients wo sinnvoll",
+          "Unknown-Field-Policy unterscheiden: Write-Pfade rejecten, Read-Adapter loggen",
+          "Schema-Version an gespeicherte Events und Audit-Logs hängen",
+          "Auf Spikes der Validierungsfehlerrate nach Releases alarmieren",
+        ],
+      },
+      {
+        heading: "Weiterentwickeln ohne Vertrauen zu brechen",
+        paragraphs: [
+          "Additive optionale Felder sind günstig; Umbenennen oder Bedeutungsverengung ist teuer. Veröffentlichen Sie eine Kompatibilitätsrichtlinie: was additiv ist, was eine neue Version braucht und wie lange Dual-Read dauert. In Multi-Tenant-SaaS gehören tenant-spezifische Extensions hinter klare Namespaces, nicht in freie Bag-Objekte, die Validierung aushebeln.",
+          "Schema-Tests sollten mit dem Produkt reisen. Golden Payloads für Happy Paths und adversariale Fälle—Extrafelder, falsche Enums, zu große Strings, fehlende Required Keys—gehören in CI. Bricht eine Änderung eine Partnerintegration oder einen AI-Tool-Vertrag, muss die Suite vor den Kunden failen.",
+        ],
+      },
+      {
+        heading: "Die Grenze beobachtbar machen",
+        paragraphs: [
+          "Verfolgen Sie Validierungsergebnisse als Produktgesundheit: Acceptance-Rate, Top-Failing-Paths, Parse-Latenz und wie oft strukturierte AI-Outputs Repair brauchen. Steigende Fehlerrate nach Modell- oder Client-Update ist ein Release-Signal, kein Logging-Kuriosum.",
+          "Das Ziel ist keine Bürokratie. Das Ziel ist eine scharfe Linie zwischen 'das ist unsere Produktsprache' und 'das ist Improvisation jemand anderen'. Schema-Validierung hält diese Linie durchsetzbar, während das System wächst.",
+        ],
+        links: [
+          {
+            label: "JSON Schema — Spec",
+            url: "https://json-schema.org/",
+          },
+          {
+            label: "Zod documentation",
+            url: "https://zod.dev/",
+          },
+          {
+            label: "OpenAI — Structured Outputs",
+            url: "https://platform.openai.com/docs/guides/structured-outputs",
+          },
+        ],
+      },
+    ],
+  },
 "release-trains-for-ai-assisted-products": {
     title: "Release Trains für KI-gestützte Produkte",
     excerpt: "KI-Features ändern sich wöchentlich. Release Trains halten Produkt-, Modell- und Evaluierungsänderungen in einem vorhersehbaren Takt — ohne jede Prompt-Änderung zum Notfall-Deploy zu machen.",

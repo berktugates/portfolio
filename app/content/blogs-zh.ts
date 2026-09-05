@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"schema-validation-as-a-product-boundary": {
+    title: "把 Schema 校验当作产品边界",
+    excerpt: "把 schema 当作把产品意图与实现漂移分开的合约——尤其当模型、合作方与服务在压力下发明字段时。",
+    description: "Staff 工程师为何把 schema 校验当作产品边界：类型化合约、fail-closed 解析、有版本的演进，以及跨服务更安全的 AI 结构化输出。",
+    sections: [
+      {
+        heading: "合约是写进代码的产品决策",
+        paragraphs: [
+          "Schema 不是给类型检查器的文书。它是产品的公开承诺：有哪些字段、哪些必填、枚举含义是什么，以及 payload 错误时会发生什么。把承诺留在隐含处的团队会在生产里发现它——当客户端发 null、合作方加同义字段，或模型发明一个几乎正确的键时。",
+          "Staff 级归属把合约放在边界：客户端入口、对合作方出口、进入 agent 的工具结果，以及触碰业务逻辑前的结构化模型输出。边界内可自由重构。跨边界的变更必须有意、有版本、可度量。",
+        ],
+      },
+      {
+        heading: "校验一次、fail-closed、保留出处",
+        paragraphs: [
+          "在边缘解析，并在无效输入变成半处理状态前拒绝。靠猜类型或丢弃未知字段来“帮忙”的强制转换，会把产品缺陷藏到客户可见。宁可要带稳定错误码的显式失败，也不要静默修补。",
+          "当 AI 功能产出结构化 JSON 时，把模型当作不可信生产者。用系统其余部分同一套 schema 校验。失败则走重试、澄清或确定性降级——绝不要基于近似对象做乐观业务写入。",
+        ],
+        points: [
+          "在可行处让 API、worker 与客户端共享一份规范 schema 包",
+          "区分未知字段策略：写路径拒绝，读适配器记录",
+          "把 schema 版本附到存储事件与审计日志",
+          "发布后校验失败率飙升时告警",
+        ],
+      },
+      {
+        heading: "演进而不破坏信任",
+        paragraphs: [
+          "可选字段的加法变更便宜；重命名或收窄含义昂贵。公布兼容策略：什么可加、什么需要新版本、双读持续多久。多租户 SaaS 中，租户特定扩展应放在清晰命名空间后，而不是击败校验的自由 bag 对象。",
+          "Schema 测试应随产品一起走。幸福路径与对抗用例的金标 payload——多余字段、错误枚举、过长字符串、缺失必填键——属于 CI。若变更破坏合作方集成或 AI 工具合约，套件应在客户之前失败。",
+        ],
+      },
+      {
+        heading: "让边界可观测",
+        paragraphs: [
+          "把校验结果当作产品健康：接受率、失败最多的路径、解析延迟，以及 AI 结构化输出需要修补的频率。模型或客户端更新后失败率上升是发布信号，不是日志趣闻。",
+          "目标不是官僚。目标是「这是我们的产品语言」与「这是别人的即兴」之间的清晰界线。Schema 校验是工程在系统成长时让这条线可执行的方式。",
+        ],
+        links: [
+          {
+            label: "JSON Schema — Spec",
+            url: "https://json-schema.org/",
+          },
+          {
+            label: "Zod documentation",
+            url: "https://zod.dev/",
+          },
+          {
+            label: "OpenAI — Structured Outputs",
+            url: "https://platform.openai.com/docs/guides/structured-outputs",
+          },
+        ],
+      },
+    ],
+  },
 "release-trains-for-ai-assisted-products": {
     title: "面向 AI 辅助产品的发布列车",
     excerpt: "AI 功能每周都在变。发布列车把产品、模型与评估变更放在可预期的节奏上，而不是把每次提示词修改都变成紧急上线。",
