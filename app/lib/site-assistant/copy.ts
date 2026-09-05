@@ -15,13 +15,13 @@ export type SiteAssistantCopy = {
 };
 
 const en: SiteAssistantCopy = {
-  title: "Berktug AI",
+  title: "Assistant",
   subtitle: "Ask about hiring, services, regions, SEO, GEO, and how to start a project.",
   placeholder: "How can I help?",
   send: "Send",
-  thinking: "Berktug AI is thinking",
-  openChat: "Chat with Berktug AI",
-  closeChat: "Close chat",
+  thinking: "Thinking…",
+  openChat: "Open assistant",
+  closeChat: "Close",
   voiceInput: "Voice input",
   error: "Something went wrong. Email contact@berktugberke.com or try again.",
   offlineNote: "Live AI runs on Cloudflare Workers AI when configured; helpful answers still work offline.",
@@ -33,13 +33,13 @@ const en: SiteAssistantCopy = {
 };
 
 const tr: SiteAssistantCopy = {
-  title: "Berktug AI",
+  title: "Asistan",
   subtitle: "İş birliği, hizmetler, bölgeler, SEO, GEO ve proje başlangıcı hakkında sorun.",
   placeholder: "Nasıl yardımcı olabilirim?",
   send: "Gönder",
-  thinking: "Berktug AI düşünüyor",
-  openChat: "Berktug AI ile sohbet",
-  closeChat: "Sohbeti kapat",
+  thinking: "Düşünüyor…",
+  openChat: "Asistanı aç",
+  closeChat: "Kapat",
   voiceInput: "Sesle yaz",
   error: "Bir sorun oluştu. contact@berktugberke.com yazın veya tekrar deneyin.",
   offlineNote: "Canlı AI, Cloudflare Workers AI yapılandırıldığında çalışır; yine de yardımcı yanıtlar verilir.",
@@ -52,11 +52,12 @@ const tr: SiteAssistantCopy = {
 
 const de: SiteAssistantCopy = {
   ...en,
+  title: "Assistent",
   subtitle: "Fragen zu Hiring, Services, Regionen, SEO, GEO und Projektstart.",
   placeholder: "Wie kann ich helfen?",
-  thinking: "Berktug AI denkt nach",
-  openChat: "Mit Berktug AI chatten",
-  closeChat: "Chat schließen",
+  thinking: "Denkt nach…",
+  openChat: "Assistent öffnen",
+  closeChat: "Schließen",
   offlineNote: "Live-KI mit Cloudflare Workers AI wenn konfiguriert; hilfreiche Antworten auch offline.",
   suggestions: [
     "Wie starten wir ein Web- oder Mobilprojekt?",
@@ -67,11 +68,12 @@ const de: SiteAssistantCopy = {
 
 const fr: SiteAssistantCopy = {
   ...en,
+  title: "Assistant",
   subtitle: "Questions sur l'embauche, les services, les régions, SEO, GEO et démarrage de projet.",
   placeholder: "Comment puis-je vous aider ?",
-  thinking: "Berktug AI réfléchit",
-  openChat: "Discuter avec Berktug AI",
-  closeChat: "Fermer le chat",
+  thinking: "Réfléchit…",
+  openChat: "Ouvrir l'assistant",
+  closeChat: "Fermer",
   suggestions: [
     "Comment démarrer un projet web ou mobile ?",
     "Travaillez-vous à distance en Turquie et à l'international ?",
@@ -81,11 +83,12 @@ const fr: SiteAssistantCopy = {
 
 const it: SiteAssistantCopy = {
   ...en,
+  title: "Assistente",
   subtitle: "Domande su hiring, servizi, regioni, SEO, GEO e avvio progetto.",
   placeholder: "Come posso aiutarti?",
-  thinking: "Berktug AI sta pensando",
-  openChat: "Chatta con Berktug AI",
-  closeChat: "Chiudi chat",
+  thinking: "Sta pensando…",
+  openChat: "Apri assistente",
+  closeChat: "Chiudi",
   suggestions: [
     "Come iniziamo un progetto web o mobile?",
     "Lavori da remoto in Turchia e a livello internazionale?",
@@ -95,12 +98,12 @@ const it: SiteAssistantCopy = {
 
 const zh: SiteAssistantCopy = {
   ...en,
-  title: "Berktug AI",
+  title: "助手",
   subtitle: "咨询合作、服务、地区、SEO、GEO 与如何启动项目。",
   placeholder: "有什么可以帮您？",
-  thinking: "Berktug AI 正在思考",
-  openChat: "与 Berktug AI 对话",
-  closeChat: "关闭对话",
+  thinking: "思考中…",
+  openChat: "打开助手",
+  closeChat: "关闭",
   send: "发送",
   suggestions: [
     "Web 或移动项目如何启动？",
@@ -111,11 +114,12 @@ const zh: SiteAssistantCopy = {
 
 const ja: SiteAssistantCopy = {
   ...en,
+  title: "アシスタント",
   subtitle: "採用、サービス、地域、SEO、GEO、プロジェクト開始について質問できます。",
   placeholder: "どのようなご用件でしょうか？",
-  thinking: "Berktug AI が考えています",
-  openChat: "Berktug AI とチャット",
-  closeChat: "チャットを閉じる",
+  thinking: "考え中…",
+  openChat: "アシスタントを開く",
+  closeChat: "閉じる",
   send: "送信",
   suggestions: [
     "Web やモバイルのプロジェクトはどう始めますか？",

@@ -10,7 +10,10 @@ import { AssistantMessageContent } from "../lib/site-assistant/render-message";
 import { AssistantTypingIndicator } from "./assistant-typing-indicator";
 
 const MIN_TYPING_MS = 520;
+const DOCK_INPUT_MIN_PX = 36;
+const DOCK_INPUT_MAX_PX = 120;
 const STORAGE_KEY = "site-assistant-messages";
+const PANEL_CLOSE_DURATION_MS = 280;
 
 function loadStoredMessages(): ChatMessage[] {
   if (typeof window === "undefined") return [];
@@ -38,6 +41,23 @@ function saveMessages(messages: ChatMessage[]) {
   }
 }
 
+function syncDockInputHeight(el: HTMLTextAreaElement | null) {
+  if (!el) return;
+  el.style.height = `${DOCK_INPUT_MIN_PX}px`;
+  const next = Math.min(Math.max(el.scrollHeight, DOCK_INPUT_MIN_PX), DOCK_INPUT_MAX_PX);
+  el.style.height = `${next}px`;
+}
+
+function MicIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M12 3.5a3 3 0 0 1 3 3v4.5a3 3 0 0 1-6 0V6.5a3 3 0 0 1 3-3Z" />
+      <path d="M5.5 11v.5a6.5 6.5 0 0 0 13 0V11" />
+      <path d="M12 18v3" />
+    </svg>
+  );
+}
+
 function SendIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -54,11 +74,13 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
   const [prompt, setPrompt] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [thinking, setThinking] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
 
   const listRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<ChatMessage[]>([]);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const isSubmittingRef = useRef(false);
+  const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Load stored messages on mount
   useEffect(() => {
@@ -78,6 +100,10 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, thinking]);
 
+  useEffect(() => {
+    syncDockInputHeight(inputRef.current);
+  }, [prompt]);
+
   // Focus input when opening
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -85,21 +111,23 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
     }
   }, [isOpen]);
 
-  const openSidebar = useCallback(() => {
+  const openDock = useCallback(() => {
     setIsClosing(false);
     setIsOpen(true);
     trackAssistantEvent("open", { locale });
   }, [locale]);
 
-  const closeSidebar = useCallback(() => {
+  const closeDock = useCallback(() => {
     setIsClosing(true);
     setTimeout(() => {
       setIsOpen(false);
       setIsClosing(false);
-    }, 300);
+    }, PANEL_CLOSE_DURATION_MS);
   }, []);
 
   const canSend = Boolean(prompt.trim()) && !thinking;
+  const showSuggestions = inputFocused && !thinking && messages.length === 0;
+  const chatOpen = messages.length > 0 || thinking;
 
   const submitText = useCallback(
     async (raw: string) => {
@@ -156,15 +184,22 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
     sessionStorage.removeItem(STORAGE_KEY);
   }, []);
 
-  const showSuggestions = messages.length === 0 && !thinking;
+  const handleFocus = () => {
+    if (blurTimer.current) clearTimeout(blurTimer.current);
+    setInputFocused(true);
+  };
+
+  const handleBlur = () => {
+    blurTimer.current = setTimeout(() => setInputFocused(false), 180);
+  };
 
   return (
     <>
-      {/* Floating button - right side */}
+      {/* Floating button - only show when dock is closed */}
       {!isOpen && (
         <button
           type="button"
-          onClick={openSidebar}
+          onClick={openDock}
           className="site-assistant-fab fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-lg shadow-zinc-900/25 transition-transform hover:scale-105 active:scale-95 dark:bg-zinc-100 dark:text-zinc-900 dark:shadow-zinc-950/40"
           aria-label={copy.openChat}
         >
@@ -172,69 +207,36 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
         </button>
       )}
 
-      {/* Sidebar panel - left side */}
+      {/* Dock - same as home page but positioned right on large screens */}
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Gradient background */}
           <div
-            className={`site-assistant-sidebar-backdrop fixed inset-0 z-50 bg-zinc-950/30 backdrop-blur-[2px] ${isClosing ? "site-assistant-sidebar-backdrop--closing" : ""}`}
-            onClick={closeSidebar}
+            className="pointer-events-none fixed inset-x-0 bottom-0 z-50 h-14 bg-gradient-to-t from-white via-white/70 to-transparent dark:from-zinc-950 dark:via-zinc-950/70"
             aria-hidden
           />
 
-          {/* Panel */}
-          <div
-            className={`site-assistant-sidebar fixed bottom-0 left-0 top-0 z-50 flex w-full max-w-md flex-col bg-white shadow-2xl dark:bg-zinc-900 ${isClosing ? "site-assistant-sidebar--closing" : ""}`}
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-zinc-100 px-4 py-3 dark:border-zinc-800">
-              <h2 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{copy.title}</h2>
-              <div className="flex items-center gap-2">
-                {messages.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={handleClearChat}
-                    className="rounded-lg px-2 py-1 text-xs text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
-                  >
-                    {locale === "tr" ? "Temizle" : "Clear"}
-                  </button>
-                )}
+          {/* Dock container - centered on mobile, right-aligned on desktop */}
+          <div className={`site-assistant-blog-dock fixed bottom-0 z-50 flex flex-col px-3 pb-2.5 sm:px-5 sm:pb-3 inset-x-0 mx-auto max-w-[720px] sm:inset-x-auto sm:right-4 sm:left-auto sm:mx-0 sm:max-w-[420px] ${isClosing ? "site-assistant-blog-dock--closing" : ""}`}>
+            {/* Chat panel */}
+            {chatOpen && (
+              <div className="site-assistant-chat-panel pointer-events-auto relative mb-2 flex w-full max-h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-lg shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40">
                 <button
                   type="button"
-                  onClick={closeSidebar}
-                  className="rounded-lg p-1.5 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+                  className="absolute right-2 top-2 z-10 rounded-lg p-1 text-zinc-400 dark:text-zinc-500"
                   aria-label={copy.closeChat}
+                  onClick={handleClearChat}
                 >
-                  <X className="h-5 w-5" />
+                  <X className="size-4" />
                 </button>
-              </div>
-            </div>
-
-            {/* Messages */}
-            <div ref={listRef} className="flex-1 overflow-y-auto p-4">
-              {showSuggestions ? (
-                <div className="space-y-2">
-                  <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">{copy.subtitle}</p>
-                  {copy.suggestions.map((q) => (
-                    <button
-                      key={q}
-                      type="button"
-                      onClick={() => pickSuggestion(q)}
-                      className="block w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-left text-sm text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-800"
-                    >
-                      {q}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-3">
+                <div ref={listRef} className="flex flex-1 flex-col gap-2 overflow-y-auto px-3 pb-3 pt-3" role="log" aria-live="polite">
                   {messages.map((msg, i) => (
                     <div
                       key={`${msg.role}-${i}`}
                       className={
                         msg.role === "user"
-                          ? "ml-8 rounded-2xl bg-zinc-900 px-4 py-2.5 text-sm text-white dark:bg-zinc-100 dark:text-zinc-900"
-                          : "mr-4 rounded-2xl bg-zinc-100 px-4 py-2.5 text-sm text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                          ? "ml-6 rounded-xl bg-zinc-100 px-3 py-2 text-sm text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100"
+                          : "mr-2 rounded-xl border border-zinc-100 bg-zinc-50/90 px-3 py-2 text-sm leading-relaxed text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-300"
                       }
                     >
                       {msg.role === "assistant" ? <AssistantMessageContent text={msg.content} /> : msg.content}
@@ -242,31 +244,66 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
                   ))}
                   {thinking && <AssistantTypingIndicator label={copy.thinking} />}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            {/* Input */}
-            <div className="border-t border-zinc-100 p-4 dark:border-zinc-800">
-              <div className="flex items-end gap-2 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 focus-within:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:focus-within:border-zinc-600">
-                <textarea
-                  ref={inputRef}
-                  className="max-h-32 min-h-[40px] flex-1 resize-none bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
-                  rows={1}
-                  value={prompt}
-                  placeholder={copy.placeholder}
-                  disabled={thinking}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                />
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={!canSend}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-900 text-white transition-colors hover:bg-zinc-700 disabled:opacity-40 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
-                  aria-label={copy.send}
+            {/* Input dock */}
+            <div className="hw-dock-stack pointer-events-auto" style={{ width: "100%", maxWidth: "100%" }}>
+              {showSuggestions && (
+                <div
+                  className="hw-dock-suggestions hw-dock-suggestions--animate"
+                  onMouseDown={(e) => e.preventDefault()}
                 >
-                  {thinking ? <span className="h-2 w-2 animate-pulse rounded-sm bg-current" /> : <SendIcon />}
-                </button>
+                  {copy.suggestions.map((q, index) => (
+                    <button
+                      key={q}
+                      type="button"
+                      className="hw-dock-suggestion"
+                      style={{ animationDelay: `${index * 55}ms` }}
+                      onClick={() => pickSuggestion(q)}
+                    >
+                      {q}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div className="hw-dock">
+                <div className="hw-dock-bar" style={{ position: "relative" }}>
+                  <textarea
+                    ref={inputRef}
+                    className="hw-dock-input"
+                    rows={1}
+                    value={prompt}
+                    placeholder={copy.placeholder}
+                    aria-label={copy.placeholder}
+                    disabled={thinking}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    onKeyDown={handleKeyDown}
+                  />
+                  <div className="hw-dock-actions">
+                    <button
+                      type="button"
+                      className="hw-dock-send"
+                      aria-label={copy.send}
+                      disabled={!canSend}
+                      onClick={handleSubmit}
+                    >
+                      {thinking ? <span className="hw-dock-send-spinner" aria-hidden /> : <SendIcon />}
+                    </button>
+                  </div>
+                  {/* Close button */}
+                  <button
+                    type="button"
+                    onClick={closeDock}
+                    className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-zinc-700 text-white shadow-md transition-transform hover:scale-110 dark:bg-zinc-600"
+                    aria-label={copy.closeChat}
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
