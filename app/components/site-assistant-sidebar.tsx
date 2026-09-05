@@ -126,9 +126,10 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
     trackAssistantEvent("open", { locale });
   }, [locale]);
 
-  const closeDock = useCallback(() => {
-    if (Date.now() < openGuardUntilRef.current) return;
-    if (thinking || isSubmittingRef.current) return;
+  const closeDock = useCallback((options?: { userInitiated?: boolean }) => {
+    const userInitiated = options?.userInitiated === true;
+    if (!userInitiated && Date.now() < openGuardUntilRef.current) return;
+    if (!userInitiated && (thinking || isSubmittingRef.current)) return;
     setIsClosing(true);
     setInputFocused(false);
     inputRef.current?.blur();
@@ -262,10 +263,13 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
               ref={dockContainerRef}
               className="site-assistant-input-shell pointer-events-auto flex w-full min-w-0 max-w-[400px] flex-col sm:w-[380px]"
               onKeyDown={(e) => {
-                if (e.key === "Escape") closeDock();
+                if (e.key === "Escape") closeDock({ userInitiated: true });
               }}
             >
-              <AssistantDockCloseButton label={copy.closeChat} onClick={closeDock} />
+              <AssistantDockCloseButton
+                label={copy.closeChat}
+                onClick={() => closeDock({ userInitiated: true })}
+              />
 
               {chatOpen && (
                 <div className="site-assistant-chat-panel relative mb-2 flex max-h-[min(50vh,380px)] w-full flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900">

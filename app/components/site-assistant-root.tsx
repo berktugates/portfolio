@@ -15,13 +15,13 @@ function localeFromPathname(pathname: string) {
 }
 
 export function SiteAssistantRoot() {
-  const pathname = usePathname();
-  const locale = localeFromPathname(pathname ?? "/");
-  const fabSurface = usesFabAssistant(pathname ?? "/");
+  const pathname = usePathname() ?? "";
+  const locale = localeFromPathname(pathname || "/");
+  const fabSurface = usesFabAssistant(pathname);
 
   if (fabSurface) {
-    return <SiteAssistantSidebar locale={locale} />;
+    return <SiteAssistantSidebar key={pathname} locale={locale} />;
   }
 
-  return <SiteAssistantDock locale={locale} />;
+  return <SiteAssistantDock key={pathname} locale={locale} />;
 }

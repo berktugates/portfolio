@@ -1,17 +1,9 @@
-import { isLocale } from "../../lib/i18n";
+import { stripLocalePrefix } from "../../lib/content/paths";
 
 /** FAB + bottom-right dock (blogs, project detail, legal docs under /projects/...). */
 export function usesFabAssistant(pathname: string): boolean {
-  const segments = pathname.split("/").filter(Boolean);
-  if (segments.length === 0) return false;
-
-  const [first, second] = segments;
-
-  if (first === "blogs") return true;
-  if (isLocale(first) && second === "blogs") return true;
-
-  if (first === "projects") return segments.length >= 2;
-  if (isLocale(first) && second === "projects") return segments.length >= 3;
-
-  return false;
+  const normalized = stripLocalePrefix(pathname.replace(/\/$/, "") || "/");
+  if (normalized === "/blogs" || normalized.startsWith("/blogs/")) return true;
+  const segments = normalized.split("/").filter(Boolean);
+  return segments[0] === "projects" && segments.length >= 2;
 }

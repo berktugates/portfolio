@@ -96,6 +96,9 @@ test.describe("site assistant blog dock", () => {
     await page.getByTestId("site-assistant-fab").click();
     await expect(page.getByTestId("site-assistant-dock-close")).toBeVisible();
     await assertSendInsideBar(page);
+    await page.getByTestId("site-assistant-dock-close").click();
+    await expect(page.getByTestId("site-assistant-fab")).toBeVisible({ timeout: 5_000 });
+    await expect(page.getByTestId("site-assistant-dock-close")).toHaveCount(0);
   });
 });
 
