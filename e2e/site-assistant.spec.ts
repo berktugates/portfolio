@@ -60,7 +60,7 @@ test.describe("site assistant blog dock", () => {
     await fab.click();
     const shell = page.locator(".site-assistant-input-shell");
     await expect(shell.getByRole("textbox", { name: /How can I help/i })).toBeVisible({ timeout: 10_000 });
-    await shell.locator("button").first().click();
+    await page.getByTestId("site-assistant-dock-close").click();
     await expect(fab).toBeVisible({ timeout: 5_000 });
   });
 

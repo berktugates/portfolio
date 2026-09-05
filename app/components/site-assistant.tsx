@@ -1,6 +1,5 @@
 "use client";
 
-import { X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import type { Locale } from "../lib/i18n";
 import { getSiteAssistantCopy } from "../lib/site-assistant/copy";
@@ -8,6 +7,7 @@ import { sendAssistantMessage, trackAssistantEvent } from "../lib/site-assistant
 import type { ChatMessage } from "../lib/site-assistant/knowledge";
 import { AssistantMessageContent } from "../lib/site-assistant/render-message";
 import { AssistantTypingIndicator } from "./assistant-typing-indicator";
+import { AssistantDockCloseButton } from "./site-assistant/dock-close-button";
 import { useAssistantOutsideDismiss } from "./site-assistant/use-assistant-outside-dismiss";
 
 const MIN_TYPING_MS = 520;
@@ -290,15 +290,6 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
     }
   };
 
-  const handleClearChat = useCallback(() => {
-    clearAllTimers();
-    setMessages([]);
-    setPanelVisible(false);
-    setPanelClosing(false);
-    isSubmittingRef.current = false;
-    sessionStorage.removeItem(STORAGE_KEY);
-  }, [clearAllTimers]);
-
   const handlePanelMouseDown = (e: React.MouseEvent) => {
     // Prevent blur when clicking inside panel
     e.preventDefault();
@@ -369,20 +360,14 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
         }}
       >
         {chatOpen ? (
-          <div
-            ref={panelRef}
-            className={`site-assistant-chat-panel pointer-events-auto relative mb-2 flex w-full max-h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-lg shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40 ${panelClosing ? "site-assistant-chat-panel--closing" : ""}`}
-            onMouseDown={handlePanelMouseDown}
-          >
-            <button
-              type="button"
-              className="absolute right-2 top-2 z-10 rounded-lg p-1 text-zinc-400 dark:text-zinc-500"
-              aria-label={copy.closeChat}
-              onClick={handleClearChat}
+          <>
+            <AssistantDockCloseButton label={copy.closeChat} onClick={handleDismissOutside} />
+            <div
+              ref={panelRef}
+              className={`site-assistant-chat-panel pointer-events-auto relative mb-2 flex w-full max-h-[min(52vh,420px)] flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-lg shadow-black/5 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40 ${panelClosing ? "site-assistant-chat-panel--closing" : ""}`}
+              onMouseDown={handlePanelMouseDown}
             >
-              <X className="size-4" />
-            </button>
-            <div ref={listRef} className="flex flex-1 flex-col gap-2 overflow-y-auto px-3 pb-3 pt-3" role="log" aria-live="polite">
+              <div ref={listRef} className="flex flex-1 flex-col gap-2 overflow-y-auto px-3 pb-3 pt-3" role="log" aria-live="polite">
               {messages.map((msg, i) => (
                 <div
                   key={`${msg.role}-${i}`}
@@ -396,8 +381,9 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
                 </div>
               ))}
               {thinking ? <AssistantTypingIndicator label={copy.thinking} /> : null}
+              </div>
             </div>
-          </div>
+          </>
         ) : null}
 
         <div className="hw-dock-stack pointer-events-auto min-w-0 max-w-full" onMouseDown={handleDockMouseDown}>

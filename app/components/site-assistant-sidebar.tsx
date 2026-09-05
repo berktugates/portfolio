@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageCircle, X } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import type { Locale } from "../lib/i18n";
 import { getSiteAssistantCopy } from "../lib/site-assistant/copy";
@@ -8,6 +8,7 @@ import { sendAssistantMessage, trackAssistantEvent } from "../lib/site-assistant
 import type { ChatMessage } from "../lib/site-assistant/knowledge";
 import { AssistantMessageContent } from "../lib/site-assistant/render-message";
 import { AssistantTypingIndicator } from "./assistant-typing-indicator";
+import { AssistantDockCloseButton } from "./site-assistant/dock-close-button";
 import { useAssistantOutsideDismiss } from "./site-assistant/use-assistant-outside-dismiss";
 
 const MIN_TYPING_MS = 520;
@@ -203,11 +204,6 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
     }
   };
 
-  const handleClearChat = useCallback(() => {
-    setMessages([]);
-    sessionStorage.removeItem(STORAGE_KEY);
-  }, []);
-
   const handleFocus = () => {
     if (blurTimer.current) clearTimeout(blurTimer.current);
     setInputFocused(true);
@@ -269,27 +265,10 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
                 if (e.key === "Escape") closeDock();
               }}
             >
-              <div className="mb-1.5 flex justify-end">
-                <button
-                  type="button"
-                  onClick={closeDock}
-                  className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-600 text-white shadow dark:bg-zinc-500"
-                  aria-label={copy.closeChat}
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              </div>
+              <AssistantDockCloseButton label={copy.closeChat} onClick={closeDock} />
 
               {chatOpen && (
                 <div className="site-assistant-chat-panel relative mb-2 flex max-h-[min(50vh,380px)] w-full flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
-                  <button
-                    type="button"
-                    className="absolute right-2 top-2 z-10 rounded-lg p-1.5 text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
-                    aria-label={copy.closeChat}
-                    onClick={handleClearChat}
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
                   <div ref={listRef} className="flex flex-1 flex-col gap-2.5 overflow-y-auto px-3 pb-3 pt-3" role="log" aria-live="polite">
                     {messages.map((msg, i) => (
                       <div
