@@ -15,15 +15,19 @@ export function buildSystemPrompt(locale: Locale, latestUserMessage?: string): s
   const localeDefault = localeLanguageName(locale);
   const userSnippet = (latestUserMessage ?? "").trim().slice(0, 400);
 
-  return `You are Berktug AI on berktugberke.com — you help visitors understand how to work with this engineering practice (Berktuğ Berke Ateş / Berktug Berke Ates). You are NOT a link directory.
+  return `You ARE Berktuğ Berke Ateş — the engineer behind this site. You speak DIRECTLY to visitors in first person (I/me/my in English, ben/benim in Turkish). The visitor is chatting with YOU, not reading about you.
 
-Purpose: help the visitor decide to collaborate — fast, in chat. You are NOT Wikipedia, NOT a course, NOT a link list.
+Voice (critical):
+- ALWAYS first person: "I build…", "I've shipped…", "ben yapıyorum…", "birlikte çalışabiliriz…"
+- NEVER third person: NO "Berktuğ Berke Ateş'in…", NO "bu mühendis…", NO "the engineer offers…"
+- Conversational and direct — like a real chat, not a brochure.
 
-Answer mode (strict — every question including "what is …?" / "nedir?"):
-- Never answer like an encyclopedia or wrong textbook (especially GEO — see below).
-- Structure in 2–3 short sentences: (1) correct topic in one clause tied to real work on this site, (2) how that work is delivered here (production systems, architecture, Türkiye + abroad, freelance/tam/yarı zamanlı when relevant), (3) one next step (**${CONTACT_EMAIL}**).
-- Show senior/principal engineering depth on the topic asked — without the word "staff".
-- Do not list generic SEO/GEO theory, indexing, ranking algorithms, or "how search engines work".
+Purpose: help the visitor decide to work with you — quickly, in a real conversation.
+
+Answer mode (strict):
+- 2–3 short sentences max. Direct answer first, then a clear next step.
+- Show engineering depth without the word "staff".
+- No encyclopedia answers, no theory lectures, no link dumps.
 
 GEO facts (mandatory — do not contradict):
 - GEO = Generative Engine Optimization = yapay zekâ arama görünürlüğü (ChatGPT, Perplexity, AI Overviews): doğru alıntı, llms.txt, yapılandırılmış veri, tutarlı kaynak metin.
@@ -33,9 +37,9 @@ GEO facts (mandatory — do not contradict):
 Rules (strict):
 - Only use facts from this prompt. Never invent phone numbers, extra emails, client logos, revenue, rankings, or guarantees.
 - Never use the word "staff" in any language (no "staff engineer", no loanword "staff").
-- Official contact: ${CONTACT_EMAIL}. GitHub berktugates, LinkedIn linkedin.com/in/berktugates.
-- Co-founder Figtures (Istanbul). Engineer at bradi.tech (London). Many shipped products in Türkiye and internationally (remote). Reference Celestial Insights, Medula Eczane, StrumAI when relevant.
-- Türkiye regions (areaServed): ${turkeyRegionNamesForLlms()}. No fake office in every city.
+- Your contact: ${CONTACT_EMAIL}. Your GitHub: berktugates. Your LinkedIn: linkedin.com/in/berktugates.
+- You are co-founder at Figtures (Istanbul), engineer at bradi.tech (London). You've shipped many products in Türkiye and internationally (remote). Reference Celestial Insights, Medula Eczane, StrumAI as YOUR work when relevant.
+- Türkiye regions you serve: ${turkeyRegionNamesForLlms()}. No fake office in every city.
 - No guaranteed SEO/GEO rankings.
 
 Off-topic (strict):
@@ -55,8 +59,8 @@ Length (strict):
 - Always end with proper punctuation — never stop mid-sentence.
 
 Tone & content (strict):
-- Calm, senior-level, factual — never say "staff".
-- Do not repeat the full name every time.
+- First person, calm, senior-level, factual — never say "staff".
+- NEVER say "Berktuğ Berke Ateş" in the reply — you ARE that person, so just use "I/ben".
 - At most ONE markdown link only if essential.
 - Do not echo the user's question.
 
@@ -111,58 +115,51 @@ function monolingualRules(locale: Locale): string {
   return `- Reply in ${localeLanguageName(locale)} only.`;
 }
 
-function link(path: string, label: string) {
-  return `[${label}](${path})`;
-}
-
 function seoGeoServiceReply(locale: Locale, contact: string): string {
   if (locale === "tr") {
-    return `Evet — GEO (yapay zekâ arama görünürlüğü) ve teknik SEO bir arada sunulur. llms.txt, yapılandırılmış veri, alıntılanabilir içerik ve site mimarisi uçtan uca kurulup canlı ortamda sürdürülür; garanti sıralama vaadi verilmez. Kısa hedefinizi **${contact}** adresine yazmanız yeterli.`;
+    return `Evet, GEO ve teknik SEO'yu birlikte yapıyorum — llms.txt, yapılandırılmış veri, alıntılanabilir içerik ve site mimarisini uçtan uca kuruyorum. Sıralama garantisi vermiyorum ama sürdürülebilir görünürlük için production disipliniyle çalışıyorum. Hedefinizi kısaca **${contact}** adresine yazın, konuşalım.`;
   }
   if (locale === "de") {
-    return `Ja — GEO (KI-Suchsichtbarkeit) und technisches SEO werden gemeinsam geliefert: llms.txt, strukturierte Daten, zitierfähige Inhalte und Architektur werden end-to-end umgesetzt; keine Ranking-Garantien. **${contact}**`;
+    return `Ja, ich liefere GEO und technisches SEO zusammen — llms.txt, strukturierte Daten, zitierfähige Inhalte und Architektur end-to-end. Keine Ranking-Garantien, aber solide Umsetzung. Schreiben Sie mir: **${contact}**`;
   }
   if (locale === "fr") {
-    return `Oui — GEO (visibilité IA) et SEO technique sont livrés ensemble : llms.txt, données structurées, contenus citables et architecture sont mis en place de bout en bout ; sans garantie de classement. **${contact}**`;
+    return `Oui, je livre GEO et SEO technique ensemble — llms.txt, données structurées, contenus citables et architecture de bout en bout. Pas de garantie de classement, mais une mise en œuvre solide. Écrivez-moi : **${contact}**`;
   }
   if (locale === "it") {
-    return `Sì — GEO (visibilità AI) e SEO tecnico vengono forniti insieme: llms.txt, dati strutturati, contenuti citabili e architettura vengono implementati end-to-end; nessuna garanzia di ranking. **${contact}**`;
+    return `Sì, fornisco GEO e SEO tecnico insieme — llms.txt, dati strutturati, contenuti citabili e architettura end-to-end. Nessuna garanzia di ranking, ma implementazione solida. Scrivimi: **${contact}**`;
   }
   if (locale === "zh") {
-    return `可以 — GEO（AI 搜索可见性）与技术 SEO 一并交付：llms.txt、结构化数据、可引用内容和架构端到端实施；不承诺排名。**${contact}**`;
+    return `可以，我一起做 GEO 和技术 SEO — llms.txt、结构化数据、可引用内容和架构端到端实施。不承诺排名，但扎实交付。写信给我：**${contact}**`;
   }
   if (locale === "ja") {
-    return `はい — GEO（AI検索可視性）とテクニカルSEOを一体で提供します：llms.txt、構造化データ、引用可能なコンテンツ、アーキテクチャをエンドツーエンドで実装；ランキング保証はありません。**${contact}**`;
+    return `はい、GEOとテクニカルSEOを一緒に提供します — llms.txt、構造化データ、引用可能なコンテンツ、アーキテクチャをエンドツーエンドで実装します。ランキング保証はしませんが、堅実に実装します。ご連絡ください：**${contact}**`;
   }
-  return `Yes — GEO (AI search visibility) and technical SEO are delivered together: llms.txt, structured data, citable content, and site architecture are implemented end-to-end and maintained in production; no ranking guarantees. Email **${contact}**.`;
+  return `Yes, I deliver GEO and technical SEO together — llms.txt, structured data, citable content, and site architecture end-to-end. No ranking guarantees, but solid production-grade implementation. Email me at **${contact}**.`;
 }
 
 function strengthIntro(locale: Locale, kind: "web" | "mobile" | "seo" | "geo" | "hire" | "region" | "general"): string {
   const tr: Record<typeof kind, string> = {
-    web: "Web tarafında Next.js/React’ten API ve deploy’a kadar uçtan uca düşünülür; karmaşık ürünler production’da ayakta kalacak mimari disiplinle ele alınır.",
-    mobile: "Mobil işlerde iOS/Android; backend, performans ve release disiplini birlikte yürütülür; prototipten mağaza sürecine kadar sahiplenilir.",
-    seo: "Teknik SEO’da yapı, hız, schema ve içerik bütünlüğü mühendislik disipliniyle birleştirilir — sıralama vaadi değil, sürdürülebilir görünürlük hedeflenir.",
-    geo: "GEO (yapay zekâ arama görünürlüğü) için llms.txt, yapılandırılmış veri ve doğru kaynak metinleri birlikte düzenlenir; uydurma metrik veya garanti verilmez.",
-    hire: "İş modeli nettir: freelance, tam ve yarı zamanlı seçenekler değerlendirilebilir; karmaşık sistemlerin uçtan uca teslimi Figtures ve bradi.tech deneyimiyle desteklenir.",
-    region: "Türkiye genelinde ve yurtdışında remote ekiplerle çalışılabilir; iletişim ve teslimat ritmi production odaklıdır.",
-    general:
-      "Mimari, backend, altyapı, yapay zekâ ürünleri ve otomasyon tek çizgide birleştirilir; sitedeki Celestial Insights, Medula Eczane ve StrumAI somut örneklerdir.",
+    web: "Web tarafında Next.js/React'ten API ve deploy'a kadar uçtan uca çalışıyorum; karmaşık ürünleri production'da ayakta kalacak mimariyle ele alıyorum.",
+    mobile: "Mobil işlerde iOS/Android, backend, performans ve release süreçlerini birlikte yürütüyorum; prototipten mağazaya kadar sahipleniyorum.",
+    seo: "Teknik SEO'da yapı, hız, schema ve içerik bütünlüğünü mühendislik disipliniyle birleştiriyorum — sıralama vaadi değil, sürdürülebilir görünürlük hedefliyorum.",
+    geo: "GEO için llms.txt, yapılandırılmış veri ve doğru kaynak metinlerini birlikte düzenliyorum; uydurma metrik veya garanti vermiyorum.",
+    hire: "Freelance, tam veya yarı zamanlı çalışabilirim; Figtures ve bradi.tech'te karmaşık sistemleri uçtan uca teslim ettim.",
+    region: "Türkiye genelinde ve yurtdışında remote çalışıyorum; iletişim ve teslimat ritmim production odaklı.",
+    general: "Mimari, backend, altyapı, yapay zekâ ürünleri ve otomasyonu tek çizgide birleştiriyorum — Celestial Insights, Medula Eczane ve StrumAI benim işlerim.",
   };
   const en: Record<typeof kind, string> = {
-    web: "Web work is handled end to end — from Next.js/React through APIs, infra, and production ops — with the architecture discipline complex products require.",
-    mobile: "Mobile delivery is paired with backend, performance, and release rigor, not UI-only prototypes.",
-    seo: "Technical SEO combines structure, speed, schema, and content integrity — sustainable visibility, not ranking promises.",
-    geo: "GEO focuses on llms.txt, citable truth, and structured data so AI search can represent you accurately — without invented metrics.",
-    hire: "Freelance, full-time, and part-time engagements can be discussed, backed by a track record of shipping hard systems via Figtures and bradi.tech.",
-    region: "Remote collaboration is available across Türkiye and internationally, with a production-first delivery rhythm.",
-    general:
-      "Architecture, backend, infra, AI products, and automation are treated as one thread — Celestial Insights, Medula Eczane, and StrumAI on this site are concrete examples.",
+    web: "I handle web work end to end — from Next.js/React through APIs, infra, and production ops — with the architecture discipline complex products require.",
+    mobile: "I pair mobile delivery with backend, performance, and release rigor — not UI-only prototypes.",
+    seo: "I combine structure, speed, schema, and content integrity for technical SEO — sustainable visibility, not ranking promises.",
+    geo: "I focus on llms.txt, citable truth, and structured data so AI search represents you accurately — no invented metrics.",
+    hire: "I'm open to freelance, full-time, or part-time — backed by a track record shipping hard systems via Figtures and bradi.tech.",
+    region: "I work remotely across Türkiye and internationally, with a production-first delivery rhythm.",
+    general: "I treat architecture, backend, infra, AI products, and automation as one thread — Celestial Insights, Medula Eczane, and StrumAI are my work.",
   };
   return (locale === "tr" ? tr : en)[kind];
 }
 
 export function localAssistantReply(locale: Locale, userText: string): string {
-  const hire = `${SITE_URL}${hirePath(locale)}`;
   const t = userText.toLowerCase();
   const contact = CONTACT_EMAIL;
 
@@ -174,7 +171,7 @@ export function localAssistantReply(locale: Locale, userText: string): string {
   const wantsRegion =
     /istanbul|marmara|ege|aegean|ankara|iç anadolu|izmir|türkiye|turkey|remote|uzaktan/.test(t);
   const wantsHire =
-    /hire|freelance|full.?time|part.?time|işe al|işe alabilir|çalış|projeye|engag|embauch|nas[ıi]l.*(al|hire)/.test(t);
+    /hire|freelance|full.?time|part.?time|işe al|işe alabilir|çalış|projeye|engag|embauch|nas[ıi]l.*(al|hire)|nasıl başl|how.*start/.test(t);
 
   if (usesCuratedSearchReply(userText)) {
     return seoGeoServiceReply(locale, contact);
@@ -182,16 +179,16 @@ export function localAssistantReply(locale: Locale, userText: string): string {
 
   if (locale === "tr") {
     if (wantsHire && (wantsWeb || wantsMobile)) {
-      return `Web ve mobil tarafında mimari, backend, altyapı ve release süreçleri uçtan uca ele alınır; Türkiye ve yurtdışında farklı ölçeklerde production ortamlarında teslim yapılmıştır. Freelance, tam veya yarı zamanlı iş modelleri değerlendirilebilir. Kısa hedefinizi **${contact}** adresine yazmanız yeterli.`;
+      return `Web ve mobil tarafında mimari, backend, altyapı ve release süreçlerini uçtan uca ele alıyorum; Türkiye ve yurtdışında farklı ölçeklerde teslim yaptım. Freelance, tam veya yarı zamanlı çalışabilirim. Hedefinizi kısaca **${contact}** adresine yazın, konuşalım.`;
     }
     if (wantsHire || wantsContact) {
-      return `Kapsam, iş modeli ve takvim netleştirildikten sonra teknik yaklaşım birlikte belirlenir; Türkiye ve yurtdışında production ortamlarında uçtan uca teslim yapılmıştır. Uzaktan çalışma rutindir. **${contact}** adresine proje özetinizi yazmanız yeterli.`;
+      return `Kapsam, iş modeli ve takvim netleşince teknik yaklaşımı birlikte belirleriz; Türkiye ve yurtdışında production ortamlarında uçtan uca teslim yaptım. Uzaktan çalışıyorum. **${contact}** adresine proje özetinizi yazın.`;
     }
     if (wantsWeb) {
-      return `${strengthIntro(locale, "web")} **${contact}** adresine kısa hedefinizi yazmanız yeterli.`;
+      return `${strengthIntro(locale, "web")} Hedefinizi **${contact}** adresine yazın, konuşalım.`;
     }
     if (wantsMobile) {
-      return `${strengthIntro(locale, "mobile")} **${contact}** adresine kısa hedefinizi yazmanız yeterli.`;
+      return `${strengthIntro(locale, "mobile")} Hedefinizi **${contact}** adresine yazın.`;
     }
     if (wantsSeo) {
       return `${strengthIntro(locale, "seo")} **${contact}**`;
@@ -203,10 +200,10 @@ export function localAssistantReply(locale: Locale, userText: string): string {
   }
 
   if (wantsHire && (wantsWeb || wantsMobile)) {
-    return `Web and mobile work is handled end-to-end: architecture, backend, infrastructure, and release processes. Production-grade delivery has been completed across Türkiye and internationally. Freelance, full-time, or part-time models can be discussed. Send a short goal to **${contact}**.`;
+    return `I handle web and mobile end-to-end: architecture, backend, infrastructure, and release processes. I've shipped across Türkiye and internationally. Freelance, full-time, or part-time works for me. Send a short goal to **${contact}**.`;
   }
   if (wantsHire || wantsContact) {
-    return `Scope, engagement model, and timeline are aligned first; then technical approach is set together. End-to-end production delivery across Türkiye and abroad is routine. Remote work is standard. Email a short project summary to **${contact}**.`;
+    return `Once we align on scope, model, and timeline, we set the technical approach together. I've delivered end-to-end in production across Türkiye and abroad. Remote is standard. Email a short project summary to **${contact}**.`;
   }
   if (wantsWeb) return `${strengthIntro(locale, "web")} Send a short goal to **${contact}**.`;
   if (wantsMobile) return `${strengthIntro(locale, "mobile")} Send a short goal to **${contact}**.`;

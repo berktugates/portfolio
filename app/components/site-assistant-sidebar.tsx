@@ -268,6 +268,7 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
                     placeholder={copy.placeholder}
                     aria-label={copy.placeholder}
                     disabled={thinking}
+                    maxLength={500}
                     onChange={(e) => setPrompt(e.target.value)}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
