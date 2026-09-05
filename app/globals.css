@@ -198,19 +198,28 @@ body.has-site-assistant-dock #main-content { padding-bottom: 4.5rem; }
 }
 .site-assistant-blog-dock--closing {
   animation: site-assistant-blog-dock-close 0.28s cubic-bezier(0.4, 0, 1, 1) both;
+  pointer-events: none;
 }
 @keyframes site-assistant-blog-dock-open {
-  from { opacity: 0; transform: translateY(1.5rem) scale(0.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(1.5rem); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @keyframes site-assistant-blog-dock-close {
-  from { opacity: 1; transform: translateY(0) scale(1); }
-  to { opacity: 0; transform: translateY(1rem) scale(0.97); }
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(1rem); }
+}
+.site-assistant-blog-suggestion {
+  animation: site-assistant-blog-suggestion-enter 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes site-assistant-blog-suggestion-enter {
+  from { opacity: 0; transform: translateY(-0.5rem); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .site-assistant-fab,
   .site-assistant-blog-dock,
-  .site-assistant-blog-dock--closing {
+  .site-assistant-blog-dock--closing,
+  .site-assistant-blog-suggestion {
     animation: none;
   }
 }
