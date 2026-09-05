@@ -354,7 +354,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
       <div
         ref={dockHostRef}
         data-testid="site-assistant-dock-host"
-        className="site-assistant-dock-host site-assistant-blog-dock-shell fixed inset-x-0 bottom-0 z-50 flex flex-col items-center px-4 pb-4 sm:items-end sm:px-6 sm:pb-5"
+        className="site-assistant-dock-host site-assistant-blog-dock-shell fixed inset-x-0 bottom-0 z-50 flex flex-col items-center px-4 pb-4 sm:px-6 sm:pb-5"
         onKeyDown={(e) => {
           if (e.key === "Escape") handleDismissOutside();
         }}
