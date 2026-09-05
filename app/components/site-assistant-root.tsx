@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { DEFAULT_LOCALE, isLocale } from "../lib/i18n";
 import { SiteAssistantDock } from "./site-assistant";
 import { SiteAssistantSidebar } from "./site-assistant-sidebar";
+import { usesFabAssistant } from "./site-assistant/assistant-routes";
 
 function localeFromPathname(pathname: string) {
   const segment = pathname.split("/").filter(Boolean)[0];
@@ -13,20 +14,12 @@ function localeFromPathname(pathname: string) {
   return DEFAULT_LOCALE;
 }
 
-function isBlogPage(pathname: string): boolean {
-  const segments = pathname.split("/").filter(Boolean);
-  // Check for /blogs or /{locale}/blogs
-  if (segments[0] === "blogs") return true;
-  if (segments.length >= 2 && isLocale(segments[0]) && segments[1] === "blogs") return true;
-  return false;
-}
-
 export function SiteAssistantRoot() {
   const pathname = usePathname();
   const locale = localeFromPathname(pathname ?? "/");
-  const isBlog = isBlogPage(pathname ?? "/");
+  const fabSurface = usesFabAssistant(pathname ?? "/");
 
-  if (isBlog) {
+  if (fabSurface) {
     return <SiteAssistantSidebar locale={locale} />;
   }
 

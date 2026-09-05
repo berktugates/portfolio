@@ -354,11 +354,12 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
       <div
         ref={dockHostRef}
         data-testid="site-assistant-dock-host"
-        className="site-assistant-dock-host fixed inset-x-0 bottom-0 z-50 mx-auto flex min-w-0 max-w-[720px] flex-col px-3 pb-2.5 sm:px-5 sm:pb-3"
+        className="site-assistant-dock-host site-assistant-blog-dock-shell fixed inset-x-0 bottom-0 z-50 flex flex-col items-center px-4 pb-4 sm:items-end sm:px-6 sm:pb-5"
         onKeyDown={(e) => {
           if (e.key === "Escape") handleDismissOutside();
         }}
       >
+        <div className="site-assistant-input-shell pointer-events-auto flex w-full min-w-0 max-w-[400px] flex-col sm:w-[380px]">
         {chatOpen ? (
           <>
             <AssistantDockCloseButton label={copy.closeChat} onClick={handleDismissOutside} />
@@ -451,6 +452,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </>

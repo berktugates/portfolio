@@ -226,7 +226,6 @@ body.has-site-assistant-dock #main-content { padding-bottom: 4.5rem; }
 
 /* Better-i18n style hw-dock (adapted for this site's dark theme) */
 .site-assistant-dock-host {
-  align-items: center;
   min-width: 0;
 }
 .site-assistant-input-shell {

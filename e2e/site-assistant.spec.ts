@@ -49,6 +49,25 @@ test.describe("site assistant home dock", () => {
     await expect(panel).not.toBeAttached({ timeout: 5_000 });
     await expect(input).toBeVisible();
   });
+
+  test("close button aligns with input shell", async ({ page }) => {
+    await page.goto("/");
+    const input = page.getByRole("textbox", { name: /How can I help/i });
+    await input.click();
+    await page.locator(".hw-dock-suggestion").first().click();
+    await expect(page.locator(".hw-dock-send-spinner")).toHaveCount(0, { timeout: 20_000 });
+    const close = page.getByTestId("site-assistant-dock-close");
+    const shell = page.locator("[data-testid=site-assistant-dock-host] .site-assistant-input-shell");
+    await expect(close).toBeVisible();
+    const closeBox = await close.boundingBox();
+    const shellBox = await shell.boundingBox();
+    expect(closeBox).not.toBeNull();
+    expect(shellBox).not.toBeNull();
+    if (closeBox && shellBox) {
+      expect(closeBox.x + closeBox.width).toBeLessThanOrEqual(shellBox.x + shellBox.width + 2);
+      expect(closeBox.x).toBeGreaterThanOrEqual(shellBox.x - 2);
+    }
+  });
 });
 
 test.describe("site assistant blog dock", () => {
@@ -69,19 +88,28 @@ test.describe("site assistant blog dock", () => {
     await page.getByTestId("site-assistant-fab").click();
     await assertSendInsideBar(page);
   });
+
+  test("project detail uses FAB assistant like blogs", async ({ page }) => {
+    await page.goto("/projects/strumai");
+    await expect(page.getByTestId("site-assistant-fab")).toBeVisible();
+    await expect(page.getByTestId("site-assistant-dock-host")).toHaveCount(0);
+    await page.getByTestId("site-assistant-fab").click();
+    await expect(page.getByTestId("site-assistant-dock-close")).toBeVisible();
+    await assertSendInsideBar(page);
+  });
 });
 
 test.describe("site assistant desktop", () => {
   test.use({ viewport: DESKTOP });
 
-  test("home dock bar width is constrained on large screens", async ({ page }) => {
+  test("home input shell width on large screens", async ({ page }) => {
     await page.goto("/");
-    const stack = page.locator("[data-testid=site-assistant-dock-host] .hw-dock-stack");
-    await page.getByRole("textbox", { name: /How can I help/i }).click();
-    const box = await stack.boundingBox();
+    const shell = page.locator("[data-testid=site-assistant-dock-host] .site-assistant-input-shell");
+    await expect(shell).toBeVisible({ timeout: 15_000 });
+    const box = await shell.boundingBox();
     expect(box).not.toBeNull();
     if (box) {
-      expect(box.width).toBeLessThanOrEqual(416);
+      expect(box.width).toBeLessThanOrEqual(400);
     }
   });
 });
