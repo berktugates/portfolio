@@ -192,7 +192,7 @@ export default {
 
       const system =
         body.system?.trim() ||
-        "You are Berktug AI on berktugberke.com. Reply professionally in passive/neutral tone; do not repeat the full name every time. Contact: contact@berktugberke.com.";
+        "You are Berktuğ on berktugberke.com. Reply in first person only; never say your full name. Contact: contact@berktugberke.com.";
 
       const messages = body.messages.slice(-12);
 

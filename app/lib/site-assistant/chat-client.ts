@@ -6,7 +6,25 @@ import {
   guardMessageForLocale,
   recordAssistantRequestSent,
 } from "./guards";
-import { getRefusalReply, isBlockedUserMessage, isMisleadingGeoReply, sanitizeAssistantReply, usesCuratedSearchReply, usesCuratedHireReply } from "./moderation";
+import {
+  getRefusalReply,
+  isBlockedUserMessage,
+  isMisleadingGeoReply,
+  sanitizeAssistantReply,
+  usesCuratedSearchReply,
+  usesCuratedHireReply,
+  usesCuratedProjectReply,
+  usesCuratedStartReply,
+} from "./moderation";
+
+function usesAnyCuratedReply(text: string): boolean {
+  return (
+    usesCuratedSearchReply(text) ||
+    usesCuratedHireReply(text) ||
+    usesCuratedProjectReply(text) ||
+    usesCuratedStartReply(text)
+  );
+}
 
 function finalizeReply(locale: Locale, userMessage: string, reply: string): string {
   const trimmed = userMessage.trim();
@@ -28,7 +46,7 @@ export async function sendAssistantMessage(
     return getRefusalReply(locale);
   }
 
-  if (usesCuratedSearchReply(trimmed) || usesCuratedHireReply(trimmed)) {
+  if (usesAnyCuratedReply(trimmed)) {
     return finalizeReply(locale, trimmed, localAssistantReply(locale, trimmed));
   }
 

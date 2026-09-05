@@ -1,5 +1,9 @@
 import type { Locale } from "../i18n";
 
+function normUserText(text: string): string {
+  return text.trim().toLocaleLowerCase("tr");
+}
+
 const ABUSE_RE =
   /\b(sex|seks|porn|xxx|nude|naked|fuck|shit|bitch|amk|aq|orospu|siktir|piç|yarrak|mal\s*af|sikerim)\b|pomp+a{2,}/iu;
 
@@ -7,7 +11,7 @@ const POLITICS_RE =
   /\b(seçim|parti|akp|chp|erdogan|erdoğan|trump|biden|siyaset|politic|election|war crime|genocide)\b/iu;
 
 export function usesCuratedSearchReply(text: string): boolean {
-  const t = text.trim().toLowerCase();
+  const t = normUserText(text);
   if (/(?:^|\s|\()geo\b|yapay zek[âa]|üretken arama|llms\.txt/.test(t)) return true;
   if (/seo[\s\-–/]*geo|geo[\s\-–/]*seo|seo ve geo/.test(t)) return true;
   if (/\bseo\b/.test(t) && /\bgeo\b/.test(t)) return true;
@@ -17,12 +21,60 @@ export function usesCuratedSearchReply(text: string): boolean {
 }
 
 export function usesCuratedHireReply(text: string): boolean {
-  const t = text.trim().toLowerCase();
-  const wantsHire = /hire|freelance|full.?time|part.?time|işe al|işe alabilir|çalış|projeye|engag|embauch|nas[ıi]l.*(al|hire)|how.*(hire|work)|wie.*einstell/.test(t);
+  const t = normUserText(text);
   const wantsWebOrMobile = /web|mobile|mobil|ios|android|app|uygulama|frontend|backend/.test(t);
+  const wantsHire =
+    /hire|freelance|full.?time|part.?time|işe al|işe alabilir|çalış|projeye|engag|embauch|nas[ıi]l.*(al|hire)|how.*(hire|work)|wie.*einstell/.test(
+      t,
+    ) ||
+    (/nasıl başl|how do we start|how.*start|get started/.test(t) && wantsWebOrMobile);
   if (wantsHire && wantsWebOrMobile) return true;
   if (wantsHire && /hizmet|servis|service|remote|uzak|yurt|abroad|international/.test(t)) return true;
   return false;
+}
+
+export function usesCuratedProjectReply(text: string): boolean {
+  const t = normUserText(text);
+  if (usesCuratedHireReply(text)) return false;
+  return /hangi proje|which project|what project|what.*projects|ne.*proje|proje.*çalış|projelerin|projelerde|your projects|experience.*project|referans|portfolio/.test(
+    t,
+  );
+}
+
+export function usesCuratedStartReply(text: string): boolean {
+  const t = normUserText(text);
+  if (usesCuratedHireReply(text)) return false;
+  return /nasıl başl|how do we start|how.*start|ilk adım|first step|nereden başl|where.*begin|get started|başlamak/.test(
+    t,
+  );
+}
+
+const PROJECT_NAME_RE =
+  /Celestial\s+Insights|Medula\s+Eczane|StrumAI|Figtures|bradi\.tech/gi;
+
+const FULL_NAME_RE =
+  /Berktu[gğ]\s*Berke\s*Ate[sş]|Berktug\s*Berke\s*Ates|Berktu[gğ]'?[uü]n|Berktu[gğ]\s*Berke\s*Ate[sş]'?in/giu;
+
+function stripUnwantedNames(text: string, userMessage: string): string {
+  let out = text;
+  const userNamedProject = PROJECT_NAME_RE.test(userMessage);
+  PROJECT_NAME_RE.lastIndex = 0;
+
+  if (!userNamedProject) {
+    const hits = out.match(PROJECT_NAME_RE);
+    if (hits && hits.length > 0) {
+      out = out.replace(PROJECT_NAME_RE, "");
+      out = out.replace(/\s*(?:örnek olarak|such as|like|e\.g\.|for example)\s*[,.]?\s*/gi, " ");
+      out = out.replace(/:\s*,/g, ":").replace(/,\s*,/g, ",").replace(/\s{2,}/g, " ");
+    }
+  }
+
+  out = out.replace(FULL_NAME_RE, "");
+  out = out.replace(/\buzmanlığımız\b/giu, "uzmanlığım");
+  out = out.replace(/\bdeneyimlerimiz\b/giu, "deneyimim");
+  out = out.replace(/\s+,\s+/g, ", ");
+  out = out.replace(/\.\s*\./g, ".");
+  return out.trim();
 }
 
 export function isGeoTopicMessage(text: string): boolean {
@@ -76,6 +128,7 @@ export function sanitizeAssistantReply(reply: string, userMessage: string, local
     const escaped = user.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     out = out.replace(new RegExp(`^${escaped}\\s*`, "iu"), "");
   }
+  out = stripUnwantedNames(out, user);
   out = out.replace(/\bstaff engineer\b/gi, "senior engineer");
   out = out.replace(/\bstaff\b/gi, "senior");
   out = out.replace(/(?<![\[(])(https?:\/\/[^\s)\]]+)/g, (_, url: string) => {
