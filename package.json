@@ -18,7 +18,9 @@
     "newsletter:send": "pnpm dlx tsx scripts/send-blog-newsletter.ts",
     "newsletter:sync": "pnpm dlx tsx scripts/send-blog-newsletter.ts --sync",
     "blog:publish": "node scripts/publish-daily-blog.mjs",
-    "blog:publish:dry": "node scripts/publish-daily-blog.mjs --dry-run"
+    "blog:publish:dry": "node scripts/publish-daily-blog.mjs --dry-run",
+    "test:e2e": "playwright test",
+    "test:e2e:webkit": "playwright test --project=webkit"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.3.3",
@@ -35,6 +37,7 @@
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22",
     "@types/react": "^19",

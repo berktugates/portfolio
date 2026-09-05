@@ -8,6 +8,7 @@ import { sendAssistantMessage, trackAssistantEvent } from "../lib/site-assistant
 import type { ChatMessage } from "../lib/site-assistant/knowledge";
 import { AssistantMessageContent } from "../lib/site-assistant/render-message";
 import { AssistantTypingIndicator } from "./assistant-typing-indicator";
+import { useAssistantOutsideDismiss } from "./site-assistant/use-assistant-outside-dismiss";
 
 const MIN_TYPING_MS = 520;
 const DOCK_INPUT_MIN_PX = 36;
@@ -69,8 +70,17 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
   const listRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<ChatMessage[]>([]);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const dockContainerRef = useRef<HTMLDivElement>(null);
   const isSubmittingRef = useRef(false);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openGuardUntilRef = useRef(0);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    openGuardUntilRef.current = Date.now() + 400;
+  }, [isOpen]);
+
+  const isOpenGuarded = useCallback(() => Date.now() < openGuardUntilRef.current, []);
 
   useEffect(() => {
     const stored = loadStoredMessages();
@@ -92,6 +102,17 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
     syncDockInputHeight(inputRef.current);
   }, [prompt]);
 
+  const [backdropActive, setBackdropActive] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setBackdropActive(false);
+      return;
+    }
+    const id = window.requestAnimationFrame(() => setBackdropActive(true));
+    return () => window.cancelAnimationFrame(id);
+  }, [isOpen]);
+
   useEffect(() => {
     if (isOpen && inputRef.current) {
       setTimeout(() => inputRef.current?.focus(), 100);
@@ -105,12 +126,28 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
   }, [locale]);
 
   const closeDock = useCallback(() => {
+    if (Date.now() < openGuardUntilRef.current) return;
+    if (thinking || isSubmittingRef.current) return;
     setIsClosing(true);
+    setInputFocused(false);
+    inputRef.current?.blur();
     setTimeout(() => {
       setIsOpen(false);
       setIsClosing(false);
     }, PANEL_CLOSE_DURATION_MS);
-  }, []);
+  }, [thinking]);
+
+  const dismissGuard = useCallback(
+    () => !thinking && !isSubmittingRef.current && !isOpenGuarded(),
+    [thinking, isOpenGuarded],
+  );
+
+  useAssistantOutsideDismiss({
+    enabled: isOpen && !isClosing && backdropActive,
+    containerRef: dockContainerRef,
+    onDismiss: closeDock,
+    canDismiss: dismissGuard,
+  });
 
   const canSend = Boolean(prompt.trim()) && !thinking;
   const showSuggestions = inputFocused && !thinking && messages.length === 0;
@@ -180,12 +217,19 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
     blurTimer.current = setTimeout(() => setInputFocused(false), 180);
   };
 
+  const handleDockMouseDown = () => {
+    if (blurTimer.current) {
+      clearTimeout(blurTimer.current);
+      blurTimer.current = null;
+    }
+  };
+
   return (
     <>
-      {/* FAB - sağ altta */}
       {!isOpen && (
         <button
           type="button"
+          data-testid="site-assistant-fab"
           onClick={openDock}
           className="site-assistant-fab fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-zinc-900 text-white shadow-lg shadow-zinc-900/20 transition-transform hover:scale-105 active:scale-95 dark:bg-zinc-100 dark:text-zinc-900 sm:bottom-6 sm:right-6 sm:h-14 sm:w-14"
           aria-label={copy.openChat}
@@ -194,23 +238,50 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
         </button>
       )}
 
-      {/* Dock açıkken */}
       {isOpen && (
         <>
-          {/* Gradient arka plan */}
+          {backdropActive && (
+            <button
+              type="button"
+              data-testid="site-assistant-blog-backdrop"
+              className="fixed inset-0 z-[55] cursor-default bg-transparent"
+              aria-hidden
+              tabIndex={-1}
+              onPointerDown={(e) => {
+                e.preventDefault();
+                closeDock();
+              }}
+            />
+          )}
+
           <div
             className="pointer-events-none fixed inset-x-0 bottom-0 z-40 h-20 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-zinc-950 dark:via-zinc-950/80"
             aria-hidden
           />
 
-          {/* Dock container */}
           <div
-            className={`site-assistant-blog-dock fixed bottom-0 left-0 right-0 z-50 flex flex-col items-center px-4 pb-4 sm:items-end sm:px-6 sm:pb-5 ${isClosing ? "site-assistant-blog-dock--closing" : ""}`}
+            className={`site-assistant-blog-dock site-assistant-blog-dock-shell fixed bottom-0 left-0 right-0 z-[60] flex flex-col items-center px-4 pb-4 sm:items-end sm:px-6 sm:pb-5 ${isClosing ? "site-assistant-blog-dock--closing" : ""}`}
           >
-            <div className="flex w-full max-w-[400px] flex-col sm:w-[380px]">
-              {/* Chat panel */}
+            <div
+              ref={dockContainerRef}
+              className="site-assistant-input-shell pointer-events-auto flex w-full min-w-0 max-w-[400px] flex-col sm:w-[380px]"
+              onKeyDown={(e) => {
+                if (e.key === "Escape") closeDock();
+              }}
+            >
+              <div className="mb-1.5 flex justify-end">
+                <button
+                  type="button"
+                  onClick={closeDock}
+                  className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-600 text-white shadow dark:bg-zinc-500"
+                  aria-label={copy.closeChat}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+
               {chatOpen && (
-                <div className="site-assistant-chat-panel pointer-events-auto relative mb-2 flex max-h-[min(50vh,380px)] w-full flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+                <div className="site-assistant-chat-panel relative mb-2 flex max-h-[min(50vh,380px)] w-full flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
                   <button
                     type="button"
                     className="absolute right-2 top-2 z-10 rounded-lg p-1.5 text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
@@ -237,10 +308,9 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
                 </div>
               )}
 
-              {/* Suggestions */}
               {showSuggestions && (
                 <div
-                  className="pointer-events-auto mb-2 flex flex-col gap-1.5"
+                  className="mb-2 flex flex-col gap-1.5"
                   onMouseDown={(e) => e.preventDefault()}
                 >
                   {copy.suggestions.map((q, index) => (
@@ -257,42 +327,43 @@ export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
                 </div>
               )}
 
-              {/* Input bar */}
-              <div className="pointer-events-auto relative">
-                <div className="flex items-end gap-2 rounded-full bg-zinc-800 px-4 py-2 shadow-lg dark:bg-zinc-700">
-                  <textarea
-                    ref={inputRef}
-                    className="max-h-24 min-h-[32px] flex-1 resize-none bg-transparent text-sm text-white outline-none placeholder:text-zinc-400"
-                    rows={1}
-                    value={prompt}
-                    placeholder={copy.placeholder}
-                    aria-label={copy.placeholder}
-                    disabled={thinking}
-                    maxLength={500}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    onKeyDown={handleKeyDown}
-                  />
-                  <button
-                    type="button"
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20 text-white transition-colors hover:bg-white/30 disabled:opacity-40"
-                    aria-label={copy.send}
-                    disabled={!canSend}
-                    onClick={handleSubmit}
+              <div className="hw-dock-stack min-w-0 max-w-full" onMouseDown={handleDockMouseDown}>
+                <div className="hw-dock">
+                  <div
+                    className="hw-dock-bar"
+                    data-grown={
+                      prompt.includes("\n") || (inputRef.current?.scrollHeight ?? 0) > DOCK_INPUT_MIN_PX + 4
+                        ? "true"
+                        : "false"
+                    }
                   >
-                    {thinking ? <span className="h-2 w-2 animate-pulse rounded-sm bg-current" /> : <SendIcon />}
-                  </button>
+                    <textarea
+                      ref={inputRef}
+                      className="hw-dock-input"
+                      rows={1}
+                      value={prompt}
+                      placeholder={copy.placeholder}
+                      aria-label={copy.placeholder}
+                      disabled={thinking}
+                      maxLength={500}
+                      onChange={(e) => setPrompt(e.target.value)}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      onKeyDown={handleKeyDown}
+                    />
+                    <div className="hw-dock-actions">
+                      <button
+                        type="button"
+                        className="hw-dock-send"
+                        aria-label={copy.send}
+                        disabled={!canSend}
+                        onClick={handleSubmit}
+                      >
+                        {thinking ? <span className="hw-dock-send-spinner" aria-hidden /> : <SendIcon />}
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                {/* Close button */}
-                <button
-                  type="button"
-                  onClick={closeDock}
-                  className="absolute -top-1 right-0 flex h-6 w-6 translate-x-1/2 items-center justify-center rounded-full bg-zinc-600 text-white shadow transition-transform hover:scale-110 dark:bg-zinc-500"
-                  aria-label={copy.closeChat}
-                >
-                  <X className="h-3 w-3" />
-                </button>
               </div>
             </div>
           </div>

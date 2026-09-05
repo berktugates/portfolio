@@ -8,6 +8,7 @@ import { sendAssistantMessage, trackAssistantEvent } from "../lib/site-assistant
 import type { ChatMessage } from "../lib/site-assistant/knowledge";
 import { AssistantMessageContent } from "../lib/site-assistant/render-message";
 import { AssistantTypingIndicator } from "./assistant-typing-indicator";
+import { useAssistantOutsideDismiss } from "./site-assistant/use-assistant-outside-dismiss";
 
 const MIN_TYPING_MS = 520;
 const DOCK_INPUT_MIN_PX = 36;
@@ -115,7 +116,8 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
   const messagesRef = useRef<ChatMessage[]>([]);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  
+  const dockHostRef = useRef<HTMLDivElement>(null);
+
   // Ref to track if we're submitting - prevents race conditions with blur
   const isSubmittingRef = useRef(false);
 
@@ -166,7 +168,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
     const hasContent = messages.length > 0 || thinking;
     const shouldShow = (inputFocused || thinking) && hasContent;
 
-    if (shouldShow) {
+    if (shouldShow && !panelClosing) {
       // Open panel
       if (closeTimer.current) {
         clearTimeout(closeTimer.current);
@@ -174,7 +176,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
       }
       setPanelClosing(false);
       setPanelVisible(true);
-    } else if (panelVisible && !thinking && !isSubmittingRef.current) {
+    } else if (panelVisible && !thinking && !isSubmittingRef.current && !shouldShow) {
       // Close panel with animation (only if not thinking/submitting)
       setPanelClosing(true);
       closeTimer.current = setTimeout(() => {
@@ -182,7 +184,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
         setPanelClosing(false);
       }, PANEL_CLOSE_DURATION_MS);
     }
-  }, [inputFocused, messages.length, thinking, panelVisible]);
+  }, [inputFocused, messages.length, thinking, panelVisible, panelClosing]);
 
   const showSuggestions = inputFocused && !thinking && messages.length === 0;
   const canSend = Boolean(prompt.trim()) && !thinking;
@@ -310,6 +312,31 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
     }
   };
 
+  const handleDismissOutside = useCallback(() => {
+    if (isSubmittingRef.current || thinking) return;
+    clearAllTimers();
+    inputRef.current?.blur();
+    setInputFocused(false);
+    if (messagesRef.current.length > 0 || thinking) {
+      setPanelClosing(true);
+      closeTimer.current = setTimeout(() => {
+        setPanelVisible(false);
+        setPanelClosing(false);
+      }, PANEL_CLOSE_DURATION_MS);
+    }
+  }, [clearAllTimers, thinking]);
+
+  const dismissGuard = useCallback(() => !thinking && !isSubmittingRef.current, [thinking]);
+
+  const dismissEnabled = inputFocused || panelVisible || showSuggestions;
+
+  useAssistantOutsideDismiss({
+    enabled: dismissEnabled,
+    containerRef: dockHostRef,
+    onDismiss: handleDismissOutside,
+    canDismiss: dismissGuard,
+  });
+
   const chatOpen = panelVisible && (messages.length > 0 || thinking);
 
   return (
@@ -319,7 +346,28 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
         aria-hidden
       />
 
-      <div className="site-assistant-dock-host fixed inset-x-0 bottom-0 z-50 mx-auto flex max-w-[720px] flex-col px-3 pb-2.5 sm:px-5 sm:pb-3">
+      {chatOpen && (
+        <button
+          type="button"
+          data-testid="site-assistant-home-backdrop"
+          className="fixed inset-0 z-40 cursor-default bg-transparent"
+          aria-hidden
+          tabIndex={-1}
+          onPointerDown={(e) => {
+            e.preventDefault();
+            handleDismissOutside();
+          }}
+        />
+      )}
+
+      <div
+        ref={dockHostRef}
+        data-testid="site-assistant-dock-host"
+        className="site-assistant-dock-host fixed inset-x-0 bottom-0 z-50 mx-auto flex min-w-0 max-w-[720px] flex-col px-3 pb-2.5 sm:px-5 sm:pb-3"
+        onKeyDown={(e) => {
+          if (e.key === "Escape") handleDismissOutside();
+        }}
+      >
         {chatOpen ? (
           <div
             ref={panelRef}
@@ -352,7 +400,7 @@ export function SiteAssistantDock({ locale }: { locale: Locale }) {
           </div>
         ) : null}
 
-        <div className="hw-dock-stack pointer-events-auto" onMouseDown={handleDockMouseDown}>
+        <div className="hw-dock-stack pointer-events-auto min-w-0 max-w-full" onMouseDown={handleDockMouseDown}>
           {showSuggestions ? (
             <div
               className="hw-dock-suggestions hw-dock-suggestions--animate"

@@ -227,6 +227,24 @@ body.has-site-assistant-dock #main-content { padding-bottom: 4.5rem; }
 /* Better-i18n style hw-dock (adapted for this site's dark theme) */
 .site-assistant-dock-host {
   align-items: center;
+  min-width: 0;
+}
+.site-assistant-input-shell {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+.site-assistant-input-shell .hw-dock-stack {
+  width: 100%;
+  max-width: 100%;
+}
+.site-assistant-blog-dock-shell {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+}
+@media (min-width: 640px) {
+  .site-assistant-blog-dock-shell {
+    padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
+  }
 }
 .hw-dock-stack {
   width: 60%;
@@ -240,6 +258,12 @@ body.has-site-assistant-dock #main-content { padding-bottom: 4.5rem; }
   .hw-dock-stack {
     width: min(100%, calc(100vw - 1.25rem));
     max-width: min(100%, calc(100vw - 1.25rem));
+  }
+  .hw-dock-bar {
+    padding: 0.4rem 0.35rem 0.35rem 0.75rem;
+  }
+  .hw-dock-input {
+    font-size: clamp(0.8125rem, 2.5vw, 0.875rem);
   }
 }
 .hw-dock {
@@ -265,7 +289,7 @@ body.has-site-assistant-dock #main-content { padding-bottom: 4.5rem; }
     0 1px 0 rgb(255 255 255 / 0.06) inset;
 }
 .hw-dock-input {
-  flex: 1 1 auto;
+  flex: 1 1 0%;
   min-width: 0;
   min-height: 36px;
   max-height: 120px;
