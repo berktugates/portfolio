@@ -21,6 +21,76 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "mobile-background-work-that-survives-os-limits",
+    title: "Mobile Background Work That Survives OS Limits",
+    excerpt: "Background sync is not a forever daemon. Design mobile work around OS budgets, deferrable tasks, and user-visible outcomes that still complete when the app is frozen.",
+    description: "Staff-level patterns for mobile background work under iOS and Android limits: WorkManager and BGTaskScheduler, constrained sync, push-driven wakeups, and resilient offline queues.",
+    publishedAt: "2026-09-06",
+    readingMinutes: 7,
+    keywords: [
+      "mobile background tasks",
+      "WorkManager",
+      "BGTaskScheduler",
+      "offline sync",
+      "iOS Android",
+      "mobile architecture",
+    ],
+    socialThreadTr: [
+      "Mobil arka plan işi sonsuz daemon değil; OS bütçesine, ertelenebilir göreve ve uygulama donduğunda bile tamamlanan kullanıcı sonucuna göre tasarlanır. 🧵",
+      "Kuyrukla, kısıtla, gözlemle, kullanıcıya görünür hale getir. Detay: https://berktugberke.com/tr/blogs/mobile-background-work-that-survives-os-limits",
+    ],
+    sections: [
+      {
+        heading: "The OS owns the clock, not your process",
+        paragraphs: [
+          "Modern mobile platforms aggressively suspend apps to protect battery and privacy. Assuming a long-lived background process will finish uploads, sync CRM state, or process AI jobs is a design that works in the debugger and fails in the field. The durable unit of work is a queued job with constraints, not a hope that your process stays awake.",
+          "Treat background execution as a scarce budget granted under conditions: charging, unmetered network, idle device, or a push wakeup with a short window. Product features that require certainty—payment confirmation, critical message delivery—need a path that does not depend on opportunistic sync alone.",
+        ],
+      },
+      {
+        heading: "Queue locally, reconcile remotely",
+        paragraphs: [
+          "Persist intended mutations on device with idempotency keys before the network round-trip. When the OS wakes the app, drain the queue under declared constraints and reconcile with server truth. Conflicts belong in product design: last-write-wins is a choice, not a default that should surprise users.",
+          "Separate user-initiated urgent work from deferrable maintenance. A photo the user just took may deserve an immediate upload attempt with a visible progress affordance. Nightly embedding refresh for an on-device search index can wait for Wi-Fi and charging. Mixing those priorities burns battery and trust.",
+        ],
+        points: [
+          "Use platform schedulers (WorkManager, BGTaskScheduler) instead of custom forever loops",
+          "Store job payloads and retry metadata in durable local storage",
+          "Bound retries with jitter; never spin on hard failures",
+          "Surface sync status in UI when user outcomes depend on it",
+        ],
+      },
+      {
+        heading: "Push and short wakeups are features, not cheats",
+        paragraphs: [
+          "Silent or data pushes can open a brief execution window for high-value sync, but platforms rate-limit abuse and users revoke notification permission. Design the happy path to work without push, then use push as acceleration. Document what happens if the wakeup never arrives.",
+          "For AI-assisted mobile features—transcription, summarization, retrieval—prefer on-device incremental work with explicit user initiation for expensive cloud calls. Background AI that surprises battery meters becomes a one-star review faster than a missing offline cache.",
+        ],
+      },
+      {
+        heading: "Measure completion, not just enqueue",
+        paragraphs: [
+          "Instrument job age, success rate by constraint set, battery attribution where available, and user-visible staleness. A queue that grows while the app is backgrounded is an early warning that your constraints are too strict or your payloads too large.",
+          "Staff-level mobile architecture accepts OS limits as product requirements. The winning systems complete the work users care about within those limits, fail loudly when they cannot, and never pretend a suspended process is still serving the customer.",
+        ],
+        links: [
+          {
+            label: "Android Developers — WorkManager",
+            url: "https://developer.android.com/topic/libraries/architecture/workmanager",
+          },
+          {
+            label: "Apple — BGTaskScheduler",
+            url: "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler",
+          },
+          {
+            label: "Apple — Background execution",
+            url: "https://developer.apple.com/documentation/uikit/app_and_environment/scenes/preparing_your_ui_to_run_in_the_background",
+          },
+        ],
+      },
+    ],
+  },
+    {
     slug: "schema-validation-as-a-product-boundary",
     title: "Schema Validation as a Product Boundary",
     excerpt: "Treat schemas as the contract that separates product intent from implementation drift—especially when models, partners, and services invent fields under pressure.",

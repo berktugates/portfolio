@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"mobile-background-work-that-survives-os-limits": {
+    title: "Mobiler Hintergrundarbeit, die OS-Limits übersteht",
+    excerpt: "Hintergrund-Sync ist kein ewiger Daemon. Gestalten Sie mobile Arbeit um OS-Budgets, aufschiebbare Tasks und nutzersichtbare Outcomes, die auch bei eingefrorener App abgeschlossen werden.",
+    description: "Staff-Patterns für mobile Hintergrundarbeit unter iOS- und Android-Limits: WorkManager und BGTaskScheduler, eingeschränkter Sync, Push-Wakeups und robuste Offline-Queues.",
+    sections: [
+      {
+        heading: "Das OS besitzt die Uhr, nicht Ihr Prozess",
+        paragraphs: [
+          "Moderne Mobile-Plattformen suspendieren Apps aggressiv, um Akku und Privatsphäre zu schützen. Die Annahme, ein langlebiger Hintergrundprozess werde Uploads beenden, CRM-State syncen oder AI-Jobs verarbeiten, funktioniert im Debugger und scheitert im Feld. Die dauerhafte Arbeitseinheit ist ein Queue-Job mit Constraints—nicht die Hoffnung, dass Ihr Prozess wach bleibt.",
+          "Behandeln Sie Background-Execution als knappes Budget unter Bedingungen: Laden, unmetered Network, Idle-Gerät oder Push-Wakeup mit kurzem Fenster. Features, die Sicherheit brauchen—Zahlungsbestätigung, kritische Nachrichtenzustellung—brauchen einen Pfad, der nicht allein von opportunistischem Sync abhängt.",
+        ],
+      },
+      {
+        heading: "Lokal queuen, remote reconcilen",
+        paragraphs: [
+          "Persistieren Sie beabsichtigte Mutationen auf dem Gerät mit Idempotency Keys vor dem Network-Roundtrip. Wenn das OS die App weckt, leeren Sie die Queue unter deklarierten Constraints und reconcilen Sie mit Server-Truth. Konflikte gehören ins Produktdesign: Last-write-wins ist eine Wahl, kein Default, der Nutzer überraschen sollte.",
+          "Trennen Sie nutzerinitiierte dringende Arbeit von aufschiebbarer Wartung. Ein gerade aufgenommenes Foto verdient vielleicht einen sofortigen Upload-Versuch mit sichtbarem Progress. Nächtliche Embedding-Refresh für einen On-Device-Suchindex kann auf Wi-Fi und Laden warten. Diese Prioritäten zu mischen verbrennt Akku und Vertrauen.",
+        ],
+        points: [
+          "Platform-Scheduler (WorkManager, BGTaskScheduler) statt eigener Forever-Loops",
+          "Job-Payloads und Retry-Metadaten in durablem lokalem Storage speichern",
+          "Retries mit Jitter begrenzen; bei Hard Failures nicht spinnen",
+          "Sync-Status in der UI zeigen, wenn Nutzer-Outcomes davon abhängen",
+        ],
+      },
+      {
+        heading: "Push und kurze Wakeups sind Features, keine Tricks",
+        paragraphs: [
+          "Stille oder Data-Pushes können ein kurzes Ausführungsfenster für hochwertigen Sync öffnen, aber Plattformen rate-limiten Missbrauch und Nutzer widerrufen Notification-Permission. Designen Sie den Happy Path ohne Push, dann Push als Beschleunigung. Dokumentieren Sie, was passiert, wenn der Wakeup nie kommt.",
+          "Für AI-gestützte Mobile-Features—Transkription, Summarization, Retrieval—bevorzugen Sie on-device inkrementelle Arbeit mit expliziter Nutzerinitiation für teure Cloud-Calls. Hintergrund-AI, die Akkumeter überrascht, wird schneller zur Ein-Stern-Review als ein fehlender Offline-Cache.",
+        ],
+      },
+      {
+        heading: "Abschluss messen, nicht nur Enqueue",
+        paragraphs: [
+          "Instrumentieren Sie Job-Alter, Erfolgsrate nach Constraint-Set, Battery-Attribution wo verfügbar und nutzersichtbare Staleness. Eine Queue, die wächst während die App im Hintergrund ist, warnt früh, dass Constraints zu streng oder Payloads zu groß sind.",
+          "Staff-Mobile-Architektur akzeptiert OS-Limits als Produktanforderungen. Gewinnende Systeme schließen die Arbeit ab, die Nutzern wichtig ist, failen laut wenn sie nicht können, und behaupten nie, ein suspendierter Prozess diene noch dem Kunden.",
+        ],
+        links: [
+          {
+            label: "Android Developers — WorkManager",
+            url: "https://developer.android.com/topic/libraries/architecture/workmanager",
+          },
+          {
+            label: "Apple — BGTaskScheduler",
+            url: "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler",
+          },
+          {
+            label: "Apple — Background execution",
+            url: "https://developer.apple.com/documentation/uikit/app_and_environment/scenes/preparing_your_ui_to_run_in_the_background",
+          },
+        ],
+      },
+    ],
+  },
 "schema-validation-as-a-product-boundary": {
     title: "Schema-Validierung als Produktgrenze",
     excerpt: "Behandeln Sie Schemas als den Vertrag, der Produktabsicht von Implementierungsdrift trennt—besonders wenn Modelle, Partner und Services unter Druck Felder erfinden.",

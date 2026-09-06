@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"mobile-background-work-that-survives-os-limits": {
+    title: "能在系统限制下存活的移动端后台任务",
+    excerpt: "后台同步不是永久守护进程。围绕系统预算、可延迟任务，以及应用冻结后仍能完成的用户结果来设计移动端工作。",
+    description: "在 iOS 与 Android 限制下做移动端后台任务的 Staff 级模式：WorkManager 与 BGTaskScheduler、带约束的同步、推送唤醒，以及可靠的离线队列。",
+    sections: [
+      {
+        heading: "时钟由系统掌握，不是你的进程",
+        paragraphs: [
+          "现代移动平台会积极挂起应用以保护电池与隐私。假设长生命周期后台进程能完成上传、同步 CRM 状态或处理 AI 任务，这种设计在调试器里成立、在现场失败。可靠的工作单元是带约束的排队任务，而不是希望进程一直醒着。",
+          "把后台执行当作在条件下授予的稀缺预算：充电、不计费网络、空闲设备，或带短窗口的推送唤醒。需要确定性的功能——支付确认、关键消息送达——需要不单靠机会主义同步的路径。",
+        ],
+      },
+      {
+        heading: "本地排队，远端调和",
+        paragraphs: [
+          "在网络往返前用幂等键把意图变更持久化到设备。当系统唤醒应用时，在声明的约束下排空队列并与服务器真相调和。冲突属于产品设计：last-write-wins 是一种选择，不该成为让用户惊讶的默认。",
+          "把用户发起的紧急工作与可延迟维护分开。用户刚拍的照片可能值得立即上传并显示进度。设备端搜索索引的夜间 embedding 刷新可以等 Wi‑Fi 与充电。混在一起会烧掉电量和信任。",
+        ],
+        points: [
+          "用平台调度器（WorkManager、BGTaskScheduler）而不是自定义死循环",
+          "把任务载荷与重试元数据存入持久本地存储",
+          "用抖动限制重试；硬失败时不要空转",
+          "当用户结果依赖同步时，在 UI 中展示同步状态",
+        ],
+      },
+      {
+        heading: "推送与短唤醒是功能，不是作弊",
+        paragraphs: [
+          "静默或数据推送可为高价值同步打开短暂执行窗口，但平台会限流滥用，用户也会撤销通知权限。把幸福路径设计成不依赖推送，再用推送加速。记录若唤醒永不到来会发生什么。",
+          "对 AI 辅助移动功能——转写、摘要、检索——优先设备端增量工作，昂贵云调用需明确用户发起。让电量表吃惊的后台 AI，比缺失离线缓存更快变成一星评价。",
+        ],
+      },
+      {
+        heading: "度量完成，而不只是入队",
+        paragraphs: [
+          "度量任务年龄、按约束集的成功率、可用时的电池归因，以及用户可见的陈旧度。应用在后台时队列仍在增长，是约束过严或载荷过大的早期警告。",
+          "Staff 级移动架构把系统限制当作产品需求。赢家在限制内完成用户在意的工作，做不到时大声失败，且从不假装已挂起的进程仍在服务客户。",
+        ],
+        links: [
+          {
+            label: "Android Developers — WorkManager",
+            url: "https://developer.android.com/topic/libraries/architecture/workmanager",
+          },
+          {
+            label: "Apple — BGTaskScheduler",
+            url: "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler",
+          },
+          {
+            label: "Apple — Background execution",
+            url: "https://developer.apple.com/documentation/uikit/app_and_environment/scenes/preparing_your_ui_to_run_in_the_background",
+          },
+        ],
+      },
+    ],
+  },
 "schema-validation-as-a-product-boundary": {
     title: "把 Schema 校验当作产品边界",
     excerpt: "把 schema 当作把产品意图与实现漂移分开的合约——尤其当模型、合作方与服务在压力下发明字段时。",

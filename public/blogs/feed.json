@@ -1,8 +1,30 @@
 {
   "version": 1,
   "site": "https://berktugberke.com",
-  "generatedAt": "2026-09-05T09:50:20.112Z",
+  "generatedAt": "2026-09-06T10:06:42.112Z",
   "posts": [
+    {
+      "id": "mobile-background-work-that-survives-os-limits",
+      "slug": "mobile-background-work-that-survives-os-limits",
+      "title": "Mobile Background Work That Survives OS Limits",
+      "url": "https://berktugberke.com/blogs/mobile-background-work-that-survives-os-limits",
+      "publishedAt": "2026-09-06",
+      "tags": [
+        "mobile background tasks",
+        "WorkManager",
+        "BGTaskScheduler",
+        "offline sync",
+        "iOS Android",
+        "mobile architecture"
+      ],
+      "excerpt": "Background sync is not a forever daemon. Design mobile work around OS budgets, deferrable tasks, and user-visible outcomes that still complete when the app is frozen.",
+      "bodyPlain": "Modern mobile platforms aggressively suspend apps to protect battery and privacy. Assuming a long-lived background process will finish uploads, sync CRM state, or process AI jobs is a design that works in the debugger and fails in the field. The durable unit of work is a queued job with constraints, not a hope that your process stays awake.\n\nTreat background execution as a scarce budget granted under conditions: charging, unmetered network, idle device, or a push wakeup with a short window. Product features that require certainty—payment confirmation, critical message delivery—need a path that does not depend on opportunistic sync alone.\n\nPersist intended mutations on device with idempotency keys before the network round-trip. When the OS wakes the app, drain the queue under declared constraints and reconcile with server truth. Conflicts belong in product design: last-write-wins is a choice, not a default that should surprise users.\n\nSeparate user-initiated urgent work from deferrable maintenance. A photo the user just took may deserve an immediate upload attempt with a visible progress affordance. Nightly embedding refresh for an on-device search index can wait for Wi-Fi and charging. Mixing those priorities burns battery and trust.\n\nUse platform schedulers (WorkManager, BGTaskScheduler) instead of custom forever loops\n\nStore job payloads and retry metadata in durable local storage\n\nBound retries with jitter; never spin on hard failures\n\nSurface sync status in UI when user outcomes depend on it\n\nSilent or data pushes can open a brief execution window for high-value sync, but platforms rate-limit abuse and users revoke notification permission. Design the happy path to work without push, then use push as acceleration. Document what happens if the wakeup never arrives.\n\nFor AI-assisted mobile features—transcription, summarization, retrieval—prefer on-device incremental work with explicit user initiation for expensive cloud calls. Background AI that surprises battery meters becomes a one-star review faster than a missing offline cache.\n\nInstrument job age, success rate by constraint set, battery attribution where available, and user-visible staleness. A queue that grows while the app is backgrounded is an early warning that your constraints are too strict or your payloads too large.\n\nStaff-level mobile architecture accepts OS limits as product requirements. The winning systems complete the work users care about within those limits, fail loudly when they cannot, and never pretend a suspended process is still serving the customer.",
+      "contentHash": "0793eea9f3b443d3",
+      "socialThreadTr": [
+        "Mobil arka plan işi sonsuz daemon değil; OS bütçesine, ertelenebilir göreve ve uygulama donduğunda bile tamamlanan kullanıcı sonucuna göre tasarlanır. 🧵",
+        "Kuyrukla, kısıtla, gözlemle, kullanıcıya görünür hale getir. Detay: https://berktugberke.com/tr/blogs/mobile-background-work-that-survives-os-limits"
+      ]
+    },
     {
       "id": "schema-validation-as-a-product-boundary",
       "slug": "schema-validation-as-a-product-boundary",

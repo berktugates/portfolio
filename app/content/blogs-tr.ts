@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"mobile-background-work-that-survives-os-limits": {
+    title: "OS Limitlerinden Kurtulan Mobil Arka Plan İşi",
+    excerpt: "Arka plan senkronizasyonu sonsuz bir daemon değildir. Mobil işi OS bütçelerine, ertelenebilir görevlere ve uygulama donduğunda bile tamamlanan kullanıcı sonuçlarına göre tasarlayın.",
+    description: "iOS ve Android limitleri altında mobil arka plan işi için staff seviye kalıplar: WorkManager ve BGTaskScheduler, kısıtlı sync, push ile uyandırma ve dayanıklı çevrimdışı kuyruklar.",
+    sections: [
+      {
+        heading: "Saati OS yönetir, süreciniz değil",
+        paragraphs: [
+          "Modern mobil platformlar pil ve gizliliği korumak için uygulamaları agresif şekilde askıya alır. Uzun ömürlü bir arka plan sürecinin yüklemeleri bitireceğini, CRM durumunu senkronize edeceğini veya AI işlerini işleyeceğini varsaymak debugger'da çalışıp sahada kırılan bir tasarımdır. Dayanıklı iş birimi uyanık kalma umudu değil; kısıtları olan kuyruklanmış bir job'dır.",
+          "Arka plan yürütmeyi koşullar altında verilen kıt bir bütçe gibi ele alın: şarj, ölçülmemiş ağ, boşta cihaz veya kısa pencereli push uyandırma. Kesinlik gerektiren özellikler—ödeme onayı, kritik mesaj teslimi—yalnızca fırsatçı sync'e bağlı olmayan bir yol ister.",
+        ],
+      },
+      {
+        heading: "Yerelde kuyruklayın, uzakta uzlaştırın",
+        paragraphs: [
+          "Ağ gidiş-dönüşünden önce cihaz üzerinde idempotency anahtarlarıyla amaçlanan mutasyonları kalıcılaştırın. OS uygulamayı uyandırdığında bildirilen kısıtlar altında kuyruğu boşaltın ve sunucu gerçeğiyle uzlaştırın. Çatışmalar ürün tasarımına aittir: last-write-wins bir seçimdir, kullanıcıyı şaşırtması gereken bir varsayılan değil.",
+          "Kullanıcı başlatımlı acil işi ertelenebilir bakımdan ayırın. Kullanıcının az önce çektiği fotoğraf görünür ilerleme ile hemen yükleme denemesi hak edebilir. Cihaz içi arama indeksi için gece embedding yenilemesi Wi-Fi ve şarjı bekleyebilir. Bu öncelikleri karıştırmak hem pili hem güveni yakar.",
+        ],
+        points: [
+          "Özel sonsuz döngüler yerine platform scheduler'ları (WorkManager, BGTaskScheduler) kullanın",
+          "Job payload ve retry meta verisini dayanıklı yerel depoda saklayın",
+          "Retry'ları jitter ile sınırlayın; sert hatalarda dönmeyin",
+          "Kullanıcı sonucu buna bağlıysa sync durumunu UI'da gösterin",
+        ],
+      },
+      {
+        heading: "Push ve kısa uyandırmalar hile değil özelliktir",
+        paragraphs: [
+          "Sessiz veya data push yüksek değerli sync için kısa bir yürütme penceresi açabilir; ancak platformlar kötüye kullanımı sınırlar ve kullanıcılar bildirim iznini geri alır. Mutlu yolu push olmadan çalışacak şekilde tasarlayın; push'u hızlandırma olarak kullanın. Uyandırma hiç gelmezse ne olacağını belgelendirin.",
+          "AI destekli mobil özellikler—transkripsiyon, özetleme, retrieval—için pahalı bulut çağrılarını açık kullanıcı başlatımıyla, cihaz içi artımlı işi tercih edin. Pil sayacını şaşırtan arka plan AI, eksik çevrimdışı önbellekten daha hızlı bir yıldızlı yoruma dönüşür.",
+        ],
+      },
+      {
+        heading: "Yalnızca enqueue'u değil tamamlanmayı ölçün",
+        paragraphs: [
+          "Job yaşını, kısıt setine göre başarı oranını, mümkünse pil atıfını ve kullanıcıya görünür bayatlığı ölçün. Uygulama arka plandayken büyüyen kuyruk, kısıtlarınızın çok sıkı veya payload'larınızın çok büyük olduğunun erken uyarısıdır.",
+          "Staff seviye mobil mimari OS limitlerini ürün gereksinimi olarak kabul eder. Kazanan sistemler kullanıcıların önemsediği işi bu limitler içinde tamamlar, yapamadığında sesli fail eder ve askıya alınmış bir sürecin hâlâ müşteriye hizmet ettiğini asla iddia etmez.",
+        ],
+        links: [
+          {
+            label: "Android Developers — WorkManager",
+            url: "https://developer.android.com/topic/libraries/architecture/workmanager",
+          },
+          {
+            label: "Apple — BGTaskScheduler",
+            url: "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler",
+          },
+          {
+            label: "Apple — Background execution",
+            url: "https://developer.apple.com/documentation/uikit/app_and_environment/scenes/preparing_your_ui_to_run_in_the_background",
+          },
+        ],
+      },
+    ],
+  },
 "schema-validation-as-a-product-boundary": {
     title: "Ürün Sınırı Olarak Şema Doğrulama",
     excerpt: "Şemaları, ürün niyetini implementasyon kaymasından ayıran sözleşme gibi ele alın—özellikle modeller, partnerler ve servisler baskı altında alan uydurduğunda.",

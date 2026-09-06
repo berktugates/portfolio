@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"mobile-background-work-that-survives-os-limits": {
+    title: "Travail mobile en arrière-plan qui survit aux limites OS",
+    excerpt: "La sync en arrière-plan n'est pas un daemon éternel. Concevez le travail mobile autour des budgets OS, des tâches différables et des résultats visibles qui se terminent même quand l'app est figée.",
+    description: "Patterns staff pour le travail mobile en arrière-plan sous les limites iOS et Android : WorkManager et BGTaskScheduler, sync contrainte, wakeups push et files offline résilientes.",
+    sections: [
+      {
+        heading: "L'OS possède l'horloge, pas votre processus",
+        paragraphs: [
+          "Les plateformes mobiles modernes suspendent agressivement les apps pour protéger batterie et vie privée. Supposer qu'un processus arrière-plan long-lived finira uploads, sync CRM ou jobs IA fonctionne dans le debugger et échoue sur le terrain. L'unité durable de travail est un job en file avec contraintes—pas l'espoir que votre processus reste éveillé.",
+          "Traitez l'exécution arrière-plan comme un budget rare accordé sous conditions : charge, réseau non compté, appareil idle, ou wakeup push avec fenêtre courte. Les features qui exigent de la certitude—confirmation de paiement, livraison de message critique—ont besoin d'un chemin qui ne dépend pas seulement de la sync opportuniste.",
+        ],
+      },
+      {
+        heading: "Mettre en file localement, réconcilier à distance",
+        paragraphs: [
+          "Persistez les mutations prévues sur l'appareil avec des clés d'idempotence avant l'aller-retour réseau. Quand l'OS réveille l'app, videz la file sous les contraintes déclarées et réconciliez avec la vérité serveur. Les conflits appartiennent au design produit : last-write-wins est un choix, pas un défaut qui doit surprendre les utilisateurs.",
+          "Séparez le travail urgent initié par l'utilisateur de la maintenance différable. Une photo venant d'être prise peut mériter une tentative d'upload immédiate avec progrès visible. Un refresh nocturne d'embeddings pour un index de recherche on-device peut attendre Wi-Fi et charge. Mélanger ces priorités brûle batterie et confiance.",
+        ],
+        points: [
+          "Utiliser les schedulers plateforme (WorkManager, BGTaskScheduler) plutôt que des boucles forever custom",
+          "Stocker payloads de jobs et métadonnées de retry en stockage local durable",
+          "Borner les retries avec jitter ; ne jamais tourner en boucle sur les hard failures",
+          "Afficher le statut de sync dans l'UI quand les résultats utilisateur en dépendent",
+        ],
+      },
+      {
+        heading: "Push et courts wakeups sont des features, pas des triches",
+        paragraphs: [
+          "Les push silencieux ou data peuvent ouvrir une brève fenêtre d'exécution pour une sync à haute valeur, mais les plateformes limitent l'abus et les utilisateurs révoquent la permission de notification. Concevez le happy path sans push, puis utilisez le push comme accélération. Documentez ce qui se passe si le wakeup n'arrive jamais.",
+          "Pour les features mobiles assistées par IA—transcription, résumé, retrieval—préférez le travail incrémental on-device avec initiation utilisateur explicite pour les appels cloud coûteux. L'IA arrière-plan qui surprend le compteur batterie devient un avis une étoile plus vite qu'un cache offline manquant.",
+        ],
+      },
+      {
+        heading: "Mesurer l'achèvement, pas seulement l'enqueue",
+        paragraphs: [
+          "Instrumentez l'âge des jobs, le taux de succès par jeu de contraintes, l'attribution batterie si disponible, et la staleness visible. Une file qui grandit pendant que l'app est en arrière-plan est un signal précoce que vos contraintes sont trop strictes ou vos payloads trop gros.",
+          "L'architecture mobile staff accepte les limites OS comme exigences produit. Les systèmes gagnants terminent le travail qui compte pour les utilisateurs dans ces limites, échouent bruyamment quand ils ne peuvent pas, et ne prétendent jamais qu'un processus suspendu sert encore le client.",
+        ],
+        links: [
+          {
+            label: "Android Developers — WorkManager",
+            url: "https://developer.android.com/topic/libraries/architecture/workmanager",
+          },
+          {
+            label: "Apple — BGTaskScheduler",
+            url: "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler",
+          },
+          {
+            label: "Apple — Background execution",
+            url: "https://developer.apple.com/documentation/uikit/app_and_environment/scenes/preparing_your_ui_to_run_in_the_background",
+          },
+        ],
+      },
+    ],
+  },
 "schema-validation-as-a-product-boundary": {
     title: "La validation de schéma comme frontière produit",
     excerpt: "Traitez les schémas comme le contrat qui sépare l'intention produit de la dérive d'implémentation—surtout quand modèles, partenaires et services inventent des champs sous pression.",

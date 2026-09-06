@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"mobile-background-work-that-survives-os-limits": {
+    title: "Lavoro in background mobile che sopravvive ai limiti OS",
+    excerpt: "La sync in background non è un daemon eterno. Progettate il lavoro mobile intorno a budget OS, task differibili e outcome visibili che si completano anche quando l'app è congelata.",
+    description: "Pattern staff per lavoro in background mobile sotto i limiti iOS e Android: WorkManager e BGTaskScheduler, sync vincolata, wakeup push e code offline resilienti.",
+    sections: [
+      {
+        heading: "L'OS possiede l'orologio, non il vostro processo",
+        paragraphs: [
+          "Le piattaforme mobile moderne sospendono aggressivamente le app per proteggere batteria e privacy. Assumere che un processo background long-lived finisca upload, sync CRM o job IA funziona nel debugger e fallisce sul campo. L'unità durevole di lavoro è un job in coda con vincoli—non la speranza che il processo resti sveglio.",
+          "Trattate l'esecuzione in background come un budget scarso concesso sotto condizioni: carica, rete non a consumo, dispositivo idle o wakeup push con finestra breve. Le feature che richiedono certezza—conferma pagamento, consegna messaggio critica—hanno bisogno di un percorso che non dipenda solo dalla sync opportunistica.",
+        ],
+      },
+      {
+        heading: "Accodare in locale, riconciliare da remoto",
+        paragraphs: [
+          "Persistete le mutazioni intese sul dispositivo con chiavi di idempotenza prima del round-trip di rete. Quando l'OS sveglia l'app, svuotate la coda sotto i vincoli dichiarati e riconciliate con la verità server. I conflitti appartengono al design di prodotto: last-write-wins è una scelta, non un default che deve sorprendere gli utenti.",
+          "Separate il lavoro urgente iniziato dall'utente dalla manutenzione differibile. Una foto appena scattata può meritare un tentativo di upload immediato con progresso visibile. Il refresh notturno di embedding per un indice di ricerca on-device può aspettare Wi-Fi e carica. Mischiare queste priorità brucia batteria e fiducia.",
+        ],
+        points: [
+          "Usare gli scheduler di piattaforma (WorkManager, BGTaskScheduler) invece di loop forever custom",
+          "Memorizzare payload dei job e metadati di retry in storage locale durevole",
+          "Limitare i retry con jitter; non girare su hard failure",
+          "Mostrare lo stato di sync in UI quando gli outcome utente ne dipendono",
+        ],
+      },
+      {
+        heading: "Push e brevi wakeup sono feature, non trucchi",
+        paragraphs: [
+          "Push silenziosi o data possono aprire una breve finestra di esecuzione per sync ad alto valore, ma le piattaforme limitano l'abuso e gli utenti revocano il permesso di notifica. Progettate l'happy path senza push, poi usate il push come accelerazione. Documentate cosa succede se il wakeup non arriva mai.",
+          "Per feature mobile assistite da IA—trascrizione, summarization, retrieval—preferite lavoro incrementale on-device con inizio utente esplicito per chiamate cloud costose. L'IA in background che sorprende il contatore batteria diventa una recensione a una stella più in fretta di una cache offline mancante.",
+        ],
+      },
+      {
+        heading: "Misurate il completamento, non solo l'enqueue",
+        paragraphs: [
+          "Strumentate età dei job, tasso di successo per set di vincoli, attribuzione batteria dove disponibile e staleness visibile. Una coda che cresce mentre l'app è in background è un allarme precoce che i vincoli sono troppo stretti o i payload troppo grandi.",
+          "L'architettura mobile staff accetta i limiti OS come requisiti di prodotto. I sistemi vincenti completano il lavoro che conta per gli utenti entro quei limiti, falliscono rumorosamente quando non possono e non fingono mai che un processo sospeso stia ancora servendo il cliente.",
+        ],
+        links: [
+          {
+            label: "Android Developers — WorkManager",
+            url: "https://developer.android.com/topic/libraries/architecture/workmanager",
+          },
+          {
+            label: "Apple — BGTaskScheduler",
+            url: "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler",
+          },
+          {
+            label: "Apple — Background execution",
+            url: "https://developer.apple.com/documentation/uikit/app_and_environment/scenes/preparing_your_ui_to_run_in_the_background",
+          },
+        ],
+      },
+    ],
+  },
 "schema-validation-as-a-product-boundary": {
     title: "Validazione dello schema come confine di prodotto",
     excerpt: "Trattate gli schema come il contratto che separa l'intento di prodotto dalla deriva di implementazione—soprattutto quando modelli, partner e servizi inventano campi sotto pressione.",
