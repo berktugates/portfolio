@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"designing-kill-switches-for-ai-features": {
+    title: "Kill-Switches für KI-Features gestalten",
+    excerpt: "Wenn Sie eine KI-Fähigkeit nicht innerhalb von Minuten ohne Produktausfall deaktivieren können, sind Sie nicht bereit für irreversible Aktionen.",
+    description: "Kill-Switches für KI-Features: Blast-Radius-Scopes, Soft Degrade vs. Hard Stop, Propagations-SLAs, Tripwires und nutzerseitige Fallbacks, die kritische Arbeit erhalten.",
+    sections: [
+      {
+        heading: "Ein Flag ist kein Kill-Switch, bis er den Blast Radius stoppt",
+        paragraphs: [
+          "Feature Flags, die nur einen Button verstecken, lassen Modellaufrufe, Tool-Invocations und gequeuete Side Effects weiterlaufen. Ein echter Kill-Switch für KI deaktiviert den Capability-Pfad: keine neuen Generierungen, keine Tool-Writes, keine Outbound-Messages und ein deterministischer Produktpfad, der kritische Arbeit weiter ermöglicht.",
+          "Designen Sie den Switch vor dem Launch, nicht im ersten Incident. Benennen Sie Owner, sicheren Default, Propagations-SLA und nutzerseitigen Copy wenn KI aus ist. Braucht das Umschalten ein Redeploy, haben Sie keinen Kill-Switch—nur Hoffnung.",
+        ],
+      },
+      {
+        heading: "Scope nach Risiko, nicht nach Vanity-Granularität",
+        paragraphs: [
+          "Lieber wenige gut getestete Switches als Dutzende halb verdrahteter Toggles. Nützliche Scopes: alle KI für einen Tenant, ein einzelner high-stakes Action-Typ, Model-Route A versus Fallback B, Tool-Writes versus read-only Assistance. Jeder Switch sollte auf einen klaren Blast Radius mappen, den Sie im Incident-Channel erklären können.",
+          "Trennen Sie Soft Degrade von Hard Stop. Soft Degrade kann Refusal-Rate erhöhen, retrieval-only Answers erzwingen oder auf ein kleineres Modell routen. Hard Stop entfernt KI vollständig vom kritischen Pfad. Gestresste Operatoren brauchen beides, mit Defaults die bei irreversiblen Aktionen zur Safety failen.",
+        ],
+        points: [
+          "Kill-State an Edge, Worker und Clients innerhalb definierter SLA propagieren",
+          "Switches unabhängig von der Provider-Statusseite halten",
+          "Non-AI-Pfad für Checkout, Auth und Data Export behalten",
+          "Wer was wann warum flipped hat für Audit loggen",
+        ],
+      },
+      {
+        heading: "Den Dark Path wie ein Release-Gate testen",
+        paragraphs: [
+          "Staging sollte regelmäßig mit getöteter KI laufen. Prüfen Sie Empty States, Support-Macros, sinnvolle Analytics und dass In-Flight-Jobs nach dem Flip keine gefährliche Arbeit abschließen. Chaos Days die nur Latenz testen verfehlen den Failure Mode den Kunden fürchten: selbstbewusste falsche Aktionen.",
+          "Koppeln Sie Kill-Switches mit automatischen Tripwires: Cost Burn, Groundedness-Collapse, Policy-Violation-Spikes oder erhöhte Human Escalation. Automation kann Soft Degrade vorschlagen oder ausführen; Hard Stops für kundennahe Writes verdienen meist Human Confirm—außer das Risiko ist katastrophal.",
+        ],
+      },
+      {
+        heading: "Den Ausfall als Produkt kommunizieren, nicht als Entschuldigungs-Spam",
+        paragraphs: [
+          "Wenn KI aus ist, sagen Sie was noch funktioniert und wie die Aufgabe endet. Vages „Assistent nicht verfügbar“ treibt Retries die ein gestresstes System hämmern. Interne Runbooks brauchen Customer Messaging, Support Scripts und Kriterien zum Re-Enable nach Eval-Health.",
+          "Kill-Switches sind Staff-Infrastruktur für KI-Produkte. Sie machen Modell-Unsicherheit zu einer operable Control Plane: Sie können ambitionierte Features shippen, weil Sie sie sauber stoppen können wenn Realität und Demo divergieren.",
+        ],
+        links: [
+          {
+            label: "LaunchDarkly — Kill switches",
+            url: "https://docs.launchdarkly.com/guides/flags/kill-switch",
+          },
+          {
+            label: "Google SRE — Managing risk",
+            url: "https://sre.google/sre-book/managing-risk/",
+          },
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+        ],
+      },
+    ],
+  },
 "mobile-background-work-that-survives-os-limits": {
     title: "Mobiler Hintergrundarbeit, die OS-Limits übersteht",
     excerpt: "Hintergrund-Sync ist kein ewiger Daemon. Gestalten Sie mobile Arbeit um OS-Budgets, aufschiebbare Tasks und nutzersichtbare Outcomes, die auch bei eingefrorener App abgeschlossen werden.",

@@ -1,8 +1,30 @@
 {
   "version": 1,
   "site": "https://berktugberke.com",
-  "generatedAt": "2026-09-06T10:06:42.112Z",
+  "generatedAt": "2026-09-07T11:21:07.105Z",
   "posts": [
+    {
+      "id": "designing-kill-switches-for-ai-features",
+      "slug": "designing-kill-switches-for-ai-features",
+      "title": "Designing Kill Switches for AI Features",
+      "url": "https://berktugberke.com/blogs/designing-kill-switches-for-ai-features",
+      "publishedAt": "2026-09-07",
+      "tags": [
+        "AI kill switch",
+        "feature flags",
+        "AI incident response",
+        "production AI",
+        "progressive delivery",
+        "LLM safety"
+      ],
+      "excerpt": "If you cannot disable an AI capability within minutes without taking down the product, you are not ready to expose it to irreversible actions.",
+      "bodyPlain": "Feature flags that only hide a button leave model calls, tool invocations, and queued side effects running. A true kill switch for AI features disables the capability path: no new generations, no tool writes, no outbound messages, and a deterministic product path that still lets users finish critical work.\n\nDesign the switch before launch, not during the first incident. Name the owner, the default safe state, the propagation SLA, and the user-facing copy when AI is off. If turning the switch requires a redeploy, you do not have a kill switch—you have a hope.\n\nPrefer a small number of well-tested switches over dozens of half-wired toggles. Useful scopes include: all AI for a tenant, a single high-stakes action type, model route A versus fallback B, and tool writes versus read-only assistance. Each switch should map to a clear blast radius you can explain in an incident channel.\n\nSeparate soft degrade from hard stop. Soft degrade may increase refusal rate, force retrieval-only answers, or route to a smaller model. Hard stop removes AI from the critical path entirely. Operators under stress need both, with defaults that fail toward safety for irreversible actions.\n\nPropagate kill state to edge, workers, and clients within a defined SLA\n\nMake switches independent of the model provider status page\n\nKeep a non-AI path for checkout, auth, and data export flows\n\nLog who flipped what, when, and why for auditability\n\nStaging should regularly run with AI killed. Verify empty states, support macros, analytics still make sense, and that in-flight jobs do not complete dangerous work after the switch flips. Chaos days that only test latency misses the failure mode customers actually fear: confident wrong actions.\n\nPair kill switches with automatic tripwires: cost burn, groundedness collapse, policy violation spikes, or elevated human escalation. Automation can propose or even execute a soft degrade; hard stops for customer-facing write actions usually deserve a human confirm unless the risk is catastrophic.\n\nWhen AI is off, say what still works and how to complete the task. Vague 'assistant unavailable' copy drives retries that hammer an already stressed system. Internal runbooks should include customer messaging, support scripts, and criteria for re-enabling after eval health returns.\n\nKill switches are staff-level infrastructure for AI products. They turn model uncertainty into an operable control plane: you can ship ambitious features because you can stop them cleanly when reality diverges from the demo.",
+      "contentHash": "aaee65c8b992f3db",
+      "socialThreadTr": [
+        "AI özelliğini dakikalar içinde ürünü düşürmeden kapatamıyorsanız, geri dönüşsüz eylemlere açmaya hazır değilsiniz. Kill switch buton gizleme değil; yetenek yolunu kesmektir. 🧵",
+        "Kapsam, soft degrade, hard stop, SLA ve kullanıcı yolu birlikte tasarlanır. Detay: https://berktugberke.com/tr/blogs/designing-kill-switches-for-ai-features"
+      ]
+    },
     {
       "id": "mobile-background-work-that-survives-os-limits",
       "slug": "mobile-background-work-that-survives-os-limits",

@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"designing-kill-switches-for-ai-features": {
+    title: "为 AI 功能设计熔断开关",
+    excerpt: "若无法在几分钟内关闭 AI 能力且不拖垮产品，就还没准备好把它暴露给不可逆操作。",
+    description: "如何为 AI 功能设计熔断开关：爆炸半径范围、软降级与硬停止、传播 SLA、绊线，以及保留关键工作的用户侧降级。",
+    sections: [
+      {
+        heading: "在挡住爆炸半径之前，开关还不算熔断",
+        paragraphs: [
+          "只藏按钮的功能开关仍会让模型调用、工具调用与排队副作用继续跑。真正的 AI 熔断会切断能力路径：不再生成、不再工具写入、不再外发消息，并保留让用户完成关键工作的确定性产品路径。",
+          "在上线前设计开关，而不是第一次事故时。写明负责人、默认安全态、传播 SLA，以及 AI 关闭时的用户文案。若拨动需要重新部署，你没有熔断——只有希望。",
+        ],
+      },
+      {
+        heading: "按风险定范围，不是按虚荣粒度",
+        paragraphs: [
+          "宁可少量充分测试的开关，也不要几十个半接线的拨动。有用范围包括：某租户全部 AI、单一高风险动作类型、模型路由 A 对回退 B、工具写入对只读协助。每个开关应映射到事故频道里能说清的爆炸半径。",
+          "区分软降级与硬停止。软降级可提高拒答率、强制仅检索回答，或切到更小模型。硬停止把 AI 完全移出关键路径。压力下的值班需要两者；对不可逆动作，默认应偏向安全失败。",
+        ],
+        points: [
+          "在约定 SLA 内把熔断状态传播到边缘、worker 与客户端",
+          "让开关独立于模型供应商状态页",
+          "为结账、认证与数据导出保留非 AI 路径",
+          "记录谁在何时因何拨动了什么，便于审计",
+        ],
+      },
+      {
+        heading: "把暗路径当发布门禁来测",
+        paragraphs: [
+          "预发环境应定期在 AI 关闭下运行。验证空状态、支持宏、分析仍合理，以及开关拨动后在途任务不会完成危险工作。只测延迟的混沌日，错过了客户真正害怕的失败模式：自信的错误动作。",
+          "把熔断与自动绊线配对：成本燃烧、grounding 崩塌、策略违规飙升或人工升级升高。自动化可提议甚至执行软降级；面向客户的写入硬停止通常需要人工确认，除非风险是灾难级。",
+        ],
+      },
+      {
+        heading: "把中断当作产品沟通，而不是道歉刷屏",
+        paragraphs: [
+          "AI 关闭时，说明仍可用什么以及如何完成任务。含糊的「助手不可用」会驱动重试，冲击已承压系统。内部 runbook 应包含客户话术、支持脚本，以及评估健康恢复后重新开启的标准。",
+          "熔断是 AI 产品的 staff 级基础设施。它把模型不确定性变成可运营的控制面：因为现实偏离演示时能干净停下，你才能上线大胆功能。",
+        ],
+        links: [
+          {
+            label: "LaunchDarkly — Kill switches",
+            url: "https://docs.launchdarkly.com/guides/flags/kill-switch",
+          },
+          {
+            label: "Google SRE — Managing risk",
+            url: "https://sre.google/sre-book/managing-risk/",
+          },
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+        ],
+      },
+    ],
+  },
 "mobile-background-work-that-survives-os-limits": {
     title: "能在系统限制下存活的移动端后台任务",
     excerpt: "后台同步不是永久守护进程。围绕系统预算、可延迟任务，以及应用冻结后仍能完成的用户结果来设计移动端工作。",

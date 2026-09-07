@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"designing-kill-switches-for-ai-features": {
+    title: "Concevoir des kill switches pour les fonctionnalités IA",
+    excerpt: "Si vous ne pouvez pas désactiver une capacité IA en quelques minutes sans faire tomber le produit, vous n'êtes pas prêt pour des actions irréversibles.",
+    description: "Kill switches pour features IA : portées de blast radius, soft degrade vs hard stop, SLA de propagation, tripwires et fallbacks utilisateur qui préservent le travail critique.",
+    sections: [
+      {
+        heading: "Un flag n'est un kill switch que lorsqu'il arrête le blast radius",
+        paragraphs: [
+          "Les feature flags qui ne font que cacher un bouton laissent tourner appels modèle, invocations d'outils et side effects en file. Un vrai kill switch pour l'IA coupe le chemin de capacité : pas de nouvelles générations, pas d'écritures d'outils, pas de messages sortants, et un chemin produit déterministe qui laisse finir le travail critique.",
+          "Concevez le switch avant le lancement, pas pendant le premier incident. Nommez le owner, l'état sûr par défaut, le SLA de propagation et le copy utilisateur quand l'IA est off. Si basculer exige un redeploy, vous n'avez pas de kill switch—vous avez un espoir.",
+        ],
+      },
+      {
+        heading: "Porter par risque, pas par granularité de vanité",
+        paragraphs: [
+          "Préférez peu de switches bien testés à des dizaines de toggles à moitié branchés. Portées utiles : toute l'IA pour un tenant, un seul type d'action à fort enjeu, route modèle A versus fallback B, écritures d'outils versus assistance en lecture seule. Chaque switch doit mapper un blast radius clair expliquable dans le canal d'incident.",
+          "Séparez soft degrade et hard stop. Soft degrade peut augmenter le taux de refus, forcer des réponses retrieval-only, ou router vers un plus petit modèle. Hard stop retire l'IA du chemin critique. Les opérateurs sous stress ont besoin des deux, avec des defaults qui failent vers la sécurité pour les actions irréversibles.",
+        ],
+        points: [
+          "Propager l'état kill vers edge, workers et clients dans un SLA défini",
+          "Rendre les switches indépendants de la page de statut du provider",
+          "Garder un chemin non-IA pour checkout, auth et export de données",
+          "Logger qui a basculé quoi, quand et pourquoi pour l'audit",
+        ],
+      },
+      {
+        heading: "Tester le dark path comme une porte de release",
+        paragraphs: [
+          "Le staging doit régulièrement tourner avec l'IA tuée. Vérifiez empty states, macros support, analytics encore sensées, et que les jobs in-flight ne terminent pas de travail dangereux après le flip. Les chaos days qui ne testent que la latence ratent le mode de panne que les clients craignent : des actions fausses et confiantes.",
+          "Associez kill switches et tripwires automatiques : cost burn, effondrement de groundedness, pics de violations de politique, ou escalade humaine élevée. L'automation peut proposer ou exécuter un soft degrade ; les hard stops pour écritures client méritent souvent une confirmation humaine sauf risque catastrophique.",
+        ],
+      },
+      {
+        heading: "Communiquer la panne comme produit, pas comme spam d'excuses",
+        paragraphs: [
+          "Quand l'IA est off, dites ce qui marche encore et comment finir la tâche. Un copy vague « assistant indisponible » provoque des retries qui martèlent un système déjà stressé. Les runbooks internes doivent inclure messaging client, scripts support et critères de réactivation après retour de santé d'eval.",
+          "Les kill switches sont de l'infrastructure staff pour les produits IA. Ils transforment l'incertitude du modèle en plan de contrôle opérable : vous pouvez shipper des features ambitieuses parce que vous pouvez les arrêter proprement quand la réalité diverge de la démo.",
+        ],
+        links: [
+          {
+            label: "LaunchDarkly — Kill switches",
+            url: "https://docs.launchdarkly.com/guides/flags/kill-switch",
+          },
+          {
+            label: "Google SRE — Managing risk",
+            url: "https://sre.google/sre-book/managing-risk/",
+          },
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+        ],
+      },
+    ],
+  },
 "mobile-background-work-that-survives-os-limits": {
     title: "Travail mobile en arrière-plan qui survit aux limites OS",
     excerpt: "La sync en arrière-plan n'est pas un daemon éternel. Concevez le travail mobile autour des budgets OS, des tâches différables et des résultats visibles qui se terminent même quand l'app est figée.",

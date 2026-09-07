@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"designing-kill-switches-for-ai-features": {
+    title: "Yapay Zeka Özellikleri için Kill Switch Tasarımı",
+    excerpt: "Geri dönüşsüz eylemlere açmadan önce, AI yeteneğini ürünü düşürmeden dakikalar içinde kapatabilmelisiniz.",
+    description: "AI özellikleri için kill switch tasarımı: etki yarıçapı kapsamları, soft degrade ile hard stop, yayılım SLA'ları, tripwire'lar ve kritik işi koruyan kullanıcı fallback'leri.",
+    sections: [
+      {
+        heading: "Bayrak, patlama yarıçapını durdurana kadar kill switch değildir",
+        paragraphs: [
+          "Yalnızca düğmeyi gizleyen feature flag'ler model çağrılarını, tool invocation'ları ve kuyruktaki yan etkileri çalıştırmaya devam eder. AI için gerçek kill switch yetenek yolunu keser: yeni üretim yok, tool yazması yok, dış mesaj yok ve kullanıcıların kritik işi bitirmesine izin veren deterministik ürün yolu.",
+          "Anahtarı ilk olay sırasında değil lansmandan önce tasarlayın. Sahibi, varsayılan güvenli durumu, yayılım SLA'sını ve AI kapalıyken kullanıcıya dönük metni adlandırın. Anahtarı çevirmek redeploy gerektiriyorsa kill switch'iniz yok—umudunuz var.",
+        ],
+      },
+      {
+        heading: "Vanity granülerlik değil riske göre kapsam",
+        paragraphs: [
+          "Yarım bağlı onlarca toggle yerine az sayıda iyi test edilmiş anahtar tercih edin. Yararlı kapsamlar: bir tenant için tüm AI, tek bir yüksek riskli eylem tipi, model route A'ya karşı fallback B, tool yazmalarına karşı salt okunur yardım. Her anahtar, olay kanalında açıklayabileceğiniz net bir patlama yarıçapına map olmalıdır.",
+          "Soft degrade ile hard stop'u ayırın. Soft degrade red oranını artırabilir, yalnızca retrieval yanıtlarına zorlayabilir veya daha küçük modele yönlendirebilir. Hard stop AI'yı kritik yoldan tamamen çıkarır. Stres altındaki operatörler ikisine de ihtiyaç duyar; geri dönüşsüz eylemlerde varsayılan güvenlik yönüne fail eder.",
+        ],
+        points: [
+          "Kill durumunu edge, worker ve client'lara tanımlı SLA içinde yayın",
+          "Anahtarları model sağlayıcı status sayfasından bağımsız tut",
+          "Checkout, auth ve veri dışa aktarma için AI'sız yol koru",
+          "Kim neyi ne zaman neden çevirdiğini audit için logla",
+        ],
+      },
+      {
+        heading: "Karanlık yolu yayın kapısı gibi test edin",
+        paragraphs: [
+          "Staging düzenli olarak AI kapalı çalışmalıdır. Boş durumları, destek makro'larını, analitiğin hâlâ anlamlı olduğunu ve anahtar çevrildikten sonra uçuştaki job'ların tehlikeli işi tamamlamadığını doğrulayın. Yalnızca gecikmeyi test eden chaos günleri, müşterilerin gerçekten korktuğu başarısızlığı kaçırır: kendinden emin yanlış eylemler.",
+          "Kill switch'leri otomatik tripwire'larla eşleştirin: maliyet yanması, groundedness çöküşü, politika ihlali sıçramaları veya yükselen insan yükseltmesi. Otomasyon soft degrade önerebilir veya uygulayabilir; müşteriye dönük yazma eylemleri için hard stop genellikle felaket riski yoksa insan onayı hak eder.",
+        ],
+      },
+      {
+        heading: "Kesintiyi özür spam'i değil ürün olarak anlatın",
+        paragraphs: [
+          "AI kapalıyken hâlâ neyin çalıştığını ve görevin nasıl tamamlanacağını söyleyin. Belirsiz 'asistan kullanılamıyor' metni, zaten stresli sistemi döven yeniden denemelere yol açar. İç runbook'lar müşteri mesajlaşması, destek script'leri ve eval sağlığı döndükten sonra yeniden açma kriterlerini içermelidir.",
+          "Kill switch'ler AI ürünleri için staff seviye altyapıdır. Model belirsizliğini işletilebilir bir kontrol düzlemine çevirirler: gerçeklik demodan saptığında temizce durabildiğiniz için iddialı özellikler yayınlayabilirsiniz.",
+        ],
+        links: [
+          {
+            label: "LaunchDarkly — Kill switches",
+            url: "https://docs.launchdarkly.com/guides/flags/kill-switch",
+          },
+          {
+            label: "Google SRE — Managing risk",
+            url: "https://sre.google/sre-book/managing-risk/",
+          },
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+        ],
+      },
+    ],
+  },
 "mobile-background-work-that-survives-os-limits": {
     title: "OS Limitlerinden Kurtulan Mobil Arka Plan İşi",
     excerpt: "Arka plan senkronizasyonu sonsuz bir daemon değildir. Mobil işi OS bütçelerine, ertelenebilir görevlere ve uygulama donduğunda bile tamamlanan kullanıcı sonuçlarına göre tasarlayın.",
