@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"ownership-models-for-shared-platform-code": {
+    title: "共享平台代码的归属模型",
+    excerpt: "没有明确负责人的共享库会成为所有人的依赖、无人的事故。选择与爆炸半径、变更速率以及谁被呼叫相匹配的归属模型。",
+    description: "关于共享平台代码归属的 Staff 指南：CODEOWNERS、平台团队与联邦维护者、接口稳定性，以及在无孤儿风险下运营共享包。",
+    sections: [
+      {
+        heading: "共享意味着可问责，而不是匿名",
+        paragraphs: [
+          "平台包、设计系统、认证 SDK 与数据访问层集中杠杆与风险。当归属是「最后碰过的团队」时，升级停滞、安全补丁等志愿者，生产故障在未设计该抽象的产品小队之间弹跳。",
+          "把归属写成运营合约：谁审变更、谁定兼容策略、谁对共享层导致的故障 on-call、谁能废弃。README 徽章不够；合约必须出现在 CODEOWNERS、on-call 轮值与路线图容量中。",
+        ],
+      },
+      {
+        heading: "选择匹配爆炸半径的模型",
+        paragraphs: [
+          "当表面稳定、专长稀缺、一致性重于本地速度时，中央平台归属有效——身份、支付管道、可观测 agent。当领域分化且中央团队会成为瓶颈时，带 steward 的联邦归属有效，前提是每个领域点名维护者并就共享接口测试达成一致。",
+          "避免最差混合：人人可合并、无人排期维护。若产品团队贡献，需要贡献指南、审阅 SLA，以及 breaking change 上有否决权的 steward。没有 steward 的贡献只是用更多 committer 重造孤儿问题。",
+        ],
+        points: [
+          "把每个共享包映射到主负责人与备份",
+          "让 on-call 与能呼叫生产的包对齐",
+          "在一处发布兼容与废弃窗口",
+          "在规划中为平台工作留预算——不只是功能需求",
+        ],
+      },
+      {
+        heading: "接口是平台代码的产品",
+        paragraphs: [
+          "消费者通过 API、错误语义、升级成本与文档新鲜度体验你的归属。宁可窄且有版本的接口，也不要杂物袋工具。度量采用率、每次发布的破坏、跨消费仓库的升级时间——这些指标告诉你共享层是否物有所值。",
+          "对 AI 与数据平台，共享检索客户端、提示词注册表与评估 harness 需要与认证 SDK 同等严谨。没有负责人的「有用」共享提示词助手，会成为每个导入它的产品中静默质量漂移的来源。",
+        ],
+      },
+      {
+        heading: "让归属在交付路径上可见",
+        paragraphs: [
+          "接口变更要求负责人批准，在平台 CI 跑消费者合约测试，并在已知频道按日期宣布破坏性变更。当事故涉及共享代码时，事后复盘应点名负责团队及其所需修复容量——不是含糊的「改善沟通」。",
+          "健康的平台归属略显无聊：可预期升级、清晰升级路径、更少英雄主义。这种无聊说明共享代码是基础设施，而不是拖到下次中断才腐烂的公地。",
+        ],
+        links: [
+          {
+            label: "GitHub Docs — CODEOWNERS",
+            url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+          },
+          {
+            label: "Team Topologies — Platform team",
+            url: "https://teamtopologies.com/key-concepts",
+          },
+          {
+            label: "Google — Software Engineering at Google (excerpt on ownership)",
+            url: "https://abseil.io/resources/swe-book",
+          },
+        ],
+      },
+    ],
+  },
 "designing-kill-switches-for-ai-features": {
     title: "为 AI 功能设计熔断开关",
     excerpt: "若无法在几分钟内关闭 AI 能力且不拖垮产品，就还没准备好把它暴露给不可逆操作。",

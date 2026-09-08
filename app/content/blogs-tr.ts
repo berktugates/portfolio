@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"ownership-models-for-shared-platform-code": {
+    title: "Paylaşılan Platform Kodu için Sahiplik Modelleri",
+    excerpt: "Net sahibi olmayan paylaşılan kütüphaneler herkesin bağımlılığı ve kimsenin olayı olur. Blast radius, değişim hızı ve kim page alır ile uyumlu bir sahiplik modeli seçin.",
+    description: "Paylaşılan platform kodu için staff rehberi: CODEOWNERS, platform ekipleri ve federated maintainer'lar, arayüz istikrarı ve yetim risk olmadan paylaşılan paketleri işletmek.",
+    sections: [
+      {
+        heading: "Paylaşılan, anonim değil hesap verebilir demektir",
+        paragraphs: [
+          "Platform paketleri, tasarım sistemleri, auth SDK'ları ve veri erişim katmanları kaldıraç ve riski yoğunlaştırır. Sahiplik 'son dokunan ekip' olduğunda yükseltmeler durur, güvenlik yamaları gönüllü bekler ve üretim kırılmaları soyutlamayı tasarlamayan ürün ekipleri arasında seker.",
+          "Sahipliği işletim sözleşmesi olarak yazın: değişiklikleri kim inceler, uyumluluk politikasını kim koyar, paylaşılan kata atfedilen hatalar için kim on-call'dır ve kim deprecate edebilir. README rozeti yetmez; sözleşme CODEOWNERS, on-call rotasyonu ve roadmap kapasitesinde görünmelidir.",
+        ],
+      },
+      {
+        heading: "Blast radius'a uyan modeli seçin",
+        paragraphs: [
+          "Merkezi platform sahipliği yüzey istikrarlı, uzmanlık kıt ve tutarlılık yerel hızdan önemliyse işe yarar—kimlik, ödemeler altyapısı, observability agent'ları. Federated sahiplik bir steward ile, alanlar ayrışıyorsa ve merkezi ekip darboğaz olacaksa işe yarar; her alan maintainer adlandırmalı ve paylaşılan arayüz testlerinde anlaşmalıdır.",
+          "En kötü hibritten kaçının: herkes merge edebilir, kimse bakım için planlanmamıştır. Ürün ekipleri katkı yapıyorsa katkı rehberi, inceleme SLA'sı ve breaking change'de veto yetkili steward gerekir. Stewardship'suz katkı, daha fazla committer ile yetim sorununu yeniden üretir.",
+        ],
+        points: [
+          "Her paylaşılan paketi birincil sahip ve yedekle eşleştirin",
+          "On-call'ı production'ı page edebilen paketlerle hizalayın",
+          "Uyumluluk ve deprecation pencerelerini tek yerde yayınlayın",
+          "Platform işini planlamada bütçeleyin—yalnızca feature talebi değil",
+        ],
+      },
+      {
+        heading: "Arayüzler platform kodunun ürünüdür",
+        paragraphs: [
+          "Tüketiciler sahipliğinizi API'ler, hata semantiği, yükseltme maliyeti ve dokümantasyon tazeliği üzerinden yaşar. Grab-bag utility'ler yerine dar, sürümlenmiş arayüzleri tercih edin. Benimsemeyi, yayın başına kırılmayı ve tüketici repolarında yükseltme süresini ölçün—bu metrikler paylaşılan katmanın karşılığını verip vermediğini söyler.",
+          "AI ve veri platformlarında paylaşılan retrieval client'ları, prompt registry'leri ve evaluation harness'ları auth SDK'ları kadar titizlik ister. Sahibi olmayan 'yararlı' paylaşılan prompt yardımcısı, onu import eden her üründe sessiz kalite kaymasının kaynağı olur.",
+        ],
+      },
+      {
+        heading: "Sahipliği teslimat yolunda görünür kılın",
+        paragraphs: [
+          "Arayüz değişikliklerinde sahip onayı zorunlu kılın, platform CI'da tüketici sözleşme testlerini çalıştırın ve breaking change'leri bilinen bir kanalda tarihlerle duyurun. Olaylar paylaşılan kodu içerdiğinde postmortem sahip ekibi ve ihtiyaç duydukları remediation kapasitesini adlandırmalıdır—belirsiz 'iletişimi iyileştir' değil.",
+          "Sağlıklı platform sahipliği biraz sıkıcı hissettirir: öngörülebilir yükseltmeler, net yükseltme yolu ve daha az kahramanlık. Bu sıkıcılık, paylaşılan kodun bir sonraki kesintiye kadar çürüyen commons değil altyapı olduğunun sinyalidir.",
+        ],
+        links: [
+          {
+            label: "GitHub Docs — CODEOWNERS",
+            url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+          },
+          {
+            label: "Team Topologies — Platform team",
+            url: "https://teamtopologies.com/key-concepts",
+          },
+          {
+            label: "Google — Software Engineering at Google (excerpt on ownership)",
+            url: "https://abseil.io/resources/swe-book",
+          },
+        ],
+      },
+    ],
+  },
 "designing-kill-switches-for-ai-features": {
     title: "Yapay Zeka Özellikleri için Kill Switch Tasarımı",
     excerpt: "Geri dönüşsüz eylemlere açmadan önce, AI yeteneğini ürünü düşürmeden dakikalar içinde kapatabilmelisiniz.",

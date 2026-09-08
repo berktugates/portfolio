@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"ownership-models-for-shared-platform-code": {
+    title: "Modèles d'ownership pour le code plateforme partagé",
+    excerpt: "Les libraries partagées sans owners clairs deviennent la dépendance de tous et l'incident de personne. Choisissez un modèle d'ownership aligné sur le blast radius, le rythme de change et qui est pagé.",
+    description: "Guidance staff sur l'ownership du code plateforme partagé : CODEOWNERS, équipes plateforme vs mainteneurs fédérés, stabilité d'interface et exploitation sans risque orphelin.",
+    sections: [
+      {
+        heading: "Partagé veut dire accountable, pas anonyme",
+        paragraphs: [
+          "Packages plateforme, design systems, SDK auth et couches d'accès données concentrent levier et risque. Quand l'ownership est 'l'équipe qui a touché en dernier', les upgrades stallent, les patches sécu attendent des volontaires, et les casses prod rebondissent entre squads produit qui n'ont pas conçu l'abstraction.",
+          "Écrivez l'ownership comme contrat d'exploitation : qui review, qui fixe la politique de compatibilité, qui est on-call pour les échecs attribuables à la couche partagée, et qui peut déprécier. Un badge README ne suffit pas ; le contrat doit apparaître dans CODEOWNERS, rotations on-call et capacité roadmap.",
+        ],
+      },
+      {
+        heading: "Choisissez un modèle qui colle au blast radius",
+        paragraphs: [
+          "L'ownership plateforme central marche quand la surface est stable, l'expertise rare et la cohérence plus importante que la vitesse locale—identité, plumbing paiements, agents d'observabilité. L'ownership fédéré avec steward marche quand les domaines divergent et qu'une équipe centrale serait un goulot, à condition que chaque domaine nomme des mainteneurs et s'accorde sur des tests d'interface partagés.",
+          "Évitez le pire hybride : tout le monde peut merger, personne n'est planifié pour maintenir. Si les équipes produit contribuent, exigez guidelines, SLA de review et un steward avec veto sur les breaking changes. Contribuer sans stewardship recrée le problème orphelin avec plus de committers.",
+        ],
+        points: [
+          "Mapper chaque package partagé à un owner primaire et un backup",
+          "Aligner l'on-call sur les packages qui peuvent pager la prod",
+          "Publier fenêtres de compatibilité et de dépréciation au même endroit",
+          "Budgéter le travail plateforme dans le planning—pas seulement la demande feature",
+        ],
+      },
+      {
+        heading: "Les interfaces sont le produit du code plateforme",
+        paragraphs: [
+          "Les consommateurs vivent votre ownership via APIs, sémantique d'erreur, coût d'upgrade et fraîcheur doc. Préférez des interfaces étroites et versionnées aux utilitaires fourre-tout. Mesurez adoption, cassures par release et time-to-upgrade dans les repos consommateurs—ces métriques disent si la couche partagée vaut le coup.",
+          "Pour plateformes IA et data, clients de retrieval partagés, registres de prompts et harnesses d'évaluation demandent la même rigueur que les SDK auth. Un helper de prompt 'utile' sans owner devient la source silencieuse de dérive qualité dans chaque produit qui l'importe.",
+        ],
+      },
+      {
+        heading: "Rendre l'ownership visible dans le chemin de livraison",
+        paragraphs: [
+          "Exigez l'approbation owner sur les changements d'interface, lancez des contract tests consommateurs dans la CI plateforme, et annoncez les breaking changes sur un canal connu avec dates. Quand un incident implique du code partagé, le postmortem doit nommer l'équipe owner et la capacité de remédiation nécessaire—pas un vague 'améliorer la communication.'",
+          "Une ownership plateforme saine paraît un peu ennuyeuse : upgrades prévisibles, escalade claire, moins d'héroïsme. Cet ennui signale que le code partagé est de l'infrastructure, pas un commons qui pourrit jusqu'à la prochaine panne.",
+        ],
+        links: [
+          {
+            label: "GitHub Docs — CODEOWNERS",
+            url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+          },
+          {
+            label: "Team Topologies — Platform team",
+            url: "https://teamtopologies.com/key-concepts",
+          },
+          {
+            label: "Google — Software Engineering at Google (excerpt on ownership)",
+            url: "https://abseil.io/resources/swe-book",
+          },
+        ],
+      },
+    ],
+  },
 "designing-kill-switches-for-ai-features": {
     title: "Concevoir des kill switches pour les fonctionnalités IA",
     excerpt: "Si vous ne pouvez pas désactiver une capacité IA en quelques minutes sans faire tomber le produit, vous n'êtes pas prêt pour des actions irréversibles.",

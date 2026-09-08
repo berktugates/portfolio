@@ -21,6 +21,76 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "ownership-models-for-shared-platform-code",
+    title: "Ownership Models for Shared Platform Code",
+    excerpt: "Shared libraries without clear owners become everyone's dependency and nobody's incident. Pick an ownership model that matches blast radius, change rate, and who gets paged.",
+    description: "Staff guidance on ownership models for shared platform code: CODEOWNERS, platform teams vs federated maintainers, interface stability, and operating shared packages without orphaned risk.",
+    publishedAt: "2026-09-08",
+    readingMinutes: 7,
+    keywords: [
+      "code ownership",
+      "platform engineering",
+      "shared libraries",
+      "CODEOWNERS",
+      "internal platforms",
+      "engineering org design",
+    ],
+    socialThreadTr: [
+      "Sahibi belirsiz paylaşılan kütüphane herkesin bağımlılığı, kimsenin olayıdır. Blast radius, değişim hızı ve kim page alır sahiplik modelini belirler. 🧵",
+      "CODEOWNERS, arayüz SLA'sı ve on-call gerçekliği hizalanmalı. Detay: https://berktugberke.com/tr/blogs/ownership-models-for-shared-platform-code",
+    ],
+    sections: [
+      {
+        heading: "Shared means accountable, not anonymous",
+        paragraphs: [
+          "Platform packages, design systems, auth SDKs, and data access layers concentrate leverage and risk. When ownership is 'the team that last touched it,' upgrades stall, security patches wait for volunteers, and production breakages bounce between product squads that did not design the abstraction.",
+          "Write ownership as an operating contract: who reviews changes, who sets compatibility policy, who is on-call for failures attributable to the shared layer, and who can deprecate. A README badge is not enough; the contract must show up in CODEOWNERS, on-call rotations, and roadmap capacity.",
+        ],
+      },
+      {
+        heading: "Choose a model that fits the blast radius",
+        paragraphs: [
+          "Central platform ownership works when the surface is stable, expertise is scarce, and consistency matters more than local speed—identity, payments plumbing, observability agents. Federated ownership with a steward works when domains diverge and a central team would become a bottleneck, provided each domain names maintainers and agrees on shared interface tests.",
+          "Avoid the worst hybrid: everyone can merge, nobody is scheduled to maintain. If product teams contribute, require contribution guidelines, review SLAs, and a steward with veto on breaking changes. Contribution without stewardship recreates the orphan problem with more committers.",
+        ],
+        points: [
+          "Map each shared package to a primary owner and a backup",
+          "Align on-call with the packages that can page production",
+          "Publish compatibility and deprecation windows in one place",
+          "Budget platform work in planning—not only feature demand",
+        ],
+      },
+      {
+        heading: "Interfaces are the product of platform code",
+        paragraphs: [
+          "Consumers experience your ownership through APIs, error semantics, upgrade cost, and documentation freshness. Prefer narrow, versioned interfaces over grab-bag utilities. Measure adoption, breakages per release, and time-to-upgrade across consumer repos—those metrics tell you whether the shared layer is earning its keep.",
+          "For AI and data platforms, shared retrieval clients, prompt registries, and evaluation harnesses need the same rigor as auth SDKs. A 'helpful' shared prompt helper without an owner becomes the silent source of quality drift across every product that imports it.",
+        ],
+      },
+      {
+        heading: "Make ownership visible in the delivery path",
+        paragraphs: [
+          "Require owner approval on interface changes, run consumer contract tests in the platform CI, and announce breaking changes on a known channel with dates. When incidents involve shared code, the postmortem should name the owning team and the remediation capacity they need—not a vague 'improve communication.'",
+          "Healthy platform ownership feels slightly boring: predictable upgrades, clear escalation, and fewer heroics. That boredom is the signal that shared code is infrastructure, not a commons that decays until the next outage.",
+        ],
+        links: [
+          {
+            label: "GitHub Docs — CODEOWNERS",
+            url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+          },
+          {
+            label: "Team Topologies — Platform team",
+            url: "https://teamtopologies.com/key-concepts",
+          },
+          {
+            label: "Google — Software Engineering at Google (excerpt on ownership)",
+            url: "https://abseil.io/resources/swe-book",
+          },
+        ],
+      },
+    ],
+  },
+    {
     slug: "designing-kill-switches-for-ai-features",
     title: "Designing Kill Switches for AI Features",
     excerpt: "If you cannot disable an AI capability within minutes without taking down the product, you are not ready to expose it to irreversible actions.",

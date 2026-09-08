@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"ownership-models-for-shared-platform-code": {
+    title: "Ownership-Modelle für geteilten Platform-Code",
+    excerpt: "Geteilte Libraries ohne klare Owner werden jedermanns Dependency und niemandes Incident. Wählen Sie ein Ownership-Modell das zu Blast Radius, Änderungsrate und Paging passt.",
+    description: "Staff-Guidance zu Ownership für Shared Platform Code: CODEOWNERS, Platform Teams vs. föderierte Maintainer, Interface-Stabilität und Betrieb ohne verwaistes Risiko.",
+    sections: [
+      {
+        heading: "Shared heißt accountable, nicht anonym",
+        paragraphs: [
+          "Platform-Packages, Design Systems, Auth-SDKs und Data-Access-Layer bündeln Hebel und Risiko. Ist Ownership 'das Team das zuletzt angefasst hat', stocken Upgrades, Security-Patches warten auf Freiwillige und Produktionsbrüche springen zwischen Product Squads die die Abstraktion nicht entworfen haben.",
+          "Schreiben Sie Ownership als Operating Contract: wer Changes reviewed, wer Compatibility Policy setzt, wer für Failures der Shared Layer on-call ist und wer deprecaten darf. Ein README-Badge reicht nicht; der Contract muss in CODEOWNERS, On-Call-Rotationen und Roadmap-Kapazität erscheinen.",
+        ],
+      },
+      {
+        heading: "Wählen Sie ein Modell das zum Blast Radius passt",
+        paragraphs: [
+          "Zentrale Platform-Ownership funktioniert wenn die Surface stabil ist, Expertise knapp und Konsistenz wichtiger als lokale Speed—Identity, Payments-Plumbing, Observability-Agents. Föderierte Ownership mit Steward funktioniert wenn Domains divergieren und ein zentrales Team Bottleneck würde—sofern jede Domain Maintainer nennt und Shared Interface Tests vereinbart.",
+          "Vermeiden Sie den schlechtesten Hybrid: jeder kann mergen, niemand ist für Maintain eingeplant. Wenn Product Teams beitragen, brauchen Sie Contribution Guidelines, Review-SLAs und einen Steward mit Veto bei Breaking Changes. Contribution ohne Stewardship reproduziert das Orphan-Problem mit mehr Committern.",
+        ],
+        points: [
+          "Jedes Shared Package einem Primary Owner und Backup zuordnen",
+          "On-Call an Packages ausrichten die Production paget können",
+          "Compatibility- und Deprecation-Fenster an einem Ort veröffentlichen",
+          "Platform-Arbeit in der Planung budgetieren—nicht nur Feature-Demand",
+        ],
+      },
+      {
+        heading: "Interfaces sind das Produkt von Platform-Code",
+        paragraphs: [
+          "Consumer erleben Ownership über APIs, Error-Semantics, Upgrade-Kosten und Doc-Freshness. Bevorzugen Sie schmale, versionierte Interfaces statt Grab-Bag-Utilities. Messen Sie Adoption, Breakages pro Release und Time-to-Upgrade über Consumer-Repos—diese Metriken zeigen ob die Shared Layer sich lohnt.",
+          "Für AI- und Data-Platforms brauchen Shared Retrieval Clients, Prompt Registries und Evaluation Harnesses dieselbe Strenge wie Auth-SDKs. Ein 'hilfreicher' Shared Prompt Helper ohne Owner wird zur stillen Quelle von Quality Drift in jedem Produkt das ihn importiert.",
+        ],
+      },
+      {
+        heading: "Ownership im Delivery Path sichtbar machen",
+        paragraphs: [
+          "Verlangen Sie Owner-Approval bei Interface-Changes, laufen Sie Consumer Contract Tests in der Platform-CI und kündigen Sie Breaking Changes auf einem bekannten Kanal mit Daten an. Wenn Incidents Shared Code betreffen, sollte das Postmortem das Owning Team und die nötige Remediation-Kapazität nennen—nicht vages 'Kommunikation verbessern.'",
+          "Gesunde Platform-Ownership fühlt sich leicht langweilig an: vorhersehbare Upgrades, klare Eskalation, weniger Heroics. Diese Langeweile signalisiert dass Shared Code Infrastruktur ist, kein Commons das bis zum nächsten Outage verfällt.",
+        ],
+        links: [
+          {
+            label: "GitHub Docs — CODEOWNERS",
+            url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+          },
+          {
+            label: "Team Topologies — Platform team",
+            url: "https://teamtopologies.com/key-concepts",
+          },
+          {
+            label: "Google — Software Engineering at Google (excerpt on ownership)",
+            url: "https://abseil.io/resources/swe-book",
+          },
+        ],
+      },
+    ],
+  },
 "designing-kill-switches-for-ai-features": {
     title: "Kill-Switches für KI-Features gestalten",
     excerpt: "Wenn Sie eine KI-Fähigkeit nicht innerhalb von Minuten ohne Produktausfall deaktivieren können, sind Sie nicht bereit für irreversible Aktionen.",
