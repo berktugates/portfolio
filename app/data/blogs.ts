@@ -21,6 +21,76 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "measuring-retrieval-quality-without-vanity-metrics",
+    title: "Measuring Retrieval Quality Without Vanity Metrics",
+    excerpt: "Embedding similarity and click-through on demos do not prove retrieval helps users. Measure task success, grounded answer rates, and hard negatives that should return nothing.",
+    description: "A staff engineer playbook for retrieval quality: offline labels, online task metrics, abstention correctness, slice-based evals, and avoiding vanity RAG dashboards.",
+    publishedAt: "2026-09-09",
+    readingMinutes: 7,
+    keywords: [
+      "retrieval quality",
+      "RAG evaluation",
+      "information retrieval",
+      "LLM grounding",
+      "search metrics",
+      "AI product analytics",
+    ],
+    socialThreadTr: [
+      "Embedding benzerliği ve demo tıklaması retrieval'ın kullanıcıya yardım ettiğini kanıtlamaz. Görev başarısı, grounded yanıt oranı ve 'hiçbir şey dönmeli' hard negative'ler ölçülür. 🧵",
+      "Vanity RAG panellerini bırakın; dilimlenmiş eval ve online görev metriklerine geçin. Detay: https://berktugberke.com/tr/blogs/measuring-retrieval-quality-without-vanity-metrics",
+    ],
+    sections: [
+      {
+        heading: "Similarity is not usefulness",
+        paragraphs: [
+          "Cosine similarity between query and chunk tells you the index retrieved something nearby in vector space. It does not tell you whether the chunk contains the fact needed to complete the user task, whether citations are faithful, or whether the system should have retrieved nothing. Optimizing for similarity alone rewards fluent irrelevance.",
+          "Staff-level measurement starts from product promises. If the feature claims grounded answers from your corpus, the metric is correct grounding under realistic queries—not how pretty the nearest neighbors look in a notebook.",
+        ],
+      },
+      {
+        heading: "Build an evaluation set that can fail you",
+        paragraphs: [
+          "Label query sets with expected document IDs or answer properties, including adversarial cases: synonyms, outdated entities, partial identifiers, multilingual phrasing, and questions whose answer is absent. Track recall@k for must-find docs, precision of citations, and abstention accuracy when nothing should match.",
+          "Refresh the set as the product changes. A frozen golden set from launch week becomes vanity once content and user language drift. Version the dataset with the index and chunking strategy so regressions are attributable.",
+        ],
+        points: [
+          "Report metrics by slice: tenant, language, content type, and risk tier",
+          "Include 'should retrieve nothing' cases in every release gate",
+          "Pair offline scores with human review on production samples",
+          "Separate retrieval failures from generation failures in incident review",
+        ],
+      },
+      {
+        heading: "Online metrics must connect to outcomes",
+        paragraphs: [
+          "Instrument whether users complete the job after an AI answer, how often they regenerate, escalate to search or support, or correct citations. A high thumbs-up rate on stylistic answers can coexist with rising ticket volume when facts are wrong. Prefer outcome-linked rates over isolated engagement vanity.",
+          "When you change chunking, embeddings, or rerankers, run paired experiments with clear success criteria. Guard against regressions in latency and cost per successful grounded answer—cheaper retrieval that forces five regenerations is not cheaper.",
+        ],
+      },
+      {
+        heading: "Operate retrieval like a production dependency",
+        paragraphs: [
+          "Index freshness, permission filters, and empty-result rates belong on the same dashboard as API availability. A silent drop in recall after a crawler or ACL change is a product incident, even if the model still produces confident prose.",
+          "Vanity metrics make teams feel busy. Useful metrics make teams decide: ship, roll back, or invest in content and chunking. That decision quality is the point of measuring retrieval at all.",
+        ],
+        links: [
+          {
+            label: "NIST — AI RMF",
+            url: "https://www.nist.gov/itl/ai-risk-management-framework",
+          },
+          {
+            label: "OpenAI — Evaluation best practices",
+            url: "https://platform.openai.com/docs/guides/evaluation",
+          },
+          {
+            label: "Anthropic — Measuring faithfulness",
+            url: "https://www.anthropic.com/research",
+          },
+        ],
+      },
+    ],
+  },
+    {
     slug: "ownership-models-for-shared-platform-code",
     title: "Ownership Models for Shared Platform Code",
     excerpt: "Shared libraries without clear owners become everyone's dependency and nobody's incident. Pick an ownership model that matches blast radius, change rate, and who gets paged.",

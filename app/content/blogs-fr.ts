@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"measuring-retrieval-quality-without-vanity-metrics": {
+    title: "Mesurer la qualité de retrieval sans vanity metrics",
+    excerpt: "La similarité d'embedding et le clic en démo ne prouvent pas que le retrieval aide les utilisateurs. Mesurez le succès de tâche, les taux de réponses ancrées et les hard negatives qui ne doivent rien renvoyer.",
+    description: "Playbook staff pour la qualité de retrieval : labels offline, métriques de tâche online, abstention correcte, evals par tranche et éviter les dashboards RAG de vanité.",
+    sections: [
+      {
+        heading: "La similarité n'est pas l'utilité",
+        paragraphs: [
+          "La similarité cosinus entre requête et chunk dit que l'index a ramené quelque chose de proche dans l'espace vectoriel. Elle ne dit pas si le chunk contient le fait nécessaire pour finir la tâche, si les citations sont fidèles, ou si le système n'aurait rien dû récupérer. Optimiser la seule similarité récompense l'irrelevance fluide.",
+          "La mesure staff part des promesses produit. Si la feature revendique des réponses ancrées dans votre corpus, la métrique est le grounding correct sous requêtes réalistes—pas la beauté des nearest neighbors dans un notebook.",
+        ],
+      },
+      {
+        heading: "Construisez un jeu d'évaluation qui peut vous faire échouer",
+        paragraphs: [
+          "Étiquetez des jeux de requêtes avec IDs de documents attendus ou propriétés de réponse, y compris cas adversariaux : synonymes, entités obsolètes, identifiants partiels, formulations multilingues et questions sans réponse. Suivez recall@k pour les docs must-find, précision des citations et exactitude d'abstention quand rien ne doit matcher.",
+          "Rafraîchissez le jeu quand le produit change. Un golden set figé de la semaine de lancement devient vanity dès que contenu et langage utilisateur dérivent. Versionnez le dataset avec l'index et la stratégie de chunking pour attribuer les régressions.",
+        ],
+        points: [
+          "Reporter les métriques par tranche : tenant, langue, type de contenu et niveau de risque",
+          "Inclure les cas « ne doit rien récupérer » dans chaque porte de release",
+          "Coupler scores offline et revue humaine sur échantillons prod",
+          "Séparer échecs de retrieval et de génération dans la revue d'incident",
+        ],
+      },
+      {
+        heading: "Les métriques online doivent se lier aux outcomes",
+        paragraphs: [
+          "Instrumentez si les utilisateurs terminent le job après une réponse IA, à quelle fréquence ils régénèrent, escaladent vers search ou support, ou corrigent des citations. Un fort taux de thumbs-up sur des réponses stylistiques peut coexister avec une hausse de tickets quand les faits sont faux. Préférez des taux liés aux outcomes à la vanity d'engagement isolée.",
+          "Quand vous changez chunking, embeddings ou rerankers, lancez des expériences appariées avec critères de succès clairs. Gardez-vous des régressions de latence et de coût par réponse ancrée réussie—un retrieval moins cher qui force cinq régénérations n'est pas moins cher.",
+        ],
+      },
+      {
+        heading: "Opérer le retrieval comme une dépendance de production",
+        paragraphs: [
+          "Fraîcheur d'index, filtres de permission et taux de résultats vides appartiennent au même dashboard que la disponibilité API. Une chute silencieuse de recall après un changement crawler ou ACL est un incident produit, même si le modèle produit encore une prose confiante.",
+          "Les vanity metrics font sentir les équipes occupées. Les métriques utiles font décider : shipper, rollback, ou investir dans contenu et chunking. Cette qualité de décision est tout l'intérêt de mesurer le retrieval.",
+        ],
+        links: [
+          {
+            label: "NIST — AI RMF",
+            url: "https://www.nist.gov/itl/ai-risk-management-framework",
+          },
+          {
+            label: "OpenAI — Evaluation best practices",
+            url: "https://platform.openai.com/docs/guides/evaluation",
+          },
+          {
+            label: "Anthropic — Measuring faithfulness",
+            url: "https://www.anthropic.com/research",
+          },
+        ],
+      },
+    ],
+  },
 "ownership-models-for-shared-platform-code": {
     title: "Modèles d'ownership pour le code plateforme partagé",
     excerpt: "Les libraries partagées sans owners clairs deviennent la dépendance de tous et l'incident de personne. Choisissez un modèle d'ownership aligné sur le blast radius, le rythme de change et qui est pagé.",

@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"measuring-retrieval-quality-without-vanity-metrics": {
+    title: "Retrieval-Qualität ohne Vanity Metrics messen",
+    excerpt: "Embedding-Ähnlichkeit und Demo-Klicks beweisen nicht, dass Retrieval Nutzern hilft. Messen Sie Task-Erfolg, Grounded-Answer-Raten und Hard Negatives die nichts zurückgeben sollten.",
+    description: "Staff-Playbook für Retrieval-Qualität: Offline-Labels, Online-Task-Metriken, korrekte Abstention, Slice-Evals und Vermeidung von Vanity-RAG-Dashboards.",
+    sections: [
+      {
+        heading: "Ähnlichkeit ist nicht Nützlichkeit",
+        paragraphs: [
+          "Cosine Similarity zwischen Query und Chunk sagt, dass der Index etwas nahe im Vektorraum geholt hat. Sie sagt nicht, ob der Chunk die für den User-Task nötige Tatsache enthält, ob Zitationen treu sind oder ob das System nichts hätte holen sollen. Nur Similarity zu optimieren belohnt fluente Irrelevanz.",
+          "Staff-Messung startet bei Produktversprechen. Behauptet das Feature Grounded Answers aus Ihrem Corpus, ist die Metrik korrektes Grounding unter realistischen Queries—nicht wie hübsch die Nearest Neighbors im Notebook aussehen.",
+        ],
+      },
+      {
+        heading: "Bauen Sie ein Eval-Set das Sie failen kann",
+        paragraphs: [
+          "Labeln Sie Query-Sets mit erwarteten Document-IDs oder Answer-Properties inkl. adversarialer Fälle: Synonyme, veraltete Entities, partielle Identifier, mehrsprachige Formulierungen und Fragen ohne Antwort. Tracken Sie Recall@k für Must-Find-Docs, Precision von Citations und Abstention-Accuracy wenn nichts matchen soll.",
+          "Aktualisieren Sie das Set wenn das Produkt sich ändert. Ein eingefrorenes Golden Set aus der Launch-Woche wird Vanity sobald Content und User-Sprache driften. Versionieren Sie Dataset mit Index und Chunking-Strategie damit Regressionen zuordenbar sind.",
+        ],
+        points: [
+          "Metriken nach Slice reporten: Tenant, Sprache, Content-Typ und Risk Tier",
+          "'Should retrieve nothing'-Fälle in jedes Release-Gate aufnehmen",
+          "Offline-Scores mit Human Review auf Production Samples koppeln",
+          "Retrieval-Failures von Generation-Failures in Incident Reviews trennen",
+        ],
+      },
+      {
+        heading: "Online-Metriken müssen an Outcomes hängen",
+        paragraphs: [
+          "Instrumentieren Sie ob Nutzer den Job nach einer AI-Antwort abschließen, wie oft sie regenerieren, zu Search oder Support eskalieren oder Citations korrigieren. Hohe Thumbs-up auf stilistische Answers können mit steigendem Ticket-Volumen koexistieren wenn Fakten falsch sind. Preferieren Sie outcome-linked Rates über isolierte Engagement-Vanity.",
+          "Wenn Sie Chunking, Embeddings oder Reranker ändern, laufen Sie Paired Experiments mit klaren Success Criteria. Schützen Sie vor Regressionen in Latenz und Cost per erfolgreicher Grounded Answer—billigeres Retrieval das fünf Regenerationen erzwingt ist nicht billiger.",
+        ],
+      },
+      {
+        heading: "Retrieval wie eine Production Dependency betreiben",
+        paragraphs: [
+          "Index Freshness, Permission Filters und Empty-Result-Rates gehören auf dasselbe Dashboard wie API Availability. Ein stiller Recall-Drop nach Crawler- oder ACL-Change ist ein Produktincident—auch wenn das Modell weiter selbstbewusstes Prosa produziert.",
+          "Vanity Metrics lassen Teams beschäftigt wirken. Nützliche Metrics lassen Teams entscheiden: shippen, rollbacken oder in Content und Chunking investieren. Diese Entscheidungsqualität ist der Sinn von Retrieval-Messung.",
+        ],
+        links: [
+          {
+            label: "NIST — AI RMF",
+            url: "https://www.nist.gov/itl/ai-risk-management-framework",
+          },
+          {
+            label: "OpenAI — Evaluation best practices",
+            url: "https://platform.openai.com/docs/guides/evaluation",
+          },
+          {
+            label: "Anthropic — Measuring faithfulness",
+            url: "https://www.anthropic.com/research",
+          },
+        ],
+      },
+    ],
+  },
 "ownership-models-for-shared-platform-code": {
     title: "Ownership-Modelle für geteilten Platform-Code",
     excerpt: "Geteilte Libraries ohne klare Owner werden jedermanns Dependency und niemandes Incident. Wählen Sie ein Ownership-Modell das zu Blast Radius, Änderungsrate und Paging passt.",

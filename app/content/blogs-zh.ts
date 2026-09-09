@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"measuring-retrieval-quality-without-vanity-metrics": {
+    title: "不用虚荣指标衡量检索质量",
+    excerpt: "向量相似度与演示点击不能证明检索对用户有帮助。衡量任务成功、有依据回答率，以及本应返回空的 hard negative。",
+    description: "检索质量的 Staff 手册：离线标注、在线任务指标、正确弃答、分片评估，以及避开虚荣 RAG 看板。",
+    sections: [
+      {
+        heading: "相似不等于有用",
+        paragraphs: [
+          "查询与 chunk 的余弦相似度只说明索引在向量空间取回了附近的东西。它不说明 chunk 是否含有完成用户任务所需的事实、引用是否忠实，或系统是否本应什么都不取。只优化相似度会奖励流畅的无关。",
+          "Staff 级度量从产品承诺出发。若功能声称基于你们语料的有依据回答，指标是在真实查询下的正确 grounding——不是 notebook 里近邻有多好看。",
+        ],
+      },
+      {
+        heading: "构建能让你失败的评估集",
+        paragraphs: [
+          "用期望文档 ID 或回答属性标注查询集，并包含对抗用例：同义词、过时实体、部分标识符、多语表述，以及答案不存在的问题。跟踪必找文档的 recall@k、引用 precision，以及本应无匹配时的弃答准确率。",
+          "随产品变化刷新集合。上线周冻结的金标集在内容与用户语言漂移后会变成虚荣。把数据集与索引、切块策略一起版本化，以便归因回归。",
+        ],
+        points: [
+          "按分片报告指标：租户、语言、内容类型与风险层级",
+          "每个发布门禁都包含「应检索为空」用例",
+          "把离线分数与生产样本的人工审阅配对",
+          "事故复盘中把检索失败与生成失败分开",
+        ],
+      },
+      {
+        heading: "在线指标必须连到结果",
+        paragraphs: [
+          "度量用户在 AI 回答后是否完成工作、多久重新生成、升级到搜索或支持，或修正引用。风格化回答的高点赞可与事实错误时工单上升并存。宁可要结果挂钩比率，也不要孤立的互动虚荣。",
+          "更改切块、嵌入或重排时，用清晰成功标准做配对实验。防范延迟与每次成功有依据回答成本的回归——逼出五次重新生成的更便宜检索并不更便宜。",
+        ],
+      },
+      {
+        heading: "把检索当作生产依赖来运营",
+        paragraphs: [
+          "索引新鲜度、权限过滤与空结果率应与 API 可用性同看板。爬虫或 ACL 变更后 recall 静默下降是产品事故，即使模型仍产出自信散文。",
+          "虚荣指标让团队感觉忙碌。有用指标让团队决策：上线、回滚，或投资内容与切块。这种决策质量才是衡量检索的意义。",
+        ],
+        links: [
+          {
+            label: "NIST — AI RMF",
+            url: "https://www.nist.gov/itl/ai-risk-management-framework",
+          },
+          {
+            label: "OpenAI — Evaluation best practices",
+            url: "https://platform.openai.com/docs/guides/evaluation",
+          },
+          {
+            label: "Anthropic — Measuring faithfulness",
+            url: "https://www.anthropic.com/research",
+          },
+        ],
+      },
+    ],
+  },
 "ownership-models-for-shared-platform-code": {
     title: "共享平台代码的归属模型",
     excerpt: "没有明确负责人的共享库会成为所有人的依赖、无人的事故。选择与爆炸半径、变更速率以及谁被呼叫相匹配的归属模型。",

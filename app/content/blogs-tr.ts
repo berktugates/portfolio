@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"measuring-retrieval-quality-without-vanity-metrics": {
+    title: "Gösteriş Metrikleri Olmadan Retrieval Kalitesini Ölçmek",
+    excerpt: "Embedding benzerliği ve demoda tıklama, retrieval'ın kullanıcıya yardım ettiğini kanıtlamaz. Görev başarısını, grounded yanıt oranını ve hiçbir şey dönmesi gereken hard negative'leri ölçün.",
+    description: "Retrieval kalitesi için staff playbook: çevrimdışı etiketler, online görev metrikleri, doğru abstention, dilimlenmiş eval ve vanity RAG panellerinden kaçınma.",
+    sections: [
+      {
+        heading: "Benzerlik yararlılık değildir",
+        paragraphs: [
+          "Sorgu ile chunk arasındaki cosine benzerliği, indeksin vektör uzayında yakından bir şey getirdiğini söyler. Chunk'ın kullanıcı görevini tamamlamak için gereken gerçeği içerip içermediğini, atıfların sadık olup olmadığını veya sistemin hiçbir şey getirmemesi gerekip gerekmediğini söylemez. Yalnızca benzerliği optimize etmek akıcı ilgisizliği ödüllendirir.",
+          "Staff seviye ölçüm ürün vaatlerinden başlar. Özellik korpusunuzdan grounded yanıt iddia ediyorsa metrik, notebook'ta en yakın komşuların ne kadar şık göründüğü değil; gerçekçi sorgular altında doğru grounding'dir.",
+        ],
+      },
+      {
+        heading: "Sizi fail ettirebilecek bir değerlendirme seti kurun",
+        paragraphs: [
+          "Sorgu setlerini beklenen belge ID'leri veya yanıt özellikleriyle etiketleyin; adversariyal durumları dahil edin: eş anlamlılar, güncel olmayan varlıklar, kısmi tanımlayıcılar, çok dilli ifade ve cevabı olmayan sorular. Bulunması zorunlu dokümanlar için recall@k, atıf precision'ı ve hiçbir şey eşleşmemeliyken abstention doğruluğunu izleyin.",
+          "Ürün değiştikçe seti yenileyin. Lansman haftasından donmuş golden set, içerik ve kullanıcı dili kayınca vanity olur. Regresyonlar atfedilebilsin diye veri setini indeks ve chunking stratejisiyle sürümleyin.",
+        ],
+        points: [
+          "Metrikleri dilime göre raporlayın: tenant, dil, içerik tipi ve risk katmanı",
+          "Her yayın kapısına 'hiçbir şey getirmemeli' vakaları ekleyin",
+          "Çevrimdışı skorları üretim örneklerinde insan incelemesiyle eşleştirin",
+          "Olay incelemesinde retrieval hatalarını generation hatalarından ayırın",
+        ],
+      },
+      {
+        heading: "Online metrikler sonuçlara bağlanmalı",
+        paragraphs: [
+          "Kullanıcıların AI yanıtından sonra işi bitirip bitirmediğini, ne sıklıkla yeniden ürettiklerini, aramaya veya desteğe yükselttiklerini veya atıfları düzelttiklerini ölçün. Stilistik yanıtlarda yüksek beğeni, gerçekler yanlışken artan ticket hacmiyle bir arada olabilir. İzole etkileşim vanity'si yerine sonuca bağlı oranları tercih edin.",
+          "Chunking, embedding veya reranker değiştirdiğinizde net başarı kriterleriyle eşli deneyler yürütün. Gecikme ve başarılı grounded yanıt başına maliyet regresyonlarına karşı koruyun—beş yeniden üretim zorlayan ucuz retrieval ucuz değildir.",
+        ],
+      },
+      {
+        heading: "Retrieval'ı üretim bağımlılığı gibi işletin",
+        paragraphs: [
+          "İndeks tazeliği, izin filtreleri ve boş sonuç oranları API erişilebilirliğiyle aynı panelde olmalıdır. Crawler veya ACL değişikliğinden sonra recall'da sessiz düşüş, model hâlâ kendinden emin düzyazı üretsen bile ürün olayıdır.",
+          "Vanity metrikler ekipleri meşgul hissettirir. Yararlı metrikler karar verdirir: yayınla, geri al veya içerik ile chunking'e yatırım yap. Bu karar kalitesi retrieval ölçmenin bütün noktasıdır.",
+        ],
+        links: [
+          {
+            label: "NIST — AI RMF",
+            url: "https://www.nist.gov/itl/ai-risk-management-framework",
+          },
+          {
+            label: "OpenAI — Evaluation best practices",
+            url: "https://platform.openai.com/docs/guides/evaluation",
+          },
+          {
+            label: "Anthropic — Measuring faithfulness",
+            url: "https://www.anthropic.com/research",
+          },
+        ],
+      },
+    ],
+  },
 "ownership-models-for-shared-platform-code": {
     title: "Paylaşılan Platform Kodu için Sahiplik Modelleri",
     excerpt: "Net sahibi olmayan paylaşılan kütüphaneler herkesin bağımlılığı ve kimsenin olayı olur. Blast radius, değişim hızı ve kim page alır ile uyumlu bir sahiplik modeli seçin.",
