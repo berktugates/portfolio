@@ -21,6 +21,76 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "progressive-delivery-for-multi-tenant-saas",
+    title: "Progressive Delivery for Multi-Tenant SaaS",
+    excerpt: "Shipping the same binary to every tenant at once is a blast-radius choice. Progressive delivery lets you prove change on the right cohorts before the whole fleet feels it.",
+    description: "How staff engineers run progressive delivery in multi-tenant SaaS: tenant cohorts, ring deployments, flag-based exposure, per-tenant rollback, and guardrail metrics that respect isolation.",
+    publishedAt: "2026-09-10",
+    readingMinutes: 7,
+    keywords: [
+      "progressive delivery",
+      "multi-tenant SaaS",
+      "canary releases",
+      "feature flags",
+      "ring deployment",
+      "release engineering",
+    ],
+    socialThreadTr: [
+      "Aynı binary'yi tüm tenant'lara birden göndermek bir blast-radius seçimidir. Progressive delivery, doğru kohortlarda kanıtlayıp filoyu riske atmadan yayınlar. 🧵",
+      "Ring, flag, tenant rollback ve izolasyonlu guardrail. Detay: https://berktugberke.com/tr/blogs/progressive-delivery-for-multi-tenant-saas",
+    ],
+    sections: [
+      {
+        heading: "Tenants are not interchangeable canaries",
+        paragraphs: [
+          "A random 5% of traffic can hide failures that only appear for enterprise SSO, custom data residency, or high-cardinality configs. In multi-tenant SaaS, progressive delivery must reason about tenant identity, plan tier, region, and risk profile—not only request percentage.",
+          "Build explicit rings: internal dogfood, friendly design partners, low-risk self-serve cohorts, then strategic accounts. Promotion between rings is a decision with owners and metrics, not an automatic timer that ignores support load.",
+        ],
+      },
+      {
+        heading: "Separate deploy from expose",
+        paragraphs: [
+          "Ship inactive code behind flags so you can soak infrastructure without changing customer-visible behavior. Then expose by tenant cohort, with sticky assignment so a user does not bounce between experiences mid-session. For data-path changes, prefer dual-write or shadow-read windows before cutting reads.",
+          "Per-tenant kill and rollback matter more than fleet-wide revert when only a slice is unhealthy. Practice restoring a single noisy neighbor without undoing a good rollout for everyone else.",
+        ],
+        points: [
+          "Tag metrics and logs with tenant and ring identity",
+          "Gate promotion on error budget, latency, and tenant-critical journeys",
+          "Keep schema migrations backward compatible across rings",
+          "Document which changes cannot be flagged and need darker launches",
+        ],
+      },
+      {
+        heading: "Guardrails must respect isolation",
+        paragraphs: [
+          "Aggregate dashboards can look healthy while one tenant burns. Alert on per-tenant SLO burn for critical paths, and on cross-tenant symptoms that suggest noisy-neighbor or shared-resource contention. Progressive delivery without tenant-aware observability just slows the blast radius discovery.",
+          "Compliance and contract constraints also shape rings. Some customers cannot receive experimental AI features; encode those exclusions in the targeting system so sales promises and engineering exposure stay aligned.",
+        ],
+      },
+      {
+        heading: "Make promotion boring and reversible",
+        paragraphs: [
+          "A mature multi-tenant release feels like traffic control: clear rings, measured promotion, fast per-tenant escape hatches, and post-promotion review. The goal is not slower shipping—it is shipping more often with blast radius you chose on purpose.",
+          "When AI features enter the same pipeline, add quality and cost guardrails alongside classic reliability. Progressive delivery is how SaaS products absorb continuous change without treating every tenant as an unpaid beta tester.",
+        ],
+        links: [
+          {
+            label: "LaunchDarkly — Progressive delivery",
+            url: "https://docs.launchdarkly.com/guides/progressive-delivery",
+          },
+          {
+            label: "Microsoft — Deployment rings",
+            url: "https://learn.microsoft.com/en-us/azure/devops/migrate/phase-rollout-with-rings",
+          },
+          {
+            label: "Google SRE — Canarying releases",
+            url: "https://sre.google/workbook/canarying-releases/",
+          },
+        ],
+      },
+    ],
+  },
+    {
     slug: "measuring-retrieval-quality-without-vanity-metrics",
     title: "Measuring Retrieval Quality Without Vanity Metrics",
     excerpt: "Embedding similarity and click-through on demos do not prove retrieval helps users. Measure task success, grounded answer rates, and hard negatives that should return nothing.",

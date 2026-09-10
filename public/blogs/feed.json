@@ -1,8 +1,30 @@
 {
   "version": 1,
   "site": "https://berktugberke.com",
-  "generatedAt": "2026-09-09T10:36:52.959Z",
+  "generatedAt": "2026-09-10T10:24:47.334Z",
   "posts": [
+    {
+      "id": "progressive-delivery-for-multi-tenant-saas",
+      "slug": "progressive-delivery-for-multi-tenant-saas",
+      "title": "Progressive Delivery for Multi-Tenant SaaS",
+      "url": "https://berktugberke.com/blogs/progressive-delivery-for-multi-tenant-saas",
+      "publishedAt": "2026-09-10",
+      "tags": [
+        "progressive delivery",
+        "multi-tenant SaaS",
+        "canary releases",
+        "feature flags",
+        "ring deployment",
+        "release engineering"
+      ],
+      "excerpt": "Shipping the same binary to every tenant at once is a blast-radius choice. Progressive delivery lets you prove change on the right cohorts before the whole fleet feels it.",
+      "bodyPlain": "A random 5% of traffic can hide failures that only appear for enterprise SSO, custom data residency, or high-cardinality configs. In multi-tenant SaaS, progressive delivery must reason about tenant identity, plan tier, region, and risk profile—not only request percentage.\n\nBuild explicit rings: internal dogfood, friendly design partners, low-risk self-serve cohorts, then strategic accounts. Promotion between rings is a decision with owners and metrics, not an automatic timer that ignores support load.\n\nShip inactive code behind flags so you can soak infrastructure without changing customer-visible behavior. Then expose by tenant cohort, with sticky assignment so a user does not bounce between experiences mid-session. For data-path changes, prefer dual-write or shadow-read windows before cutting reads.\n\nPer-tenant kill and rollback matter more than fleet-wide revert when only a slice is unhealthy. Practice restoring a single noisy neighbor without undoing a good rollout for everyone else.\n\nTag metrics and logs with tenant and ring identity\n\nGate promotion on error budget, latency, and tenant-critical journeys\n\nKeep schema migrations backward compatible across rings\n\nDocument which changes cannot be flagged and need darker launches\n\nAggregate dashboards can look healthy while one tenant burns. Alert on per-tenant SLO burn for critical paths, and on cross-tenant symptoms that suggest noisy-neighbor or shared-resource contention. Progressive delivery without tenant-aware observability just slows the blast radius discovery.\n\nCompliance and contract constraints also shape rings. Some customers cannot receive experimental AI features; encode those exclusions in the targeting system so sales promises and engineering exposure stay aligned.\n\nA mature multi-tenant release feels like traffic control: clear rings, measured promotion, fast per-tenant escape hatches, and post-promotion review. The goal is not slower shipping—it is shipping more often with blast radius you chose on purpose.\n\nWhen AI features enter the same pipeline, add quality and cost guardrails alongside classic reliability. Progressive delivery is how SaaS products absorb continuous change without treating every tenant as an unpaid beta tester.",
+      "contentHash": "818aa7eb4f455c96",
+      "socialThreadTr": [
+        "Aynı binary'yi tüm tenant'lara birden göndermek bir blast-radius seçimidir. Progressive delivery, doğru kohortlarda kanıtlayıp filoyu riske atmadan yayınlar. 🧵",
+        "Ring, flag, tenant rollback ve izolasyonlu guardrail. Detay: https://berktugberke.com/tr/blogs/progressive-delivery-for-multi-tenant-saas"
+      ]
+    },
     {
       "id": "measuring-retrieval-quality-without-vanity-metrics",
       "slug": "measuring-retrieval-quality-without-vanity-metrics",

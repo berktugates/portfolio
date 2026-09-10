@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"progressive-delivery-for-multi-tenant-saas": {
+    title: "Progressive delivery per SaaS multi-tenant",
+    excerpt: "Inviare lo stesso binary a tutti i tenant insieme è una scelta di blast radius. La progressive delivery prova il cambiamento sulle coorti giuste prima che l'intera flotta lo senta.",
+    description: "Come gli staff engineer gestiscono la progressive delivery nel SaaS multi-tenant: coorti di tenant, ring deployment, esposizione via flag, rollback per tenant e metriche guardrail che rispettano l'isolamento.",
+    sections: [
+      {
+        heading: "I tenant non sono canary intercambiabili",
+        paragraphs: [
+          "Il 5% di traffico casuale può nascondere failure che compaiono solo con SSO enterprise, data residency custom o config ad alta cardinalità. Nel SaaS multi-tenant la progressive delivery deve ragionare su identità tenant, piano, regione e profilo di rischio—non solo sulla percentuale di richieste.",
+          "Costruite ring espliciti: dogfood interno, design partner amici, coorti self-serve a basso rischio, poi account strategici. La promozione tra ring è una decisione con owner e metriche, non un timer automatico che ignora il carico del support.",
+        ],
+      },
+      {
+        heading: "Separare deploy ed expose",
+        paragraphs: [
+          "Shippare codice inattivo dietro flag per soakare l'infra senza cambiare il comportamento visibile. Poi esporre per coorte di tenant, con assegnazione sticky così un utente non salta tra esperienze a metà sessione. Per cambi sul data-path preferite dual-write o finestre shadow-read prima di tagliare le read.",
+          "Kill e rollback per tenant contano più di un revert flotta intera quando solo una fetta è malsana. Esercitatevi a ripristinare un noisy neighbor senza annullare un buon rollout per tutti gli altri.",
+        ],
+        points: [
+          "Taggare metriche e log con identità tenant e ring",
+          "Vincolare la promozione a error budget, latenza e journey tenant-critici",
+          "Mantenere le migrazioni di schema retrocompatibili tra ring",
+          "Documentare i cambi non flaggabili che richiedono launch più scuri",
+        ],
+      },
+      {
+        heading: "I guardrail devono rispettare l'isolamento",
+        paragraphs: [
+          "Dashboard aggregate possono sembrare sane mentre un tenant brucia. Allertate sul burn SLO per tenant sui path critici e su sintomi cross-tenant che suggeriscono noisy-neighbor o contention su risorse condivise. Senza observability tenant-aware la progressive delivery rallenta solo la scoperta del blast radius.",
+          "Vincoli di compliance e contratto modellano anche i ring. Alcuni clienti non possono ricevere feature IA sperimentali; codificate queste esclusioni nel targeting così promesse sales ed esposizione engineering restano allineate.",
+        ],
+      },
+      {
+        heading: "Rendere la promozione noiosa e reversibile",
+        paragraphs: [
+          "Una release multi-tenant matura sembra controllo del traffico: ring chiari, promozione misurata, escape hatch rapidi per tenant e review post-promozione. L'obiettivo non è shippare più lentamente—è shippare più spesso con un blast radius scelto di proposito.",
+          "Quando le feature IA entrano nella stessa pipeline, aggiungete guardrail di qualità e costo accanto alla reliability classica. La progressive delivery è come i prodotti SaaS assorbono il cambiamento continuo senza trattare ogni tenant come beta tester non pagato.",
+        ],
+        links: [
+          {
+            label: "LaunchDarkly — Progressive delivery",
+            url: "https://docs.launchdarkly.com/guides/progressive-delivery",
+          },
+          {
+            label: "Microsoft — Deployment rings",
+            url: "https://learn.microsoft.com/en-us/azure/devops/migrate/phase-rollout-with-rings",
+          },
+          {
+            label: "Google SRE — Canarying releases",
+            url: "https://sre.google/workbook/canarying-releases/",
+          },
+        ],
+      },
+    ],
+  },
 "measuring-retrieval-quality-without-vanity-metrics": {
     title: "Misurare la qualità del retrieval senza vanity metric",
     excerpt: "La similarità di embedding e il click in demo non provano che il retrieval aiuti gli utenti. Misurate il successo del task, i tassi di risposte grounded e gli hard negative che non devono restituire nulla.",

@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"progressive-delivery-for-multi-tenant-saas": {
+    title: "Progressive Delivery für Multi-Tenant-SaaS",
+    excerpt: "Dasselbe Binary an alle Tenants gleichzeitig zu shippen ist eine Blast-Radius-Entscheidung. Progressive Delivery beweist Change zuerst auf den richtigen Kohorten.",
+    description: "So betreiben Staff Engineers Progressive Delivery in Multi-Tenant-SaaS: Tenant-Kohorten, Ring Deployments, Flag-basierte Exposure, Per-Tenant-Rollback und Guardrail-Metriken die Isolation respektieren.",
+    sections: [
+      {
+        heading: "Tenants sind keine austauschbaren Canaries",
+        paragraphs: [
+          "Zufällige 5% Traffic können Failures verstecken die nur bei Enterprise-SSO, Custom Data Residency oder High-Cardinality-Configs erscheinen. In Multi-Tenant-SaaS muss Progressive Delivery Tenant-Identität, Plan-Tier, Region und Risk Profile einbeziehen—nicht nur Request-Prozent.",
+          "Bauen Sie explizite Rings: internes Dogfood, freundliche Design Partner, Low-Risk Self-Serve-Kohorten, dann strategische Accounts. Promotion zwischen Rings ist eine Entscheidung mit Ownern und Metriken—kein automatischer Timer der Support-Last ignoriert.",
+        ],
+      },
+      {
+        heading: "Deploy von Expose trennen",
+        paragraphs: [
+          "Shippen Sie inaktiven Code hinter Flags um Infrastruktur zu soaken ohne kunden sichtbares Verhalten zu ändern. Dann exposen Sie nach Tenant-Kohorte mit sticky Assignment damit Nutzer nicht mitten in der Session zwischen Experiences springen. Für Data-Path-Changes bevorzugen Sie Dual-Write oder Shadow-Read-Fenster vor dem Read-Cutover.",
+          "Per-Tenant-Kill und Rollback zählen mehr als Fleet-wide Revert wenn nur ein Slice ungesund ist. Üben Sie einen noisy Neighbor wiederherzustellen ohne einen guten Rollout für alle anderen rückgängig zu machen.",
+        ],
+        points: [
+          "Metriken und Logs mit Tenant- und Ring-Identität taggen",
+          "Promotion an Error Budget, Latenz und tenant-kritische Journeys koppeln",
+          "Schema-Migrationen über Rings hinweg rückwärtskompatibel halten",
+          "Dokumentieren welche Changes nicht geflagt werden können und dunklere Launches brauchen",
+        ],
+      },
+      {
+        heading: "Guardrails müssen Isolation respektieren",
+        paragraphs: [
+          "Aggregierte Dashboards können gesund aussehen während ein Tenant brennt. Alerten Sie auf Per-Tenant-SLO-Burn für kritische Pfade und auf Cross-Tenant-Symptome die Noisy-Neighbor oder Shared-Resource-Contention nahelegen. Progressive Delivery ohne tenant-aware Observability verlangsamt nur die Blast-Radius-Entdeckung.",
+          "Compliance- und Vertragsconstraints formen Rings ebenfalls. Manche Kunden dürfen keine experimentellen AI-Features erhalten; kodieren Sie diese Ausschlüsse im Targeting-System damit Sales-Promises und Engineering-Exposure aligned bleiben.",
+        ],
+      },
+      {
+        heading: "Promotion langweilig und reversibel machen",
+        paragraphs: [
+          "Ein reifes Multi-Tenant-Release fühlt sich wie Traffic Control an: klare Rings, gemessene Promotion, schnelle Per-Tenant-Escape-Hatches und Post-Promotion-Review. Das Ziel ist nicht langsameres Shipping—es ist häufigeres Shipping mit bewusst gewähltem Blast Radius.",
+          "Wenn AI-Features dieselbe Pipeline betreten, ergänzen Sie Quality- und Cost-Guardrails neben klassischer Reliability. Progressive Delivery ist wie SaaS-Produkte kontinuierlichen Change aufnehmen ohne jeden Tenant zum unbezahlten Beta-Tester zu machen.",
+        ],
+        links: [
+          {
+            label: "LaunchDarkly — Progressive delivery",
+            url: "https://docs.launchdarkly.com/guides/progressive-delivery",
+          },
+          {
+            label: "Microsoft — Deployment rings",
+            url: "https://learn.microsoft.com/en-us/azure/devops/migrate/phase-rollout-with-rings",
+          },
+          {
+            label: "Google SRE — Canarying releases",
+            url: "https://sre.google/workbook/canarying-releases/",
+          },
+        ],
+      },
+    ],
+  },
 "measuring-retrieval-quality-without-vanity-metrics": {
     title: "Retrieval-Qualität ohne Vanity Metrics messen",
     excerpt: "Embedding-Ähnlichkeit und Demo-Klicks beweisen nicht, dass Retrieval Nutzern hilft. Messen Sie Task-Erfolg, Grounded-Answer-Raten und Hard Negatives die nichts zurückgeben sollten.",

@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"progressive-delivery-for-multi-tenant-saas": {
+    title: "面向多租户 SaaS 的渐进式交付",
+    excerpt: "把同一二进制一次发给所有租户是爆炸半径的选择。渐进式交付让你在整支舰队感知之前，先在正确人群上证明变更。",
+    description: "Staff 工程师如何在多租户 SaaS 中运行渐进式交付：租户人群、环形部署、基于开关的暴露、按租户回滚，以及尊重隔离的护栏指标。",
+    sections: [
+      {
+        heading: "租户不是可互换的金丝雀",
+        paragraphs: [
+          "随机 5% 流量可能掩盖只在企业 SSO、自定义数据驻留或高基数配置下出现的失败。在多租户 SaaS 中，渐进式交付必须考虑租户身份、套餐层级、区域与风险画像——不只是请求百分比。",
+          "建立明确的环：内部试用、友好设计伙伴、低风险自助人群，再到战略客户。环间晋升是有负责人与指标的决策，不是忽略支持负载的自动计时器。",
+        ],
+      },
+      {
+        heading: "把部署与暴露分开",
+        paragraphs: [
+          "把未激活代码放在开关后发布，以便在不改变客户可见行为下浸泡基础设施。再按租户人群暴露，并用粘性分配避免用户在会话中途在体验间跳动。对数据路径变更，在切断读之前优先双写或影子读窗口。",
+          "当只有一片不健康时，按租户熔断与回滚比全舰队回退更重要。练习在不撤销对其余人的良好放量时，恢复单个嘈杂邻居。",
+        ],
+        points: [
+          "用租户与环身份标记指标与日志",
+          "用错误预算、延迟与租户关键旅程门禁晋升",
+          "跨环保持 schema 迁移向后兼容",
+          "记录无法用开关、需要更暗发布的变更",
+        ],
+      },
+      {
+        heading: "护栏必须尊重隔离",
+        paragraphs: [
+          "聚合看板可能在某个租户燃烧时仍显健康。对关键路径做按租户 SLO 燃烧告警，并对暗示嘈杂邻居或共享资源争用的跨租户症状告警。没有租户感知可观测性的渐进式交付，只会拖慢爆炸半径发现。",
+          "合规与合同约束也塑造环。有些客户不能接收实验性 AI 功能；把这些排除写入定向系统，使销售承诺与工程暴露对齐。",
+        ],
+      },
+      {
+        heading: "让晋升无聊且可逆",
+        paragraphs: [
+          "成熟的多租户发布像交通管制：清晰的环、可度量的晋升、快速的按租户逃生舱与晋升后复盘。目标不是更慢上线——而是更频繁上线，并带有刻意选择的爆炸半径。",
+          "当 AI 功能进入同一流水线时，在经典可靠性旁加上质量与成本护栏。渐进式交付是 SaaS 产品在不把每个租户当无偿测试员的情况下吸收持续变更的方式。",
+        ],
+        links: [
+          {
+            label: "LaunchDarkly — Progressive delivery",
+            url: "https://docs.launchdarkly.com/guides/progressive-delivery",
+          },
+          {
+            label: "Microsoft — Deployment rings",
+            url: "https://learn.microsoft.com/en-us/azure/devops/migrate/phase-rollout-with-rings",
+          },
+          {
+            label: "Google SRE — Canarying releases",
+            url: "https://sre.google/workbook/canarying-releases/",
+          },
+        ],
+      },
+    ],
+  },
 "measuring-retrieval-quality-without-vanity-metrics": {
     title: "不用虚荣指标衡量检索质量",
     excerpt: "向量相似度与演示点击不能证明检索对用户有帮助。衡量任务成功、有依据回答率，以及本应返回空的 hard negative。",

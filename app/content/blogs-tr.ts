@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"progressive-delivery-for-multi-tenant-saas": {
+    title: "Multi-Tenant SaaS için Progressive Delivery",
+    excerpt: "Aynı binary'yi tüm tenant'lara birden göndermek bir blast-radius seçimidir. Progressive delivery, değişikliği tüm filo hissetmeden önce doğru kohortlarda kanıtlatır.",
+    description: "Staff mühendisler multi-tenant SaaS'ta progressive delivery'yi nasıl işletir: tenant kohortları, ring deploy, flag tabanlı açılış, tenant başına rollback ve izolasyona saygılı guardrail metrikleri.",
+    sections: [
+      {
+        heading: "Tenant'lar birbirinin yerine geçen canary değildir",
+        paragraphs: [
+          "Rastgele %5 trafik, yalnızca kurumsal SSO, özel veri ikameti veya yüksek kardinaliteli config'lerde görünen hataları gizleyebilir. Multi-tenant SaaS'ta progressive delivery yalnızca istek yüzdesini değil; tenant kimliği, plan katmanı, bölge ve risk profilini de hesaba katmalıdır.",
+          "Açık ring'ler kurun: iç dogfood, dost design partner'lar, düşük riskli self-serve kohortlar, sonra stratejik hesaplar. Ring'ler arası yükseltme, destek yükünü yok sayan otomatik zamanlayıcı değil; sahipleri ve metrikleri olan bir karardır.",
+        ],
+      },
+      {
+        heading: "Deploy ile expose'u ayırın",
+        paragraphs: [
+          "Müşteriye görünür davranışı değiştirmeden altyapıyı soak etmek için kodu flag arkasında pasif yayınlayın. Sonra tenant kohortuna göre açın; kullanıcı oturum ortasında deneyimler arasında zıplamasın diye sticky atama kullanın. Veri yolu değişikliklerinde okumaları kesmeden önce dual-write veya shadow-read pencereleri tercih edin.",
+          "Yalnızca bir dilim sağlıksızken filo geneli geri almak yerine tenant başına kill ve rollback daha önemlidir. İyi bir yayını herkes için geri almadan tek bir noisy neighbor'ı geri yüklemeyi prova edin.",
+        ],
+        points: [
+          "Metrik ve logları tenant ve ring kimliğiyle etiketleyin",
+          "Yükseltmeyi hata bütçesi, gecikme ve tenant-kritik yolculuklara bağlayın",
+          "Şema migrasyonlarını ring'ler arasında geriye uyumlu tutun",
+          "Flag'lenemeyen ve daha karanlık lansman isteyen değişiklikleri belgelendirin",
+        ],
+      },
+      {
+        heading: "Guardrail'ler izolasyona saygı göstermelidir",
+        paragraphs: [
+          "Toplu paneller bir tenant yanarken sağlıklı görünebilir. Kritik yollar için tenant başına SLO yanmasına ve noisy-neighbor veya paylaşılan kaynak çekişmesini düşündüren çapraz-tenant belirtilere alarm kurun. Tenant-farkındalıklı observability olmadan progressive delivery yalnızca blast radius keşfini yavaşlatır.",
+          "Uyumluluk ve sözleşme kısıtları da ring'leri şekillendirir. Bazı müşteriler deneysel AI özellikleri alamaz; satış vaatleri ile mühendislik açılışının hizalı kalması için bu istisnaları targeting sistemine kodlayın.",
+        ],
+      },
+      {
+        heading: "Yükseltmeyi sıkıcı ve geri alınabilir kılın",
+        paragraphs: [
+          "Olgun multi-tenant yayın trafik kontrolü gibi hissettirir: net ring'ler, ölçülü yükseltme, hızlı tenant başına kaçış kapakları ve yükseltme sonrası inceleme. Amaç daha yavaş yayın değil; bilinçli seçtiğiniz blast radius ile daha sık yayınlamaktır.",
+          "AI özellikleri aynı pipeline'a girdiğinde klasik güvenilirliğin yanına kalite ve maliyet guardrail'leri ekleyin. Progressive delivery, SaaS ürünlerinin her tenant'ı ücretsiz beta testçisi yapmadan sürekli değişimi emme yoludur.",
+        ],
+        links: [
+          {
+            label: "LaunchDarkly — Progressive delivery",
+            url: "https://docs.launchdarkly.com/guides/progressive-delivery",
+          },
+          {
+            label: "Microsoft — Deployment rings",
+            url: "https://learn.microsoft.com/en-us/azure/devops/migrate/phase-rollout-with-rings",
+          },
+          {
+            label: "Google SRE — Canarying releases",
+            url: "https://sre.google/workbook/canarying-releases/",
+          },
+        ],
+      },
+    ],
+  },
 "measuring-retrieval-quality-without-vanity-metrics": {
     title: "Gösteriş Metrikleri Olmadan Retrieval Kalitesini Ölçmek",
     excerpt: "Embedding benzerliği ve demoda tıklama, retrieval'ın kullanıcıya yardım ettiğini kanıtlamaz. Görev başarısını, grounded yanıt oranını ve hiçbir şey dönmesi gereken hard negative'leri ölçün.",
