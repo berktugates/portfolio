@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"contract-testing-for-ai-tool-calling": {
+    title: "Contract testing pour l'appel d'outils IA",
+    excerpt: "Quand le modèle invente des arguments ou saute des champs requis, les tests unitaires du prompt ne suffisent pas. Les contract tests font des schémas d'outils des frontières exécutoires.",
+    description: "Comment les staff engineers appliquent le contract testing à l'appel d'outils IA : fixtures de schéma, paires golden requête/réponse, contrôles de drift fournisseur et portes CI qui attrapent les invocations dangereuses avant la production.",
+    sections: [
+      {
+        heading: "Traiter les schémas d'outils comme des API produit",
+        paragraphs: [
+          "L'appel d'outils paraît doux car le modèle produit du langage naturel, mais les effets de bord sont durs : paiements, tickets, emails et écritures DB. Si le contrat d'outil n'est documenté que dans un paragraphe de prompt, chaque upgrade de modèle devient un breaking change silencieux.",
+          "Publiez les outils comme schémas versionnés avec champs requis, enums, clés d'idempotence et deny lists explicites. Les contract tests affirment que l'adaptateur modèle et l'exécuteur d'outil s'accordent sur cette forme—avant qu'une session utilisateur paie le coût du désaccord.",
+        ],
+      },
+      {
+        heading: "Tester la frontière, pas la poésie",
+        paragraphs: [
+          "Les fixtures golden doivent inclure appels valides, appels malformés near-miss et payloads adversariaux qui tentent de contrebande des champs extra ou de brouiller des objets imbriqués. Rejouez les échecs production enregistrés dans la suite pour qu'un bump fournisseur ne réintroduise pas la même classe de bug.",
+          "Séparez contrats de sortie modèle et contrats d'exécuteur d'outil. Les premiers vérifient que parsing et validation rejettent les formes dangereuses ; les seconds que l'exécuteur se comporte encore correctement avec un payload valide versionné. Les mélanger cache si le modèle ou le backend a régressé.",
+        ],
+        points: [
+          "Épingler les versions de schéma d'outil et faire échouer la CI sur breaking changes non déclarés",
+          "Asserter champs requis, règles de coercion de type et rejet des champs inconnus",
+          "Inclure séquences multi-outils et chemins de récupération d'échec partiel",
+          "Shadow-run les nouvelles routes modèle contre des fixtures de contrat gelées",
+        ],
+      },
+      {
+        heading: "Rendre le drift visible dans les portes de release",
+        paragraphs: [
+          "SDK fournisseurs, bizarreries JSON mode et politiques tool-choice dérivent. Ajoutez une suite contract planifiée qui frappe le staging avec les mêmes fixtures que la CI PR, et alertez quand les pass rates chutent même si les métriques produit restent belles.",
+          "Suivez le pass rate contract, les outils qui échouent le plus et les histogrammes de forme d'arguments par route modèle. Un dashboard vert avec une suite contract rouge est comment vous shippez une régression visible seulement sous vraie pression d'outils.",
+        ],
+      },
+      {
+        heading: "Récupérer comme un produit, pas comme un parseur",
+        paragraphs: [
+          "Quand un contrat échoue, préférez fail-closed pour les outils irréversibles et fail-soft pour l'assistance en lecture seule. Donnez au modèle des indices de réparation structurés—noms de champs manquants, enums autorisés—au lieu de 500 opaques qui encouragent les boucles de retry.",
+          "Le contract testing rend l'appel d'outils ennuyeux : les schémas évoluent exprès, et les modèles sont invités de l'API—pas ses auteurs.",
+        ],
+        links: [
+          {
+            label: "Pact — Contract testing",
+            url: "https://docs.pact.io/",
+          },
+          {
+            label: "OpenAI — Function calling",
+            url: "https://platform.openai.com/docs/guides/function-calling",
+          },
+          {
+            label: "JSON Schema — Specification",
+            url: "https://json-schema.org/specification",
+          },
+        ],
+      },
+    ],
+  },
 "progressive-delivery-for-multi-tenant-saas": {
     title: "Progressive delivery pour le SaaS multi-tenant",
     excerpt: "Envoyer le même binaire à tous les tenants d'un coup est un choix de blast radius. La progressive delivery prouve le changement sur les bonnes cohortes avant que toute la flotte le sente.",

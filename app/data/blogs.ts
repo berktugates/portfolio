@@ -21,6 +21,76 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "contract-testing-for-ai-tool-calling",
+    title: "Contract Testing for AI Tool Calling",
+    excerpt: "When models invent arguments or skip required fields, unit tests on the prompt are not enough. Contract tests turn tool schemas into enforceable boundaries between the model and your systems.",
+    description: "How staff engineers apply contract testing to AI tool calling: schema fixtures, golden request/response pairs, provider drift checks, and CI gates that catch unsafe tool invocations before production.",
+    publishedAt: "2026-09-11",
+    readingMinutes: 7,
+    keywords: [
+      "contract testing",
+      "AI tool calling",
+      "function calling",
+      "LLM tools",
+      "API contracts",
+      "schema validation",
+    ],
+    socialThreadTr: [
+      "Model zorunlu alanları atlayınca prompt unit testi yetmez. Contract test, tool şemasını model ile sisteminiz arasında zorlayıcı sınır yapar. 🧵",
+      "Golden fixture, CI kapıları ve fail-closed kurtarma. Detay: https://berktugberke.com/tr/blogs/contract-testing-for-ai-tool-calling",
+    ],
+    sections: [
+      {
+        heading: "Treat tool schemas as product APIs",
+        paragraphs: [
+          "Tool calling looks soft because the model produces natural language, but the side effects are hard: payments, tickets, emails, and database writes. If the tool contract is only documented in a prompt paragraph, every model upgrade becomes a silent breaking change.",
+          "Publish tools as versioned schemas with required fields, enums, idempotency keys, and explicit deny lists. Contract tests assert that both the model adapter and the tool executor agree on that shape—before a user session pays the cost of disagreement.",
+        ],
+      },
+      {
+        heading: "Test the boundary, not the poetry",
+        paragraphs: [
+          "Golden fixtures should include valid calls, near-miss malformed calls, and adversarial payloads that try to smuggle extra fields or confuse nested objects. Replay recorded production failures into the suite so the next provider bump cannot reintroduce the same bug class.",
+          "Separate model-output contracts from tool-executor contracts. The first verifies that parsing and validation reject unsafe shapes; the second verifies that the executor still behaves correctly when given a valid, versioned payload. Mixing them hides whether the model or the backend regressed.",
+        ],
+        points: [
+          "Pin tool schema versions and fail CI on undeclared breaking changes",
+          "Assert required fields, type coercion rules, and unknown-field rejection",
+          "Include multi-tool sequences and partial-failure recovery paths",
+          "Shadow-run new model routes against frozen contract fixtures",
+        ],
+      },
+      {
+        heading: "Make drift visible in release gates",
+        paragraphs: [
+          "Provider SDKs, JSON mode quirks, and tool-choice policies drift over time. Add a scheduled contract suite that hits staging with the same fixtures used in PR CI, and alert when pass rates drop even if product metrics still look fine.",
+          "Track contract pass rate, top failing tools, and argument-shape histograms per model route. A green dashboard with a red contract suite is how you ship a regression that only appears under real tool pressure.",
+        ],
+      },
+      {
+        heading: "Recover like a product, not a parser",
+        paragraphs: [
+          "When a contract fails, prefer fail-closed for irreversible tools and fail-soft for read-only assistance. Surface structured repair hints to the model—missing field names, allowed enums—instead of opaque 500s that encourage retry loops.",
+          "Contract testing is how AI products keep tool calling boring: schemas evolve deliberately, and models are guests of the API—not its authors.",
+        ],
+        links: [
+          {
+            label: "Pact — Contract testing",
+            url: "https://docs.pact.io/",
+          },
+          {
+            label: "OpenAI — Function calling",
+            url: "https://platform.openai.com/docs/guides/function-calling",
+          },
+          {
+            label: "JSON Schema — Specification",
+            url: "https://json-schema.org/specification",
+          },
+        ],
+      },
+    ],
+  },
+    {
     slug: "progressive-delivery-for-multi-tenant-saas",
     title: "Progressive Delivery for Multi-Tenant SaaS",
     excerpt: "Shipping the same binary to every tenant at once is a blast-radius choice. Progressive delivery lets you prove change on the right cohorts before the whole fleet feels it.",

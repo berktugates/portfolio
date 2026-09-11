@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"contract-testing-for-ai-tool-calling": {
+    title: "Contract Testing für AI Tool Calling",
+    excerpt: "Wenn Modelle Argumente erfinden oder Pflichtfelder auslassen, reichen Unit Tests am Prompt nicht. Contract Tests machen Tool-Schemas zu durchsetzbaren Grenzen zwischen Modell und Systemen.",
+    description: "So wenden Staff Engineers Contract Testing auf AI Tool Calling an: Schema-Fixtures, Golden Request/Response-Paare, Provider-Drift-Checks und CI-Gates die unsichere Tool-Aufrufe vor Production fangen.",
+    sections: [
+      {
+        heading: "Tool-Schemas wie Produkt-APIs behandeln",
+        paragraphs: [
+          "Tool Calling wirkt weich weil das Modell natürliche Sprache erzeugt, aber Side Effects sind hart: Payments, Tickets, Emails und DB-Writes. Steht der Tool-Contract nur in einem Prompt-Absatz, wird jedes Model-Upgrade zu einem stillen Breaking Change.",
+          "Veröffentlichen Sie Tools als versionierte Schemas mit Required Fields, Enums, Idempotency Keys und expliziten Deny Lists. Contract Tests prüfen dass Model-Adapter und Tool-Executor die Form teilen—bevor eine User-Session den Preis der Uneinigkeit zahlt.",
+        ],
+      },
+      {
+        heading: "Die Grenze testen, nicht die Poesie",
+        paragraphs: [
+          "Golden Fixtures sollten gültige Calls, Near-Miss-Malformed-Calls und adversariale Payloads enthalten die Extra-Fields einschmuggeln oder Nested Objects verwirren. Spielen Sie aufgezeichnete Production-Failures in die Suite ein damit der nächste Provider-Bump dieselbe Bug-Klasse nicht zurückbringt.",
+          "Trennen Sie Model-Output-Contracts von Tool-Executor-Contracts. Erstere prüfen dass Parsing und Validation unsichere Formen ablehnen; letztere dass der Executor bei gültigem versioniertem Payload korrekt bleibt. Vermischen versteckt ob Modell oder Backend regressiert hat.",
+        ],
+        points: [
+          "Tool-Schema-Versionen pinnen und CI bei undeclared Breaking Changes failen",
+          "Required Fields, Type-Coercion-Regeln und Unknown-Field-Rejection asserten",
+          "Multi-Tool-Sequenzen und Partial-Failure-Recovery-Pfade einbeziehen",
+          "Neue Model-Routes gegen frozen Contract-Fixtures shadow-runnen",
+        ],
+      },
+      {
+        heading: "Drift in Release-Gates sichtbar machen",
+        paragraphs: [
+          "Provider-SDKs, JSON-Mode-Eigenheiten und Tool-Choice-Policies driften. Ergänzen Sie eine geplante Contract-Suite die Staging mit denselben Fixtures wie PR-CI trifft und alertet wenn Pass Rates fallen obwohl Produktmetriken noch gut wirken.",
+          "Tracken Sie Contract-Pass-Rate, Top-Failing-Tools und Argument-Shape-Histogramme pro Model-Route. Ein grünes Dashboard mit roter Contract-Suite ist der Weg zu Regressionen die nur unter echtem Tool-Druck sichtbar werden.",
+        ],
+      },
+      {
+        heading: "Wie ein Produkt recoveren, nicht wie ein Parser",
+        paragraphs: [
+          "Bei Contract-Failure fail-closed für irreversible Tools und fail-soft für Read-only Assistance. Geben Sie dem Modell strukturierte Repair-Hints—fehlende Feldnamen, erlaubte Enums—statt opaker 500er die Retry-Loops fördern.",
+          "Contract Testing hält Tool Calling langweilig: Schemas evolvieren absichtlich und Modelle sind Gäste der API—nicht ihre Autoren.",
+        ],
+        links: [
+          {
+            label: "Pact — Contract testing",
+            url: "https://docs.pact.io/",
+          },
+          {
+            label: "OpenAI — Function calling",
+            url: "https://platform.openai.com/docs/guides/function-calling",
+          },
+          {
+            label: "JSON Schema — Specification",
+            url: "https://json-schema.org/specification",
+          },
+        ],
+      },
+    ],
+  },
 "progressive-delivery-for-multi-tenant-saas": {
     title: "Progressive Delivery für Multi-Tenant-SaaS",
     excerpt: "Dasselbe Binary an alle Tenants gleichzeitig zu shippen ist eine Blast-Radius-Entscheidung. Progressive Delivery beweist Change zuerst auf den richtigen Kohorten.",

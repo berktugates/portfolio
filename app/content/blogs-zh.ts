@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"contract-testing-for-ai-tool-calling": {
+    title: "面向 AI 工具调用的契约测试",
+    excerpt: "当模型编造参数或跳过必填字段时，针对提示词的单元测试不够。契约测试把工具 schema 变成模型与系统之间可强制执行的边界。",
+    description: "Staff 工程师如何把契约测试用于 AI 工具调用：schema fixture、黄金请求/响应对、提供商漂移检查，以及在生产前拦截不安全工具调用的 CI 门禁。",
+    sections: [
+      {
+        heading: "把工具 schema 当作产品 API",
+        paragraphs: [
+          "工具调用因模型产出自然语言而显得柔软，但副作用是硬的：支付、工单、邮件与数据库写入。若工具契约只写在提示段落里，每次模型升级都变成静默破坏性变更。",
+          "以带必填字段、枚举、幂等键与明确拒绝列表的版本化 schema 发布工具。契约测试断言模型适配器与工具执行器在该形状上达成一致——在用户会话为分歧买单之前。",
+        ],
+      },
+      {
+        heading: "测试边界，而不是文采",
+        paragraphs: [
+          "黄金 fixture 应包含有效调用、近似错误的畸形调用，以及试图夹带额外字段或混淆嵌套对象的对抗载荷。把记录的生产失败回放到套件中，使下一次提供商升级无法重引入同类缺陷。",
+          "将模型输出契约与工具执行器契约分开。前者验证解析与校验会拒绝不安全形状；后者验证在给定有效、版本化载荷时执行器仍行为正确。混在一起会掩盖是模型还是后端回归。",
+        ],
+        points: [
+          "固定工具 schema 版本，未声明的破坏性变更让 CI 失败",
+          "断言必填字段、类型强制规则与未知字段拒绝",
+          "包含多工具序列与部分失败恢复路径",
+          "对新模型路由对冻结契约 fixture 做影子运行",
+        ],
+      },
+      {
+        heading: "让漂移在发布门禁中可见",
+        paragraphs: [
+          "提供商 SDK、JSON mode 怪癖与 tool-choice 策略会漂移。加入用与 PR CI 相同 fixture 打 staging 的定时契约套件，并在通过率下降（即使产品指标仍好看）时告警。",
+          "跟踪契约通过率、最常失败的工具，以及按模型路由的参数形状直方图。绿色看板配红色契约套件，正是你在真实工具压力下才会发现的回归上线方式。",
+        ],
+      },
+      {
+        heading: "像产品一样恢复，而不是像解析器",
+        paragraphs: [
+          "契约失败时，对不可逆工具优先 fail-closed，对只读协助 fail-soft。向模型提供结构化修复提示——缺失字段名、允许的枚举——而不是助长重试循环的不透明 500。",
+          "契约测试让 AI 产品把工具调用变得无聊：schema 有意演进，模型是 API 的客人——不是作者。",
+        ],
+        links: [
+          {
+            label: "Pact — Contract testing",
+            url: "https://docs.pact.io/",
+          },
+          {
+            label: "OpenAI — Function calling",
+            url: "https://platform.openai.com/docs/guides/function-calling",
+          },
+          {
+            label: "JSON Schema — Specification",
+            url: "https://json-schema.org/specification",
+          },
+        ],
+      },
+    ],
+  },
 "progressive-delivery-for-multi-tenant-saas": {
     title: "面向多租户 SaaS 的渐进式交付",
     excerpt: "把同一二进制一次发给所有租户是爆炸半径的选择。渐进式交付让你在整支舰队感知之前，先在正确人群上证明变更。",

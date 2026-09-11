@@ -1,8 +1,30 @@
 {
   "version": 1,
   "site": "https://berktugberke.com",
-  "generatedAt": "2026-09-10T10:24:47.334Z",
+  "generatedAt": "2026-09-11T10:26:49.913Z",
   "posts": [
+    {
+      "id": "contract-testing-for-ai-tool-calling",
+      "slug": "contract-testing-for-ai-tool-calling",
+      "title": "Contract Testing for AI Tool Calling",
+      "url": "https://berktugberke.com/blogs/contract-testing-for-ai-tool-calling",
+      "publishedAt": "2026-09-11",
+      "tags": [
+        "contract testing",
+        "AI tool calling",
+        "function calling",
+        "LLM tools",
+        "API contracts",
+        "schema validation"
+      ],
+      "excerpt": "When models invent arguments or skip required fields, unit tests on the prompt are not enough. Contract tests turn tool schemas into enforceable boundaries between the model and your systems.",
+      "bodyPlain": "Tool calling looks soft because the model produces natural language, but the side effects are hard: payments, tickets, emails, and database writes. If the tool contract is only documented in a prompt paragraph, every model upgrade becomes a silent breaking change.\n\nPublish tools as versioned schemas with required fields, enums, idempotency keys, and explicit deny lists. Contract tests assert that both the model adapter and the tool executor agree on that shape—before a user session pays the cost of disagreement.\n\nGolden fixtures should include valid calls, near-miss malformed calls, and adversarial payloads that try to smuggle extra fields or confuse nested objects. Replay recorded production failures into the suite so the next provider bump cannot reintroduce the same bug class.\n\nSeparate model-output contracts from tool-executor contracts. The first verifies that parsing and validation reject unsafe shapes; the second verifies that the executor still behaves correctly when given a valid, versioned payload. Mixing them hides whether the model or the backend regressed.\n\nPin tool schema versions and fail CI on undeclared breaking changes\n\nAssert required fields, type coercion rules, and unknown-field rejection\n\nInclude multi-tool sequences and partial-failure recovery paths\n\nShadow-run new model routes against frozen contract fixtures\n\nProvider SDKs, JSON mode quirks, and tool-choice policies drift over time. Add a scheduled contract suite that hits staging with the same fixtures used in PR CI, and alert when pass rates drop even if product metrics still look fine.\n\nTrack contract pass rate, top failing tools, and argument-shape histograms per model route. A green dashboard with a red contract suite is how you ship a regression that only appears under real tool pressure.\n\nWhen a contract fails, prefer fail-closed for irreversible tools and fail-soft for read-only assistance. Surface structured repair hints to the model—missing field names, allowed enums—instead of opaque 500s that encourage retry loops.\n\nContract testing is how AI products keep tool calling boring: schemas evolve deliberately, and models are guests of the API—not its authors.",
+      "contentHash": "d70bbb05d967c111",
+      "socialThreadTr": [
+        "Model zorunlu alanları atlayınca prompt unit testi yetmez. Contract test, tool şemasını model ile sisteminiz arasında zorlayıcı sınır yapar. 🧵",
+        "Golden fixture, CI kapıları ve fail-closed kurtarma. Detay: https://berktugberke.com/tr/blogs/contract-testing-for-ai-tool-calling"
+      ]
+    },
     {
       "id": "progressive-delivery-for-multi-tenant-saas",
       "slug": "progressive-delivery-for-multi-tenant-saas",

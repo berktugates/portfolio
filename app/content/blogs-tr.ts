@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"contract-testing-for-ai-tool-calling": {
+    title: "AI Tool Calling için Contract Testing",
+    excerpt: "Model zorunlu alanları atladığında veya argüman uydurduğunda prompt unit testi yetmez. Contract test, tool şemalarını model ile sisteminiz arasında zorlayıcı sınırlara çevirir.",
+    description: "Staff mühendisler AI tool calling'e contract testing'i nasıl uygular: şema fixture'ları, golden istek/yanıt çiftleri, sağlayıcı drift kontrolleri ve güvensiz tool çağrılarını production'dan önce yakalayan CI kapıları.",
+    sections: [
+      {
+        heading: "Tool şemalarını ürün API'si gibi ele alın",
+        paragraphs: [
+          "Tool calling doğal dil ürettiği için yumuşak görünür; yan etkiler ise serttir: ödemeler, ticket'lar, e-postalar ve veritabanı yazmaları. Tool sözleşmesi yalnızca prompt paragrafında belgelenmişse her model yükseltmesi sessiz bir breaking change olur.",
+          "Tool'ları zorunlu alanlar, enum'lar, idempotency anahtarları ve açık deny list'lerle versiyonlu şema olarak yayınlayın. Contract testler, kullanıcı oturumu anlaşmazlığın bedelini ödemeden önce hem model adapter'ın hem tool executor'ın bu şekil üzerinde anlaştığını doğrular.",
+        ],
+      },
+      {
+        heading: "Şiiri değil sınırı test edin",
+        paragraphs: [
+          "Golden fixture'lar geçerli çağrıları, neredeyse-hatalı malformed çağrıları ve ekstra alan kaçırmaya veya iç içe nesneleri karıştırmaya çalışan adversarial payload'ları içermelidir. Kayıtlı production hatalarını suite'e yeniden oynatın ki sonraki sağlayıcı yükseltmesi aynı hata sınıfını geri getiremesin.",
+          "Model-çıktı sözleşmelerini tool-executor sözleşmelerinden ayırın. İlki parsing ve validation'ın güvensiz şekilleri reddettiğini; ikincisi geçerli, versiyonlu payload verildiğinde executor'ın hâlâ doğru davrandığını doğrular. Karıştırmak model mi backend mi regress ettiğini gizler.",
+        ],
+        points: [
+          "Tool şema sürümlerini sabitleyin; beyan edilmemiş breaking change'de CI'ı düşürün",
+          "Zorunlu alanları, tip coercion kurallarını ve unknown-field reddini assert edin",
+          "Çoklu-tool dizilerini ve kısmi-hata kurtarma yollarını dahil edin",
+          "Yeni model route'larını dondurulmuş contract fixture'lara karşı shadow-run edin",
+        ],
+      },
+      {
+        heading: "Drift'i yayın kapılarında görünür kılın",
+        paragraphs: [
+          "Sağlayıcı SDK'ları, JSON mode tuhaflıkları ve tool-choice politikaları zamanla kayar. PR CI'daki aynı fixture'larla staging'e vuran zamanlanmış bir contract suite ekleyin; ürün metrikleri hâlâ iyi görünse bile pass rate düşünce alarm verin.",
+          "Contract pass rate, en çok başarısız tool'lar ve model route başına argüman şekli histogramlarını izleyin. Yeşil dashboard ve kırmızı contract suite, yalnızca gerçek tool baskısında görünen regresyonu yayınlamanın yoludur.",
+        ],
+      },
+      {
+        heading: "Parser değil ürün gibi kurtarın",
+        paragraphs: [
+          "Sözleşme bozulunca geri dönüşsüz tool'larda fail-closed, salt okunur yardımda fail-soft tercih edin. Opak 500'ler yerine modele yapılandırılmış onarım ipuçları verin—eksik alan adları, izinli enum'lar—retry döngüsünü teşvik etmesin.",
+          "Contract testing, AI ürünlerinin tool calling'i sıkıcı tutma yoludur: şemalar bilinçli evrilir ve modeller API'nin yazarı değil konuğudur.",
+        ],
+        links: [
+          {
+            label: "Pact — Contract testing",
+            url: "https://docs.pact.io/",
+          },
+          {
+            label: "OpenAI — Function calling",
+            url: "https://platform.openai.com/docs/guides/function-calling",
+          },
+          {
+            label: "JSON Schema — Specification",
+            url: "https://json-schema.org/specification",
+          },
+        ],
+      },
+    ],
+  },
 "progressive-delivery-for-multi-tenant-saas": {
     title: "Multi-Tenant SaaS için Progressive Delivery",
     excerpt: "Aynı binary'yi tüm tenant'lara birden göndermek bir blast-radius seçimidir. Progressive delivery, değişikliği tüm filo hissetmeden önce doğru kohortlarda kanıtlatır.",
