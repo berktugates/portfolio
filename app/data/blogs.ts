@@ -21,6 +21,76 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "feature-store-vs-prompt-store-tradeoffs",
+    title: "Feature Store vs Prompt Store Tradeoffs",
+    excerpt: "Feature stores optimize deterministic signals for models; prompt stores optimize language, tools, and policy for LLMs. Conflating them creates duplicate truth, stale context, and the wrong on-call.",
+    description: "Staff-level tradeoffs between feature stores and prompt stores for AI products: freshness SLAs, ownership, versioning, offline/online parity, and when to unify retrieval instead of duplicating registries.",
+    publishedAt: "2026-09-12",
+    readingMinutes: 7,
+    keywords: [
+      "feature store",
+      "prompt store",
+      "MLOps",
+      "LLM prompts",
+      "retrieval context",
+      "AI product architecture",
+    ],
+    socialThreadTr: [
+      "Feature store deterministik sinyaller içindir; prompt store dil, tool ve politika içindir. İkisini karıştırmak çift gerçeklik ve bayat bağlam üretir. 🧵",
+      "Tazelik SLA'sı, sahiplik ve sürümleme. Detay: https://berktugberke.com/tr/blogs/feature-store-vs-prompt-store-tradeoffs",
+    ],
+    sections: [
+      {
+        heading: "They solve different freshness problems",
+        paragraphs: [
+          "A feature store answers: what numeric or categorical signals did we know about this entity at decision time, with point-in-time correctness and training-serving skew controls. A prompt store answers: which instructions, examples, tool definitions, and safety policies did we show the model for this surface, with auditability and rollback.",
+          "Teams that dump embeddings, RAG snippets, and business rules into one 'context bucket' often recreate both systems poorly—without lineage for features or review workflow for prompts. Name the problem before you name the store.",
+        ],
+      },
+      {
+        heading: "When a feature store earns its keep",
+        paragraphs: [
+          "Use a feature store when multiple models or rules consume the same signals, when offline training must match online serving, and when compliance needs reproducible inputs per prediction. Batch backfills, materialized views, and entity keys are first-class—not afterthoughts bolted onto a vector DB.",
+          "Prompt tweaks do not replace missing features. If churn models need usage aggregates, put aggregates in the feature path with owners and SLAs instead of asking the LLM to improvise numbers from chat history.",
+        ],
+        points: [
+          "Define entity keys and freshness SLAs per consumer",
+          "Track point-in-time joins for training vs online serving",
+          "Version materialized feature sets, not only model weights",
+          "Alert when serving lags batch pipelines beyond policy",
+        ],
+      },
+      {
+        heading: "When a prompt store is the right abstraction",
+        paragraphs: [
+          "Use a prompt store when product, safety, and legal need reviewed changes to language, tool exposure, and refusal policies—often faster than code deploys but slower than ad-hoc edits in a dashboard. Pair it with evaluation suites and environment promotion, not copy-paste in production configs.",
+          "Prompt stores are weak primary homes for transactional facts. If a value must be exact—balances, entitlements, inventory—fetch it through tools or features, then let the prompt describe how to speak about it.",
+        ],
+      },
+      {
+        heading: "Unify retrieval, do not duplicate truth",
+        paragraphs: [
+          "Many products need both: features for scoring and prompts for interaction. Share a retrieval layer for documents and policies, but keep feature lineage and prompt approval workflows separate. Document which layer owns conflicts when they disagree.",
+          "The goal is one operational story for freshness and ownership—not one database pretending to be everything.",
+        ],
+        links: [
+          {
+            label: "Feast — Feature store concepts",
+            url: "https://docs.feast.dev/getting-started/concepts/feature-store",
+          },
+          {
+            label: "LangSmith — Prompt management",
+            url: "https://docs.smith.langchain.com/prompt_engineering/concepts",
+          },
+          {
+            label: "Tecton — Feature store overview",
+            url: "https://docs.tecton.ai/docs/reading-guide/concepts",
+          },
+        ],
+      },
+    ],
+  },
+    {
     slug: "contract-testing-for-ai-tool-calling",
     title: "Contract Testing for AI Tool Calling",
     excerpt: "When models invent arguments or skip required fields, unit tests on the prompt are not enough. Contract tests turn tool schemas into enforceable boundaries between the model and your systems.",

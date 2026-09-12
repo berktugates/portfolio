@@ -1,8 +1,30 @@
 {
   "version": 1,
   "site": "https://berktugberke.com",
-  "generatedAt": "2026-09-11T10:26:49.913Z",
+  "generatedAt": "2026-09-12T09:55:47.532Z",
   "posts": [
+    {
+      "id": "feature-store-vs-prompt-store-tradeoffs",
+      "slug": "feature-store-vs-prompt-store-tradeoffs",
+      "title": "Feature Store vs Prompt Store Tradeoffs",
+      "url": "https://berktugberke.com/blogs/feature-store-vs-prompt-store-tradeoffs",
+      "publishedAt": "2026-09-12",
+      "tags": [
+        "feature store",
+        "prompt store",
+        "MLOps",
+        "LLM prompts",
+        "retrieval context",
+        "AI product architecture"
+      ],
+      "excerpt": "Feature stores optimize deterministic signals for models; prompt stores optimize language, tools, and policy for LLMs. Conflating them creates duplicate truth, stale context, and the wrong on-call.",
+      "bodyPlain": "A feature store answers: what numeric or categorical signals did we know about this entity at decision time, with point-in-time correctness and training-serving skew controls. A prompt store answers: which instructions, examples, tool definitions, and safety policies did we show the model for this surface, with auditability and rollback.\n\nTeams that dump embeddings, RAG snippets, and business rules into one 'context bucket' often recreate both systems poorly—without lineage for features or review workflow for prompts. Name the problem before you name the store.\n\nUse a feature store when multiple models or rules consume the same signals, when offline training must match online serving, and when compliance needs reproducible inputs per prediction. Batch backfills, materialized views, and entity keys are first-class—not afterthoughts bolted onto a vector DB.\n\nPrompt tweaks do not replace missing features. If churn models need usage aggregates, put aggregates in the feature path with owners and SLAs instead of asking the LLM to improvise numbers from chat history.\n\nDefine entity keys and freshness SLAs per consumer\n\nTrack point-in-time joins for training vs online serving\n\nVersion materialized feature sets, not only model weights\n\nAlert when serving lags batch pipelines beyond policy\n\nUse a prompt store when product, safety, and legal need reviewed changes to language, tool exposure, and refusal policies—often faster than code deploys but slower than ad-hoc edits in a dashboard. Pair it with evaluation suites and environment promotion, not copy-paste in production configs.\n\nPrompt stores are weak primary homes for transactional facts. If a value must be exact—balances, entitlements, inventory—fetch it through tools or features, then let the prompt describe how to speak about it.\n\nMany products need both: features for scoring and prompts for interaction. Share a retrieval layer for documents and policies, but keep feature lineage and prompt approval workflows separate. Document which layer owns conflicts when they disagree.\n\nThe goal is one operational story for freshness and ownership—not one database pretending to be everything.",
+      "contentHash": "cd43513de42e9917",
+      "socialThreadTr": [
+        "Feature store deterministik sinyaller içindir; prompt store dil, tool ve politika içindir. İkisini karıştırmak çift gerçeklik ve bayat bağlam üretir. 🧵",
+        "Tazelik SLA'sı, sahiplik ve sürümleme. Detay: https://berktugberke.com/tr/blogs/feature-store-vs-prompt-store-tradeoffs"
+      ]
+    },
     {
       "id": "contract-testing-for-ai-tool-calling",
       "slug": "contract-testing-for-ai-tool-calling",

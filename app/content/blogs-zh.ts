@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"feature-store-vs-prompt-store-tradeoffs": {
+    title: "Feature Store 与 Prompt Store 的权衡",
+    excerpt: "Feature store 为模型优化确定性信号；prompt store 为 LLM 优化语言、工具与策略。混为一谈会产生双重真相与陈旧上下文。",
+    description: "AI 产品中 feature store 与 prompt store 的 staff 级权衡：新鲜度 SLA、归属、版本、离线/在线一致性，以及何时统一检索而非重复注册表。",
+    sections: [
+      {
+        heading: "它们解决不同的新鲜度问题",
+        paragraphs: [
+          "Feature store 回答：在决策时刻我们对该实体知道哪些数值或类别信号——带点对点正确性与训练-服务偏移控制。Prompt store 回答：对该界面我们向模型展示了哪些指令、示例、工具定义与安全策略——可审计且可回滚。",
+          "把嵌入、RAG 片段与业务规则扔进一个「上下文桶」的团队，往往拙劣地重建两套系统——既没有特征血缘，也没有提示评审流程。先命名问题，再命名存储。",
+        ],
+      },
+      {
+        heading: "何时值得上 feature store",
+        paragraphs: [
+          "当多个模型或规则消费相同信号、离线训练必须匹配在线服务、合规需要每次预测可复现输入时使用 feature store。批量回填、物化视图与实体键是一等公民——不是事后贴在向量库上的想法。",
+          "提示微调不能替代缺失特征。若流失模型需要用量聚合，把聚合放在有负责人与 SLA 的特征路径上，而不是让 LLM 从聊天历史即兴编数字。",
+        ],
+        points: [
+          "按消费者定义实体键与新鲜度 SLA",
+          "跟踪训练与在线服务的点对点连接",
+          "为物化特征集而不仅是模型权重做版本",
+          "当服务滞后于批量管道超过策略时告警",
+        ],
+      },
+      {
+        heading: "何时 prompt store 才是对抽象",
+        paragraphs: [
+          "当产品、安全与法务需要对语言、工具暴露与拒绝策略做评审变更时使用 prompt store——通常比代码发布快，但比仪表盘临时编辑慢。配合评测套件与环境晋升，而非生产配置复制粘贴。",
+          "Prompt store 不适合作为交易事实的主家园。若数值必须精确——余额、权益、库存——通过工具或特征获取；提示只描述如何表述。",
+        ],
+      },
+      {
+        heading: "统一检索，不重复真相",
+        paragraphs: [
+          "许多产品两者都需要：打分用特征，交互用提示。文档与策略共享检索层，但特征血缘与提示审批流程分开。记录冲突时哪一层负责。",
+          "目标是为新鲜度与归属讲清一条运营故事——而不是一个假装全能的数据库。",
+        ],
+        links: [
+          {
+            label: "Feast — Feature store concepts",
+            url: "https://docs.feast.dev/getting-started/concepts/feature-store",
+          },
+          {
+            label: "LangSmith — Prompt management",
+            url: "https://docs.smith.langchain.com/prompt_engineering/concepts",
+          },
+          {
+            label: "Tecton — Feature store overview",
+            url: "https://docs.tecton.ai/docs/reading-guide/concepts",
+          },
+        ],
+      },
+    ],
+  },
 "contract-testing-for-ai-tool-calling": {
     title: "面向 AI 工具调用的契约测试",
     excerpt: "当模型编造参数或跳过必填字段时，针对提示词的单元测试不够。契约测试把工具 schema 变成模型与系统之间可强制执行的边界。",

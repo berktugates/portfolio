@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"feature-store-vs-prompt-store-tradeoffs": {
+    title: "Feature StoreとPrompt Storeのトレードオフ",
+    excerpt: "Feature Storeはモデル向けの決定的シグナルを最適化し、Prompt StoreはLLM向けの言語・ツール・ポリシーを最適化します。混同すると二重の真実と古いコンテキストが生まれます。",
+    description: "AIプロダクトにおけるFeature StoreとPrompt Storeのスタッフ級トレードオフ：鮮度SLA、オーナーシップ、版管理、オフライン/オンライン整合、レジストリを複製せず検索を統一するタイミング。",
+    sections: [
+      {
+        heading: "異なる鮮度問題を解く",
+        paragraphs: [
+          "Feature Storeが答えるのは：意思決定時点でこのエンティティについてどの数値/カテゴリシグナルを知っていたか—ポイントインタイム正確性と学習-配信スキュー制御付き。Prompt Storeが答えるのは：このサーフェスでモデルにどの指示・例・ツール定義・安全ポリシーを見せたか—監査可能性とロールバック付き。",
+          "埋め込み、RAG断片、ビジネスルールを一つの「コンテキストバケツ」に入れるチームは、しばしば両システムを下手に再実装します—特徴の系譜もプロンプトのレビューフローもなく。ストアを名付ける前に問題を名付けてください。",
+        ],
+      },
+      {
+        heading: "Feature Storeが価値を出すとき",
+        paragraphs: [
+          "複数モデルやルールが同じシグナルを消費するとき、オフライン学習がオンライン配信と一致すべきとき、コンプライアンスが予測ごとに再現可能な入力を要するときにFeature Storeを使います。バッチバックフィル、マテリアライズドビュー、エンティティキーは一等公民です—ベクターDBへの後付けではありません。",
+          "プロンプト調整は欠けた特徴の代わりにはなりません。チャーン模型が利用集計を要するなら、チャット履歴からLLMに数字を即興させるのではなく、オーナーとSLA付きの特徴パスに置いてください。",
+        ],
+        points: [
+          "コンシューマごとにエンティティキーと鮮度SLAを定義",
+          "学習対オンライン配信のポイントインタイム結合を追跡",
+          "モデル重みだけでなくマテリアライズ特徴セットを版管理",
+          "配信がポリシーを超えてバッチパイプラインに遅れたらアラート",
+        ],
+      },
+      {
+        heading: "Prompt Storeが正しい抽象のとき",
+        paragraphs: [
+          "プロダクト・安全・法務が言語、ツール露出、拒否ポリシーのレビュー済み変更を要するとき—多くの場合コードデプロイより速く、ダッシュボード即席編集より遅い—Prompt Storeを使います。本番設定へのコピペではなく、評価スイートと環境昇格と組み合わせます。",
+          "Prompt Storeは取引事実の主たる居場所としては弱いです。残高・権利・在庫など値が厳密であるならツールや特徴で取得し、プロンプトは話し方だけを記述します。",
+        ],
+      },
+      {
+        heading: "検索を統一し、真実を複製しない",
+        paragraphs: [
+          "多くのプロダクトは両方必要です：スコアリング用の特徴と対話用のプロンプト。文書とポリシーで検索層を共有しつつ、特徴系譜とプロンプト承認は分離します。矛盾時にどの層がオーナーか文書化します。",
+          "目標は鮮度とオーナーシップの一本の運用ストーリーであり、何でもあるふりをする一つのDBではありません。",
+        ],
+        links: [
+          {
+            label: "Feast — Feature store concepts",
+            url: "https://docs.feast.dev/getting-started/concepts/feature-store",
+          },
+          {
+            label: "LangSmith — Prompt management",
+            url: "https://docs.smith.langchain.com/prompt_engineering/concepts",
+          },
+          {
+            label: "Tecton — Feature store overview",
+            url: "https://docs.tecton.ai/docs/reading-guide/concepts",
+          },
+        ],
+      },
+    ],
+  },
 "contract-testing-for-ai-tool-calling": {
     title: "AIツール呼び出しの契約テスト",
     excerpt: "モデルが引数を捏造したり必須フィールドを飛ばしたりするとき、プロンプトの単体テストでは足りません。契約テストはツールスキーマをモデルとシステム間の強制境界にします。",

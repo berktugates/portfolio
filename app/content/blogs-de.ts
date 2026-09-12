@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"feature-store-vs-prompt-store-tradeoffs": {
+    title: "Feature Store vs Prompt Store: Trade-offs",
+    excerpt: "Feature Stores optimieren deterministische Signale für Modelle; Prompt Stores optimieren Sprache, Tools und Policy für LLMs. Verwechslung erzeugt doppelte Wahrheit und veralteten Kontext.",
+    description: "Staff-Level Trade-offs zwischen Feature Store und Prompt Store für AI-Produkte: Freshness-SLAs, Ownership, Versionierung, Offline/Online-Parität und wann man Retrieval statt doppelter Registries vereinheitlicht.",
+    sections: [
+      {
+        heading: "Sie lösen unterschiedliche Freshness-Probleme",
+        paragraphs: [
+          "Ein Feature Store beantwortet: welche numerischen oder kategorialen Signale kannten wir zur Entscheidungszeit über diese Entität—mit Point-in-Time-Korrektheit und Training-Serving-Skew-Kontrollen. Ein Prompt Store beantwortet: welche Anweisungen, Beispiele, Tool-Definitionen und Safety-Policies zeigten wir dem Modell für diese Oberfläche—mit Auditierbarkeit und Rollback.",
+          "Teams die Embeddings, RAG-Snippets und Business Rules in einen 'Context Bucket' werfen, bauen oft beide Systeme schlecht nach—ohne Lineage für Features oder Review-Workflow für Prompts. Benennen Sie das Problem, bevor Sie den Store benennen.",
+        ],
+      },
+      {
+        heading: "Wann sich ein Feature Store lohnt",
+        paragraphs: [
+          "Nutzen Sie einen Feature Store wenn mehrere Modelle oder Regeln dieselben Signale konsumieren, Offline-Training Online-Serving matchen muss und Compliance reproduzierbare Inputs pro Prediction braucht. Batch-Backfills, materialisierte Views und Entity Keys sind first-class—kein Nachthought an einer Vector DB.",
+          "Prompt-Tweaks ersetzen keine fehlenden Features. Braucht ein Churn-Modell Nutzungsaggregate, legen Sie Aggregate in den Feature-Pfad mit Ownern und SLAs statt das LLM Zahlen aus Chat-Historie improvisieren zu lassen.",
+        ],
+        points: [
+          "Entity Keys und Freshness-SLAs pro Consumer definieren",
+          "Point-in-Time-Joins für Training vs Online Serving tracken",
+          "Materialisierte Feature Sets versionieren, nicht nur Modellgewichte",
+          "Alarm wenn Serving Batch-Pipelines über Policy hinaus hinkt",
+        ],
+      },
+      {
+        heading: "Wann ein Prompt Store die richtige Abstraktion ist",
+        paragraphs: [
+          "Nutzen Sie einen Prompt Store wenn Produkt, Safety und Legal reviewed Changes an Sprache, Tool-Exposure und Refusal-Policies brauchen—oft schneller als Code-Deploys, aber langsamer als Ad-hoc-Dashboard-Edits. Koppeln Sie an Eval-Suites und Environment-Promotion, nicht Copy-Paste in Prod-Configs.",
+          "Prompt Stores sind schwache primäre Heimat für transaktionale Fakten. Muss ein Wert exakt sein—Salden, Entitlements, Inventar—holen Sie es über Tools oder Features; der Prompt beschreibt nur, wie darüber gesprochen wird.",
+        ],
+      },
+      {
+        heading: "Retrieval vereinheitlichen, Wahrheit nicht duplizieren",
+        paragraphs: [
+          "Viele Produkte brauchen beides: Features fürs Scoring und Prompts für Interaktion. Teilen Sie eine Retrieval-Schicht für Dokumente und Policies, aber halten Sie Feature-Lineage und Prompt-Approval getrennt. Dokumentieren Sie, welche Schicht bei Konflikten owned.",
+          "Das Ziel ist eine operative Geschichte für Freshness und Ownership—keine Datenbank, die alles sein will.",
+        ],
+        links: [
+          {
+            label: "Feast — Feature store concepts",
+            url: "https://docs.feast.dev/getting-started/concepts/feature-store",
+          },
+          {
+            label: "LangSmith — Prompt management",
+            url: "https://docs.smith.langchain.com/prompt_engineering/concepts",
+          },
+          {
+            label: "Tecton — Feature store overview",
+            url: "https://docs.tecton.ai/docs/reading-guide/concepts",
+          },
+        ],
+      },
+    ],
+  },
 "contract-testing-for-ai-tool-calling": {
     title: "Contract Testing für AI Tool Calling",
     excerpt: "Wenn Modelle Argumente erfinden oder Pflichtfelder auslassen, reichen Unit Tests am Prompt nicht. Contract Tests machen Tool-Schemas zu durchsetzbaren Grenzen zwischen Modell und Systemen.",

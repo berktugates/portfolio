@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"feature-store-vs-prompt-store-tradeoffs": {
+    title: "Feature Store vs Prompt Store: Ödünleşimler",
+    excerpt: "Feature store'lar modeller için deterministik sinyalleri optimize eder; prompt store'lar LLM'ler için dil, tool ve politikayı optimize eder. Karıştırmak çift gerçeklik ve bayat bağlam üretir.",
+    description: "AI ürünlerinde feature store ile prompt store arasındaki staff seviyesi ödünleşimler: tazelik SLA'ları, sahiplik, sürümleme, offline/online paritesi ve kayıtları çoğaltmak yerine retrieval'ı ne zaman birleştirmeli.",
+    sections: [
+      {
+        heading: "Farklı tazelik problemlerini çözerler",
+        paragraphs: [
+          "Feature store şunu yanıtlar: karar anında bu varlık hakkında hangi sayısal/kategorik sinyalleri biliyorduk—point-in-time doğruluk ve training-serving skew kontrolleriyle. Prompt store şunu yanıtlar: bu yüzey için modele hangi talimatları, örnekleri, tool tanımlarını ve güvenlik politikalarını gösterdik—denetlenebilirlik ve rollback ile.",
+          "Embedding, RAG parçası ve iş kurallarını tek bir 'context bucket'a atan ekipler çoğu zaman her iki sistemi de kötü yeniden kurar—feature'lar için lineage veya prompt'lar için review akışı olmadan. Depoyu adlandırmadan önce problemi adlandırın.",
+        ],
+      },
+      {
+        heading: "Feature store ne zaman hak eder",
+        paragraphs: [
+          "Aynı sinyalleri birden fazla model veya kural tükettiğinde, offline eğitim online serving ile eşleşmeli olduğunda ve uyumluluk tahmin başına tekrarlanabilir girdi istediğinde feature store kullanın. Batch backfill, materialize view ve entity key'ler sonradan vector DB'ye eklenen düşünceler değil, birinci sınıftır.",
+          "Prompt ince ayarı eksik feature'ların yerini tutmaz. Churn modeli kullanım agregatları istiyorsa, agregatları chat geçmişinden sayı uydurması için LLM'e sormak yerine sahiplik ve SLA'lı feature yoluna koyun.",
+        ],
+        points: [
+          "Tüketici başına entity key ve tazelik SLA'sı tanımlayın",
+          "Eğitim vs online serving için point-in-time join'leri izleyin",
+          "Yalnızca model ağırlıklarını değil, materialize feature set'lerini sürümleyin",
+          "Serving, batch pipeline'dan politikayı aştığında alarm kurun",
+        ],
+      },
+      {
+        heading: "Prompt store doğru soyutlama ne zaman",
+        paragraphs: [
+          "Ürün, güvenlik ve hukuk dil, tool açılışı ve red politikalarında incelenmiş değişiklik istediğinde—çoğu zaman code deploy'dan hızlı ama dashboard'da ad-hoc düzenlemeden yavaş—prompt store kullanın. Production config'e kopyala-yapıştır değil; değerlendirme suite'leri ve ortam promosyonu ile eşleyin.",
+          "Prompt store'lar işlemsel gerçekler için zayıf birincil evdir. Bakiye, entitlement, stok gibi değerler kesin olmalıysa tool veya feature ile çekin; prompt yalnızca bunun hakkında nasıl konuşulacağını tarif etsin.",
+        ],
+      },
+      {
+        heading: "Retrieval'ı birleştirin, gerçeği çoğaltmayın",
+        paragraphs: [
+          "Birçok ürün ikisine de ihtiyaç duyar: skorlama için feature, etkileşim için prompt. Doküman ve politikalar için paylaşılan retrieval katmanı kullanın ama feature lineage ile prompt onay akışlarını ayırın. Çeliştiklerinde hangi katmanın sahip olduğunu belgelendirin.",
+          "Amaç her şeymiş gibi davranan tek veritabanı değil; tazelik ve sahiplik için tek operasyonel hikâyedir.",
+        ],
+        links: [
+          {
+            label: "Feast — Feature store concepts",
+            url: "https://docs.feast.dev/getting-started/concepts/feature-store",
+          },
+          {
+            label: "LangSmith — Prompt management",
+            url: "https://docs.smith.langchain.com/prompt_engineering/concepts",
+          },
+          {
+            label: "Tecton — Feature store overview",
+            url: "https://docs.tecton.ai/docs/reading-guide/concepts",
+          },
+        ],
+      },
+    ],
+  },
 "contract-testing-for-ai-tool-calling": {
     title: "AI Tool Calling için Contract Testing",
     excerpt: "Model zorunlu alanları atladığında veya argüman uydurduğunda prompt unit testi yetmez. Contract test, tool şemalarını model ile sisteminiz arasında zorlayıcı sınırlara çevirir.",

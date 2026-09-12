@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"feature-store-vs-prompt-store-tradeoffs": {
+    title: "Feature store vs prompt store: compromessi",
+    excerpt: "I feature store ottimizzano segnali deterministici per i modelli; i prompt store ottimizzano linguaggio, tool e policy per gli LLM. Confonderli crea doppia verità e contesto stantio.",
+    description: "Compromessi staff tra feature store e prompt store per prodotti IA: SLA di freschezza, ownership, versionamento, parità offline/online e quando unificare il retrieval invece di duplicare i registry.",
+    sections: [
+      {
+        heading: "Risolgono problemi di freschezza diversi",
+        paragraphs: [
+          "Un feature store risponde: quali segnali numerici o categorici conoscevamo su questa entità al momento della decisione, con correttezza point-in-time e controllo dello skew training-serving. Un prompt store risponde: quali istruzioni, esempi, definizioni di tool e policy di safety abbiamo mostrato al modello per questa superficie, con audit e rollback.",
+          "I team che buttano embedding, snippet RAG e regole di business in un unico 'secchio di contesto' spesso ricreano male entrambi i sistemi—senza lineage per le feature o workflow di review per i prompt. Nominate il problema prima dello store.",
+        ],
+      },
+      {
+        heading: "Quando un feature store vale la pena",
+        paragraphs: [
+          "Usate un feature store quando più modelli o regole consumano gli stessi segnali, quando il training offline deve matchare il serving online e la compliance richiede input riproducibili per predizione. Backfill batch, viste materializzate e entity key sono di prima classe—non un pensiero tardivo su una vector DB.",
+          "I tweak di prompt non sostituiscono feature mancanti. Se un modello di churn ha bisogno di aggregati di utilizzo, metteteli nel percorso feature con owner e SLA invece di chiedere all'LLM di improvvisare numeri dalla chat history.",
+        ],
+        points: [
+          "Definire entity key e SLA di freschezza per consumer",
+          "Tracciare join point-in-time per training vs serving online",
+          "Versionare set di feature materializzati, non solo pesi del modello",
+          "Allertare quando il serving ritarda le pipeline batch oltre la policy",
+        ],
+      },
+      {
+        heading: "Quando un prompt store è l'astrazione giusta",
+        paragraphs: [
+          "Usate un prompt store quando prodotto, safety e legal richiedono cambiamenti revisionati su linguaggio, esposizione tool e policy di rifiuto—spesso più veloce dei deploy di codice ma più lento delle edit ad hoc. Abbinate a suite di eval e promozione ambienti, non copia-incolla nelle config di prod.",
+          "I prompt store sono case primarie deboli per fatti transazionali. Se un valore deve essere esatto—saldi, entitlement, inventario—recuperatelo via tool o feature; il prompt descrive solo come parlarne.",
+        ],
+      },
+      {
+        heading: "Unificare il retrieval, non duplicare la verità",
+        paragraphs: [
+          "Molti prodotti hanno bisogno di entrambi: feature per lo scoring e prompt per l'interazione. Condividete uno strato di retrieval per documenti e policy, ma tenete lineage delle feature e approvazione prompt separati. Documentate chi possiede i conflitti.",
+          "L'obiettivo è una storia operativa unica per freschezza e ownership—non un database che finge di essere tutto.",
+        ],
+        links: [
+          {
+            label: "Feast — Feature store concepts",
+            url: "https://docs.feast.dev/getting-started/concepts/feature-store",
+          },
+          {
+            label: "LangSmith — Prompt management",
+            url: "https://docs.smith.langchain.com/prompt_engineering/concepts",
+          },
+          {
+            label: "Tecton — Feature store overview",
+            url: "https://docs.tecton.ai/docs/reading-guide/concepts",
+          },
+        ],
+      },
+    ],
+  },
 "contract-testing-for-ai-tool-calling": {
     title: "Contract testing per il tool calling IA",
     excerpt: "Quando il modello inventa argomenti o salta campi obbligatori, i unit test sul prompt non bastano. I contract test trasformano gli schemi tool in confini vincolanti tra modello e sistemi.",
