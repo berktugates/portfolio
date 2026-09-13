@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"offline-first-sync-conflicts-in-mobile-apps": {
+    title: "Conflitti di sync offline-first nelle app mobile",
+    excerpt: "L'UX offline-first promette continuità; la sync promette consistenza eventuale. Senza modelli di conflitto espliciti, gli utenti vedono azioni duplicate, edit persi e ticket che si riproducono solo in aereo.",
+    description: "Come gli staff engineer progettano la sync offline-first mobile: tipi di conflitto, CRDT vs last-write-wins, mutazioni idempotenti, UX di merge e telemetria che prova la salute sync sul campo.",
+    sections: [
+      {
+        heading: "Nominate i conflitti che gli utenti colpiranno davvero",
+        paragraphs: [
+          "Non ogni collisione è un problema di merge. Alcune sono intenti duplicati: tap 'paga' due volte in tunnel instabile, accodare due bonifici e riconciliare al ritorno della connettività. Altre sono vere edit allo stesso campo da due dispositivi. Il layer sync ha bisogno di strategie separate—chiavi di idempotenza per azioni, merge strutturati per lo stato.",
+          "I team staff documentano classi di conflitto per entità: eventi append-only, campi scalari LWW, unioni di insiemi e merge 'umano richiesto'. Se il prodotto non descrive l'esito desiderato, l'engineering non deve indovinare sul client.",
+        ],
+      },
+      {
+        heading: "Regole server noiose con UX client onesta",
+        paragraphs: [
+          "Last-write-wins va bene per preferenze a basso rischio; inaccettabile per denaro, inventario o note mediche senza escalation. Esponete risultati di merge server con provenance: quale dispositivo ha vinto, cosa è stato scartato, come annullare se la policy lo consente.",
+          "Accodate mutazioni con id generati dal client e API retry-safe. Il server deve riconoscere i duplicati e restituire l'esito originale invece di applicare due volte gli effetti.",
+        ],
+        points: [
+          "Chiavi di idempotenza su ogni mutazione visibile all'utente",
+          "Policy di conflitto per entità documentata con sign-off prodotto",
+          "Schermate di conflitto che mostrano entrambe le versioni, non overwrite silenzioso",
+          "Metriche backlog sync: profondità coda, età e tasso di errore per versione OS",
+        ],
+      },
+      {
+        heading: "CRDT quando la collaborazione è il prodotto",
+        paragraphs: [
+          "Quando più utenti editano artefatti condivisi in tempo reale—lavagne, liste, note co-edit—CRDT o OT possono battere timestamp naïf. Il costo è complessità, carico di test e narrative support più difficili. Adottate quando la collaborazione offline è valore core, non perché il blog sembrava figo.",
+          "Anche con CRDT servono autorizzazione, compaction e limiti di snapshot per non riprodurre storia illimitata al cold start.",
+        ],
+      },
+      {
+        heading: "Provare la salute sync fuori dal lab",
+        paragraphs: [
+          "Simulate modalità aereo, skew dell'orologio, upload parziali e kill dell'app a metà coda. In produzione campionate tassi di conflitto, fallimenti di merge e undo utente. Picchi dopo un release spesso significano cambio schema o policy—non 'più offline'.",
+          "Offline-first è una feature di affidabilità. Trattate la sync come i pagamenti: osservabile, owned e provata prima che il marketing la prometta ovunque.",
+        ],
+        links: [
+          {
+            label: "Automerge — CRDT library",
+            url: "https://automerge.org/docs/",
+          },
+          {
+            label: "Apple — Syncing model data",
+            url: "https://developer.apple.com/documentation/swiftdata/syncing-model-data-across-a-persons-devices",
+          },
+          {
+            label: "Couchbase — Mobile sync",
+            url: "https://docs.couchbase.com/sync-gateway/current/sync.html",
+          },
+        ],
+      },
+    ],
+  },
 "feature-store-vs-prompt-store-tradeoffs": {
     title: "Feature store vs prompt store: compromessi",
     excerpt: "I feature store ottimizzano segnali deterministici per i modelli; i prompt store ottimizzano linguaggio, tool e policy per gli LLM. Confonderli crea doppia verità e contesto stantio.",

@@ -21,6 +21,76 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "offline-first-sync-conflicts-in-mobile-apps",
+    title: "Offline-First Sync Conflicts in Mobile Apps",
+    excerpt: "Offline-first UX promises continuity; sync promises eventual consistency. Without explicit conflict models, users see duplicated actions, lost edits, and support tickets that reproduce only on airplanes.",
+    description: "How staff engineers design offline-first sync for mobile: conflict types, CRDT vs last-write-wins, idempotent mutations, merge UX, and telemetry that proves sync health in the field.",
+    publishedAt: "2026-09-13",
+    readingMinutes: 7,
+    keywords: [
+      "offline-first",
+      "mobile sync",
+      "conflict resolution",
+      "CRDT",
+      "eventual consistency",
+      "idempotent APIs",
+    ],
+    socialThreadTr: [
+      "Offline-first UX süreklilik vaat eder; sync eventual consistency vaat eder. Açık çatışma modeli yoksa kullanıcı çift aksiyon ve kayıp düzenleme görür. 🧵",
+      "Idempotent mutation, merge UX ve saha telemetrisi. Detay: https://berktugberke.com/tr/blogs/offline-first-sync-conflicts-in-mobile-apps",
+    ],
+    sections: [
+      {
+        heading: "Name the conflicts users will actually hit",
+        paragraphs: [
+          "Not every collision is a merge problem. Some are duplicate intents: tap 'pay' twice on a flaky tunnel, queue two transfers, and reconcile when connectivity returns. Others are true edits to the same field from two devices. Your sync layer needs separate strategies—idempotency keys for actions, structured merges for state.",
+          "Staff teams document conflict classes per entity: append-only events, scalar fields with LWW, set unions, and 'human required' merges. If product cannot describe the desired outcome, engineering should not guess in the client.",
+        ],
+      },
+      {
+        heading: "Prefer boring server rules with honest client UX",
+        paragraphs: [
+          "Last-write-wins is fine for low-stakes preferences; it is unacceptable for money, inventory, or medical notes without escalation. Expose server merge results with provenance: which device won, what was discarded, and how to undo when policy allows.",
+          "Queue mutations with client-generated ids and retry-safe APIs. The server should recognize duplicates and return the original outcome instead of double-applying side effects.",
+        ],
+        points: [
+          "Idempotency keys on every user-visible mutation",
+          "Per-entity conflict policy documented with product sign-off",
+          "Conflict screens that show both versions, not silent overwrite",
+          "Sync backlog metrics: queue depth, age, and failure rate by OS version",
+        ],
+      },
+      {
+        heading: "CRDTs when collaboration is the product",
+        paragraphs: [
+          "When multiple users edit shared artifacts in real time—whiteboards, shared lists, co-editing notes—CRDTs or operation-based OT can beat naive timestamps. The cost is complexity, testing burden, and harder support narratives. Adopt when offline collaboration is core value, not because the blog post sounded cool.",
+          "Even with CRDTs, you still need authorization, compaction, and snapshot boundaries so clients do not replay unbounded history on cold start.",
+        ],
+      },
+      {
+        heading: "Prove sync health outside the lab",
+        paragraphs: [
+          "Simulate airplane mode, clock skew, partial uploads, and app kills mid-queue. In production, sample conflict rates, merge failures, and user undo actions. Spikes after a release often mean a schema or policy change—not 'users offline more.'",
+          "Offline-first is a reliability feature. Treat sync like payments: observable, owned, and rehearsed before marketing promises it everywhere.",
+        ],
+        links: [
+          {
+            label: "Automerge — CRDT library",
+            url: "https://automerge.org/docs/",
+          },
+          {
+            label: "Apple — Syncing model data",
+            url: "https://developer.apple.com/documentation/swiftdata/syncing-model-data-across-a-persons-devices",
+          },
+          {
+            label: "Couchbase — Mobile sync",
+            url: "https://docs.couchbase.com/sync-gateway/current/sync.html",
+          },
+        ],
+      },
+    ],
+  },
+    {
     slug: "feature-store-vs-prompt-store-tradeoffs",
     title: "Feature Store vs Prompt Store Tradeoffs",
     excerpt: "Feature stores optimize deterministic signals for models; prompt stores optimize language, tools, and policy for LLMs. Conflating them creates duplicate truth, stale context, and the wrong on-call.",

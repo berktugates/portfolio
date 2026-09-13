@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"offline-first-sync-conflicts-in-mobile-apps": {
+    title: "移动应用中的离线优先同步冲突",
+    excerpt: "离线优先 UX 承诺连续性；同步承诺最终一致性。没有明确的冲突模型，用户会看到重复操作、丢失编辑，以及只在飞机上才能复现的工单。",
+    description: "Staff 工程师如何设计移动离线优先同步：冲突类型、CRDT 与最后写入胜出、幂等变更、合并 UX，以及证明现场同步健康的遥测。",
+    sections: [
+      {
+        heading: "命名用户会真实遇到的冲突",
+        paragraphs: [
+          "并非每次碰撞都是合并问题。有些是重复意图：在不稳定隧道里点两次「支付」、排队两笔转账，连通后 reconcile。另一些是两台设备对同一字段的真实编辑。同步层需要不同策略——动作用幂等键，状态用结构化合并。",
+          "Staff 团队按实体记录冲突类别：仅追加事件、LWW 标量字段、集合并集与「需人工」合并。若产品无法描述期望结果，工程不应在客户端猜测。",
+        ],
+      },
+      {
+        heading: "无聊的服务端规则与诚实的客户端体验",
+        paragraphs: [
+          "最后写入胜出适合低风险偏好；对金钱、库存或医疗记录若无升级则不可接受。展示带来源的服务端合并结果：哪台设备胜出、丢弃了什么、政策允许时如何撤销。",
+          "用客户端生成的 id 排队变更，API 可安全重试。服务端应识别重复并返回原结果，而非双重应用副作用。",
+        ],
+        points: [
+          "每个用户可见变更带幂等键",
+          "经产品签字的按实体冲突策略文档",
+          "冲突界面展示两版内容，而非静默覆盖",
+          "同步积压指标：队列深度、年龄与按 OS 版本的失败率",
+        ],
+      },
+      {
+        heading: "协作即产品时再用 CRDT",
+        paragraphs: [
+          "多人实时编辑共享对象——白板、列表、共编笔记——时，CRDT 或 OT 可胜过天真时间戳。代价是复杂度、测试负担与更难的支持叙事。仅在离线协作是核心价值时采用，而非因为博客很酷。",
+          "即使用 CRDT，仍需要授权、压缩与快照边界，避免冷启动回放无限历史。",
+        ],
+      },
+      {
+        heading: "在实验室外证明同步健康",
+        paragraphs: [
+          "模拟飞行模式、时钟偏移、部分上传与队列中途杀进程。在生产采样冲突率、合并失败与用户撤销。发布后尖峰常意味模式或策略变更——不是「用户更常离线」。",
+          "离线优先是可靠性能力。像支付一样对待同步：可观测、有归属，并在营销到处承诺前演练。",
+        ],
+        links: [
+          {
+            label: "Automerge — CRDT library",
+            url: "https://automerge.org/docs/",
+          },
+          {
+            label: "Apple — Syncing model data",
+            url: "https://developer.apple.com/documentation/swiftdata/syncing-model-data-across-a-persons-devices",
+          },
+          {
+            label: "Couchbase — Mobile sync",
+            url: "https://docs.couchbase.com/sync-gateway/current/sync.html",
+          },
+        ],
+      },
+    ],
+  },
 "feature-store-vs-prompt-store-tradeoffs": {
     title: "Feature Store 与 Prompt Store 的权衡",
     excerpt: "Feature store 为模型优化确定性信号；prompt store 为 LLM 优化语言、工具与策略。混为一谈会产生双重真相与陈旧上下文。",

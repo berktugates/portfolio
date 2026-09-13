@@ -1,8 +1,30 @@
 {
   "version": 1,
   "site": "https://berktugberke.com",
-  "generatedAt": "2026-09-12T09:55:47.532Z",
+  "generatedAt": "2026-09-13T10:56:42.266Z",
   "posts": [
+    {
+      "id": "offline-first-sync-conflicts-in-mobile-apps",
+      "slug": "offline-first-sync-conflicts-in-mobile-apps",
+      "title": "Offline-First Sync Conflicts in Mobile Apps",
+      "url": "https://berktugberke.com/blogs/offline-first-sync-conflicts-in-mobile-apps",
+      "publishedAt": "2026-09-13",
+      "tags": [
+        "offline-first",
+        "mobile sync",
+        "conflict resolution",
+        "CRDT",
+        "eventual consistency",
+        "idempotent APIs"
+      ],
+      "excerpt": "Offline-first UX promises continuity; sync promises eventual consistency. Without explicit conflict models, users see duplicated actions, lost edits, and support tickets that reproduce only on airplanes.",
+      "bodyPlain": "Not every collision is a merge problem. Some are duplicate intents: tap 'pay' twice on a flaky tunnel, queue two transfers, and reconcile when connectivity returns. Others are true edits to the same field from two devices. Your sync layer needs separate strategies—idempotency keys for actions, structured merges for state.\n\nStaff teams document conflict classes per entity: append-only events, scalar fields with LWW, set unions, and 'human required' merges. If product cannot describe the desired outcome, engineering should not guess in the client.\n\nLast-write-wins is fine for low-stakes preferences; it is unacceptable for money, inventory, or medical notes without escalation. Expose server merge results with provenance: which device won, what was discarded, and how to undo when policy allows.\n\nQueue mutations with client-generated ids and retry-safe APIs. The server should recognize duplicates and return the original outcome instead of double-applying side effects.\n\nIdempotency keys on every user-visible mutation\n\nPer-entity conflict policy documented with product sign-off\n\nConflict screens that show both versions, not silent overwrite\n\nSync backlog metrics: queue depth, age, and failure rate by OS version\n\nWhen multiple users edit shared artifacts in real time—whiteboards, shared lists, co-editing notes—CRDTs or operation-based OT can beat naive timestamps. The cost is complexity, testing burden, and harder support narratives. Adopt when offline collaboration is core value, not because the blog post sounded cool.\n\nEven with CRDTs, you still need authorization, compaction, and snapshot boundaries so clients do not replay unbounded history on cold start.\n\nSimulate airplane mode, clock skew, partial uploads, and app kills mid-queue. In production, sample conflict rates, merge failures, and user undo actions. Spikes after a release often mean a schema or policy change—not 'users offline more.'\n\nOffline-first is a reliability feature. Treat sync like payments: observable, owned, and rehearsed before marketing promises it everywhere.",
+      "contentHash": "8176b64e25651b58",
+      "socialThreadTr": [
+        "Offline-first UX süreklilik vaat eder; sync eventual consistency vaat eder. Açık çatışma modeli yoksa kullanıcı çift aksiyon ve kayıp düzenleme görür. 🧵",
+        "Idempotent mutation, merge UX ve saha telemetrisi. Detay: https://berktugberke.com/tr/blogs/offline-first-sync-conflicts-in-mobile-apps"
+      ]
+    },
     {
       "id": "feature-store-vs-prompt-store-tradeoffs",
       "slug": "feature-store-vs-prompt-store-tradeoffs",

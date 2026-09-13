@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"offline-first-sync-conflicts-in-mobile-apps": {
+    title: "Offline-First-Sync-Konflikte in Mobile Apps",
+    excerpt: "Offline-First-UX verspricht Kontinuität; Sync verspricht eventual consistency. Ohne explizite Konfliktmodelle sehen Nutzer doppelte Aktionen, verlorene Edits und Support-Tickets die nur im Flugzeug reproduzieren.",
+    description: "Wie Staff Engineers Offline-First-Sync für Mobile designen: Konflikttypen, CRDT vs Last-Write-Wins, idempotente Mutationen, Merge-UX und Telemetrie die Sync-Gesundheit im Feld beweist.",
+    sections: [
+      {
+        heading: "Benennen Sie Konflikte die Nutzer wirklich treffen",
+        paragraphs: [
+          "Nicht jede Kollision ist ein Merge-Problem. Manche sind doppelte Intents: zweimal 'bezahlen' im schwachen Tunnel, zwei Transfers in die Queue und abgleichen wenn Connectivity zurückkommt. Andere sind echte Edits am selben Feld von zwei Geräten. Ihre Sync-Schicht braucht getrennte Strategien—Idempotency Keys für Aktionen, strukturierte Merges für State.",
+          "Staff-Teams dokumentieren Konfliktklassen pro Entity: append-only Events, skalare Felder mit LWW, Set-Unions und 'human required' Merges. Kann Produkt das gewünschte Ergebnis nicht beschreiben, soll Engineering nicht im Client raten.",
+        ],
+      },
+      {
+        heading: "Langweilige Server-Regeln mit ehrlicher Client-UX",
+        paragraphs: [
+          "Last-Write-Wins ist ok für Low-Stakes-Preferences; inakzeptabel für Geld, Inventar oder medizinische Notizen ohne Escalation. Zeigen Sie Server-Merge-Ergebnisse mit Provenance: welches Gerät gewann, was verworfen wurde und wie Undo wenn Policy erlaubt.",
+          "Queuen Sie Mutationen mit client-generierten IDs und retry-sicheren APIs. Der Server soll Duplikate erkennen und das ursprüngliche Ergebnis zurückgeben statt Side Effects doppelt anzuwenden.",
+        ],
+        points: [
+          "Idempotency Keys auf jeder nutzersichtbaren Mutation",
+          "Pro-Entity-Konfliktpolicy mit Produkt-Sign-off dokumentiert",
+          "Konflikt-Screens die beide Versionen zeigen, kein stilles Überschreiben",
+          "Sync-Backlog-Metriken: Queue-Tiefe, Alter und Fehlerrate nach OS-Version",
+        ],
+      },
+      {
+        heading: "CRDTs wenn Kollaboration das Produkt ist",
+        paragraphs: [
+          "Wenn mehrere Nutzer geteilte Artefakte in Echtzeit bearbeiten—Whiteboards, Listen, Co-Editing—können CRDTs oder OT naive Timestamps schlagen. Kosten sind Komplexität, Testlast und schwierigere Support-Narrative. Adoptieren wenn Offline-Kollaboration Kernwert ist, nicht weil der Blog cool klang.",
+          "Selbst mit CRDTs brauchen Sie Authorization, Compaction und Snapshot-Grenzen damit Clients bei Cold Start nicht unbounded History replayen.",
+        ],
+      },
+      {
+        heading: "Sync-Gesundheit außerhalb des Labs beweisen",
+        paragraphs: [
+          "Simulieren Sie Flugmodus, Clock Skew, partielle Uploads und App-Kill mitten in der Queue. In Produktion Conflict Rates, Merge-Failures und User-Undo sampeln. Spikes nach einem Release bedeuten oft Schema- oder Policy-Change—nicht 'Nutzer mehr offline'.",
+          "Offline-First ist ein Reliability-Feature. Behandeln Sie Sync wie Payments: beobachtbar, owned und geprobt bevor Marketing es überall verspricht.",
+        ],
+        links: [
+          {
+            label: "Automerge — CRDT library",
+            url: "https://automerge.org/docs/",
+          },
+          {
+            label: "Apple — Syncing model data",
+            url: "https://developer.apple.com/documentation/swiftdata/syncing-model-data-across-a-persons-devices",
+          },
+          {
+            label: "Couchbase — Mobile sync",
+            url: "https://docs.couchbase.com/sync-gateway/current/sync.html",
+          },
+        ],
+      },
+    ],
+  },
 "feature-store-vs-prompt-store-tradeoffs": {
     title: "Feature Store vs Prompt Store: Trade-offs",
     excerpt: "Feature Stores optimieren deterministische Signale für Modelle; Prompt Stores optimieren Sprache, Tools und Policy für LLMs. Verwechslung erzeugt doppelte Wahrheit und veralteten Kontext.",

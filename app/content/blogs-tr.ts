@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"offline-first-sync-conflicts-in-mobile-apps": {
+    title: "Mobil Uygulamalarda Offline-First Sync Çatışmaları",
+    excerpt: "Offline-first UX süreklilik vaat eder; sync eventual consistency vaat eder. Açık çatışma modeli olmadan kullanıcı çift aksiyon, kayıp düzenleme ve yalnızca uçakta tekrarlayan destek kayıtları görür.",
+    description: "Staff mühendisler mobilde offline-first sync'i nasıl tasarlar: çatışma türleri, CRDT vs last-write-wins, idempotent mutation'lar, merge UX ve sahada sync sağlığını kanıtlayan telemetri.",
+    sections: [
+      {
+        heading: "Kullanıcıların gerçekten vuracağı çatışmaları adlandırın",
+        paragraphs: [
+          "Her çarpışma merge problemi değildir. Bazıları yinelenen niyettir: dalgalı tünelde 'öde'ye iki kez basmak, iki transfer kuyruğa almak ve bağlantı dönünce uzlaştırmak. Diğerleri iki cihazdan aynı alana gerçek düzenlemedir. Sync katmanınız ayrı stratejiler ister—aksiyonlar için idempotency key, durum için yapılandırılmış merge.",
+          "Staff ekipleri varlık başına çatışma sınıflarını belgeler: yalnızca ekleme olayları, LWW skaler alanlar, küme birleşimleri ve 'insan gerekli' merge'ler. Ürün istenen sonucu tarif edemiyorsa mühendislik client'ta tahmin etmemelidir.",
+        ],
+      },
+      {
+        heading: "Dürüst client UX ile sıkıcı sunucu kurallarını tercih edin",
+        paragraphs: [
+          "Last-write-wins düşük riskli tercihler için uygundur; yükseltme olmadan para, stok veya tıbbi notlar için kabul edilemez. Sunucu merge sonuçlarını provenance ile gösterin: hangi cihaz kazandı, ne atıldı, politika izin veriyorsa nasıl geri alınır.",
+          "Client üretimli id'lerle mutation kuyruğu ve retry-safe API'ler kullanın. Sunucu kopyaları tanımalı ve yan etkiyi iki kez uygulamak yerine orijinal sonucu dönmelidir.",
+        ],
+        points: [
+          "Her kullanıcı görünür mutation'da idempotency key",
+          "Ürün onayıyla belgelenmiş varlık başına çatışma politikası",
+          "Sessiz üzerine yazma yerine her iki sürümü gösteren çatışma ekranları",
+          "Sync backlog metrikleri: kuyruk derinliği, yaşı ve OS sürümüne göre hata oranı",
+        ],
+      },
+      {
+        heading: "İşbirliği ürünün kendisiyse CRDT",
+        paragraphs: [
+          "Birden fazla kullanıcı paylaşılan artefaktları gerçek zamanlı düzenlediğinde—tahtalar, listeler, ortak notlar—CRDT veya OT, naif zaman damgalarını yenebilir. Bedeli karmaşıklık, test yükü ve daha zor destek anlatılarıdır. Offline işbirliği çekirdek değer olduğunda benimseyin; blog hoş diye değil.",
+          "CRDT ile bile yetkilendirme, compaction ve soğuk başlangıçta sınırsız geçmişi oynatmayan snapshot sınırları gerekir.",
+        ],
+      },
+      {
+        heading: "Sync sağlığını laboratuvar dışında kanıtlayın",
+        paragraphs: [
+          "Uçak modu, saat kayması, kısmi yükleme ve kuyruk ortasında app kill simüle edin. Üretimde çatışma oranı, merge hatası ve kullanıcı geri alma aksiyonlarını örnekleyin. Yayın sonrası sıçrama çoğu zaman şema veya politika değişimidir—'kullanıcılar daha çok offline' değil.",
+          "Offline-first bir güvenilirlik özelliğidir. Sync'i ödeme gibi ele alın: gözlemlenebilir, sahipli ve pazarlama her yerde vaat etmeden önce prova edilmiş.",
+        ],
+        links: [
+          {
+            label: "Automerge — CRDT library",
+            url: "https://automerge.org/docs/",
+          },
+          {
+            label: "Apple — Syncing model data",
+            url: "https://developer.apple.com/documentation/swiftdata/syncing-model-data-across-a-persons-devices",
+          },
+          {
+            label: "Couchbase — Mobile sync",
+            url: "https://docs.couchbase.com/sync-gateway/current/sync.html",
+          },
+        ],
+      },
+    ],
+  },
 "feature-store-vs-prompt-store-tradeoffs": {
     title: "Feature Store vs Prompt Store: Ödünleşimler",
     excerpt: "Feature store'lar modeller için deterministik sinyalleri optimize eder; prompt store'lar LLM'ler için dil, tool ve politikayı optimize eder. Karıştırmak çift gerçeklik ve bayat bağlam üretir.",
