@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"cost-attribution-for-shared-llm-gateways": {
+    title: "Attribuzione dei costi per gateway LLM condivisi",
+    excerpt: "Un gateway LLM condiviso senza attribuzione dei costi diventa un buco nero: i team ottimizzano i prompt in locale mentre finance vede una fattura opaca. Tagga ogni token a tenant, prodotto e caller—altrimenti niente chargeback, throttle o debug della spesa.",
+    description: "Come gli staff engineer attribuiscono la spesa LLM su gateway condivisi: tagging delle richieste, meter token vs dollaro, quote tenant, crediti cache e modelli di chargeback che sopravvivono agli agent multi-hop.",
+    sections: [
+      {
+        heading: "Il traffico senza tag è spesa senza owner",
+        paragraphs: [
+          "I gateway condivisi guadagnano centralizzando auth, routing dei modelli, retry e filtri di safety. Falliscono quando l'usage finisce in una fattura provider senza chiave di join verso le superfici prodotto. Senza tag a livello richiesta—tenant id, workspace, feature flag, servizio caller, tier modello—non potete dire quale prompt ha bruciato il budget o se una regressione ha raddoppiato i token di completion.",
+          "Trattate l'attribuzione come contratto del gateway, non come afterthought BI. Rifiutate o mettete in quarantena le chiamate senza metadata obbligatorie in non-prod; in prod i tag di default devono restare abbastanza chiari per chargeback e risposta agli incident.",
+        ],
+      },
+      {
+        heading: "Misurate i token, prezzate i dollari, riconciliate entrambi",
+        paragraphs: [
+          "I provider fatturano su token, token in cache, tool call e a volte unità immagine o audio. Il gateway deve emettere eventi di usage normalizzati: token input/output/cached, model id, classe di latenza e se la risposta viene da un cache semantico. Convertite in dollari con una tabella prezzi versionata così i report storici restano auditabili quando cambiano i listini.",
+          "Gli agent che fanno fan-out a più chiamate modello servono un correlation id che aggrega i costi figlio in una sessione parent. Altrimenti le dashboard prodotto sottostimano i workflow agent e sovrastimano i microservizi foglia.",
+        ],
+        points: [
+          "Richiedere tag tenant, prodotto e caller su ogni richiesta autenticata",
+          "Emettere eventi di usage con modello, split token, cache hit e correlation id",
+          "Versionare le tabelle prezzi così i report in dollari sopravvivono ai cambi tariffa",
+          "Esporre soft quota e hard cap per tenant con semantica 429 chiara",
+        ],
+      },
+      {
+        heading: "Chargeback su cui i team possono agire davvero",
+        paragraphs: [
+          "I rollup mensili finance-friendly sono necessari ma insufficienti. L'engineering ha bisogno della spesa giornaliera per feature e modello per abbassare temperature, accorciare il context o cambiare tier. Il prodotto ha bisogno dei burn rate per tenant per pricing e fair-use. Pubblicate entrambe le viste dallo stesso stream di usage.",
+          "Accreditare esplicitamente hit di cache semantico e sconti prompt-cache. Se nascondete i risparmi, i team smettono di investire nelle cache key; se sovra-accreditate, finance disputa il modello. Documentate chi paga l'overhead della piattaforma condivisa versus il traffico tenant.",
+        ],
+      },
+      {
+        heading: "Chiudete il loop con budget e alert",
+        paragraphs: [
+          "Attribuzione senza enforcement è solo un report. Collegare i budget alla policy del gateway: avviso al 70%, throttle delle route non critiche al 90%, page agli owner su fan-out fuori controllo. Accoppiare alert di costo e metriche di qualità così i team non degradano silenziosamente le risposte per centrare un numero.",
+          "Un gateway LLM condiviso è un prodotto interno. L'attribuzione dei costi fa parte del suo SLA—come availability e latency.",
+        ],
+        links: [
+          {
+            label: "OpenAI — Usage and costs",
+            url: "https://platform.openai.com/docs/guides/production-best-practices#managing-costs",
+          },
+          {
+            label: "Anthropic — Usage and rate limits",
+            url: "https://docs.anthropic.com/en/api/rate-limits",
+          },
+          {
+            label: "Portkey — LLM gateway observability",
+            url: "https://portkey.ai/docs/product/observability",
+          },
+        ],
+      },
+    ],
+  },
 "offline-first-sync-conflicts-in-mobile-apps": {
     title: "Conflitti di sync offline-first nelle app mobile",
     excerpt: "L'UX offline-first promette continuità; la sync promette consistenza eventuale. Senza modelli di conflitto espliciti, gli utenti vedono azioni duplicate, edit persi e ticket che si riproducono solo in aereo.",

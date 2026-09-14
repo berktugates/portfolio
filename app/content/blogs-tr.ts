@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"cost-attribution-for-shared-llm-gateways": {
+    title: "Paylaşılan LLM Gateway'lerde Maliyet Atıfı",
+    excerpt: "Maliyet atıfı olmayan paylaşılan LLM gateway kara deliğe döner: ekipler prompt'u yerelde optimize ederken finans tek opak fatura görür. Her token'ı tenant, ürün ve caller'a etiketleyin—yoksa charge, throttle veya harcamayı debug edemezsiniz.",
+    description: "Staff mühendisler paylaşılan gateway'lerde LLM harcamasını nasıl atfeder: istek etiketleme, token vs dolar metre, tenant kotaları, cache kredisi ve çok adımlı ajanlarda ayakta kalan chargeback modelleri.",
+    sections: [
+      {
+        heading: "Etiketlenmemiş trafik sahipsiz harcamadır",
+        paragraphs: [
+          "Paylaşılan gateway'ler auth, model routing, retry ve güvenlik filtrelerini merkezileştirerek değer üretir. Kullanım, ürün yüzeylerine geri join edilemeyen tek provider faturasına düştüğünde başarısız olurlar. Tenant id, workspace, feature flag, caller servis, model katmanı gibi istek düzeyi etiketler olmadan kimin prompt'unun bütçeyi yaktığını veya bir regresyonun completion token'ı ikiye katlayıp katlamadığını cevaplayamazsınız.",
+          "Atıfı BI sonradan düşüncesi değil, gateway sözleşmesi olarak ele alın. Non-prod'da zorunlu metadata eksik çağrıları reddedin veya karantinaya alın; prod'da varsayılan etiketler yine chargeback ve incident yanıtı için yeterince net olmalıdır.",
+        ],
+      },
+      {
+        heading: "Token ölçün, dolar fiyatlandırın, ikisini de mutabık kılın",
+        paragraphs: [
+          "Provider'lar token, cached token, tool call ve bazen görüntü/ses birimleri üzerinden faturalandırır. Gateway normalize kullanım olayları yayınlamalıdır: input/output/cached token, model id, latency sınıfı ve yanıtın semantic cache'ten gelip gelmediği. Dolar dönüşümünü sürümlenmiş fiyat tablosuyla yapın ki liste fiyatı değişince tarihsel raporlar denetlenebilir kalsın.",
+          "Birden fazla model çağrısına dağılan ajanlar, çocuk maliyetleri üst oturuma toplayan correlation id ister. Aksi halde ürün panoları ajan iş akışlarını eksik, yaprak mikroservisleri fazla sayar.",
+        ],
+        points: [
+          "Her kimlik doğrulanmış istekte tenant, ürün ve caller etiketi zorunlu tutun",
+          "Model, token ayrımı, cache hit ve correlation id ile kullanım olayları yayınlayın",
+          "Dolar raporlarının provider fiyat değişiminde ayakta kalması için fiyat tablolarını sürümleyin",
+          "Tenant başına soft kota ve hard cap'leri net 429 semantiğiyle açın",
+        ],
+      },
+      {
+        heading: "Ekiplerin gerçekten harekete geçebileceği chargeback",
+        paragraphs: [
+          "Finans dostu aylık özetler gerekli ama yeterli değil. Mühendislik temperature düşürmek, context kısaltmak veya katman değiştirmek için feature ve modele göre günlük harcama ister. Ürün fiyatlandırma ve adil kullanım için tenant başına yanma oranı ister. Her iki görünümü aynı kullanım akışından yayınlayın.",
+          "Semantic-cache hit'lerini ve prompt-cache indirimlerini açıkça kredilendirin. Tasarrufu gizlerseniz ekipler cache key'e yatırım bırakır; fazla kredilendirirseniz finans modeli tartışır. Paylaşılan platform overhead'ini tenant kaynaklı trafikten kimin ödediğini belgelendirin.",
+        ],
+      },
+      {
+        heading: "Döngüyü bütçe ve alarmlarla kapatın",
+        paragraphs: [
+          "Zorlamasız atıf yalnızca rapordur. Bütçeleri gateway politikasına bağlayın: %70'te uyarın, %90'da kritik olmayan rotaları throttle edin, kaçan fan-out'ta sahipleri sayfalayın. Maliyet alarmlarını kalite metrikleriyle eşleyin ki ekipler sayıyı tutturmak için yanıtları sessizce bozmasın.",
+          "Paylaşılan LLM gateway dahili bir üründür. Maliyet atıfı SLA'sının parçasıdır—availability ve latency gibi.",
+        ],
+        links: [
+          {
+            label: "OpenAI — Usage and costs",
+            url: "https://platform.openai.com/docs/guides/production-best-practices#managing-costs",
+          },
+          {
+            label: "Anthropic — Usage and rate limits",
+            url: "https://docs.anthropic.com/en/api/rate-limits",
+          },
+          {
+            label: "Portkey — LLM gateway observability",
+            url: "https://portkey.ai/docs/product/observability",
+          },
+        ],
+      },
+    ],
+  },
 "offline-first-sync-conflicts-in-mobile-apps": {
     title: "Mobil Uygulamalarda Offline-First Sync Çatışmaları",
     excerpt: "Offline-first UX süreklilik vaat eder; sync eventual consistency vaat eder. Açık çatışma modeli olmadan kullanıcı çift aksiyon, kayıp düzenleme ve yalnızca uçakta tekrarlayan destek kayıtları görür.",

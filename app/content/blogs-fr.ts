@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"cost-attribution-for-shared-llm-gateways": {
+    title: "Attribution des coûts pour les passerelles LLM partagées",
+    excerpt: "Une passerelle LLM partagée sans attribution des coûts devient un trou noir : les équipes optimisent les prompts localement tandis que la finance voit une facture opaque. Étiquetez chaque token à tenant, produit et caller—sinon pas de chargeback, throttle ni debug de dépense.",
+    description: "Comment les staff engineers attribuent la dépense LLM sur des passerelles partagées : tagging de requêtes, compteurs token vs dollar, quotas tenant, crédits cache et modèles de chargeback qui survivent aux agents multi-hop.",
+    sections: [
+      {
+        heading: "Le trafic non tagué est une dépense sans propriétaire",
+        paragraphs: [
+          "Les passerelles partagées gagnent leur place en centralisant auth, routage de modèles, retries et filtres de sécurité. Elles échouent quand l'usage tombe dans une facture fournisseur sans clé de jointure vers les surfaces produit. Sans tags au niveau requête—id tenant, workspace, feature flag, service caller, tier modèle—vous ne pouvez pas dire quel prompt a brûlé le budget ni si une régression a doublé les tokens de completion.",
+          "Traitez l'attribution comme un contrat de passerelle, pas un afterthought BI. Rejetez ou mettez en quarantaine les appels sans métadonnées requises en non-prod ; en prod, les tags par défaut doivent rester assez clairs pour chargeback et réponse incident.",
+        ],
+      },
+      {
+        heading: "Comptez les tokens, prixez en dollars, réconciliez les deux",
+        paragraphs: [
+          "Les fournisseurs facturent tokens, tokens en cache, appels d'outils et parfois unités image ou audio. Votre passerelle doit émettre des événements d'usage normalisés : tokens input/output/cached, id modèle, classe de latence et si la réponse vient d'un cache sémantique. Convertissez en dollars avec une table de prix versionnée pour que les rapports historiques restent auditables quand les prix catalogue changent.",
+          "Les agents qui se déploient vers plusieurs appels modèle ont besoin d'un correlation id qui agrège les coûts enfants dans une session parente. Sinon les tableaux de bord produit sous-comptent les workflows agent et sur-comptent les microservices feuilles.",
+        ],
+        points: [
+          "Exiger tags tenant, produit et caller sur chaque requête authentifiée",
+          "Émettre des événements d'usage avec modèle, splits de tokens, cache hits et correlation ids",
+          "Versionner les tables de prix pour que les rapports dollar survivent aux changements de tarif",
+          "Exposer soft quotas et hard caps par tenant avec sémantique 429 claire",
+        ],
+      },
+      {
+        heading: "Un chargeback sur lequel les équipes peuvent agir",
+        paragraphs: [
+          "Les rollups mensuels finance-friendly sont nécessaires mais insuffisants. L'ingénierie a besoin de la dépense quotidienne par feature et modèle pour baisser la température, raccourcir le contexte ou changer de tier. Le produit a besoin des burn rates par tenant pour pricing et fair-use. Publiez les deux vues depuis le même flux d'usage.",
+          "Créditez explicitement les hits de cache sémantique et les remises prompt-cache. Si vous cachez les économies, les équipes arrêtent d'investir dans les clés de cache ; si vous sur-créditez, la finance conteste le modèle. Documentez qui paie l'overhead plateforme partagée versus le trafic tenant.",
+        ],
+      },
+      {
+        heading: "Fermez la boucle avec budgets et alertes",
+        paragraphs: [
+          "L'attribution sans enforcement n'est qu'un rapport. Branchez les budgets à la politique de passerelle : alerte à 70 %, throttle des routes non critiques à 90 %, page owners sur fan-out incontrôlé. Couplez alertes de coût et métriques de qualité pour que les équipes ne dégradent pas silencieusement les réponses pour tenir un chiffre.",
+          "Une passerelle LLM partagée est un produit interne. L'attribution des coûts fait partie de son SLA—comme disponibilité et latence.",
+        ],
+        links: [
+          {
+            label: "OpenAI — Usage and costs",
+            url: "https://platform.openai.com/docs/guides/production-best-practices#managing-costs",
+          },
+          {
+            label: "Anthropic — Usage and rate limits",
+            url: "https://docs.anthropic.com/en/api/rate-limits",
+          },
+          {
+            label: "Portkey — LLM gateway observability",
+            url: "https://portkey.ai/docs/product/observability",
+          },
+        ],
+      },
+    ],
+  },
 "offline-first-sync-conflicts-in-mobile-apps": {
     title: "Conflits de sync offline-first dans les apps mobiles",
     excerpt: "L'UX offline-first promet la continuité ; la sync promet la cohérence éventuelle. Sans modèles de conflit explicites, les utilisateurs voient des actions dupliquées, des edits perdus et des tickets qui ne se reproduisent qu'en avion.",

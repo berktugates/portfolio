@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"cost-attribution-for-shared-llm-gateways": {
+    title: "共享 LLM 网关的成本归因",
+    excerpt: "没有成本归因的共享 LLM 网关会变成黑洞：团队在本地优化提示，财务只看到一张不透明账单。把每个 token 打到租户、产品与调用方——否则无法计费、限流或调试支出。",
+    description: "Staff 工程师如何在共享网关上归因 LLM 支出：请求打标、token 与美元计量、租户配额、缓存抵扣，以及能撑过多跳智能体的分摊模型。",
+    sections: [
+      {
+        heading: "未打标流量就是无主支出",
+        paragraphs: [
+          "共享网关通过集中鉴权、模型路由、重试与安全过滤创造价值。当用量落入一张无法回连产品表面的供应商账单时就会失败。没有请求级标签——租户 id、工作区、功能开关、调用服务、模型档位——你无法回答是谁的提示烧了预算，或回归是否把 completion token 翻倍。",
+          "把归因当作网关契约，而不是 BI 事后补丁。非生产环境拒绝或隔离缺少必填元数据的调用；生产环境的默认标签仍须足够明确，以支撑分摊与事件响应。",
+        ],
+      },
+      {
+        heading: "计量 token、定价美元、两边对账",
+        paragraphs: [
+          "供应商按 token、缓存 token、工具调用，有时还有图像或音频单位计费。网关应发出规范化用量事件：输入/输出/缓存 token、模型 id、延迟档位，以及响应是否来自语义缓存。用带版本的价格表换算美元，以便目录价变更后历史报告仍可审计。",
+          "向多个模型调用扇出的智能体需要把子成本滚入父会话的 correlation id。否则产品仪表盘会少计智能体工作流、多计叶子微服务。",
+        ],
+        points: [
+          "每个已认证请求强制要求租户、产品与调用方标签",
+          "发出含模型、token 拆分、缓存命中与 correlation id 的用量事件",
+          "为价格表做版本，使美元报告在供应商调价后仍可用",
+          "按租户暴露软配额与硬上限，并给出清晰的 429 语义",
+        ],
+      },
+      {
+        heading: "团队真正能行动的分摊",
+        paragraphs: [
+          "面向财务的月度汇总必要但不够。工程需要按功能与模型的日支出，才能降低 temperature、缩短上下文或切换档位。产品需要按租户的燃烧速率做定价与公平使用。从同一用量流发布两种视图。",
+          "明确抵扣语义缓存命中与提示缓存折扣。隐藏节省会让团队停止投入缓存键；过度抵扣会让财务质疑模型。记录共享平台开销与租户驱动流量分别由谁支付。",
+        ],
+      },
+      {
+        heading: "用预算与告警闭环",
+        paragraphs: [
+          "没有执行力的归因只是报告。把预算接到网关策略：70% 告警，90% 限流非关键路由，失控扇出时呼叫负责人。把成本告警与质量指标配对，避免团队为凑数字悄悄劣化回答。",
+          "共享 LLM 网关是内部产品。成本归因是其 SLA 的一部分——与可用性、延迟同等。",
+        ],
+        links: [
+          {
+            label: "OpenAI — Usage and costs",
+            url: "https://platform.openai.com/docs/guides/production-best-practices#managing-costs",
+          },
+          {
+            label: "Anthropic — Usage and rate limits",
+            url: "https://docs.anthropic.com/en/api/rate-limits",
+          },
+          {
+            label: "Portkey — LLM gateway observability",
+            url: "https://portkey.ai/docs/product/observability",
+          },
+        ],
+      },
+    ],
+  },
 "offline-first-sync-conflicts-in-mobile-apps": {
     title: "移动应用中的离线优先同步冲突",
     excerpt: "离线优先 UX 承诺连续性；同步承诺最终一致性。没有明确的冲突模型，用户会看到重复操作、丢失编辑，以及只在飞机上才能复现的工单。",

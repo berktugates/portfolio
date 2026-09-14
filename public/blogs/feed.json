@@ -1,8 +1,30 @@
 {
   "version": 1,
   "site": "https://berktugberke.com",
-  "generatedAt": "2026-09-13T10:56:42.266Z",
+  "generatedAt": "2026-09-14T11:30:53.762Z",
   "posts": [
+    {
+      "id": "cost-attribution-for-shared-llm-gateways",
+      "slug": "cost-attribution-for-shared-llm-gateways",
+      "title": "Cost Attribution for Shared LLM Gateways",
+      "url": "https://berktugberke.com/blogs/cost-attribution-for-shared-llm-gateways",
+      "publishedAt": "2026-09-14",
+      "tags": [
+        "LLM gateway",
+        "cost attribution",
+        "token metering",
+        "AI chargeback",
+        "multi-tenant AI",
+        "OpenAI usage"
+      ],
+      "excerpt": "A shared LLM gateway without cost attribution becomes a black hole: teams optimize prompts locally while finance sees one opaque bill. Tag every token to tenant, product, and caller—or you cannot charge, throttle, or debug spend.",
+      "bodyPlain": "Shared gateways earn their keep by centralizing auth, model routing, retries, and safety filters. They fail when usage lands in one provider invoice with no join key back to product surfaces. Without request-level tags—tenant id, workspace, feature flag, caller service, model tier—you cannot answer whose prompt burned the budget or whether a regression doubled completion tokens.\n\nTreat attribution as a gateway contract, not a BI afterthought. Reject or quarantine calls that omit required metadata in non-prod; in prod, default tags must still be unambiguous enough for chargeback and incident response.\n\nProviders bill on tokens, cached tokens, tool calls, and sometimes image or audio units. Your gateway should emit normalized usage events: input/output/cached tokens, model id, latency class, and whether the response came from a semantic cache. Convert to dollars with a versioned price table so historical reports stay auditable when list prices change.\n\nAgents that fan out to multiple model calls need a correlation id that rolls child costs into a parent session. Otherwise product dashboards under-count agent workflows and over-count leaf microservices.\n\nRequire tenant, product, and caller tags on every authenticated request\n\nEmit usage events with model, token splits, cache hits, and correlation ids\n\nVersion price tables so dollar reports survive provider rate changes\n\nExpose soft quotas and hard caps per tenant with clear 429 semantics\n\nFinance-friendly monthly rollups are necessary but insufficient. Engineering needs daily spend by feature and model so they can cut temperature, shrink context, or switch tiers. Product needs per-tenant burn rates for pricing and fair-use enforcement. Publish both views from the same usage stream.\n\nCredit semantic-cache hits and prompt-cache discounts explicitly. If you hide savings, teams stop investing in cache keys; if you over-credit, finance disputes the model. Document who pays for shared platform overhead versus tenant-driven traffic.\n\nAttribution without enforcement is a report. Wire budgets to gateway policy: warn at 70%, throttle non-critical routes at 90%, and page owners on runaway fan-out. Pair cost alerts with quality metrics so teams do not silently degrade answers to hit a number.\n\nA shared LLM gateway is an internal product. Cost attribution is part of its SLA—same as availability and latency.",
+      "contentHash": "4108424c3d338497",
+      "socialThreadTr": [
+        "Paylaşılan LLM gateway'de maliyet atıfı yoksa fatura tek kara delik olur. Her token'ı tenant, ürün ve caller'a etiketleyin. 🧵",
+        "Kota, chargeback ve cache kredisi. Detay: https://berktugberke.com/tr/blogs/cost-attribution-for-shared-llm-gateways"
+      ]
+    },
     {
       "id": "offline-first-sync-conflicts-in-mobile-apps",
       "slug": "offline-first-sync-conflicts-in-mobile-apps",

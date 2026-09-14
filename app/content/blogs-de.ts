@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"cost-attribution-for-shared-llm-gateways": {
+    title: "Kostenzuordnung für shared LLM Gateways",
+    excerpt: "Ein shared LLM Gateway ohne Kostenzuordnung wird zum schwarzen Loch: Teams optimieren Prompts lokal, Finance sieht eine undurchsichtige Rechnung. Taggen Sie jeden Token auf Tenant, Produkt und Caller—sonst kein Chargeback, Throttle oder Spend-Debug.",
+    description: "Wie Staff Engineers LLM-Spend auf shared Gateways zuordnen: Request-Tagging, Token- vs Dollar-Meter, Tenant-Quotas, Cache-Credits und Chargeback-Modelle die Multi-Hop-Agents überleben.",
+    sections: [
+      {
+        heading: "Ungetaggter Traffic ist unowned Spend",
+        paragraphs: [
+          "Shared Gateways verdienen sich durch zentrale Auth, Model-Routing, Retries und Safety-Filter. Sie scheitern, wenn Usage in einer Provider-Rechnung landet ohne Join-Key zurück zu Produktflächen. Ohne Request-Tags—Tenant-Id, Workspace, Feature-Flag, Caller-Service, Model-Tier—können Sie nicht sagen, wessen Prompt das Budget verbrannt hat oder ob eine Regression Completion-Tokens verdoppelt hat.",
+          "Behandeln Sie Attribution als Gateway-Contract, nicht als BI-Afterthought. Rejecten oder quarantänen Sie Calls ohne Pflicht-Metadata in Non-Prod; in Prod müssen Default-Tags trotzdem eindeutig genug für Chargeback und Incident Response sein.",
+        ],
+      },
+      {
+        heading: "Token metern, Dollars preisen, beides abstimmen",
+        paragraphs: [
+          "Provider rechnen über Tokens, Cached Tokens, Tool Calls und manchmal Bild- oder Audio-Einheiten ab. Ihr Gateway sollte normalisierte Usage-Events emittieren: Input/Output/Cached Tokens, Model-Id, Latency-Klasse und ob die Antwort aus einem Semantic Cache kam. Wandeln Sie in Dollars mit einer versionierten Preistabelle um, damit historische Reports auditierbar bleiben wenn Listenpreise sich ändern.",
+          "Agents die zu mehreren Model-Calls fan-outen brauchen eine Correlation-Id die Child-Kosten in eine Parent-Session rollt. Sonst unterzählen Produkt-Dashboards Agent-Workflows und überzählen Leaf-Microservices.",
+        ],
+        points: [
+          "Tenant-, Produkt- und Caller-Tags auf jedem authentifizierten Request verlangen",
+          "Usage-Events mit Model, Token-Splits, Cache-Hits und Correlation-Ids emittieren",
+          "Preistabellen versionieren damit Dollar-Reports Provider-Preisänderungen überleben",
+          "Soft Quotas und Hard Caps pro Tenant mit klarer 429-Semantik exponieren",
+        ],
+      },
+      {
+        heading: "Chargeback auf den Teams wirklich handeln können",
+        paragraphs: [
+          "Finance-freundliche Monats-Rollups sind nötig aber nicht genug. Engineering braucht täglichen Spend nach Feature und Model um Temperature zu senken, Context zu kürzen oder Tiers zu wechseln. Produkt braucht Burn-Rates pro Tenant für Pricing und Fair-Use. Publizieren Sie beide Views aus demselben Usage-Stream.",
+          "Kreditiere Semantic-Cache-Hits und Prompt-Cache-Rabatte explizit. Verstecken Sie Savings, stoppen Teams Cache-Key-Investitionen; überkreditieren Sie, disputiert Finance das Modell. Dokumentieren Sie wer shared Platform-Overhead vs tenant-getriebenen Traffic zahlt.",
+        ],
+      },
+      {
+        heading: "Schließen Sie den Loop mit Budgets und Alerts",
+        paragraphs: [
+          "Attribution ohne Enforcement ist ein Report. Verdrahten Sie Budgets an Gateway-Policy: Warnung bei 70%, Throttle nicht-kritischer Routes bei 90%, Page Owners bei runaway Fan-out. Koppeln Sie Cost-Alerts an Qualitätsmetriken damit Teams Antworten nicht still degradieren um eine Zahl zu treffen.",
+          "Ein shared LLM Gateway ist ein internes Produkt. Kostenzuordnung ist Teil seiner SLA—wie Availability und Latency.",
+        ],
+        links: [
+          {
+            label: "OpenAI — Usage and costs",
+            url: "https://platform.openai.com/docs/guides/production-best-practices#managing-costs",
+          },
+          {
+            label: "Anthropic — Usage and rate limits",
+            url: "https://docs.anthropic.com/en/api/rate-limits",
+          },
+          {
+            label: "Portkey — LLM gateway observability",
+            url: "https://portkey.ai/docs/product/observability",
+          },
+        ],
+      },
+    ],
+  },
 "offline-first-sync-conflicts-in-mobile-apps": {
     title: "Offline-First-Sync-Konflikte in Mobile Apps",
     excerpt: "Offline-First-UX verspricht Kontinuität; Sync verspricht eventual consistency. Ohne explizite Konfliktmodelle sehen Nutzer doppelte Aktionen, verlorene Edits und Support-Tickets die nur im Flugzeug reproduzieren.",
