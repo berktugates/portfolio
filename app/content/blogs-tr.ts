@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"designing-human-escalation-queues-for-agents": {
+    title: "Ajanlar için İnsan Escalation Kuyrukları Tasarlamak",
+    excerpt: "Hiç escalate etmeyen ajanlar özerk görünür—ta ki kullanıcıyı sessizce düşürünceye kadar. Escalation kuyrukları triage kuralları, bağlam paketleri, SLA ve geri bildirim ister; sohbete yapıştırılmış genel 'insana bağlan' düğmesi değil.",
+    description: "AI ajanlarından human-in-the-loop escalation için staff seviyesi tasarım: ne zaman escalate, bağlam nasıl paketlenir, kuyruk yönlendirme, SLA sahipliği ve çözümlerden ajanın öğrendiği döngüyü kapatmak.",
+    sections: [
+      {
+        heading: "Hisle değil, politikayla escalate edin",
+        paragraphs: [
+          "Escalation tetiklerini açık politika olarak tanımlayın: yüksek riskli intent'te düşük güven, N retry sonrası tool hatası, kullanıcının insan istemesi, düzenleyici anahtar kelimeler ve ajanın aşmaması gereken harcama/izin sınırları. Belirsiz 'takılmış gibi hissedince' sezgileri ya alarm yorgunluğu ya da sessiz çıkmaz üretir.",
+          "Soft assist—insan incelerken ajan taslak tutmaya devam eder—ile hard stop'u ayırın: ajan yan etkileri onaylanana kadar dondurur. Ürün, risk ve destek yüzey başına matrisi imzalamalıdır.",
+        ],
+      },
+      {
+        heading: "Ham transcript değil, bağlam paketi gönderin",
+        paragraphs: [
+          "İnsanlar ajanın neden durduğunu yeniden kurmak için dakikalar kaybeder. Kullanıcı hedefini, son tool sonuçlarını, önerilen sonraki aksiyonu, güven sinyallerini ve ajanın zaten ne vaat ettiğini paketleyin. Gizlileri redakte edin; denetim için yeterli kanıt bırakın.",
+          "Beceri ve yetkiye göre yönlendirin: faturalama uyuşmazlıkları, güvenlik olayları ve hesap kurtarma tek ayrışmamış inbox paylaşmamalı. Öncelik ve müşteri katmanını ekleyin ki kuyruk sırası iş politikasıyla eşleşsin.",
+        ],
+        points: [
+          "Ürün ve risk imzalı escalation tetik matrisi yayınlayın",
+          "Hedef, tool ve önerilen aksiyonlarla yapılandırılmış bağlam paketleri ekleyin",
+          "Tek catch-all kuyruk değil; beceri, yetki ve şiddete göre yönlendirin",
+          "Yalnızca ticket hacmini değil, time-to-first-human ve çözüm kalitesini ölçün",
+        ],
+      },
+      {
+        heading: "Handoff'u çift yönlü yapın",
+        paragraphs: [
+          "İnsan bir vakayı çözünce sonucu geri besleyin: düzeltilmiş gerçekler, onaylı playbook'lar ve ajanın devam edip edemeyeceği. Bu döngü olmadan benzer her vaka yine escalate olur ve maliyet eğrisi hiç kırılmaz.",
+          "Operatör UI'sında ajan durum geçişlerini gösterin—bekliyor, insan bekliyor, devam etti, kapandı—ki destek, ajanın hâlâ sahip sandığı paralel sohbetle savaşmasın.",
+        ],
+      },
+      {
+        heading: "Kuyrukları güvenilirlik işi gibi işletin",
+        paragraphs: [
+          "Backlog yaşını, terk oranlarını ve yanlış escalation'ları izleyin. Model veya prompt değişiminden sonra ani artış genelde kullanıcıların birden fazla insan istemesi değil, kalibrasyonun bozulmasıdır. Ajan özerkliğini pazarlamadan önce peak yük ve mesai dışı kapsama prova edin.",
+          "İnsan escalation'ı ops bütçeli bir ürün özelliğidir. Besleyen ajanla aynı titizlikle tasarlayın.",
+        ],
+        links: [
+          {
+            label: "LangGraph — Human-in-the-loop",
+            url: "https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/",
+          },
+          {
+            label: "OpenAI — Agents handoffs",
+            url: "https://platform.openai.com/docs/guides/agents#handoffs",
+          },
+          {
+            label: "Anthropic — Human feedback patterns",
+            url: "https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview",
+          },
+        ],
+      },
+    ],
+  },
 "cost-attribution-for-shared-llm-gateways": {
     title: "Paylaşılan LLM Gateway'lerde Maliyet Atıfı",
     excerpt: "Maliyet atıfı olmayan paylaşılan LLM gateway kara deliğe döner: ekipler prompt'u yerelde optimize ederken finans tek opak fatura görür. Her token'ı tenant, ürün ve caller'a etiketleyin—yoksa charge, throttle veya harcamayı debug edemezsiniz.",

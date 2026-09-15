@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"designing-human-escalation-queues-for-agents": {
+    title: "为智能体设计人工升级队列",
+    excerpt: "从不升级的智能体看似自主——直到默默让用户失败。升级队列需要分诊规则、上下文包、SLA 与反馈闭环——而不是贴在聊天上的通用「找人工」按钮。",
+    description: "从 AI 智能体做 human-in-the-loop 升级的 staff 级设计：何时升级、如何打包上下文、队列路由、SLA 归属，以及闭环让智能体从处置中学习。",
+    sections: [
+      {
+        heading: "按策略升级，不按感觉",
+        paragraphs: [
+          "把升级触发写成明确策略：高风险意图上的低置信度、N 次重试后的工具失败、用户要求人工、监管关键词，以及智能体不得越过的支出或权限边界。模糊的「感觉卡住了」启发式只会带来告警疲劳或静默死胡同。",
+          "区分软协助——人工审阅时智能体继续起草——与硬停止，即副作用冻结直至批准。产品、风险与支持须按表面签署矩阵。",
+        ],
+      },
+      {
+        heading: "交付上下文包，而非原始转录",
+        paragraphs: [
+          "人工会浪费数分钟重建智能体为何停下。打包用户目标、最近工具结果、建议的下一步、置信信号，以及智能体已承诺的内容。脱敏秘密；保留足够审计证据。",
+          "按技能与权限路由：账单争议、安全事件与账户恢复不应共享一个未分化收件箱。包含优先级与客户层级，使排队顺序匹配业务策略。",
+        ],
+        points: [
+          "发布经产品与风险签署的升级触发矩阵",
+          "附带含目标、工具与建议动作的结构化上下文包",
+          "按技能、权限与严重度路由——不是单一兜底队列",
+          "衡量首次人工响应时间与处置质量，而不只是工单量",
+        ],
+      },
+      {
+        heading: "让交接双向进行",
+        paragraphs: [
+          "人工解决案件后回传结果：更正事实、批准剧本，以及智能体是否可恢复。没有该闭环，每个相似案件会再次升级，成本曲线永不弯折。",
+          "在操作员 UI 暴露智能体状态转换——pending、waiting on human、resumed、closed——避免支持与智能体仍以为自己拥有的并行聊天打架。",
+        ],
+      },
+      {
+        heading: "像可靠性工作一样运营队列",
+        paragraphs: [
+          "跟踪积压年龄、放弃率与误升级。模型或提示变更后的尖峰通常意味着校准坏了——不是用户突然更需要人工。在营销智能体自主性之前演练峰值负载与非工作时间覆盖。",
+          "人工升级是带运维预算的产品功能。用喂养它的智能体同等严谨来设计。",
+        ],
+        links: [
+          {
+            label: "LangGraph — Human-in-the-loop",
+            url: "https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/",
+          },
+          {
+            label: "OpenAI — Agents handoffs",
+            url: "https://platform.openai.com/docs/guides/agents#handoffs",
+          },
+          {
+            label: "Anthropic — Human feedback patterns",
+            url: "https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview",
+          },
+        ],
+      },
+    ],
+  },
 "cost-attribution-for-shared-llm-gateways": {
     title: "共享 LLM 网关的成本归因",
     excerpt: "没有成本归因的共享 LLM 网关会变成黑洞：团队在本地优化提示，财务只看到一张不透明账单。把每个 token 打到租户、产品与调用方——否则无法计费、限流或调试支出。",

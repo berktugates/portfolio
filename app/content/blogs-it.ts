@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"designing-human-escalation-queues-for-agents": {
+    title: "Progettare code di escalation umana per gli agent",
+    excerpt: "Gli agent che non escalano mai sembrano autonomi—finché non fanno fallire gli utenti in silenzio. Le code di escalation richiedono regole di triage, context pack, SLA e feedback loop—non un generico pulsante 'parla con un umano' appiccicato alla chat.",
+    description: "Design staff per l'escalation human-in-the-loop dagli agent AI: quando escalare, come impacchettare il contesto, routing della coda, ownership degli SLA e chiudere il loop così gli agent imparano dalle risoluzioni.",
+    sections: [
+      {
+        heading: "Escalate sulla policy, non sul feeling",
+        paragraphs: [
+          "Definite i trigger di escalation come policy esplicite: bassa confidence su intent ad alto rischio, fallimenti tool dopo N retry, richiesta utente di un umano, keyword regolatorie e limiti di spesa o permesso che l'agent non deve superare. Euristiche ambigue 'quando sembra bloccato' producono alert fatigue o vicoli ciechi silenziosi.",
+          "Separate soft assist—l'agent continua a bozzare mentre un umano reviewa—da hard stop, dove l'agent congela gli side effect fino all'approvazione. Prodotto, risk e support devono firmare la matrice per superficie.",
+        ],
+      },
+      {
+        heading: "Spedite un context pack, non un transcript grezzo",
+        paragraphs: [
+          "Gli umani sprecano minuti a ricostruire perché l'agent si è fermato. Impacchettate obiettivo utente, ultimi risultati tool, prossima azione proposta, segnali di confidence e ciò che l'agent ha già promesso. Redigete i secret; lasciate prove sufficienti per l'audit.",
+          "Instradate per skill e autorità: dispute di billing, incident di sicurezza e account recovery non devono condividere una inbox indifferenziata. Includete priorità e tier cliente così l'ordine di coda segue la policy di business.",
+        ],
+        points: [
+          "Pubblicare una matrice di trigger firmata da prodotto e risk",
+          "Allegare context pack strutturati con goal, tool e azioni proposte",
+          "Instradare per skill, autorità e severità—non una coda catch-all",
+          "Misurare time-to-first-human e qualità di risoluzione, non solo volume ticket",
+        ],
+      },
+      {
+        heading: "Rendere l'handoff bidirezionale",
+        paragraphs: [
+          "Quando un umano risolve un caso, rimandate l'esito: fatti corretti, playbook approvati e se l'agent può riprendere. Senza quel loop ogni caso simile scala di nuovo e la curva dei costi non si piega mai.",
+          "Esporre le transizioni di stato dell'agent nella UI operatore—pending, waiting on human, resumed, closed—così il support non combatte una chat parallela che l'agent crede ancora di possedere.",
+        ],
+      },
+      {
+        heading: "Operare le code come lavoro di reliability",
+        paragraphs: [
+          "Tracciare età del backlog, tassi di abbandono e false escalation. Spike dopo un cambio di modello o prompt di solito significa calibrazione rotta—non improvviso bisogno di più umani. Provare carico di picco e copertura fuori orario prima di commercializzare l'autonomia agent.",
+          "L'escalation umana è una feature di prodotto con budget ops. Progettatela con lo stesso rigore dell'agent che la alimenta.",
+        ],
+        links: [
+          {
+            label: "LangGraph — Human-in-the-loop",
+            url: "https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/",
+          },
+          {
+            label: "OpenAI — Agents handoffs",
+            url: "https://platform.openai.com/docs/guides/agents#handoffs",
+          },
+          {
+            label: "Anthropic — Human feedback patterns",
+            url: "https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview",
+          },
+        ],
+      },
+    ],
+  },
 "cost-attribution-for-shared-llm-gateways": {
     title: "Attribuzione dei costi per gateway LLM condivisi",
     excerpt: "Un gateway LLM condiviso senza attribuzione dei costi diventa un buco nero: i team ottimizzano i prompt in locale mentre finance vede una fattura opaca. Tagga ogni token a tenant, prodotto e caller—altrimenti niente chargeback, throttle o debug della spesa.",

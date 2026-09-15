@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"designing-human-escalation-queues-for-agents": {
+    title: "Human-Escalation-Queues für Agents designen",
+    excerpt: "Agents die nie eskalieren wirken autonom—bis sie Nutzer still scheitern lassen. Escalation-Queues brauchen Triage-Regeln, Context-Packs, SLAs und Feedback-Loops—keinen generischen 'mit Mensch sprechen'-Button am Chat.",
+    description: "Staff-Level Design für Human-in-the-Loop-Escalation von AI-Agents: wann eskalieren, wie Kontext packen, Queue-Routing, SLA-Ownership und den Loop schließen damit Agents aus Resolutions lernen.",
+    sections: [
+      {
+        heading: "Nach Policy eskalieren, nicht nach Vibes",
+        paragraphs: [
+          "Definieren Sie Escalation-Trigger als explizite Policies: niedrige Confidence bei high-stakes Intents, Tool-Failures nach N Retries, Nutzerwunsch nach einem Menschen, regulatorische Keywords und Spend-/Permission-Grenzen die der Agent nicht überschreiten darf. Mehrdeutige 'wenn es stuck wirkt'-Heuristiken erzeugen Alert-Fatigue oder stille Sackgassen.",
+          "Trennen Sie Soft Assist—Agent schreibt weiter während ein Mensch reviewed—von Hard Stop, wo der Agent Side Effects bis zur Freigabe friert. Produkt, Risk und Support müssen die Matrix pro Surface signieren.",
+        ],
+      },
+      {
+        heading: "Context-Pack liefern, kein Raw-Transcript",
+        paragraphs: [
+          "Menschen verschwenden Minuten damit zu rekonstruieren warum der Agent stoppte. Packen Sie Nutzerziel, letzte Tool-Results, vorgeschlagene Next Action, Confidence-Signale und was der Agent schon versprochen hat. Secrets redaktieren; genug Evidence für Audit behalten.",
+          "Routen Sie nach Skill und Authority: Billing-Disputes, Security-Incidents und Account-Recovery sollten nicht eine undifferenzierte Inbox teilen. Priority und Customer-Tier einbeziehen damit Queue-Ordering Business-Policy matcht.",
+        ],
+        points: [
+          "Escalation-Trigger-Matrix mit Produkt- und Risk-Sign-off publizieren",
+          "Strukturierte Context-Packs mit Goals, Tools und Proposed Actions anhängen",
+          "Nach Skill, Authority und Severity routen—keine Catch-all-Queue",
+          "Time-to-first-human und Resolution-Qualität messen, nicht nur Ticket-Volumen",
+        ],
+      },
+      {
+        heading: "Handoff bidirektional machen",
+        paragraphs: [
+          "Wenn ein Mensch einen Case resolved, Outcome zurückspeisen: korrigierte Fakten, genehmigte Playbooks und ob der Agent fortsetzen darf. Ohne diesen Loop eskaliert jeder ähnliche Case erneut und die Kostenkurve biegt sich nie.",
+          "Agent-State-Transitions in der Operator-UI exponieren—pending, waiting on human, resumed, closed—damit Support nicht gegen einen parallelen Chat kämpft den der Agent noch besitzt.",
+        ],
+      },
+      {
+        heading: "Queues wie Reliability-Arbeit betreiben",
+        paragraphs: [
+          "Backlog-Age, Abandon-Rates und False Escalations tracken. Spike nach Model- oder Prompt-Change bedeutet meist kaputte Calibration—nicht plötzlich mehr Menschenbedarf. Peak-Load und After-Hours-Coverage rehearsen bevor Agent-Autonomie vermarktet wird.",
+          "Human Escalation ist ein Produktfeature mit Ops-Budget. Designen Sie es mit derselben Strenge wie den speisenden Agent.",
+        ],
+        links: [
+          {
+            label: "LangGraph — Human-in-the-loop",
+            url: "https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/",
+          },
+          {
+            label: "OpenAI — Agents handoffs",
+            url: "https://platform.openai.com/docs/guides/agents#handoffs",
+          },
+          {
+            label: "Anthropic — Human feedback patterns",
+            url: "https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview",
+          },
+        ],
+      },
+    ],
+  },
 "cost-attribution-for-shared-llm-gateways": {
     title: "Kostenzuordnung für shared LLM Gateways",
     excerpt: "Ein shared LLM Gateway ohne Kostenzuordnung wird zum schwarzen Loch: Teams optimieren Prompts lokal, Finance sieht eine undurchsichtige Rechnung. Taggen Sie jeden Token auf Tenant, Produkt und Caller—sonst kein Chargeback, Throttle oder Spend-Debug.",

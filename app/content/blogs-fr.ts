@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"designing-human-escalation-queues-for-agents": {
+    title: "Concevoir des files d'escalade humaine pour les agents",
+    excerpt: "Les agents qui n'escaladent jamais semblent autonomes—jusqu'à faire échouer les utilisateurs en silence. Les files d'escalade exigent règles de triage, context packs, SLA et boucles de feedback—pas un bouton générique 'parler à un humain' collé au chat.",
+    description: "Conception staff pour l'escalade human-in-the-loop depuis des agents IA : quand escalader, comment empaqueter le contexte, routage de file, ownership des SLA et fermer la boucle pour que les agents apprennent des résolutions.",
+    sections: [
+      {
+        heading: "Escalader sur la politique, pas sur le feeling",
+        paragraphs: [
+          "Définissez les déclencheurs d'escalade comme des politiques explicites : faible confiance sur intents à fort enjeu, échecs d'outils après N retries, demande utilisateur d'un humain, mots-clés réglementaires et limites de dépense ou permission que l'agent ne doit pas franchir. Les heuristiques ambiguës 'quand ça semble bloqué' produisent fatigue d'alertes ou impasses silencieuses.",
+          "Séparez soft assist—l'agent continue de rédiger pendant qu'un humain review—de hard stop, où l'agent gèle les effets de bord jusqu'à approbation. Produit, risque et support doivent signer la matrice par surface.",
+        ],
+      },
+      {
+        heading: "Livrer un context pack, pas un transcript brut",
+        paragraphs: [
+          "Les humains perdent des minutes à reconstruire pourquoi l'agent s'est arrêté. Empaquetez l'objectif utilisateur, derniers résultats d'outils, prochaine action proposée, signaux de confiance et ce que l'agent a déjà promis. Redactez les secrets ; gardez assez de preuves pour l'audit.",
+          "Routez par compétence et autorité : litiges facturation, incidents sécurité et récupération de compte ne doivent pas partager une inbox indifférenciée. Incluez priorité et tier client pour que l'ordre de file suive la politique métier.",
+        ],
+        points: [
+          "Publier une matrice de déclencheurs signée produit et risque",
+          "Attacher des context packs structurés avec objectifs, outils et actions proposées",
+          "Router par skill, autorité et sévérité—pas une file fourre-tout",
+          "Mesurer time-to-first-human et qualité de résolution, pas seulement le volume de tickets",
+        ],
+      },
+      {
+        heading: "Rendre le handoff bidirectionnel",
+        paragraphs: [
+          "Quand un humain résout un cas, renvoyez le résultat : faits corrigés, playbooks approuvés et si l'agent peut reprendre. Sans cette boucle, chaque cas similaire remonte et la courbe de coût ne fléchit jamais.",
+          "Exposez les transitions d'état agent dans l'UI opérateur—pending, waiting on human, resumed, closed—pour que le support ne combatte pas un chat parallèle que l'agent croit encore posséder.",
+        ],
+      },
+      {
+        heading: "Opérer les files comme du travail de fiabilité",
+        paragraphs: [
+          "Suivez âge du backlog, taux d'abandon et fausses escalades. Un pic après un changement de modèle ou de prompt signifie souvent une calibration cassée—pas un besoin soudain de plus d'humains. Répétez charge de pointe et couverture hors horaires avant de commercialiser l'autonomie agent.",
+          "L'escalade humaine est une feature produit avec budget ops. Concevez-la avec la même rigueur que l'agent qui l'alimente.",
+        ],
+        links: [
+          {
+            label: "LangGraph — Human-in-the-loop",
+            url: "https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/",
+          },
+          {
+            label: "OpenAI — Agents handoffs",
+            url: "https://platform.openai.com/docs/guides/agents#handoffs",
+          },
+          {
+            label: "Anthropic — Human feedback patterns",
+            url: "https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview",
+          },
+        ],
+      },
+    ],
+  },
 "cost-attribution-for-shared-llm-gateways": {
     title: "Attribution des coûts pour les passerelles LLM partagées",
     excerpt: "Une passerelle LLM partagée sans attribution des coûts devient un trou noir : les équipes optimisent les prompts localement tandis que la finance voit une facture opaque. Étiquetez chaque token à tenant, produit et caller—sinon pas de chargeback, throttle ni debug de dépense.",

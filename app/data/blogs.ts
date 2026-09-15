@@ -21,6 +21,76 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "designing-human-escalation-queues-for-agents",
+    title: "Designing Human Escalation Queues for Agents",
+    excerpt: "Agents that never escalate look autonomous until they silently fail users. Escalation queues need triage rules, context packs, SLAs, and feedback loops—not a generic 'talk to a human' button bolted onto a chat UI.",
+    description: "Staff-level design for human-in-the-loop escalation from AI agents: when to escalate, how to package context, queue routing, SLA ownership, and closing the loop so agents learn from resolutions.",
+    publishedAt: "2026-09-15",
+    readingMinutes: 7,
+    keywords: [
+      "human-in-the-loop",
+      "AI agent escalation",
+      "support queues",
+      "agent handoff",
+      "HITL workflows",
+      "AI operations",
+    ],
+    socialThreadTr: [
+      "Hiç escalate etmeyen ajan özerk görünür—ta ki kullanıcıyı sessizce düşürünceye kadar. Kuyruk, bağlam paketi ve SLA şart. 🧵",
+      "Triage, yönlendirme ve geri bildirim döngüsü. Detay: https://berktugberke.com/tr/blogs/designing-human-escalation-queues-for-agents",
+    ],
+    sections: [
+      {
+        heading: "Escalate on policy, not on vibes",
+        paragraphs: [
+          "Define escalation triggers as explicit policies: low confidence on high-stakes intents, tool failures after N retries, user request for a human, regulatory keywords, and spend or permission boundaries the agent must not cross. Ambiguous 'when it feels stuck' heuristics produce either alert fatigue or silent dead-ends.",
+          "Separate soft assist—agent keeps drafting while a human reviews—from hard stop, where the agent freezes side effects until approval. Product, risk, and support must sign the matrix per surface.",
+        ],
+      },
+      {
+        heading: "Ship a context pack, not a raw transcript",
+        paragraphs: [
+          "Humans waste minutes reconstructing why the agent stopped. Package the user goal, last tool results, proposed next action, confidence signals, and what the agent already promised. Redact secrets; keep enough evidence for audit.",
+          "Route by skill and authority: billing disputes, security incidents, and account recovery should not share one undifferentiated inbox. Include priority and customer tier so queue ordering matches business policy.",
+        ],
+        points: [
+          "Publish an escalation trigger matrix signed by product and risk",
+          "Attach structured context packs with goals, tools, and proposed actions",
+          "Route by skill, authority, and severity—not a single catch-all queue",
+          "Measure time-to-first-human and resolution quality, not only ticket volume",
+        ],
+      },
+      {
+        heading: "Make the handoff bidirectional",
+        paragraphs: [
+          "When a human resolves a case, feed the outcome back: corrected facts, approved playbooks, and whether the agent may resume. Without that loop, every similar case escalates again and your cost curve never bends.",
+          "Expose agent state transitions in the operator UI—pending, waiting on human, resumed, closed—so support does not fight a parallel chat the agent still thinks it owns.",
+        ],
+      },
+      {
+        heading: "Operate queues like reliability work",
+        paragraphs: [
+          "Track backlog age, abandon rates, and false escalations. Spike after a model or prompt change usually means calibration broke, not that users suddenly need more humans. Rehearse peak load and after-hours coverage before marketing agent autonomy.",
+          "Human escalation is a product feature with an ops budget. Design it with the same rigor as the agent that feeds it.",
+        ],
+        links: [
+          {
+            label: "LangGraph — Human-in-the-loop",
+            url: "https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/",
+          },
+          {
+            label: "OpenAI — Agents handoffs",
+            url: "https://platform.openai.com/docs/guides/agents#handoffs",
+          },
+          {
+            label: "Anthropic — Human feedback patterns",
+            url: "https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview",
+          },
+        ],
+      },
+    ],
+  },
+    {
     slug: "cost-attribution-for-shared-llm-gateways",
     title: "Cost Attribution for Shared LLM Gateways",
     excerpt: "A shared LLM gateway without cost attribution becomes a black hole: teams optimize prompts locally while finance sees one opaque bill. Tag every token to tenant, product, and caller—or you cannot charge, throttle, or debug spend.",
