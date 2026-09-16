@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"cache-invalidation-for-personalized-ai-uis": {
+    title: "Cache-Invalidierung für personalisierte AI-UIs",
+    excerpt: "Personalisierte AI-Surfaces cachen Embeddings, Completions und UI-Fragmente für Speed—und servieren dann dem falschen User die falsche Antwort. Invalidierung muss Identity, Entitlements und Prompt-Versionen tracken, nicht nur TTL.",
+    description: "Wie Staff Engineers Caches für personalisierte AI-UIs invalidieren: Key-Design, Tenant-Isolation, entitlement-aware Busts, Streaming-Partials und Metriken die Cross-User-Leakage früh fangen.",
+    sections: [
+      {
+        heading: "Personalisierung macht TTL unzureichend",
+        paragraphs: [
+          "Generische Page-Caches expire auf Zeit. Personalisierte AI-UIs expire wenn User, Rolle, Plan, Feature Flags, retrieved Documents oder Prompt-Version wechseln—auch wenn die Uhr den Entry als fresh zeigt. Ein 60-Sekunden-TTL der nur auf Route keyt kann trotzdem die Completion eines anderen Tenants leaken oder revoked Entitlements zeigen.",
+          "Benennen Sie was Sie cachen: Raw Model Output, gerendertes Markdown, Embedding-Vektoren für die Sidebar oder Edge-HTML-Shells. Jede Schicht braucht anderen Key und Bust-Strategie.",
+        ],
+      },
+      {
+        heading: "Keys designen die Authority kodieren",
+        paragraphs: [
+          "Tenant-Id, User- oder Session-Scope, Entitlement-Hash und Content- oder Prompt-Revision in Cache-Keys aufnehmen. Opaque Hashes statt PII-Konkatenation bevorzugen. Für Semantic Caches tenant-scoped Namespace verlangen damit ähnliche Fragen nie org-übergreifend treffen.",
+          "Bei Permission- oder Plan-Änderungen Invalidierung für die betroffene Identity broadcasten—kein Global Flush der die Fleet thrash. Dokumentieren ob soft-deleted User in Grace Periods noch Warm Entries treffen dürfen.",
+        ],
+        points: [
+          "Auf Tenant, Identity-Scope, Entitlement-Hash und Prompt/Content-Revision keyen",
+          "Semantic Caches pro Tenant namespacen; Similarity-Indexes nie org-übergreifend teilen",
+          "Bei Authz- und Plan-Events bustern, nicht nur bei Write-Timestamps",
+          "Auf Cross-Tenant-Key-Collisions und unerwartete Hit-Rates nach Releases alerten",
+        ],
+      },
+      {
+        heading: "Streaming und Partials erschweren Busts",
+        paragraphs: [
+          "AI-UIs streamen oft Tokens in einen Client der auch von CDN oder Service Worker hydratet. Entscheiden ob Partial Streams überhaupt cachebar sind. Cachen Sie nur completed Answers, dokumentieren wie Mid-Stream-Cancels und Tool-Call-Revisions Half-Truths vermeiden.",
+          "Stale-while-revalidate kann Entitlement-Revocation für einen Request-Zyklus verbergen. Für High-Risk-Surfaces—Billing, Medical, Legal—explizite Revalidation vor Render bevorzugen.",
+        ],
+      },
+      {
+        heading: "Isolation in Production beweisen",
+        paragraphs: [
+          "Canary-Checks hinzufügen die versuchen eine andere Tenant-Completion per Key-Guess und Similarity-Search zu fetchen. Hit-Rate-Cliffs nach Permission-System-Deploys monitoren. Cache-Bugs in AI-UIs sind Privacy-Incidents, keine bloßen UX-Glitches.",
+          "Speed zählt, aber korrekte Personalisierung ist das Produkt. Invalidierungs-Policy gehört in denselben Design Review wie der Prompt.",
+        ],
+        links: [
+          {
+            label: "MDN — HTTP caching",
+            url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching",
+          },
+          {
+            label: "Vercel — Caching",
+            url: "https://vercel.com/docs/infrastructure/data-cache",
+          },
+          {
+            label: "Cloudflare — Cache purge",
+            url: "https://developers.cloudflare.com/cache/how-to/purge-cache/",
+          },
+        ],
+      },
+    ],
+  },
 "designing-human-escalation-queues-for-agents": {
     title: "Human-Escalation-Queues für Agents designen",
     excerpt: "Agents die nie eskalieren wirken autonom—bis sie Nutzer still scheitern lassen. Escalation-Queues brauchen Triage-Regeln, Context-Packs, SLAs und Feedback-Loops—keinen generischen 'mit Mensch sprechen'-Button am Chat.",

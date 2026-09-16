@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"cache-invalidation-for-personalized-ai-uis": {
+    title: "Kişiselleştirilmiş AI UI'lar için Cache Invalidation",
+    excerpt: "Kişiselleştirilmiş AI yüzeyleri hız için embedding, completion ve UI parçalarını cache'ler—sonra yanlış kullanıcıya yanlış yanıt servis eder. Invalidation yalnızca TTL değil; kimlik, entitlement ve prompt sürümünü izlemelidir.",
+    description: "Staff mühendisler kişiselleştirilmiş AI UI'larda cache'i nasıl invalidate eder: anahtar tasarımı, tenant izolasyonu, entitlement-aware bust, streaming partial'lar ve çapraz kullanıcı sızıntısını erken yakalayan metrikler.",
+    sections: [
+      {
+        heading: "Kişiselleştirme TTL'yi yetersiz kılar",
+        paragraphs: [
+          "Genel sayfa cache'leri zamana göre expire olur. Kişiselleştirilmiş AI UI'lar kullanıcı, rol, plan, feature flag, retrieve edilen doküman veya prompt sürümü değişince expire olur—saat girişi taze dese bile. Yalnızca route'a key'lenen 60 saniyelik TTL başka tenant'ın completion'ını sızdırabilir veya iptal edilmiş entitlement gösterebilir.",
+          "Ne cache'lediğinizi adlandırın: ham model çıktısı, render markdown, kenar çubuğu embedding'leri veya edge HTML kabukları. Her katmanın farklı anahtarı ve bust stratejisi vardır.",
+        ],
+      },
+      {
+        heading: "Yetkiyi kodlayan anahtarlar tasarlayın",
+        paragraphs: [
+          "Cache anahtarlarına tenant id, kullanıcı veya oturum kapsamı, entitlement hash'i ve içerik/prompt revizyonunu ekleyin. PII birleştirmek yerine opak hash tercih edin. Semantic cache'ler için tenant-scoped namespace zorunlu tutun ki benzer sorular organizasyonlar arası asla isabet etmesin.",
+          "İzin veya plan değişiminde etkilenen kimlik için invalidation yayınlayın—filoyu thrash eden global flush değil. Soft-delete kullanıcıların grace döneminde warm entry'ye hâlâ isabet edip edemeyeceğini belgelendirin.",
+        ],
+        points: [
+          "Tenant, kimlik kapsamı, entitlement hash ve prompt/içerik revizyonuna key'leyin",
+          "Semantic cache'leri tenant başına namespace'leyin; org'lar arası similarity index paylaşmayın",
+          "Yalnızca yazma zaman damgasında değil, authz ve plan olaylarında bust edin",
+          "Çapraz-tenant key çarpışması ve release sonrası beklenmeyen hit rate için alarm kurun",
+        ],
+      },
+      {
+        heading: "Streaming ve partial'lar bust'ı zorlaştırır",
+        paragraphs: [
+          "AI UI'lar sıkça token'ları, CDN veya service worker'dan hydrate olan bir client'a stream eder. Partial stream'lerin hiç cache'lenip cache'lenmeyeceğine karar verin. Yalnızca tamamlanmış yanıtları cache'liyorsanız, mid-stream iptallerin ve tool-call revizyonlarının yarım gerçekleri saklamasını nasıl engellediğinizi belgelendirin.",
+          "Stale-while-revalidate entitlement iptalini bir istek döngüsü gizleyebilir. Faturalama, tıbbi, hukuki gibi yüksek riskli yüzeylerde render öncesi açık revalidation tercih edin.",
+        ],
+      },
+      {
+        heading: "İzolasyonu production'da kanıtlayın",
+        paragraphs: [
+          "Başka tenant'ın cache'li completion'ını key tahmini ve similarity aramasıyla çekmeyi deneyen canary kontrolleri ekleyin. İzin sistemi deploy'larından sonra hit-rate uçurumlarını izleyin. AI UI'lardaki cache bug'ları UX aksaklığı değil, gizlilik olayıdır.",
+          "Hız önemlidir ama doğru kişiselleştirme üründür. Invalidation politikası prompt ile aynı tasarım incelemesine aittir.",
+        ],
+        links: [
+          {
+            label: "MDN — HTTP caching",
+            url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching",
+          },
+          {
+            label: "Vercel — Caching",
+            url: "https://vercel.com/docs/infrastructure/data-cache",
+          },
+          {
+            label: "Cloudflare — Cache purge",
+            url: "https://developers.cloudflare.com/cache/how-to/purge-cache/",
+          },
+        ],
+      },
+    ],
+  },
 "designing-human-escalation-queues-for-agents": {
     title: "Ajanlar için İnsan Escalation Kuyrukları Tasarlamak",
     excerpt: "Hiç escalate etmeyen ajanlar özerk görünür—ta ki kullanıcıyı sessizce düşürünceye kadar. Escalation kuyrukları triage kuralları, bağlam paketleri, SLA ve geri bildirim ister; sohbete yapıştırılmış genel 'insana bağlan' düğmesi değil.",

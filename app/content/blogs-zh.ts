@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"cache-invalidation-for-personalized-ai-uis": {
+    title: "个性化 AI 界面的缓存失效",
+    excerpt: "个性化 AI 界面为速度缓存嵌入、补全与 UI 片段——然后把错误答案送给错误用户。失效必须跟踪身份、权益与提示版本，而不仅是 TTL。",
+    description: "Staff 工程师如何为个性化 AI UI 做缓存失效：键设计、租户隔离、感知权益的清除、流式 partial，以及尽早发现跨用户泄漏的指标。",
+    sections: [
+      {
+        heading: "个性化让 TTL 不够用",
+        paragraphs: [
+          "通用页面缓存按时间过期。个性化 AI UI 在用户、角色、套餐、功能开关、检索文档或提示版本变化时过期——即使时钟显示条目仍新鲜。仅按路由建键的 60 秒 TTL 仍可能泄漏另一租户的补全，或展示已撤销权益。",
+          "说清缓存什么：原始模型输出、渲染 markdown、侧栏嵌入向量或边缘 HTML 壳。每层需要不同的键与清除策略。",
+        ],
+      },
+      {
+        heading: "设计编码权限的键",
+        paragraphs: [
+          "在缓存键中包含租户 id、用户或会话范围、权益哈希，以及内容或提示修订。优先用不透明哈希而非拼接 PII。语义缓存要求租户作用域命名空间，使相似问题永不跨组织命中。",
+          "在权限或套餐变更时，对受影响身份广播失效——而不是 thrash 整机群的全局冲洗。记录软删除用户在宽限期内是否仍可命中温条目。",
+        ],
+        points: [
+          "按租户、身份范围、权益哈希与提示/内容修订建键",
+          "按租户为语义缓存建命名空间；永不跨组织共享相似度索引",
+          "在授权与套餐事件上清除，而不仅是写入时间戳",
+          "对跨租户键冲突与发布后异常命中率告警",
+        ],
+      },
+      {
+        heading: "流式与 partial 让清除更复杂",
+        paragraphs: [
+          "AI UI 常把 token 流到同时从 CDN 或 service worker 注水的客户端。决定 partial 流是否可缓存。若只缓存完整答案，记录中途取消与工具调用修订如何避免存下半真半假。",
+          "Stale-while-revalidate 可能在一个请求周期内掩盖权益撤销。对高风险表面——计费、医疗、法律——在渲染前做显式再验证。",
+        ],
+      },
+      {
+        heading: "在生产中证明隔离",
+        paragraphs: [
+          "加入金丝雀检查，尝试通过键猜测与相似度搜索拉取另一租户的缓存补全。监控权限系统部署后的命中率悬崖。AI UI 中的缓存缺陷是隐私事件，而不只是 UX 毛刺。",
+          "速度重要，但正确的个性化才是产品。失效策略应与提示进入同一设计评审。",
+        ],
+        links: [
+          {
+            label: "MDN — HTTP caching",
+            url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching",
+          },
+          {
+            label: "Vercel — Caching",
+            url: "https://vercel.com/docs/infrastructure/data-cache",
+          },
+          {
+            label: "Cloudflare — Cache purge",
+            url: "https://developers.cloudflare.com/cache/how-to/purge-cache/",
+          },
+        ],
+      },
+    ],
+  },
 "designing-human-escalation-queues-for-agents": {
     title: "为智能体设计人工升级队列",
     excerpt: "从不升级的智能体看似自主——直到默默让用户失败。升级队列需要分诊规则、上下文包、SLA 与反馈闭环——而不是贴在聊天上的通用「找人工」按钮。",

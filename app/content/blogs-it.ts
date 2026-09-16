@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"cache-invalidation-for-personalized-ai-uis": {
+    title: "Invalidazione cache per UI AI personalizzate",
+    excerpt: "Le superfici AI personalizzate mettono in cache embedding, completion e frammenti UI per la velocità—poi servono la risposta sbagliata all'utente sbagliato. L'invalidazione deve tracciare identità, entitlement e versioni di prompt, non solo il TTL.",
+    description: "Come gli staff engineer invalidano le cache per UI AI personalizzate: design delle chiavi, isolamento tenant, bust sensibili agli entitlement, partial in streaming e metriche che intercettano presto i leak cross-user.",
+    sections: [
+      {
+        heading: "La personalizzazione rende insufficiente il TTL",
+        paragraphs: [
+          "Le cache di pagina generiche scadono nel tempo. Le UI AI personalizzate scadono quando cambiano utente, ruolo, piano, feature flag, documenti recuperati o versione di prompt—anche se l'orologio dice che l'entry è fresca. Un TTL di 60 secondi chiave solo sulla route può comunque far trapelare la completion di un altro tenant o mostrare entitlement revocati.",
+          "Nominate cosa cacheate: output grezzo del modello, markdown renderizzato, vettori embedding per la sidebar o shell HTML edge. Ogni layer ha chiave e strategia di bust diverse.",
+        ],
+      },
+      {
+        heading: "Progettare chiavi che codificano l'autorità",
+        paragraphs: [
+          "Includere tenant id, scope utente o sessione, hash entitlement e revisione contenuto/prompt nelle chiavi. Preferire hash opachi alla concatenazione di PII. Per i cache semantici richiedere un namespace scoped al tenant così domande simili non colpiscono mai tra organizzazioni.",
+          "Su cambi di permesso o piano, broadcastare invalidazione per l'identità colpita—non un flush globale che thrash la flotta. Documentare se utenti soft-deleted possono ancora colpire entry calde nei periodi di grazia.",
+        ],
+        points: [
+          "Chiave su tenant, scope identità, hash entitlement e revisione prompt/contenuto",
+          "Namespace dei cache semantici per tenant; non condividere indici di similarità tra org",
+          "Bust su eventi authz e piano, non solo timestamp di scrittura",
+          "Allertare su collisioni di chiavi cross-tenant e hit rate inattesi dopo i release",
+        ],
+      },
+      {
+        heading: "Streaming e partial complicano i bust",
+        paragraphs: [
+          "Le UI AI spesso streammano token in un client che idrata anche da CDN o service worker. Decidere se i partial stream sono cacheabili affatto. Se cacheate solo risposte complete, documentate come cancel mid-stream e revisioni di tool-call evitano di memorizzare mezze verità.",
+          "Stale-while-revalidate può nascondere la revoca di entitlement per un ciclo di richiesta. Per superfici ad alto rischio—billing, medicale, legale—preferire revalidation esplicita prima del render.",
+        ],
+      },
+      {
+        heading: "Dimostrare l'isolamento in produzione",
+        paragraphs: [
+          "Aggiungere canary che tentano di fetchare la completion in cache di un altro tenant per guess di chiave e ricerca di similarità. Monitorare cliff di hit-rate dopo deploy del sistema di permessi. I bug di cache nelle UI AI sono incident di privacy, non solo glitch UX.",
+          "La velocità conta, ma la personalizzazione corretta è il prodotto. La policy di invalidazione appartiene alla stessa design review del prompt.",
+        ],
+        links: [
+          {
+            label: "MDN — HTTP caching",
+            url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching",
+          },
+          {
+            label: "Vercel — Caching",
+            url: "https://vercel.com/docs/infrastructure/data-cache",
+          },
+          {
+            label: "Cloudflare — Cache purge",
+            url: "https://developers.cloudflare.com/cache/how-to/purge-cache/",
+          },
+        ],
+      },
+    ],
+  },
 "designing-human-escalation-queues-for-agents": {
     title: "Progettare code di escalation umana per gli agent",
     excerpt: "Gli agent che non escalano mai sembrano autonomi—finché non fanno fallire gli utenti in silenzio. Le code di escalation richiedono regole di triage, context pack, SLA e feedback loop—non un generico pulsante 'parla con un umano' appiccicato alla chat.",

@@ -21,6 +21,76 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "cache-invalidation-for-personalized-ai-uis",
+    title: "Cache Invalidation for Personalized AI UIs",
+    excerpt: "Personalized AI surfaces cache embeddings, completions, and UI fragments for speed—then serve the wrong user the wrong answer. Invalidation must track identity, entitlements, and prompt versions, not just TTL.",
+    description: "How staff engineers invalidate caches for personalized AI UIs: key design, tenant isolation, entitlement-aware busts, streaming partials, and metrics that catch cross-user leakage early.",
+    publishedAt: "2026-09-16",
+    readingMinutes: 7,
+    keywords: [
+      "cache invalidation",
+      "personalized AI",
+      "CDN caching",
+      "LLM response cache",
+      "tenant isolation",
+      "AI UI performance",
+    ],
+    socialThreadTr: [
+      "Kişiselleştirilmiş AI UI cache'i hız kazandırır—yanlış kullanıcıya yanlış yanıt da servis eder. Invalidation kimlik ve entitlement bilmeli. 🧵",
+      "Anahtar tasarımı, tenant izolasyonu ve sızıntı metrikleri. Detay: https://berktugberke.com/tr/blogs/cache-invalidation-for-personalized-ai-uis",
+    ],
+    sections: [
+      {
+        heading: "Personalization makes TTL insufficient",
+        paragraphs: [
+          "Generic page caches expire on time. Personalized AI UIs expire when the user, role, plan, feature flags, retrieved documents, or prompt version change—even if the clock says the entry is fresh. A 60-second TTL that keys only on route can still leak another tenant's completion or show revoked entitlements.",
+          "Name what you cache: raw model output, rendered markdown, embedding vectors for the sidebar, or edge HTML shells. Each layer needs a different key and bust strategy.",
+        ],
+      },
+      {
+        heading: "Design keys that encode authority",
+        paragraphs: [
+          "Include tenant id, user or session scope, entitlement hash, and content or prompt revision in cache keys. Prefer opaque hashes over concatenating PII. For semantic caches, require a tenant-scoped namespace so similar questions never hit across organizations.",
+          "On permission or plan changes, broadcast invalidation for the affected identity—not a global flush that thrashes the fleet. Document whether soft-deleted users can still hit warm entries during grace periods.",
+        ],
+        points: [
+          "Key on tenant, identity scope, entitlement hash, and prompt/content revision",
+          "Namespace semantic caches per tenant; never share similarity indexes across orgs",
+          "Bust on authz and plan events, not only on write timestamps",
+          "Alert on cross-tenant key collisions and unexpected cache hit rates after releases",
+        ],
+      },
+      {
+        heading: "Streaming and partials complicate busts",
+        paragraphs: [
+          "AI UIs often stream tokens into a client that also hydrates from a CDN or service worker. Decide whether partial streams are cacheable at all. If you cache completed answers only, document how mid-stream cancels and tool-call revisions avoid storing half-truths.",
+          "Stale-while-revalidate can hide entitlement revocation for one request cycle. For high-risk surfaces—billing, medical, legal—prefer explicit revalidation before render.",
+        ],
+      },
+      {
+        heading: "Prove isolation in production",
+        paragraphs: [
+          "Add canary checks that attempt to fetch another tenant's cached completion by key guess and by similarity search. Monitor hit-rate cliffs after permission system deploys. Cache bugs in AI UIs are privacy incidents, not just UX glitches.",
+          "Speed matters, but correct personalization is the product. Invalidation policy belongs in the same design review as the prompt.",
+        ],
+        links: [
+          {
+            label: "MDN — HTTP caching",
+            url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching",
+          },
+          {
+            label: "Vercel — Caching",
+            url: "https://vercel.com/docs/infrastructure/data-cache",
+          },
+          {
+            label: "Cloudflare — Cache purge",
+            url: "https://developers.cloudflare.com/cache/how-to/purge-cache/",
+          },
+        ],
+      },
+    ],
+  },
+    {
     slug: "designing-human-escalation-queues-for-agents",
     title: "Designing Human Escalation Queues for Agents",
     excerpt: "Agents that never escalate look autonomous until they silently fail users. Escalation queues need triage rules, context packs, SLAs, and feedback loops—not a generic 'talk to a human' button bolted onto a chat UI.",

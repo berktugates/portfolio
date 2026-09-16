@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"cache-invalidation-for-personalized-ai-uis": {
+    title: "Invalidation de cache pour les UI IA personnalisées",
+    excerpt: "Les surfaces IA personnalisées mettent en cache embeddings, completions et fragments d'UI pour la vitesse—puis servent la mauvaise réponse au mauvais utilisateur. L'invalidation doit suivre identité, entitlements et versions de prompt, pas seulement le TTL.",
+    description: "Comment les staff engineers invalidents les caches pour UI IA personnalisées : design de clés, isolation tenant, busts sensibles aux entitlements, partials en streaming et métriques qui détectent tôt les fuites cross-user.",
+    sections: [
+      {
+        heading: "La personnalisation rend le TTL insuffisant",
+        paragraphs: [
+          "Les caches de pages génériques expirent dans le temps. Les UI IA personnalisées expirent quand utilisateur, rôle, plan, feature flags, documents récupérés ou version de prompt changent—même si l'horloge dit que l'entrée est fraîche. Un TTL de 60 secondes clé seulement sur la route peut encore fuiter la completion d'un autre tenant ou montrer des entitlements révoqués.",
+          "Nommez ce que vous cachez : sortie modèle brute, markdown rendu, vecteurs d'embedding pour la sidebar ou coques HTML edge. Chaque couche a une clé et une stratégie de bust différentes.",
+        ],
+      },
+      {
+        heading: "Concevoir des clés qui encodent l'autorité",
+        paragraphs: [
+          "Incluez id tenant, portée utilisateur ou session, hash d'entitlement et révision contenu/prompt dans les clés. Préférez des hashes opaques à la concaténation de PII. Pour les caches sémantiques, exigez un namespace scoped tenant pour que des questions similaires ne frappent jamais entre organisations.",
+          "Sur changements de permission ou de plan, diffusez l'invalidation pour l'identité affectée—pas un flush global qui thrash la flotte. Documentez si les utilisateurs soft-deleted peuvent encore toucher des entrées chaudes pendant les périodes de grâce.",
+        ],
+        points: [
+          "Clé sur tenant, portée d'identité, hash d'entitlement et révision prompt/contenu",
+          "Namespace des caches sémantiques par tenant ; ne jamais partager les index de similarité entre orgs",
+          "Buster sur événements authz et plan, pas seulement timestamps d'écriture",
+          "Alerter sur collisions de clés cross-tenant et hit rates inattendus après releases",
+        ],
+      },
+      {
+        heading: "Streaming et partials compliquent les busts",
+        paragraphs: [
+          "Les UI IA streamnent souvent des tokens vers un client qui hydrate aussi depuis CDN ou service worker. Décidez si les partial streams sont cacheables du tout. Si vous ne cachez que les réponses complètes, documentez comment annulations mid-stream et révisions d'appels d'outils évitent de stocker des demi-vérités.",
+          "Stale-while-revalidate peut masquer une révocation d'entitlement pendant un cycle de requête. Pour surfaces à haut risque—facturation, médical, juridique—préférez une revalidation explicite avant render.",
+        ],
+      },
+      {
+        heading: "Prouver l'isolation en production",
+        paragraphs: [
+          "Ajoutez des canary qui tentent de récupérer la completion cachée d'un autre tenant par guess de clé et recherche de similarité. Surveillez les falaises de hit-rate après déploiements du système de permissions. Les bugs de cache dans les UI IA sont des incidents de confidentialité, pas de simples glitches UX.",
+          "La vitesse compte, mais la personnalisation correcte est le produit. La politique d'invalidation appartient à la même revue de design que le prompt.",
+        ],
+        links: [
+          {
+            label: "MDN — HTTP caching",
+            url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching",
+          },
+          {
+            label: "Vercel — Caching",
+            url: "https://vercel.com/docs/infrastructure/data-cache",
+          },
+          {
+            label: "Cloudflare — Cache purge",
+            url: "https://developers.cloudflare.com/cache/how-to/purge-cache/",
+          },
+        ],
+      },
+    ],
+  },
 "designing-human-escalation-queues-for-agents": {
     title: "Concevoir des files d'escalade humaine pour les agents",
     excerpt: "Les agents qui n'escaladent jamais semblent autonomes—jusqu'à faire échouer les utilisateurs en silence. Les files d'escalade exigent règles de triage, context packs, SLA et boucles de feedback—pas un bouton générique 'parler à un humain' collé au chat.",
