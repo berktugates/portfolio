@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"permission-models-for-multi-tenant-ai-copilots": {
+    title: "Çok Kiracılı AI Copilot'lar için İzin Modelleri",
+    excerpt: "Sohbet iznini miras alıp veri ACL'sini yok sayan çok kiracılı AI copilott yanlış tenant'ı kendinden emin alıntılar. Tool çağrıları API'lerinizle aynı yetkilendirme yolunu kullanmalı—tenant, rol ve kaynak başına scoped.",
+    description: "Çok kiracılı AI copilottlar için staff seviyesi izin modelleri: tenant izolasyonu, tool-level authz, retrieval filtreleri, delegasyon kimlik bilgileri ve ajan fan-out'unda ayakta kalan denetim izleri.",
+    sections: [
+      {
+        heading: "Sohbet erişimi veri erişimi değildir",
+        paragraphs: [
+          "Copilot panelini açabilen kullanıcılar modelin retrieve edebileceği her dokümanı otomatik okumamalıdır. Konuşma üyeliğini kaynak entitlement'larından ayırın. Model yalnızca o tenant'ta o principal için sunucu tarafı politikanın izin verdiğini görür—prompt'un kullanıcının 'ihtiyacı var' dediğini değil.",
+          "Çapraz-tenant sızıntısı çoğu zaman retrieval'da başlar: tenant predicate'siz indekslenmiş embedding'ler veya yalnızca similarity ile sorgulanan paylaşılan vector koleksiyonları. Her index partition'ına ve her tool argüman doğrulamasına tenant id koyun.",
+        ],
+      },
+      {
+        heading: "Tool'ları public API gibi yetkilendirin",
+        paragraphs: [
+          "Her tool çağrısı REST veya gRPC handler'larınızla aynı authz middleware'inden geçmeli: kullanıcıyı (veya servis kimliğini) doğrula, tenant bağlamını çöz, RBAC/ABAC kontrol et, sonra least privilege ile çalıştır. Ajanlar satır düzeyi kontrolleri bypass eden uzun ömürlü tanrı token'ları tutmamalıdır.",
+          "Oturum veya tool çağrısı başına verilen kısa ömürlü, scoped kimlik bilgilerini tercih edin. Ajanlar fan-out yaptığında subject ve tenant claim'lerini iletin—planner adımı 'daha fazla bağlam istiyor' diye kapsamı genişletmeyin.",
+        ],
+        points: [
+          "Retrieval index'lerinde ve tool argümanlarında tenant predicate zorunlu tutun",
+          "Her tool çağrısı için API authz middleware'ini yeniden kullanın; gölge izin yolu yok",
+          "Paylaşılan servis tanrıları yerine kısa ömürlü scoped kimlik bilgisi verin",
+          "Her çağrı için principal, tenant, tool, kaynak ve kararı denetleyin",
+        ],
+      },
+      {
+        heading: "Ajanın hareket ettiği principal'ı modelleyin",
+        paragraphs: [
+          "Copilot'un son kullanıcı olarak mı, kısıtlı asistan rolü olarak mı, yoksa ayrı onaylı break-glass operatör olarak mı hareket ettiğine karar verin. Destek ve uyumluluk için farkı belgelendirin. Denetimsiz impersonation bekleyen bir güvenlik olaydır.",
+          "Prompt injection tool'ları yükseltmeye çalışabilir. Savunma modelin dışında politika uygulamaktır: deny list, role başına tool allow list ve yeni izin veremeyen çıktı filtreleri.",
+        ],
+      },
+      {
+        heading: "İzolasyonu sürekli kanıtlayın",
+        paragraphs: [
+          "Çalınmış conversation id ile çapraz-tenant retrieval ve tool çağrılarını deneyen otomatik testler ekleyin. Prompt veya index değişimlerinden sonra deny oranlarını ve beklenmeyen allow sıçramalarını izleyin. Çok kiracılı copilottlar demoda gürültülü, production'da sessizce başarısız olur—sessiz başarısızlıklara instrument edin.",
+          "İzinler ürün yüzeyidir. Arkalarında konuşan modelle aynı özenle tasarlayın.",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenAI — Safety best practices",
+            url: "https://platform.openai.com/docs/guides/safety-best-practices",
+          },
+          {
+            label: "Auth0 — Authorization patterns",
+            url: "https://auth0.com/docs/manage-users/access-control/rbac",
+          },
+        ],
+      },
+    ],
+  },
 "cache-invalidation-for-personalized-ai-uis": {
     title: "Kişiselleştirilmiş AI UI'lar için Cache Invalidation",
     excerpt: "Kişiselleştirilmiş AI yüzeyleri hız için embedding, completion ve UI parçalarını cache'ler—sonra yanlış kullanıcıya yanlış yanıt servis eder. Invalidation yalnızca TTL değil; kimlik, entitlement ve prompt sürümünü izlemelidir.",

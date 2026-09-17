@@ -21,6 +21,76 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "permission-models-for-multi-tenant-ai-copilots",
+    title: "Permission Models for Multi-Tenant AI Copilots",
+    excerpt: "A multi-tenant AI copilot that inherits chat permissions but ignores data ACLs will confidently quote the wrong tenant. Tool calls need the same authorization path as your APIs—scoped per tenant, role, and resource.",
+    description: "Staff-level permission models for multi-tenant AI copilots: tenant isolation, tool-level authz, retrieval filters, delegated credentials, and audit trails that survive agent fan-out.",
+    publishedAt: "2026-09-17",
+    readingMinutes: 7,
+    keywords: [
+      "multi-tenant AI",
+      "AI copilot permissions",
+      "authorization",
+      "RBAC ABAC",
+      "tool calling security",
+      "tenant isolation",
+    ],
+    socialThreadTr: [
+      "Çok kiracılı AI copilotta sohbet izni var diye veri ACL'sini atlamak yanlış tenant'ı alıntılatır. Tool çağrıları API ile aynı authz yolunu kullanmalı. 🧵",
+      "Tenant izolasyonu, tool yetkisi ve denetim izi. Detay: https://berktugberke.com/tr/blogs/permission-models-for-multi-tenant-ai-copilots",
+    ],
+    sections: [
+      {
+        heading: "Chat access is not data access",
+        paragraphs: [
+          "Users who can open a copilot panel must not automatically read every document the model can retrieve. Separate conversation membership from resource entitlements. The model sees only what a server-side policy allows for that principal in that tenant—never what a prompt claims the user needs.",
+          "Cross-tenant leakage often starts in retrieval: embeddings indexed without tenant predicates, or shared vector collections queried by similarity alone. Put tenant id in every index partition and every tool argument validation.",
+        ],
+      },
+      {
+        heading: "Authorize tools like public APIs",
+        paragraphs: [
+          "Every tool invocation should pass through the same authz middleware as your REST or gRPC handlers: authenticate the user (or service identity), resolve tenant context, check RBAC/ABAC, then execute with least privilege. Agents must not hold long-lived god tokens that bypass row-level checks.",
+          "Prefer short-lived, scoped credentials issued per session or per tool call. When agents fan out, propagate subject and tenant claims—do not widen scope because a planner step 'needs more context.'",
+        ],
+        points: [
+          "Enforce tenant predicates on retrieval indexes and tool arguments",
+          "Reuse API authz middleware for every tool call; no shadow permission path",
+          "Issue short-lived scoped credentials instead of shared service gods",
+          "Audit principal, tenant, tool, resource, and decision for each call",
+        ],
+      },
+      {
+        heading: "Model the principal the agent acts as",
+        paragraphs: [
+          "Decide whether the copilot acts as the end user, as a constrained assistant role, or as a break-glass operator with separate approval. Document the difference for support and compliance. Impersonation without audit is a security incident waiting to happen.",
+          "Prompt injection can try to elevate tools. Defense is policy enforcement outside the model: deny lists, allow lists of tools per role, and output filters that cannot grant new permissions.",
+        ],
+      },
+      {
+        heading: "Prove isolation continuously",
+        paragraphs: [
+          "Add automated tests that attempt cross-tenant retrieval and tool calls with stolen conversation ids. Monitor denial rates and unexpected allow spikes after prompt or index changes. Multi-tenant copilots fail loudly in demos and quietly in production—instrument for the quiet failures.",
+          "Permissions are product surface. Design them with the same care as the model that speaks behind them.",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenAI — Safety best practices",
+            url: "https://platform.openai.com/docs/guides/safety-best-practices",
+          },
+          {
+            label: "Auth0 — Authorization patterns",
+            url: "https://auth0.com/docs/manage-users/access-control/rbac",
+          },
+        ],
+      },
+    ],
+  },
+    {
     slug: "cache-invalidation-for-personalized-ai-uis",
     title: "Cache Invalidation for Personalized AI UIs",
     excerpt: "Personalized AI surfaces cache embeddings, completions, and UI fragments for speed—then serve the wrong user the wrong answer. Invalidation must track identity, entitlements, and prompt versions, not just TTL.",

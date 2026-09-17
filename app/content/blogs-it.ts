@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"permission-models-for-multi-tenant-ai-copilots": {
+    title: "Modelli di permesso per copiloti AI multi-tenant",
+    excerpt: "Un copilota AI multi-tenant che eredita i permessi chat ma ignora le ACL dati citerà con sicurezza il tenant sbagliato. Le tool call devono usare lo stesso percorso di autorizzazione delle vostre API—scoped per tenant, ruolo e risorsa.",
+    description: "Modelli di permesso staff per copiloti AI multi-tenant: isolamento tenant, authz a livello tool, filtri di retrieval, credenziali delegate e audit trail che sopravvivono al fan-out degli agent.",
+    sections: [
+      {
+        heading: "L'accesso chat non è accesso ai dati",
+        paragraphs: [
+          "Gli utenti che possono aprire un pannello copilota non devono leggere automaticamente ogni documento che il modello può recuperare. Separate l'appartenenza alla conversazione dagli entitlement di risorsa. Il modello vede solo ciò che una policy lato server consente per quel principal in quel tenant—mai ciò che un prompt afferma che l'utente 'abbia bisogno'.",
+          "Il leak cross-tenant spesso inizia nel retrieval: embedding indicizzati senza predicati tenant, o collezioni vettoriali condivise interrogate solo per similarità. Mettete il tenant id in ogni partizione di indice e in ogni validazione di argomenti tool.",
+        ],
+      },
+      {
+        heading: "Autorizzare i tool come API pubbliche",
+        paragraphs: [
+          "Ogni invocazione tool deve passare dallo stesso middleware authz dei vostri handler REST o gRPC: autenticare l'utente (o l'identità di servizio), risolvere il contesto tenant, controllare RBAC/ABAC, poi eseguire con least privilege. Gli agent non devono trattenere token dio di lunga durata che bypassano i controlli row-level.",
+          "Preferire credenziali short-lived e scoped emesse per sessione o per tool call. Quando gli agent fan-out, propagare claim subject e tenant—non ampliare lo scope perché uno step del planner 'ha bisogno di più contesto.'",
+        ],
+        points: [
+          "Applicare predicati tenant su indici di retrieval e argomenti tool",
+          "Riutilizzare il middleware authz API per ogni tool call; nessun percorso di permesso ombra",
+          "Emettere credenziali short-lived scoped invece di dei di servizio condivisi",
+          "Auditare principal, tenant, tool, risorsa e decisione per ogni chiamata",
+        ],
+      },
+      {
+        heading: "Modellare il principal per cui agisce l'agent",
+        paragraphs: [
+          "Decidere se il copilota agisce come utente finale, come ruolo assistente vincolato, o come operatore break-glass con approvazione separata. Documentare la differenza per support e compliance. Impersonation senza audit è un incident di sicurezza in attesa.",
+          "Il prompt injection può tentare di elevare i tool. La difesa è enforcement di policy fuori dal modello: deny list, allow list di tool per ruolo e filtri di output che non possono concedere nuovi permessi.",
+        ],
+      },
+      {
+        heading: "Dimostrare l'isolamento in continuo",
+        paragraphs: [
+          "Aggiungere test automatici che tentano retrieval e tool call cross-tenant con conversation id rubati. Monitorare tassi di denial e spike di allow inattesi dopo cambi di prompt o indice. I copiloti multi-tenant falliscono rumorosamente in demo e silenziosamente in produzione—strumentate per i fallimenti silenziosi.",
+          "I permessi sono superficie di prodotto. Progettateli con la stessa cura del modello che parla dietro di essi.",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenAI — Safety best practices",
+            url: "https://platform.openai.com/docs/guides/safety-best-practices",
+          },
+          {
+            label: "Auth0 — Authorization patterns",
+            url: "https://auth0.com/docs/manage-users/access-control/rbac",
+          },
+        ],
+      },
+    ],
+  },
 "cache-invalidation-for-personalized-ai-uis": {
     title: "Invalidazione cache per UI AI personalizzate",
     excerpt: "Le superfici AI personalizzate mettono in cache embedding, completion e frammenti UI per la velocità—poi servono la risposta sbagliata all'utente sbagliato. L'invalidazione deve tracciare identità, entitlement e versioni di prompt, non solo il TTL.",

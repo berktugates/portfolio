@@ -1,8 +1,30 @@
 {
   "version": 1,
   "site": "https://berktugberke.com",
-  "generatedAt": "2026-09-16T10:40:53.040Z",
+  "generatedAt": "2026-09-17T10:49:09.418Z",
   "posts": [
+    {
+      "id": "permission-models-for-multi-tenant-ai-copilots",
+      "slug": "permission-models-for-multi-tenant-ai-copilots",
+      "title": "Permission Models for Multi-Tenant AI Copilots",
+      "url": "https://berktugberke.com/blogs/permission-models-for-multi-tenant-ai-copilots",
+      "publishedAt": "2026-09-17",
+      "tags": [
+        "multi-tenant AI",
+        "AI copilot permissions",
+        "authorization",
+        "RBAC ABAC",
+        "tool calling security",
+        "tenant isolation"
+      ],
+      "excerpt": "A multi-tenant AI copilot that inherits chat permissions but ignores data ACLs will confidently quote the wrong tenant. Tool calls need the same authorization path as your APIs—scoped per tenant, role, and resource.",
+      "bodyPlain": "Users who can open a copilot panel must not automatically read every document the model can retrieve. Separate conversation membership from resource entitlements. The model sees only what a server-side policy allows for that principal in that tenant—never what a prompt claims the user needs.\n\nCross-tenant leakage often starts in retrieval: embeddings indexed without tenant predicates, or shared vector collections queried by similarity alone. Put tenant id in every index partition and every tool argument validation.\n\nEvery tool invocation should pass through the same authz middleware as your REST or gRPC handlers: authenticate the user (or service identity), resolve tenant context, check RBAC/ABAC, then execute with least privilege. Agents must not hold long-lived god tokens that bypass row-level checks.\n\nPrefer short-lived, scoped credentials issued per session or per tool call. When agents fan out, propagate subject and tenant claims—do not widen scope because a planner step 'needs more context.'\n\nEnforce tenant predicates on retrieval indexes and tool arguments\n\nReuse API authz middleware for every tool call; no shadow permission path\n\nIssue short-lived scoped credentials instead of shared service gods\n\nAudit principal, tenant, tool, resource, and decision for each call\n\nDecide whether the copilot acts as the end user, as a constrained assistant role, or as a break-glass operator with separate approval. Document the difference for support and compliance. Impersonation without audit is a security incident waiting to happen.\n\nPrompt injection can try to elevate tools. Defense is policy enforcement outside the model: deny lists, allow lists of tools per role, and output filters that cannot grant new permissions.\n\nAdd automated tests that attempt cross-tenant retrieval and tool calls with stolen conversation ids. Monitor denial rates and unexpected allow spikes after prompt or index changes. Multi-tenant copilots fail loudly in demos and quietly in production—instrument for the quiet failures.\n\nPermissions are product surface. Design them with the same care as the model that speaks behind them.",
+      "contentHash": "6d52a3baa3840b4e",
+      "socialThreadTr": [
+        "Çok kiracılı AI copilotta sohbet izni var diye veri ACL'sini atlamak yanlış tenant'ı alıntılatır. Tool çağrıları API ile aynı authz yolunu kullanmalı. 🧵",
+        "Tenant izolasyonu, tool yetkisi ve denetim izi. Detay: https://berktugberke.com/tr/blogs/permission-models-for-multi-tenant-ai-copilots"
+      ]
+    },
     {
       "id": "cache-invalidation-for-personalized-ai-uis",
       "slug": "cache-invalidation-for-personalized-ai-uis",

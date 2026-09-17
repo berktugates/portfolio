@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"permission-models-for-multi-tenant-ai-copilots": {
+    title: "多租户 AI 副驾驶的权限模型",
+    excerpt: "继承聊天权限却忽略数据 ACL 的多租户 AI 副驾驶会自信地引用错误租户。工具调用需要与你们的 API 走同一条授权路径——按租户、角色与资源限定范围。",
+    description: "多租户 AI 副驾驶的 staff 级权限模型：租户隔离、工具级授权、检索过滤、委托凭证，以及能撑过智能体扇出的审计轨迹。",
+    sections: [
+      {
+        heading: "聊天访问不等于数据访问",
+        paragraphs: [
+          "能打开副驾驶面板的用户，不得自动读取模型可检索的每份文档。把会话成员与资源权益分开。模型只看到该租户下该主体经服务端策略允许的内容——绝不是提示词声称用户「需要」的内容。",
+          "跨租户泄漏常始于检索：无租户谓词的嵌入索引，或仅按相似度查询的共享向量集合。把租户 id 放进每个索引分区与每次工具参数校验。",
+        ],
+      },
+      {
+        heading: "像公共 API 一样授权工具",
+        paragraphs: [
+          "每次工具调用都应经过与 REST 或 gRPC 处理器相同的授权中间件：认证用户（或服务身份）、解析租户上下文、检查 RBAC/ABAC，再以最小权限执行。智能体不得持有绕过行级检查的长期上帝令牌。",
+          "优先使用按会话或按工具调用签发的短时、限定范围凭证。智能体扇出时传播主体与租户声明——不要因为规划步骤「需要更多上下文」就扩大范围。",
+        ],
+        points: [
+          "在检索索引与工具参数上强制租户谓词",
+          "每次工具调用复用 API 授权中间件；没有影子权限路径",
+          "签发短时限定凭证，而非共享服务上帝账号",
+          "审计每次调用的主体、租户、工具、资源与决策",
+        ],
+      },
+      {
+        heading: "建模智能体所扮演的主体",
+        paragraphs: [
+          "决定副驾驶是以终端用户、受限助理角色，还是需单独审批的紧急操作者身份行事。为支持与合规记录差异。无审计的冒充是迟早的安全事件。",
+          "提示注入可能试图提升工具。防御是在模型外执行策略：拒绝列表、按角色的工具允许列表，以及无法授予新权限的输出过滤。",
+        ],
+      },
+      {
+        heading: "持续证明隔离",
+        paragraphs: [
+          "加入自动化测试，用窃取的会话 id 尝试跨租户检索与工具调用。监控提示或索引变更后的拒绝率与意外允许尖峰。多租户副驾驶在演示中吵闹失败、在生产中安静失败——为安静失败做埋点。",
+          "权限是产品表面。用与背后说话的模型同等用心来设计。",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenAI — Safety best practices",
+            url: "https://platform.openai.com/docs/guides/safety-best-practices",
+          },
+          {
+            label: "Auth0 — Authorization patterns",
+            url: "https://auth0.com/docs/manage-users/access-control/rbac",
+          },
+        ],
+      },
+    ],
+  },
 "cache-invalidation-for-personalized-ai-uis": {
     title: "个性化 AI 界面的缓存失效",
     excerpt: "个性化 AI 界面为速度缓存嵌入、补全与 UI 片段——然后把错误答案送给错误用户。失效必须跟踪身份、权益与提示版本，而不仅是 TTL。",

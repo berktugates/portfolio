@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"permission-models-for-multi-tenant-ai-copilots": {
+    title: "Berechtigungsmodelle für Multi-Tenant-AI-Copilots",
+    excerpt: "Ein Multi-Tenant-AI-Copilot der Chat-Permissions erbt aber Data-ACLs ignoriert, zitiert selbstbewusst den falschen Tenant. Tool-Calls brauchen denselben Authorization-Pfad wie Ihre APIs—scoped pro Tenant, Rolle und Resource.",
+    description: "Staff-Level Permission Models für Multi-Tenant-AI-Copilots: Tenant-Isolation, Tool-Level-Authz, Retrieval-Filter, delegierte Credentials und Audit-Trails die Agent-Fan-out überleben.",
+    sections: [
+      {
+        heading: "Chat-Zugang ist kein Data-Zugang",
+        paragraphs: [
+          "Nutzer die ein Copilot-Panel öffnen können, dürfen nicht automatisch jedes Dokument lesen das das Modell retrieve kann. Trennen Sie Conversation-Membership von Resource-Entitlements. Das Modell sieht nur was eine server-seitige Policy für diesen Principal in diesem Tenant erlaubt—nie was ein Prompt behauptet der User brauche.",
+          "Cross-Tenant-Leakage beginnt oft im Retrieval: Embeddings ohne Tenant-Predicates indexiert, oder shared Vector-Collections nur per Similarity abgefragt. Tenant-Id in jede Index-Partition und jede Tool-Argument-Validation setzen.",
+        ],
+      },
+      {
+        heading: "Tools wie öffentliche APIs autorisieren",
+        paragraphs: [
+          "Jeder Tool-Aufruf sollte dieselbe Authz-Middleware wie Ihre REST- oder gRPC-Handler durchlaufen: User (oder Service-Identity) authentifizieren, Tenant-Context resolven, RBAC/ABAC prüfen, dann least privilege ausführen. Agents dürfen keine langlebigen God-Tokens halten die Row-Level-Checks bypassen.",
+          "Kurzlebige, scoped Credentials pro Session oder Tool-Call bevorzugen. Bei Agent-Fan-out Subject- und Tenant-Claims propagieren—Scope nicht weiten weil ein Planner-Schritt 'mehr Context braucht.'",
+        ],
+        points: [
+          "Tenant-Predicates auf Retrieval-Indexes und Tool-Argumenten erzwingen",
+          "API-Authz-Middleware für jeden Tool-Call wiederverwenden; kein Shadow-Permission-Pfad",
+          "Kurzlebige scoped Credentials statt shared Service-Gods ausstellen",
+          "Principal, Tenant, Tool, Resource und Decision pro Call auditieren",
+        ],
+      },
+      {
+        heading: "Den Principal modellieren als den der Agent handelt",
+        paragraphs: [
+          "Entscheiden ob der Copilot als Endnutzer, als constrained Assistant-Rolle oder als Break-Glass-Operator mit separater Freigabe handelt. Unterschied für Support und Compliance dokumentieren. Impersonation ohne Audit ist ein Security-Incident der wartet.",
+          "Prompt Injection kann Tools elevaten wollen. Defense ist Policy-Enforcement außerhalb des Modells: Deny-Lists, Allow-Lists von Tools pro Rolle und Output-Filter die keine neuen Permissions gewähren können.",
+        ],
+      },
+      {
+        heading: "Isolation kontinuierlich beweisen",
+        paragraphs: [
+          "Automatisierte Tests hinzufügen die Cross-Tenant-Retrieval und Tool-Calls mit gestohlenen Conversation-Ids versuchen. Denial-Rates und unerwartete Allow-Spikes nach Prompt- oder Index-Änderungen monitoren. Multi-Tenant-Copilots scheitern laut in Demos und leise in Production—instrumentieren Sie für die leisen Failures.",
+          "Permissions sind Produkt-Surface. Designen Sie sie mit derselben Sorgfalt wie das Modell das dahinter spricht.",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenAI — Safety best practices",
+            url: "https://platform.openai.com/docs/guides/safety-best-practices",
+          },
+          {
+            label: "Auth0 — Authorization patterns",
+            url: "https://auth0.com/docs/manage-users/access-control/rbac",
+          },
+        ],
+      },
+    ],
+  },
 "cache-invalidation-for-personalized-ai-uis": {
     title: "Cache-Invalidierung für personalisierte AI-UIs",
     excerpt: "Personalisierte AI-Surfaces cachen Embeddings, Completions und UI-Fragmente für Speed—und servieren dann dem falschen User die falsche Antwort. Invalidierung muss Identity, Entitlements und Prompt-Versionen tracken, nicht nur TTL.",
