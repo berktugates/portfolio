@@ -13,6 +13,8 @@
     "postbuild": "node scripts/assert-no-gundem-links.mjs",
     "test:unit": "node --import tsx --test app/lib/content-safety.test.ts app/lib/image-license.test.ts",
     "check:queues": "node --import tsx scripts/check-queue-safety.ts",
+    "gundem:seed-blob": "node --import tsx scripts/seed-gundem-blob.ts",
+    "gundem:verify-blob": "node --import tsx scripts/verify-gundem-blob.ts",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

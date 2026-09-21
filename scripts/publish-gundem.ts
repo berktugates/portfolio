@@ -1,13 +1,24 @@
 import { readdir, readFile, unlink } from "node:fs/promises";
 import { resolve } from "node:path";
-import { put } from "@vercel/blob";
 import { assessContentSafety } from "../app/lib/content-safety";
 import { validateLicensedImage } from "../app/lib/image-license";
-import { haberlerArticlePath, HABERLER_ORIGIN } from "../app/lib/gundem/hosts";
 import type { GundemBriefing } from "../app/lib/gundem/types";
+import { publishGundemBriefingToBlob } from "./lib/gundem-blob-publish";
 
 const root = resolve(import.meta.dirname, "..");
 const queueDir = resolve(root, "content/gundem-queue");
+
+async function blobBriefingIfExists(slug: string): Promise<GundemBriefing | null> {
+  const base = process.env.BLOB_PUBLIC_BASE_URL?.replace(/\/$/, "");
+  if (!base) return null;
+  try {
+    const res = await fetch(`${base}/gundem/${slug}.json`);
+    if (!res.ok) return null;
+    return (await res.json()) as GundemBriefing;
+  } catch {
+    return null;
+  }
+}
 
 async function main() {
   const files = (await readdir(queueDir)).filter((name) => name.endsWith(".json")).sort();
@@ -17,7 +28,8 @@ async function main() {
   }
 
   const selected = files[0];
-  const draft = JSON.parse(await readFile(resolve(queueDir, selected), "utf8")) as GundemBriefing;
+  const queuePath = resolve(queueDir, selected);
+  const draft = JSON.parse(await readFile(queuePath, "utf8")) as GundemBriefing;
 
   const body = draft.bodyMarkdown ?? "";
   const safety = assessContentSafety({
@@ -38,72 +50,16 @@ async function main() {
     process.exit(1);
   }
 
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    console.error("BLOB_READ_WRITE_TOKEN is required for gundem publish.");
-    process.exit(1);
+  const existing = await blobBriefingIfExists(draft.slug);
+  if (existing?.dateModified === draft.dateModified && existing?.title === draft.title) {
+    await unlink(queuePath);
+    console.log(`Blob already has ${draft.slug} (${draft.dateModified}); removed queue file.`);
+    return;
   }
 
-  await put(`gundem/${draft.slug}.json`, JSON.stringify(draft), {
-    access: "public",
-    contentType: "application/json",
-    addRandomSuffix: false,
-  });
-
-  const indexUrl = process.env.BLOB_PUBLIC_BASE_URL
-    ? `${process.env.BLOB_PUBLIC_BASE_URL.replace(/\/$/, "")}/gundem/index.json`
-    : null;
-  let index: { posts: GundemBriefing[] } = { posts: [] };
-  if (indexUrl) {
-    try {
-      const res = await fetch(indexUrl);
-      if (res.ok) index = (await res.json()) as { posts: GundemBriefing[] };
-    } catch {
-      /* start fresh */
-    }
-  }
-  const merged = [draft, ...index.posts.filter((item) => item.slug !== draft.slug)].sort((a, b) =>
-    b.publishedAt.localeCompare(a.publishedAt),
-  );
-  await put("gundem/index.json", JSON.stringify({ posts: merged }), {
-    access: "public",
-    contentType: "application/json",
-    addRandomSuffix: false,
-  });
-
-  await unlink(resolve(queueDir, selected));
+  await publishGundemBriefingToBlob(draft, root);
+  await unlink(queuePath);
   console.log(`Published gundem briefing ${draft.slug} to Blob.`);
-
-  const revalidateUrl = process.env.REVALIDATE_URL;
-  const secret = process.env.REVALIDATE_SECRET;
-  if (revalidateUrl && secret) {
-    const res = await fetch(revalidateUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${secret}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        paths: ["/gundem", `/gundem/${draft.slug}`, "/sitemap-gundem.xml", "/gundem/rss.xml"],
-        tags: ["gundem"],
-      }),
-    });
-    console.log(`Revalidate status: ${res.status}`);
-  }
-
-  const indexHost = process.env.HABERLER_HOST ?? new URL(HABERLER_ORIGIN).host;
-  if (process.env.INDEXNOW_KEY) {
-    const { execFileSync } = await import("node:child_process");
-    const articlePath = haberlerArticlePath(draft.slug);
-    execFileSync(
-      "node",
-      [
-        "scripts/indexnow-submit.mjs",
-        `https://${indexHost}${articlePath}`,
-        `https://${indexHost}/`,
-      ],
-      { stdio: "inherit", cwd: root },
-    );
-  }
 }
 
 main().catch((error) => {

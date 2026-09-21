@@ -41,7 +41,17 @@ git log --since=90.days --oneline -- app/data/blogs.ts | wc -l
 - `content/blog-queue/*.json` sayısı: 0 (2026-09-21)
 - `content/gundem-queue/*.json` sayısı: 0 (2026-09-21; boş kuyruk → `publish-gundem` exit 0)
 
-**CI:** [Publish gundem briefing](https://github.com/berktugates/portfolio/actions/workflows/publish-gundem.yml) — `workflow_dispatch` doğrulandı (Run #35651699963, success).
+**CI:** [Publish gundem briefing](https://github.com/berktugates/portfolio/actions/workflows/publish-gundem.yml) — `workflow_dispatch` doğrulandı (Run #35653676497, success).
+
+## Faz 4 (gündem uçtan uca)
+
+| DoD | Durum |
+|-----|--------|
+| T4-01…04,07,09,11,14,27 (E2E) | `pnpm test:e2e` — plan-seo-gundem |
+| 1 gerçek brifing **prod Blob** | `Seed gundem Blob` workflow + `pnpm gundem:verify-blob` |
+| Kuyruk → publish | `content/gundem-queue/*.json` + `publish-gundem` (idempotent skip) |
+
+İlk Blob seed: Actions → **Seed gundem Blob (Faz 4)** → Run workflow.
 
 ## IndexNow (repo’da hazır)
 
