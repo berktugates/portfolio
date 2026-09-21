@@ -15,6 +15,7 @@ export async function publishGundemBriefingToBlob(
     access: "public",
     contentType: "application/json",
     addRandomSuffix: false,
+    allowOverwrite: true,
   });
 
   const indexUrl = process.env.BLOB_PUBLIC_BASE_URL
@@ -36,6 +37,7 @@ export async function publishGundemBriefingToBlob(
     access: "public",
     contentType: "application/json",
     addRandomSuffix: false,
+    allowOverwrite: true,
   });
 
   const revalidateUrl = process.env.REVALIDATE_URL;
