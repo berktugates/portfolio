@@ -1,4 +1,5 @@
 import type { LicensedImage } from "../image-license";
+import type { GundemCategory } from "./editorial";
 
 export type GundemSource = {
   url: string;
@@ -16,5 +17,7 @@ export type GundemBriefing = {
   image: LicensedImage;
   trendQuery: string;
   angle: string;
+  /** Ulusal gündem şeridi; bilişim zorunlu değil. */
+  category?: GundemCategory;
   lang: "tr";
 };

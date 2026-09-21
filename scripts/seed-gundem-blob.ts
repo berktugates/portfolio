@@ -3,11 +3,13 @@ import { resolve } from "node:path";
 import { assessContentSafety } from "../app/lib/content-safety";
 import { validateLicensedImage } from "../app/lib/image-license";
 import type { GundemBriefing } from "../app/lib/gundem/types";
+import { GUNDEM_EDITORIAL_MISSION } from "../app/lib/gundem/editorial";
 import { publishGundemBriefingToBlob } from "./lib/gundem-blob-publish";
 
 const root = resolve(import.meta.dirname, "..");
 
 async function main() {
+  console.log(`Gundem seed mission: ${GUNDEM_EDITORIAL_MISSION}`);
   const raw = await readFile(resolve(root, "content/gundem-seed.json"), "utf8");
   const { posts } = JSON.parse(raw) as { posts: GundemBriefing[] };
   if (!posts?.length) {

@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getGundemBySlug, getGundemSlugs } from "../lib/gundem/catalog";
 import { validateLicensedImage } from "../lib/image-license";
+import { GUNDEM_DETAIL_ANALYSIS_NOTE, GUNDEM_HEADER_ROLE } from "../lib/gundem/editorial";
 import { haberlerArticlePath, haberlerUrl } from "../lib/gundem/hosts";
 import { AUTHOR_ID, SITE_NAME, jsonLd } from "../lib/seo";
 import { SiteFooter } from "./site-footer";
@@ -89,7 +90,7 @@ export async function GundemDetailView({ params }: Props) {
       <SiteHeader
         homeHref={haberlerUrl("/")}
         name={SITE_NAME}
-        role="Software Engineer"
+        role={GUNDEM_HEADER_ROLE}
         ariaLabel="Ana sayfa"
         imageAlt={SITE_NAME}
       />
@@ -108,6 +109,7 @@ export async function GundemDetailView({ params }: Props) {
               <time dateTime={briefing.publishedAt}>{briefing.publishedAt}</time>
             </p>
             <p className="mt-5 text-lg leading-8 text-zinc-600 dark:text-zinc-300">{briefing.excerpt}</p>
+            <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">{GUNDEM_DETAIL_ANALYSIS_NOTE}</p>
           </header>
           <figure className="mb-10 overflow-hidden rounded-xl">
             <Image

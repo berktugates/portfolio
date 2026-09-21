@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
  * Reads Trends/KWP CSV exports and writes skeleton JSON into content/gundem-queue/.
+ * Ulusal gündem (yalnızca bilişim değil); insan editöryal analiz gerekir.
  * No auto-publish — human review required.
  *
  * Usage: node scripts/gundem-from-csv.mjs path/to/trends.csv
@@ -40,7 +41,9 @@ for (let i = 1; i < lines.length; i++) {
     slug: slug || `gundem-${i}`,
     trendQuery,
     kwpVolume,
-    angle: "Bu trend yazılım ekiplerini nasıl etkiler?",
+    angle:
+      "Türkiye'de bu gündem maddesi hane halkını, iş dünyasını ve kamuoyunu nasıl etkiler? Okur için ne anlama gelir?",
+    category: "diger",
     sources: [],
     draftBody: "",
   };

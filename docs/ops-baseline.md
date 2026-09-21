@@ -43,6 +43,13 @@ git log --since=90.days --oneline -- app/data/blogs.ts | wc -l
 
 **CI:** [Publish gundem briefing](https://github.com/berktugates/portfolio/actions/workflows/publish-gundem.yml) — `workflow_dispatch` doğrulandı (Run #35653676497, success).
 
+## Haberler editöryal kapsam
+
+- **Kitle:** Türkiye geneli; yalnızca bilişim profesyonelleri değil.
+- **Konular:** Ekonomi, siyaset, toplum, sağlık, spor, kültür, bilim, bilişim (eşit şeritler).
+- **Biçim:** Gündem + kısa analiz; Trends/KWP ile talep odaklı konu seçimi.
+- **Dokümantasyon:** `docs/gundem-editorial.md`, kod: `app/lib/gundem/editorial.ts`.
+
 ## Faz 4 (gündem uçtan uca)
 
 | DoD | Durum |

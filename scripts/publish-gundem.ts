@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { assessContentSafety } from "../app/lib/content-safety";
 import { validateLicensedImage } from "../app/lib/image-license";
 import type { GundemBriefing } from "../app/lib/gundem/types";
+import { GUNDEM_EDITORIAL_MISSION } from "../app/lib/gundem/editorial";
 import { publishGundemBriefingToBlob } from "./lib/gundem-blob-publish";
 
 const root = resolve(import.meta.dirname, "..");
@@ -23,7 +24,7 @@ async function blobBriefingIfExists(slug: string): Promise<GundemBriefing | null
 async function main() {
   const files = (await readdir(queueDir)).filter((name) => name.endsWith(".json")).sort();
   if (files.length === 0) {
-    console.log("Gundem queue empty; nothing to publish.");
+    console.log(`Gundem queue empty; nothing to publish. (${GUNDEM_EDITORIAL_MISSION})`);
     return;
   }
 

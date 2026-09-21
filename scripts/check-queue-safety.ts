@@ -1,3 +1,4 @@
+/** Gündem kuyruğu: ulusal kapsam — docs/gundem-editorial.md, app/lib/gundem/editorial.ts */
 import { readdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { assessContentSafety } from "../app/lib/content-safety";

@@ -1,4 +1,5 @@
 import { getAllGundemBriefings } from "../../lib/gundem/catalog";
+import { GUNDEM_RSS_DESCRIPTION } from "../../lib/gundem/editorial";
 import { haberlerArticlePath, haberlerUrl } from "../../lib/gundem/hosts";
 import { SITE_NAME } from "../../lib/seo";
 
@@ -31,7 +32,7 @@ export async function GET() {
   <channel>
     <title>${escapeXml(SITE_NAME)} — Gündem</title>
     <link>${haberlerUrl("/")}</link>
-    <description>Türkiye teknoloji brifingleri</description>
+    <description>${escapeXml(GUNDEM_RSS_DESCRIPTION)}</description>
     ${items}
   </channel>
 </rss>`;

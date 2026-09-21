@@ -143,15 +143,15 @@ const COPY: Record<Locale, SiteAssistantCopy> = {
 export type AssistantSurface = "default" | "gundem";
 
 const gundemTrSuggestions = [
-  "Bu konuda ürün nasıl kurulur?",
-  "Remote çalışır mısın?",
-  "İletişim e-postası nedir?",
+  "Bu gündem maddesi okuyucuyu nasıl etkiler?",
+  "Kaynaklar nereden geliyor?",
+  "Bu site ajans haberi mi?",
 ];
 
 const gundemEnSuggestions = [
-  "How would you shape a product for this topic?",
-  "Do you work remotely?",
-  "What is the contact email?",
+  "How does this briefing affect everyday readers in Turkey?",
+  "Where do the sources come from?",
+  "Is this wire news or original analysis?",
 ];
 
 export function getSiteAssistantCopy(
