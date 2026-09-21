@@ -2,6 +2,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { assessContentSafety } from "../app/lib/content-safety";
+import { extractBlogQueuePlainText } from "./lib/blog-queue-body";
 
 const root = resolve(import.meta.dirname, "..");
 
@@ -16,11 +17,13 @@ async function scanDir(relative: string) {
   for (const name of names) {
     const raw = JSON.parse(await readFile(resolve(dir, name), "utf8")) as Record<string, unknown>;
     const body =
-      typeof raw.draftBody === "string"
-        ? raw.draftBody
-        : typeof raw.bodyMarkdown === "string"
-          ? raw.bodyMarkdown
-          : JSON.stringify(raw.sections ?? raw);
+      relative === "content/blog-queue"
+        ? extractBlogQueuePlainText(raw)
+        : typeof raw.draftBody === "string"
+          ? raw.draftBody
+          : typeof raw.bodyMarkdown === "string"
+            ? raw.bodyMarkdown
+            : JSON.stringify(raw.sections ?? raw);
     const title = String(raw.title ?? name);
     const result = assessContentSafety({
       title,

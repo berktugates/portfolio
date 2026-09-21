@@ -1,0 +1,372 @@
+{
+  "slug": "logging-llm-interactions-without-hoarding-pii",
+  "title": "Logging LLM Interactions Without Hoarding PII",
+  "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
+  "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+  "readingMinutes": 7,
+  "keywords": [
+    "LLM logging",
+    "PII",
+    "privacy engineering",
+    "observability",
+    "compliance"
+  ],
+  "socialThreadTr": [
+    "Copilot logları PII biriktirmeden tutulabilir; ham sohbet varsayılan olmamalı. 🧵",
+    "Katmanlı saklama ve redaksiyon. Detay: https://berktugberke.com/tr/blogs/logging-llm-interactions-without-hoarding-pii"
+  ],
+  "sections": [
+    {
+      "heading": "Logs are not a free archive",
+      "paragraphs": [
+        "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
+        "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule."
+      ]
+    },
+    {
+      "heading": "Tier transcripts by sensitivity",
+      "paragraphs": [
+        "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
+        "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job."
+      ],
+      "points": [
+        "Log prompts and outputs with redaction tiers, not raw dumps by default",
+        "Separate PII-bearing transcripts from aggregate quality metrics",
+        "Define retention per tier with legal and product sign-off",
+        "Alert on export volume spikes like any other data exfil path"
+      ]
+    },
+    {
+      "heading": "Sample for quality, aggregate for trends",
+      "paragraphs": [
+        "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
+        "Aggregate token usage and error codes without storing user text when possible."
+      ]
+    },
+    {
+      "heading": "Operate exports as security events",
+      "paragraphs": [
+        "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
+        "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March."
+      ],
+      "links": [
+        {
+          "label": "OWASP — LLM Top 10",
+          "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+        },
+        {
+          "label": "OpenAI — Safety best practices",
+          "url": "https://platform.openai.com/docs/guides/safety-best-practices"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Logging LLM Interactions Without Hoarding PII",
+      "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
+      "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+      "sections": [
+        {
+          "heading": "Logs are not a free archive",
+          "paragraphs": [
+            "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
+            "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule."
+          ]
+        },
+        {
+          "heading": "Tier transcripts by sensitivity",
+          "paragraphs": [
+            "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
+            "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job."
+          ],
+          "points": [
+            "Log prompts and outputs with redaction tiers, not raw dumps by default",
+            "Separate PII-bearing transcripts from aggregate quality metrics",
+            "Define retention per tier with legal and product sign-off",
+            "Alert on export volume spikes like any other data exfil path"
+          ]
+        },
+        {
+          "heading": "Sample for quality, aggregate for trends",
+          "paragraphs": [
+            "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
+            "Aggregate token usage and error codes without storing user text when possible."
+          ]
+        },
+        {
+          "heading": "Operate exports as security events",
+          "paragraphs": [
+            "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
+            "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March."
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenAI — Safety best practices",
+              "url": "https://platform.openai.com/docs/guides/safety-best-practices"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Logging LLM Interactions Without Hoarding PII",
+      "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
+      "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+      "sections": [
+        {
+          "heading": "Logs are not a free archive",
+          "paragraphs": [
+            "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
+            "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule."
+          ]
+        },
+        {
+          "heading": "Tier transcripts by sensitivity",
+          "paragraphs": [
+            "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
+            "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job."
+          ],
+          "points": [
+            "Log prompts and outputs with redaction tiers, not raw dumps by default",
+            "Separate PII-bearing transcripts from aggregate quality metrics",
+            "Define retention per tier with legal and product sign-off",
+            "Alert on export volume spikes like any other data exfil path"
+          ]
+        },
+        {
+          "heading": "Sample for quality, aggregate for trends",
+          "paragraphs": [
+            "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
+            "Aggregate token usage and error codes without storing user text when possible."
+          ]
+        },
+        {
+          "heading": "Operate exports as security events",
+          "paragraphs": [
+            "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
+            "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March."
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenAI — Safety best practices",
+              "url": "https://platform.openai.com/docs/guides/safety-best-practices"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Logging LLM Interactions Without Hoarding PII",
+      "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
+      "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+      "sections": [
+        {
+          "heading": "Logs are not a free archive",
+          "paragraphs": [
+            "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
+            "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule."
+          ]
+        },
+        {
+          "heading": "Tier transcripts by sensitivity",
+          "paragraphs": [
+            "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
+            "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job."
+          ],
+          "points": [
+            "Log prompts and outputs with redaction tiers, not raw dumps by default",
+            "Separate PII-bearing transcripts from aggregate quality metrics",
+            "Define retention per tier with legal and product sign-off",
+            "Alert on export volume spikes like any other data exfil path"
+          ]
+        },
+        {
+          "heading": "Sample for quality, aggregate for trends",
+          "paragraphs": [
+            "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
+            "Aggregate token usage and error codes without storing user text when possible."
+          ]
+        },
+        {
+          "heading": "Operate exports as security events",
+          "paragraphs": [
+            "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
+            "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March."
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenAI — Safety best practices",
+              "url": "https://platform.openai.com/docs/guides/safety-best-practices"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Logging LLM Interactions Without Hoarding PII",
+      "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
+      "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+      "sections": [
+        {
+          "heading": "Logs are not a free archive",
+          "paragraphs": [
+            "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
+            "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule."
+          ]
+        },
+        {
+          "heading": "Tier transcripts by sensitivity",
+          "paragraphs": [
+            "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
+            "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job."
+          ],
+          "points": [
+            "Log prompts and outputs with redaction tiers, not raw dumps by default",
+            "Separate PII-bearing transcripts from aggregate quality metrics",
+            "Define retention per tier with legal and product sign-off",
+            "Alert on export volume spikes like any other data exfil path"
+          ]
+        },
+        {
+          "heading": "Sample for quality, aggregate for trends",
+          "paragraphs": [
+            "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
+            "Aggregate token usage and error codes without storing user text when possible."
+          ]
+        },
+        {
+          "heading": "Operate exports as security events",
+          "paragraphs": [
+            "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
+            "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March."
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenAI — Safety best practices",
+              "url": "https://platform.openai.com/docs/guides/safety-best-practices"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "Logging LLM Interactions Without Hoarding PII",
+      "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
+      "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+      "sections": [
+        {
+          "heading": "Logs are not a free archive",
+          "paragraphs": [
+            "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
+            "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule."
+          ]
+        },
+        {
+          "heading": "Tier transcripts by sensitivity",
+          "paragraphs": [
+            "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
+            "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job."
+          ],
+          "points": [
+            "Log prompts and outputs with redaction tiers, not raw dumps by default",
+            "Separate PII-bearing transcripts from aggregate quality metrics",
+            "Define retention per tier with legal and product sign-off",
+            "Alert on export volume spikes like any other data exfil path"
+          ]
+        },
+        {
+          "heading": "Sample for quality, aggregate for trends",
+          "paragraphs": [
+            "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
+            "Aggregate token usage and error codes without storing user text when possible."
+          ]
+        },
+        {
+          "heading": "Operate exports as security events",
+          "paragraphs": [
+            "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
+            "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March."
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenAI — Safety best practices",
+              "url": "https://platform.openai.com/docs/guides/safety-best-practices"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "Logging LLM Interactions Without Hoarding PII",
+      "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
+      "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+      "sections": [
+        {
+          "heading": "Logs are not a free archive",
+          "paragraphs": [
+            "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
+            "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule."
+          ]
+        },
+        {
+          "heading": "Tier transcripts by sensitivity",
+          "paragraphs": [
+            "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
+            "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job."
+          ],
+          "points": [
+            "Log prompts and outputs with redaction tiers, not raw dumps by default",
+            "Separate PII-bearing transcripts from aggregate quality metrics",
+            "Define retention per tier with legal and product sign-off",
+            "Alert on export volume spikes like any other data exfil path"
+          ]
+        },
+        {
+          "heading": "Sample for quality, aggregate for trends",
+          "paragraphs": [
+            "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
+            "Aggregate token usage and error codes without storing user text when possible."
+          ]
+        },
+        {
+          "heading": "Operate exports as security events",
+          "paragraphs": [
+            "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
+            "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March."
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenAI — Safety best practices",
+              "url": "https://platform.openai.com/docs/guides/safety-best-practices"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

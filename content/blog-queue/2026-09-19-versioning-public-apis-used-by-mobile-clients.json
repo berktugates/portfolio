@@ -1,0 +1,401 @@
+{
+  "slug": "versioning-public-apis-used-by-mobile-clients",
+  "title": "Versioning Public APIs Used by Mobile Clients",
+  "excerpt": "Mobile clients ship on human timelines. If your API versioning story assumes everyone refreshes weekly, you will break production users who cannot update until the store approves.",
+  "description": "Staff-engineer guidance for versioning public APIs consumed by mobile clients: epoch headers, additive evolution, forced-upgrade guardrails, contract tests on oldest supported builds, and deprecation telemetry.",
+  "readingMinutes": 7,
+  "keywords": [
+    "API versioning",
+    "mobile clients",
+    "backward compatibility",
+    "REST API",
+    "Expo",
+    "release engineering"
+  ],
+  "socialThreadTr": [
+    "Mobil istemci haftalık deploy etmez; mağaza onayı insan zaman çizelgesindedir. API sürümleme hikâyeniz bunu yok sayıyorsa üretim kullanıcısını kırarsınız. 🧵",
+    "Epoch, additive evrim, zorunlu güncelleme guardrail'leri ve skew telemetrisi. Detay: https://berktugberke.com/tr/blogs/versioning-public-apis-used-by-mobile-clients"
+  ],
+  "sections": [
+    {
+      "heading": "Mobile lag is a permanent constraint",
+      "paragraphs": [
+        "App store review, enterprise MDM freezes, and users who ignore updates mean your API must serve multiple client generations simultaneously. Web can hide behind a deploy; mobile cannot.",
+        "Staff ownership treats oldest supported app version as a first-class consumer. Breaking changes are product decisions with sunset windows, not surprise 400s on Monday morning."
+      ]
+    },
+    {
+      "heading": "Version in contracts, not in vibes",
+      "paragraphs": [
+        "Prefer explicit API epochs via headers or path prefixes over implicit 'we deployed Friday.' Document what is additive, what is deprecated, and what requires a new epoch. Clients should send their build identity on every request so you can route, shadow, or block safely.",
+        "Never remove fields without a measured deprecation period. Return sunset hints in structured error payloads and analytics events so product can message upgrades before hard cutoffs."
+      ],
+      "points": [
+        "Publish a mobile compatibility matrix with minimum app versions per API epoch",
+        "Treat breaking changes as contract events with sunset dates in responses",
+        "Run shadow traffic from oldest supported app builds in CI",
+        "Instrument version skew: which app builds hit deprecated fields"
+      ]
+    },
+    {
+      "heading": "Coordinate with release and support",
+      "paragraphs": [
+        "Pair API sunsets with in-app upgrade prompts and support macros. Forced upgrade is a product lever—use it sparingly for security or irreversible data migrations, not for routine refactors.",
+        "Contract tests should run against the oldest supported client bundle in CI, not only the latest main branch. Mobile API versioning is release engineering for users who cannot git pull."
+      ]
+    },
+    {
+      "heading": "Measure skew before you cut",
+      "paragraphs": [
+        "Dashboard active app versions against API epoch usage. Spikes in deprecated endpoints after a release often mean a client bug, not stubborn users.",
+        "A disciplined versioning story lets you ship backend improvements without holding mobile hostage. The goal is predictable evolution, not infinite backward compatibility for dead builds."
+      ],
+      "links": [
+        {
+          "label": "Stripe — API versioning",
+          "url": "https://stripe.com/docs/api/versioning"
+        },
+        {
+          "label": "Microsoft — REST API guidelines",
+          "url": "https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md"
+        },
+        {
+          "label": "Apple — App Store review guidelines",
+          "url": "https://developer.apple.com/app-store/review/guidelines/"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Mobil İstemcilerin Kullandığı Genel API'leri Sürümlemek",
+      "excerpt": "Mobil haftalık deploy etmez; API sürümleme bunu yok sayarsa üretim kırılır.",
+      "description": "Mobil tüketen genel API'ler için epoch, additive evrim, zorunlu güncelleme guardrail'leri ve skew telemetrisi.",
+      "sections": [
+        {
+          "heading": "Mobil gecikme kalıcı bir kısıttır",
+          "paragraphs": [
+            "Mağaza incelemesi, MDM dondurmaları ve güncellemeyi yok sayan kullanıcılar API'nizin birden fazla istemci neslini aynı anda sunmasını gerektirir.",
+            "En eski desteklenen uygulama sürümünü birinci sınıf tüketici sayın."
+          ]
+        },
+        {
+          "heading": "Sürümü sözleşmede tutun",
+          "paragraphs": [
+            "Açık API epoch'ları (header veya path) kullanın; istemci build kimliğini her istekte göndersin.",
+            "Alanları ölçülü deprecation olmadan kaldırmayın; sunset ipuçlarını yapılandırılmış hatalarda döndürün."
+          ],
+          "points": [
+            "Publish a mobile compatibility matrix with minimum app versions per API epoch",
+            "Treat breaking changes as contract events with sunset dates in responses",
+            "Run shadow traffic from oldest supported app builds in CI",
+            "Instrument version skew: which app builds hit deprecated fields"
+          ]
+        },
+        {
+          "heading": "Release ve destekle koordine edin",
+          "paragraphs": [
+            "API sunset'lerini uygulama içi güncelleme ve destek makrolarıyla eşleyin.",
+            "CI'da en eski desteklenen client bundle ile sözleşme testleri çalıştırın."
+          ]
+        },
+        {
+          "heading": "Kesmeden önce skew ölçün",
+          "paragraphs": [
+            "Aktif uygulama sürümlerini API epoch kullanımına karşı panoda izleyin.",
+            "Disiplinli sürümleme, mobil'i rehin almadan backend geliştirmenizi sağlar."
+          ],
+          "links": [
+            {
+              "label": "Stripe — API versioning",
+              "url": "https://stripe.com/docs/api/versioning"
+            },
+            {
+              "label": "Microsoft — REST API guidelines",
+              "url": "https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md"
+            },
+            {
+              "label": "Apple — App Store review guidelines",
+              "url": "https://developer.apple.com/app-store/review/guidelines/"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Versionierung öffentlicher APIs für Mobile Clients",
+      "excerpt": "Mobile Clients deployen nicht wöchentlich; ignoriert Ihre API-Versionierung das, brechen Sie Produktion.",
+      "description": "Epoch-Header, additive Evolution, Upgrade-Guardrails und Deprecation-Telemetrie für Mobile APIs.",
+      "sections": [
+        {
+          "heading": "Mobile Verzögerung ist dauerhaft",
+          "paragraphs": [
+            "App Store und MDM bedeuten mehrere Client-Generationen parallel.",
+            "Älteste unterstützte App-Version ist First-Class."
+          ]
+        },
+        {
+          "heading": "Version in Verträgen",
+          "paragraphs": [
+            "Explizite API-Epochen und Build-Identität pro Request.",
+            "Felder nicht ohne Deprecation entfernen."
+          ],
+          "points": [
+            "Publish a mobile compatibility matrix with minimum app versions per API epoch",
+            "Treat breaking changes as contract events with sunset dates in responses",
+            "Run shadow traffic from oldest supported app builds in CI",
+            "Instrument version skew: which app builds hit deprecated fields"
+          ]
+        },
+        {
+          "heading": "Mit Release und Support koordinieren",
+          "paragraphs": [
+            "Sunsets mit In-App-Upgrade koppeln.",
+            "Contract-Tests auf ältestem Bundle."
+          ]
+        },
+        {
+          "heading": "Skew messen vor Cut",
+          "paragraphs": [
+            "Dashboard Versionen vs Epochen.",
+            "Vorhersagbare Evolution statt Chaos."
+          ],
+          "links": [
+            {
+              "label": "Stripe — API versioning",
+              "url": "https://stripe.com/docs/api/versioning"
+            },
+            {
+              "label": "Microsoft — REST API guidelines",
+              "url": "https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md"
+            },
+            {
+              "label": "Apple — App Store review guidelines",
+              "url": "https://developer.apple.com/app-store/review/guidelines/"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Versionner les API publiques pour clients mobiles",
+      "excerpt": "Les clients mobiles ne déploient pas chaque semaine; ignorer cela casse la prod.",
+      "description": "Époques d'API, évolution additive, garde-fous de mise à jour et télémétrie de dépréciation.",
+      "sections": [
+        {
+          "heading": "Le décalage mobile est permanent",
+          "paragraphs": [
+            "Review store et MDM imposent plusieurs générations clients.",
+            "La plus vieille version supportée est un consommateur de premier plan."
+          ]
+        },
+        {
+          "heading": "Versionner par contrat",
+          "paragraphs": [
+            "Époques explicites et identité de build par requête.",
+            "Pas de retrait de champs sans dépréciation mesurée."
+          ],
+          "points": [
+            "Publish a mobile compatibility matrix with minimum app versions per API epoch",
+            "Treat breaking changes as contract events with sunset dates in responses",
+            "Run shadow traffic from oldest supported app builds in CI",
+            "Instrument version skew: which app builds hit deprecated fields"
+          ]
+        },
+        {
+          "heading": "Coordonner release et support",
+          "paragraphs": [
+            "Sunsets avec upgrade in-app.",
+            "Tests de contrat sur le plus vieux bundle."
+          ]
+        },
+        {
+          "heading": "Mesurer le skew avant coupure",
+          "paragraphs": [
+            "Tableaux de bord versions vs époques.",
+            "Évolution prévisible."
+          ],
+          "links": [
+            {
+              "label": "Stripe — API versioning",
+              "url": "https://stripe.com/docs/api/versioning"
+            },
+            {
+              "label": "Microsoft — REST API guidelines",
+              "url": "https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md"
+            },
+            {
+              "label": "Apple — App Store review guidelines",
+              "url": "https://developer.apple.com/app-store/review/guidelines/"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Versionare API pubbliche per client mobile",
+      "excerpt": "I client mobile non deployano ogni settimana; ignorarlo rompe la produzione.",
+      "description": "Epoche API, evoluzione additiva, guardrail di upgrade e telemetria deprecazione.",
+      "sections": [
+        {
+          "heading": "Il lag mobile è permanente",
+          "paragraphs": [
+            "Review store e MDM richiedono più generazioni client.",
+            "La versione app più vecchia supportata è first-class."
+          ]
+        },
+        {
+          "heading": "Versione nel contratto",
+          "paragraphs": [
+            "Epoche esplicite e build identity per richiesta.",
+            "Non rimuovere campi senza deprecazione."
+          ],
+          "points": [
+            "Publish a mobile compatibility matrix with minimum app versions per API epoch",
+            "Treat breaking changes as contract events with sunset dates in responses",
+            "Run shadow traffic from oldest supported app builds in CI",
+            "Instrument version skew: which app builds hit deprecated fields"
+          ]
+        },
+        {
+          "heading": "Coordinare release e supporto",
+          "paragraphs": [
+            "Sunset con upgrade in-app.",
+            "Contract test sul bundle più vecchio."
+          ]
+        },
+        {
+          "heading": "Misurare lo skew prima del taglio",
+          "paragraphs": [
+            "Dashboard versioni vs epoche.",
+            "Evoluzione prevedibile."
+          ],
+          "links": [
+            {
+              "label": "Stripe — API versioning",
+              "url": "https://stripe.com/docs/api/versioning"
+            },
+            {
+              "label": "Microsoft — REST API guidelines",
+              "url": "https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md"
+            },
+            {
+              "label": "Apple — App Store review guidelines",
+              "url": "https://developer.apple.com/app-store/review/guidelines/"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "面向移动客户端的公共 API 版本化",
+      "excerpt": "移动客户端无法每周发布；忽视这一点会打爆生产。",
+      "description": "API 纪元、加法演进、强制升级护栏与废弃遥测。",
+      "sections": [
+        {
+          "heading": "移动滞后是长期约束",
+          "paragraphs": [
+            "应用商店与 MDM 意味着多代客户端并存。",
+            "最旧支持版本是一等消费者。"
+          ]
+        },
+        {
+          "heading": "用契约承载版本",
+          "paragraphs": [
+            "显式 API 纪元与每次请求的构建身份。",
+            "无度量废弃期不删字段。"
+          ],
+          "points": [
+            "Publish a mobile compatibility matrix with minimum app versions per API epoch",
+            "Treat breaking changes as contract events with sunset dates in responses",
+            "Run shadow traffic from oldest supported app builds in CI",
+            "Instrument version skew: which app builds hit deprecated fields"
+          ]
+        },
+        {
+          "heading": "与发布和支持协同",
+          "paragraphs": [
+            "下线与应用内升级配对。",
+            "CI 跑最旧 bundle 契约测试。"
+          ]
+        },
+        {
+          "heading": "切断前测量偏斜",
+          "paragraphs": [
+            "看板对比版本与纪元。",
+            "可预测的演进。"
+          ],
+          "links": [
+            {
+              "label": "Stripe — API versioning",
+              "url": "https://stripe.com/docs/api/versioning"
+            },
+            {
+              "label": "Microsoft — REST API guidelines",
+              "url": "https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md"
+            },
+            {
+              "label": "Apple — App Store review guidelines",
+              "url": "https://developer.apple.com/app-store/review/guidelines/"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "モバイルクライアント向け公開APIのバージョニング",
+      "excerpt": "モバイルは毎週デプロイできない。無視すると本番が壊れる。",
+      "description": "APIエポック、加法進化、アップグレードガードレール、非推奨テレメトリ。",
+      "sections": [
+        {
+          "heading": "モバイル遅延は恒常的制約",
+          "paragraphs": [
+            "ストア審査とMDMは複数世代の併存を意味する。",
+            "最古サポート版を第一級消費者に。"
+          ]
+        },
+        {
+          "heading": "契約でバージョン管理",
+          "paragraphs": [
+            "明示的エポックとリクエスト毎のビルドID。",
+            "測定された非推奨なしにフィールド削除しない。"
+          ],
+          "points": [
+            "Publish a mobile compatibility matrix with minimum app versions per API epoch",
+            "Treat breaking changes as contract events with sunset dates in responses",
+            "Run shadow traffic from oldest supported app builds in CI",
+            "Instrument version skew: which app builds hit deprecated fields"
+          ]
+        },
+        {
+          "heading": "リリースとサポートと調整",
+          "paragraphs": [
+            "サンセットとアプリ内アップグレードを連動。",
+            "最古バンドルで契約テスト。"
+          ]
+        },
+        {
+          "heading": "切断前にスキュー計測",
+          "paragraphs": [
+            "バージョンとエポックのダッシュボード。",
+            "予測可能な進化。"
+          ],
+          "links": [
+            {
+              "label": "Stripe — API versioning",
+              "url": "https://stripe.com/docs/api/versioning"
+            },
+            {
+              "label": "Microsoft — REST API guidelines",
+              "url": "https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md"
+            },
+            {
+              "label": "Apple — App Store review guidelines",
+              "url": "https://developer.apple.com/app-store/review/guidelines/"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

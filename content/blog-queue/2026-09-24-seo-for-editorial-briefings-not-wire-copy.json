@@ -1,0 +1,372 @@
+{
+  "slug": "seo-for-editorial-briefings-not-wire-copy",
+  "title": "SEO for Editorial Briefings, Not Wire Copy",
+  "excerpt": "Republishing headlines for traffic trains crawlers to treat you as low-trust duplication. Briefings that add analysis, clear dates, and honest structured data earn a different relationship with search.",
+  "description": "Staff SEO for editorial briefing sites: schema discipline, subdomain canonicals, measurement, and quality gates that avoid agency copy pitfalls.",
+  "readingMinutes": 7,
+  "keywords": [
+    "editorial SEO",
+    "NewsArticle",
+    "structured data",
+    "content quality",
+    "Google Search"
+  ],
+  "socialThreadTr": [
+    "Ajans kopyası yerine analiz brifingi: SEO ve güven aynı stratejinin parçası. 🧵",
+    "Schema ve ölçüm disiplini. Detay: https://berktugberke.com/tr/blogs/seo-for-editorial-briefings-not-wire-copy"
+  ],
+  "sections": [
+    {
+      "heading": "Briefings are not rewrites",
+      "paragraphs": [
+        "Search systems reward documents with clear authorship, modification dates, and original synthesis. Thin rewrites of trending queries burn crawl budget without building brand.",
+        "Editorial briefings should declare what they are: analysis with cited primary sources, not breaking news wires."
+      ]
+    },
+    {
+      "heading": "Structured data must match the page",
+      "paragraphs": [
+        "NewsArticle markup must reflect visible headlines, images, and dates. Mismatch is worse than omission.",
+        "Stock photos need license metadata in the UI, not fake photojournalism cues."
+      ],
+      "points": [
+        "Separate editorial briefings from wire copy in schema and UI",
+        "Use stock imagery with honest credit, not event photos",
+        "Keep hreflang and canonicals aligned per host",
+        "Measure content_group in analytics per surface"
+      ]
+    },
+    {
+      "heading": "Hosts and hreflang stay honest",
+      "paragraphs": [
+        "When news lives on a dedicated host, sitemaps and internal linking should respect that boundary instead of leaking into unrelated site graphs.",
+        "Redirects and canonical tags should help users and crawlers land on the intended surface."
+      ]
+    },
+    {
+      "heading": "Analytics by content surface",
+      "paragraphs": [
+        "Tag analytics by content group so product, blog, and news surfaces are comparable without double-counting journeys.",
+        "SEO for briefings is a long game: consistency, honesty, and measurable quality beat daily copy-paste."
+      ],
+      "links": [
+        {
+          "label": "Schema.org — NewsArticle",
+          "url": "https://schema.org/NewsArticle"
+        },
+        {
+          "label": "Google Search Central — Structured data",
+          "url": "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "SEO for Editorial Briefings, Not Wire Copy",
+      "excerpt": "Republishing headlines for traffic trains crawlers to treat you as low-trust duplication. Briefings that add analysis, clear dates, and honest structured data earn a different relationship with search.",
+      "description": "Staff SEO for editorial briefing sites: schema discipline, subdomain canonicals, measurement, and quality gates that avoid agency copy pitfalls.",
+      "sections": [
+        {
+          "heading": "Briefings are not rewrites",
+          "paragraphs": [
+            "Search systems reward documents with clear authorship, modification dates, and original synthesis. Thin rewrites of trending queries burn crawl budget without building brand.",
+            "Editorial briefings should declare what they are: analysis with cited primary sources, not breaking news wires."
+          ]
+        },
+        {
+          "heading": "Structured data must match the page",
+          "paragraphs": [
+            "NewsArticle markup must reflect visible headlines, images, and dates. Mismatch is worse than omission.",
+            "Stock photos need license metadata in the UI, not fake photojournalism cues."
+          ],
+          "points": [
+            "Separate editorial briefings from wire copy in schema and UI",
+            "Use stock imagery with honest credit, not event photos",
+            "Keep hreflang and canonicals aligned per host",
+            "Measure content_group in analytics per surface"
+          ]
+        },
+        {
+          "heading": "Hosts and hreflang stay honest",
+          "paragraphs": [
+            "When news lives on a dedicated host, sitemaps and internal linking should respect that boundary instead of leaking into unrelated site graphs.",
+            "Redirects and canonical tags should help users and crawlers land on the intended surface."
+          ]
+        },
+        {
+          "heading": "Analytics by content surface",
+          "paragraphs": [
+            "Tag analytics by content group so product, blog, and news surfaces are comparable without double-counting journeys.",
+            "SEO for briefings is a long game: consistency, honesty, and measurable quality beat daily copy-paste."
+          ],
+          "links": [
+            {
+              "label": "Schema.org — NewsArticle",
+              "url": "https://schema.org/NewsArticle"
+            },
+            {
+              "label": "Google Search Central — Structured data",
+              "url": "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "SEO for Editorial Briefings, Not Wire Copy",
+      "excerpt": "Republishing headlines for traffic trains crawlers to treat you as low-trust duplication. Briefings that add analysis, clear dates, and honest structured data earn a different relationship with search.",
+      "description": "Staff SEO for editorial briefing sites: schema discipline, subdomain canonicals, measurement, and quality gates that avoid agency copy pitfalls.",
+      "sections": [
+        {
+          "heading": "Briefings are not rewrites",
+          "paragraphs": [
+            "Search systems reward documents with clear authorship, modification dates, and original synthesis. Thin rewrites of trending queries burn crawl budget without building brand.",
+            "Editorial briefings should declare what they are: analysis with cited primary sources, not breaking news wires."
+          ]
+        },
+        {
+          "heading": "Structured data must match the page",
+          "paragraphs": [
+            "NewsArticle markup must reflect visible headlines, images, and dates. Mismatch is worse than omission.",
+            "Stock photos need license metadata in the UI, not fake photojournalism cues."
+          ],
+          "points": [
+            "Separate editorial briefings from wire copy in schema and UI",
+            "Use stock imagery with honest credit, not event photos",
+            "Keep hreflang and canonicals aligned per host",
+            "Measure content_group in analytics per surface"
+          ]
+        },
+        {
+          "heading": "Hosts and hreflang stay honest",
+          "paragraphs": [
+            "When news lives on a dedicated host, sitemaps and internal linking should respect that boundary instead of leaking into unrelated site graphs.",
+            "Redirects and canonical tags should help users and crawlers land on the intended surface."
+          ]
+        },
+        {
+          "heading": "Analytics by content surface",
+          "paragraphs": [
+            "Tag analytics by content group so product, blog, and news surfaces are comparable without double-counting journeys.",
+            "SEO for briefings is a long game: consistency, honesty, and measurable quality beat daily copy-paste."
+          ],
+          "links": [
+            {
+              "label": "Schema.org — NewsArticle",
+              "url": "https://schema.org/NewsArticle"
+            },
+            {
+              "label": "Google Search Central — Structured data",
+              "url": "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "SEO for Editorial Briefings, Not Wire Copy",
+      "excerpt": "Republishing headlines for traffic trains crawlers to treat you as low-trust duplication. Briefings that add analysis, clear dates, and honest structured data earn a different relationship with search.",
+      "description": "Staff SEO for editorial briefing sites: schema discipline, subdomain canonicals, measurement, and quality gates that avoid agency copy pitfalls.",
+      "sections": [
+        {
+          "heading": "Briefings are not rewrites",
+          "paragraphs": [
+            "Search systems reward documents with clear authorship, modification dates, and original synthesis. Thin rewrites of trending queries burn crawl budget without building brand.",
+            "Editorial briefings should declare what they are: analysis with cited primary sources, not breaking news wires."
+          ]
+        },
+        {
+          "heading": "Structured data must match the page",
+          "paragraphs": [
+            "NewsArticle markup must reflect visible headlines, images, and dates. Mismatch is worse than omission.",
+            "Stock photos need license metadata in the UI, not fake photojournalism cues."
+          ],
+          "points": [
+            "Separate editorial briefings from wire copy in schema and UI",
+            "Use stock imagery with honest credit, not event photos",
+            "Keep hreflang and canonicals aligned per host",
+            "Measure content_group in analytics per surface"
+          ]
+        },
+        {
+          "heading": "Hosts and hreflang stay honest",
+          "paragraphs": [
+            "When news lives on a dedicated host, sitemaps and internal linking should respect that boundary instead of leaking into unrelated site graphs.",
+            "Redirects and canonical tags should help users and crawlers land on the intended surface."
+          ]
+        },
+        {
+          "heading": "Analytics by content surface",
+          "paragraphs": [
+            "Tag analytics by content group so product, blog, and news surfaces are comparable without double-counting journeys.",
+            "SEO for briefings is a long game: consistency, honesty, and measurable quality beat daily copy-paste."
+          ],
+          "links": [
+            {
+              "label": "Schema.org — NewsArticle",
+              "url": "https://schema.org/NewsArticle"
+            },
+            {
+              "label": "Google Search Central — Structured data",
+              "url": "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "SEO for Editorial Briefings, Not Wire Copy",
+      "excerpt": "Republishing headlines for traffic trains crawlers to treat you as low-trust duplication. Briefings that add analysis, clear dates, and honest structured data earn a different relationship with search.",
+      "description": "Staff SEO for editorial briefing sites: schema discipline, subdomain canonicals, measurement, and quality gates that avoid agency copy pitfalls.",
+      "sections": [
+        {
+          "heading": "Briefings are not rewrites",
+          "paragraphs": [
+            "Search systems reward documents with clear authorship, modification dates, and original synthesis. Thin rewrites of trending queries burn crawl budget without building brand.",
+            "Editorial briefings should declare what they are: analysis with cited primary sources, not breaking news wires."
+          ]
+        },
+        {
+          "heading": "Structured data must match the page",
+          "paragraphs": [
+            "NewsArticle markup must reflect visible headlines, images, and dates. Mismatch is worse than omission.",
+            "Stock photos need license metadata in the UI, not fake photojournalism cues."
+          ],
+          "points": [
+            "Separate editorial briefings from wire copy in schema and UI",
+            "Use stock imagery with honest credit, not event photos",
+            "Keep hreflang and canonicals aligned per host",
+            "Measure content_group in analytics per surface"
+          ]
+        },
+        {
+          "heading": "Hosts and hreflang stay honest",
+          "paragraphs": [
+            "When news lives on a dedicated host, sitemaps and internal linking should respect that boundary instead of leaking into unrelated site graphs.",
+            "Redirects and canonical tags should help users and crawlers land on the intended surface."
+          ]
+        },
+        {
+          "heading": "Analytics by content surface",
+          "paragraphs": [
+            "Tag analytics by content group so product, blog, and news surfaces are comparable without double-counting journeys.",
+            "SEO for briefings is a long game: consistency, honesty, and measurable quality beat daily copy-paste."
+          ],
+          "links": [
+            {
+              "label": "Schema.org — NewsArticle",
+              "url": "https://schema.org/NewsArticle"
+            },
+            {
+              "label": "Google Search Central — Structured data",
+              "url": "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "SEO for Editorial Briefings, Not Wire Copy",
+      "excerpt": "Republishing headlines for traffic trains crawlers to treat you as low-trust duplication. Briefings that add analysis, clear dates, and honest structured data earn a different relationship with search.",
+      "description": "Staff SEO for editorial briefing sites: schema discipline, subdomain canonicals, measurement, and quality gates that avoid agency copy pitfalls.",
+      "sections": [
+        {
+          "heading": "Briefings are not rewrites",
+          "paragraphs": [
+            "Search systems reward documents with clear authorship, modification dates, and original synthesis. Thin rewrites of trending queries burn crawl budget without building brand.",
+            "Editorial briefings should declare what they are: analysis with cited primary sources, not breaking news wires."
+          ]
+        },
+        {
+          "heading": "Structured data must match the page",
+          "paragraphs": [
+            "NewsArticle markup must reflect visible headlines, images, and dates. Mismatch is worse than omission.",
+            "Stock photos need license metadata in the UI, not fake photojournalism cues."
+          ],
+          "points": [
+            "Separate editorial briefings from wire copy in schema and UI",
+            "Use stock imagery with honest credit, not event photos",
+            "Keep hreflang and canonicals aligned per host",
+            "Measure content_group in analytics per surface"
+          ]
+        },
+        {
+          "heading": "Hosts and hreflang stay honest",
+          "paragraphs": [
+            "When news lives on a dedicated host, sitemaps and internal linking should respect that boundary instead of leaking into unrelated site graphs.",
+            "Redirects and canonical tags should help users and crawlers land on the intended surface."
+          ]
+        },
+        {
+          "heading": "Analytics by content surface",
+          "paragraphs": [
+            "Tag analytics by content group so product, blog, and news surfaces are comparable without double-counting journeys.",
+            "SEO for briefings is a long game: consistency, honesty, and measurable quality beat daily copy-paste."
+          ],
+          "links": [
+            {
+              "label": "Schema.org — NewsArticle",
+              "url": "https://schema.org/NewsArticle"
+            },
+            {
+              "label": "Google Search Central — Structured data",
+              "url": "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "SEO for Editorial Briefings, Not Wire Copy",
+      "excerpt": "Republishing headlines for traffic trains crawlers to treat you as low-trust duplication. Briefings that add analysis, clear dates, and honest structured data earn a different relationship with search.",
+      "description": "Staff SEO for editorial briefing sites: schema discipline, subdomain canonicals, measurement, and quality gates that avoid agency copy pitfalls.",
+      "sections": [
+        {
+          "heading": "Briefings are not rewrites",
+          "paragraphs": [
+            "Search systems reward documents with clear authorship, modification dates, and original synthesis. Thin rewrites of trending queries burn crawl budget without building brand.",
+            "Editorial briefings should declare what they are: analysis with cited primary sources, not breaking news wires."
+          ]
+        },
+        {
+          "heading": "Structured data must match the page",
+          "paragraphs": [
+            "NewsArticle markup must reflect visible headlines, images, and dates. Mismatch is worse than omission.",
+            "Stock photos need license metadata in the UI, not fake photojournalism cues."
+          ],
+          "points": [
+            "Separate editorial briefings from wire copy in schema and UI",
+            "Use stock imagery with honest credit, not event photos",
+            "Keep hreflang and canonicals aligned per host",
+            "Measure content_group in analytics per surface"
+          ]
+        },
+        {
+          "heading": "Hosts and hreflang stay honest",
+          "paragraphs": [
+            "When news lives on a dedicated host, sitemaps and internal linking should respect that boundary instead of leaking into unrelated site graphs.",
+            "Redirects and canonical tags should help users and crawlers land on the intended surface."
+          ]
+        },
+        {
+          "heading": "Analytics by content surface",
+          "paragraphs": [
+            "Tag analytics by content group so product, blog, and news surfaces are comparable without double-counting journeys.",
+            "SEO for briefings is a long game: consistency, honesty, and measurable quality beat daily copy-paste."
+          ],
+          "links": [
+            {
+              "label": "Schema.org — NewsArticle",
+              "url": "https://schema.org/NewsArticle"
+            },
+            {
+              "label": "Google Search Central — Structured data",
+              "url": "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -325,6 +325,11 @@ write_post(
             ],
             links2,
         ),
+        "locales": pack_locales2(links2, pts2),
+    },
+)
+
+
 def i18n(blocks, points, links):
     return {code: loc(b[0], b[1], b[2], b[3], b[4], points, links) for code, b in blocks.items()}
 
@@ -513,4 +518,174 @@ write_post(
         ),
         "locales": i18n(blocks4, pts4, links4),
     },
+)
+
+
+def en_only_locales(title, excerpt, description, headings, paras, points, links):
+    block = loc(title, excerpt, description, headings, paras, points, links)
+    return {code: block for code in ["tr", "de", "fr", "it", "zh", "ja"]}
+
+
+def seo_post(filename, slug, title, excerpt, description, keywords, social_tr, h, paras, points, links):
+    write_post(
+        filename,
+        {
+            "slug": slug,
+            "title": title,
+            "excerpt": excerpt,
+            "description": description,
+            "readingMinutes": 7,
+            "keywords": keywords,
+            "socialThreadTr": social_tr,
+            "sections": en_sections(h[0], paras[0], h[1], paras[1], points, h[2], paras[2], h[3], paras[3], links),
+            "locales": en_only_locales(title, excerpt, description, h, paras, points, links),
+        },
+    )
+
+
+links5 = [
+    {"label": "OWASP — LLM Top 10", "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"},
+    {"label": "OpenAI — Safety best practices", "url": "https://platform.openai.com/docs/guides/safety-best-practices"},
+]
+pts5 = [
+    "Log prompts and outputs with redaction tiers, not raw dumps by default",
+    "Separate PII-bearing transcripts from aggregate quality metrics",
+    "Define retention per tier with legal and product sign-off",
+    "Alert on export volume spikes like any other data exfil path",
+]
+seo_post(
+    "2026-09-22-logging-llm-interactions-without-hoarding-pii.json",
+    "logging-llm-interactions-without-hoarding-pii",
+    "Logging LLM Interactions Without Hoarding PII",
+    "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
+    "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+    ["LLM logging", "PII", "privacy engineering", "observability", "compliance"],
+    [
+        "Copilot logları PII biriktirmeden tutulabilir; ham sohbet varsayılan olmamalı. 🧵",
+        "Katmanlı saklama ve redaksiyon. Detay: https://berktugberke.com/tr/blogs/logging-llm-interactions-without-hoarding-pii",
+    ],
+    [
+        "Logs are not a free archive",
+        "Tier transcripts by sensitivity",
+        "Sample for quality, aggregate for trends",
+        "Operate exports as security events",
+    ],
+    [
+        [
+            "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
+            "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule.",
+        ],
+        [
+            "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
+            "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job.",
+        ],
+        [
+            "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
+            "Aggregate token usage and error codes without storing user text when possible.",
+        ],
+        [
+            "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
+            "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March.",
+        ],
+    ],
+    pts5,
+    links5,
+)
+
+links6 = [
+    {"label": "Google Search Central — Core Web Vitals", "url": "https://developers.google.com/search/docs/appearance/core-web-vitals"},
+    {"label": "web.dev — Performance", "url": "https://web.dev/performance/"},
+]
+pts6 = [
+    "Budget LCP and INP per template, not only globally",
+    "Tie perf regressions to release trains and rollback rules",
+    "Measure real devices and slow networks in CI smoke",
+    "Publish perf dashboards beside error rate for product",
+]
+seo_post(
+    "2026-09-23-performance-budgets-for-marketing-and-app-routes.json",
+    "performance-budgets-for-marketing-and-app-routes",
+    "Performance Budgets for Marketing and App Routes",
+    "Marketing pages and authenticated app shells fail for different reasons, but they share one rule: without budgets, every launch adds weight until search and conversion quietly suffer.",
+    "How staff engineers set per-route performance budgets, wire them to CI, and keep marketing and product surfaces inside measurable LCP and INP guardrails.",
+    ["Core Web Vitals", "performance budgets", "LCP", "INP", "frontend performance"],
+    [
+        "Pazarlama ve uygulama rotaları için ayrı performans bütçesi şart; global ortalama yeterli değil. 🧵",
+        "LCP/INP bütçeleri ve CI. Detay: https://berktugberke.com/tr/blogs/performance-budgets-for-marketing-and-app-routes",
+    ],
+    [
+        "Templates need their own budgets",
+        "Ship perf with the release train",
+        "Test slow networks deliberately",
+        "Make perf visible to product",
+    ],
+    [
+        [
+            "Landing pages compete on first paint; dashboards compete on interaction readiness. A single global bundle budget hides which team regressed which surface.",
+            "Split budgets by route class and third-party tag ownership so marketing experiments do not inherit engineering defaults.",
+        ],
+        [
+            "Attach budget checks to preview deployments for high-traffic templates. Block merges that blow LCP without an explicit waiver tied to an owner.",
+            "Roll back feature flags when INP crosses thresholds in canary, not after a week of complaints.",
+        ],
+        [
+            "Lab tests on fast laptops lie. Run smoke perf on representative mobile profiles and cache states.",
+            "Track hero image bytes, font loading strategy, and hydration cost as first-class metrics.",
+        ],
+        [
+            "Product managers should see perf trends next to conversion, not in a quarterly infra review.",
+            "Budgets are how you keep SEO and UX from becoming a postmortem theme.",
+        ],
+    ],
+    pts6,
+    links6,
+)
+
+links7 = [
+    {"label": "Schema.org — NewsArticle", "url": "https://schema.org/NewsArticle"},
+    {"label": "Google Search Central — Structured data", "url": "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data"},
+]
+pts7 = [
+    "Separate editorial briefings from wire copy in schema and UI",
+    "Use stock imagery with honest credit, not event photos",
+    "Keep hreflang and canonicals aligned per host",
+    "Measure content_group in analytics per surface",
+]
+seo_post(
+    "2026-09-24-seo-for-editorial-briefings-not-wire-copy.json",
+    "seo-for-editorial-briefings-not-wire-copy",
+    "SEO for Editorial Briefings, Not Wire Copy",
+    "Republishing headlines for traffic trains crawlers to treat you as low-trust duplication. Briefings that add analysis, clear dates, and honest structured data earn a different relationship with search.",
+    "Staff SEO for editorial briefing sites: schema discipline, subdomain canonicals, measurement, and quality gates that avoid agency copy pitfalls.",
+    ["editorial SEO", "NewsArticle", "structured data", "content quality", "Google Search"],
+    [
+        "Ajans kopyası yerine analiz brifingi: SEO ve güven aynı stratejinin parçası. 🧵",
+        "Schema ve ölçüm disiplini. Detay: https://berktugberke.com/tr/blogs/seo-for-editorial-briefings-not-wire-copy",
+    ],
+    [
+        "Briefings are not rewrites",
+        "Structured data must match the page",
+        "Hosts and hreflang stay honest",
+        "Analytics by content surface",
+    ],
+    [
+        [
+            "Search systems reward documents with clear authorship, modification dates, and original synthesis. Thin rewrites of trending queries burn crawl budget without building brand.",
+            "Editorial briefings should declare what they are: analysis with cited primary sources, not breaking news wires.",
+        ],
+        [
+            "NewsArticle markup must reflect visible headlines, images, and dates. Mismatch is worse than omission.",
+            "Stock photos need license metadata in the UI, not fake photojournalism cues.",
+        ],
+        [
+            "When news lives on a dedicated host, sitemaps and internal linking should respect that boundary instead of leaking into unrelated site graphs.",
+            "Redirects and canonical tags should help users and crawlers land on the intended surface.",
+        ],
+        [
+            "Tag analytics by content group so product, blog, and news surfaces are comparable without double-counting journeys.",
+            "SEO for briefings is a long game: consistency, honesty, and measurable quality beat daily copy-paste.",
+        ],
+    ],
+    pts7,
+    links7,
 )

@@ -1,0 +1,372 @@
+{
+  "slug": "performance-budgets-for-marketing-and-app-routes",
+  "title": "Performance Budgets for Marketing and App Routes",
+  "excerpt": "Marketing pages and authenticated app shells fail for different reasons, but they share one rule: without budgets, every launch adds weight until search and conversion quietly suffer.",
+  "description": "How staff engineers set per-route performance budgets, wire them to CI, and keep marketing and product surfaces inside measurable LCP and INP guardrails.",
+  "readingMinutes": 7,
+  "keywords": [
+    "Core Web Vitals",
+    "performance budgets",
+    "LCP",
+    "INP",
+    "frontend performance"
+  ],
+  "socialThreadTr": [
+    "Pazarlama ve uygulama rotaları için ayrı performans bütçesi şart; global ortalama yeterli değil. 🧵",
+    "LCP/INP bütçeleri ve CI. Detay: https://berktugberke.com/tr/blogs/performance-budgets-for-marketing-and-app-routes"
+  ],
+  "sections": [
+    {
+      "heading": "Templates need their own budgets",
+      "paragraphs": [
+        "Landing pages compete on first paint; dashboards compete on interaction readiness. A single global bundle budget hides which team regressed which surface.",
+        "Split budgets by route class and third-party tag ownership so marketing experiments do not inherit engineering defaults."
+      ]
+    },
+    {
+      "heading": "Ship perf with the release train",
+      "paragraphs": [
+        "Attach budget checks to preview deployments for high-traffic templates. Block merges that blow LCP without an explicit waiver tied to an owner.",
+        "Roll back feature flags when INP crosses thresholds in canary, not after a week of complaints."
+      ],
+      "points": [
+        "Budget LCP and INP per template, not only globally",
+        "Tie perf regressions to release trains and rollback rules",
+        "Measure real devices and slow networks in CI smoke",
+        "Publish perf dashboards beside error rate for product"
+      ]
+    },
+    {
+      "heading": "Test slow networks deliberately",
+      "paragraphs": [
+        "Lab tests on fast laptops lie. Run smoke perf on representative mobile profiles and cache states.",
+        "Track hero image bytes, font loading strategy, and hydration cost as first-class metrics."
+      ]
+    },
+    {
+      "heading": "Make perf visible to product",
+      "paragraphs": [
+        "Product managers should see perf trends next to conversion, not in a quarterly infra review.",
+        "Budgets are how you keep SEO and UX from becoming a postmortem theme."
+      ],
+      "links": [
+        {
+          "label": "Google Search Central — Core Web Vitals",
+          "url": "https://developers.google.com/search/docs/appearance/core-web-vitals"
+        },
+        {
+          "label": "web.dev — Performance",
+          "url": "https://web.dev/performance/"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Performance Budgets for Marketing and App Routes",
+      "excerpt": "Marketing pages and authenticated app shells fail for different reasons, but they share one rule: without budgets, every launch adds weight until search and conversion quietly suffer.",
+      "description": "How staff engineers set per-route performance budgets, wire them to CI, and keep marketing and product surfaces inside measurable LCP and INP guardrails.",
+      "sections": [
+        {
+          "heading": "Templates need their own budgets",
+          "paragraphs": [
+            "Landing pages compete on first paint; dashboards compete on interaction readiness. A single global bundle budget hides which team regressed which surface.",
+            "Split budgets by route class and third-party tag ownership so marketing experiments do not inherit engineering defaults."
+          ]
+        },
+        {
+          "heading": "Ship perf with the release train",
+          "paragraphs": [
+            "Attach budget checks to preview deployments for high-traffic templates. Block merges that blow LCP without an explicit waiver tied to an owner.",
+            "Roll back feature flags when INP crosses thresholds in canary, not after a week of complaints."
+          ],
+          "points": [
+            "Budget LCP and INP per template, not only globally",
+            "Tie perf regressions to release trains and rollback rules",
+            "Measure real devices and slow networks in CI smoke",
+            "Publish perf dashboards beside error rate for product"
+          ]
+        },
+        {
+          "heading": "Test slow networks deliberately",
+          "paragraphs": [
+            "Lab tests on fast laptops lie. Run smoke perf on representative mobile profiles and cache states.",
+            "Track hero image bytes, font loading strategy, and hydration cost as first-class metrics."
+          ]
+        },
+        {
+          "heading": "Make perf visible to product",
+          "paragraphs": [
+            "Product managers should see perf trends next to conversion, not in a quarterly infra review.",
+            "Budgets are how you keep SEO and UX from becoming a postmortem theme."
+          ],
+          "links": [
+            {
+              "label": "Google Search Central — Core Web Vitals",
+              "url": "https://developers.google.com/search/docs/appearance/core-web-vitals"
+            },
+            {
+              "label": "web.dev — Performance",
+              "url": "https://web.dev/performance/"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Performance Budgets for Marketing and App Routes",
+      "excerpt": "Marketing pages and authenticated app shells fail for different reasons, but they share one rule: without budgets, every launch adds weight until search and conversion quietly suffer.",
+      "description": "How staff engineers set per-route performance budgets, wire them to CI, and keep marketing and product surfaces inside measurable LCP and INP guardrails.",
+      "sections": [
+        {
+          "heading": "Templates need their own budgets",
+          "paragraphs": [
+            "Landing pages compete on first paint; dashboards compete on interaction readiness. A single global bundle budget hides which team regressed which surface.",
+            "Split budgets by route class and third-party tag ownership so marketing experiments do not inherit engineering defaults."
+          ]
+        },
+        {
+          "heading": "Ship perf with the release train",
+          "paragraphs": [
+            "Attach budget checks to preview deployments for high-traffic templates. Block merges that blow LCP without an explicit waiver tied to an owner.",
+            "Roll back feature flags when INP crosses thresholds in canary, not after a week of complaints."
+          ],
+          "points": [
+            "Budget LCP and INP per template, not only globally",
+            "Tie perf regressions to release trains and rollback rules",
+            "Measure real devices and slow networks in CI smoke",
+            "Publish perf dashboards beside error rate for product"
+          ]
+        },
+        {
+          "heading": "Test slow networks deliberately",
+          "paragraphs": [
+            "Lab tests on fast laptops lie. Run smoke perf on representative mobile profiles and cache states.",
+            "Track hero image bytes, font loading strategy, and hydration cost as first-class metrics."
+          ]
+        },
+        {
+          "heading": "Make perf visible to product",
+          "paragraphs": [
+            "Product managers should see perf trends next to conversion, not in a quarterly infra review.",
+            "Budgets are how you keep SEO and UX from becoming a postmortem theme."
+          ],
+          "links": [
+            {
+              "label": "Google Search Central — Core Web Vitals",
+              "url": "https://developers.google.com/search/docs/appearance/core-web-vitals"
+            },
+            {
+              "label": "web.dev — Performance",
+              "url": "https://web.dev/performance/"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Performance Budgets for Marketing and App Routes",
+      "excerpt": "Marketing pages and authenticated app shells fail for different reasons, but they share one rule: without budgets, every launch adds weight until search and conversion quietly suffer.",
+      "description": "How staff engineers set per-route performance budgets, wire them to CI, and keep marketing and product surfaces inside measurable LCP and INP guardrails.",
+      "sections": [
+        {
+          "heading": "Templates need their own budgets",
+          "paragraphs": [
+            "Landing pages compete on first paint; dashboards compete on interaction readiness. A single global bundle budget hides which team regressed which surface.",
+            "Split budgets by route class and third-party tag ownership so marketing experiments do not inherit engineering defaults."
+          ]
+        },
+        {
+          "heading": "Ship perf with the release train",
+          "paragraphs": [
+            "Attach budget checks to preview deployments for high-traffic templates. Block merges that blow LCP without an explicit waiver tied to an owner.",
+            "Roll back feature flags when INP crosses thresholds in canary, not after a week of complaints."
+          ],
+          "points": [
+            "Budget LCP and INP per template, not only globally",
+            "Tie perf regressions to release trains and rollback rules",
+            "Measure real devices and slow networks in CI smoke",
+            "Publish perf dashboards beside error rate for product"
+          ]
+        },
+        {
+          "heading": "Test slow networks deliberately",
+          "paragraphs": [
+            "Lab tests on fast laptops lie. Run smoke perf on representative mobile profiles and cache states.",
+            "Track hero image bytes, font loading strategy, and hydration cost as first-class metrics."
+          ]
+        },
+        {
+          "heading": "Make perf visible to product",
+          "paragraphs": [
+            "Product managers should see perf trends next to conversion, not in a quarterly infra review.",
+            "Budgets are how you keep SEO and UX from becoming a postmortem theme."
+          ],
+          "links": [
+            {
+              "label": "Google Search Central — Core Web Vitals",
+              "url": "https://developers.google.com/search/docs/appearance/core-web-vitals"
+            },
+            {
+              "label": "web.dev — Performance",
+              "url": "https://web.dev/performance/"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Performance Budgets for Marketing and App Routes",
+      "excerpt": "Marketing pages and authenticated app shells fail for different reasons, but they share one rule: without budgets, every launch adds weight until search and conversion quietly suffer.",
+      "description": "How staff engineers set per-route performance budgets, wire them to CI, and keep marketing and product surfaces inside measurable LCP and INP guardrails.",
+      "sections": [
+        {
+          "heading": "Templates need their own budgets",
+          "paragraphs": [
+            "Landing pages compete on first paint; dashboards compete on interaction readiness. A single global bundle budget hides which team regressed which surface.",
+            "Split budgets by route class and third-party tag ownership so marketing experiments do not inherit engineering defaults."
+          ]
+        },
+        {
+          "heading": "Ship perf with the release train",
+          "paragraphs": [
+            "Attach budget checks to preview deployments for high-traffic templates. Block merges that blow LCP without an explicit waiver tied to an owner.",
+            "Roll back feature flags when INP crosses thresholds in canary, not after a week of complaints."
+          ],
+          "points": [
+            "Budget LCP and INP per template, not only globally",
+            "Tie perf regressions to release trains and rollback rules",
+            "Measure real devices and slow networks in CI smoke",
+            "Publish perf dashboards beside error rate for product"
+          ]
+        },
+        {
+          "heading": "Test slow networks deliberately",
+          "paragraphs": [
+            "Lab tests on fast laptops lie. Run smoke perf on representative mobile profiles and cache states.",
+            "Track hero image bytes, font loading strategy, and hydration cost as first-class metrics."
+          ]
+        },
+        {
+          "heading": "Make perf visible to product",
+          "paragraphs": [
+            "Product managers should see perf trends next to conversion, not in a quarterly infra review.",
+            "Budgets are how you keep SEO and UX from becoming a postmortem theme."
+          ],
+          "links": [
+            {
+              "label": "Google Search Central — Core Web Vitals",
+              "url": "https://developers.google.com/search/docs/appearance/core-web-vitals"
+            },
+            {
+              "label": "web.dev — Performance",
+              "url": "https://web.dev/performance/"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "Performance Budgets for Marketing and App Routes",
+      "excerpt": "Marketing pages and authenticated app shells fail for different reasons, but they share one rule: without budgets, every launch adds weight until search and conversion quietly suffer.",
+      "description": "How staff engineers set per-route performance budgets, wire them to CI, and keep marketing and product surfaces inside measurable LCP and INP guardrails.",
+      "sections": [
+        {
+          "heading": "Templates need their own budgets",
+          "paragraphs": [
+            "Landing pages compete on first paint; dashboards compete on interaction readiness. A single global bundle budget hides which team regressed which surface.",
+            "Split budgets by route class and third-party tag ownership so marketing experiments do not inherit engineering defaults."
+          ]
+        },
+        {
+          "heading": "Ship perf with the release train",
+          "paragraphs": [
+            "Attach budget checks to preview deployments for high-traffic templates. Block merges that blow LCP without an explicit waiver tied to an owner.",
+            "Roll back feature flags when INP crosses thresholds in canary, not after a week of complaints."
+          ],
+          "points": [
+            "Budget LCP and INP per template, not only globally",
+            "Tie perf regressions to release trains and rollback rules",
+            "Measure real devices and slow networks in CI smoke",
+            "Publish perf dashboards beside error rate for product"
+          ]
+        },
+        {
+          "heading": "Test slow networks deliberately",
+          "paragraphs": [
+            "Lab tests on fast laptops lie. Run smoke perf on representative mobile profiles and cache states.",
+            "Track hero image bytes, font loading strategy, and hydration cost as first-class metrics."
+          ]
+        },
+        {
+          "heading": "Make perf visible to product",
+          "paragraphs": [
+            "Product managers should see perf trends next to conversion, not in a quarterly infra review.",
+            "Budgets are how you keep SEO and UX from becoming a postmortem theme."
+          ],
+          "links": [
+            {
+              "label": "Google Search Central — Core Web Vitals",
+              "url": "https://developers.google.com/search/docs/appearance/core-web-vitals"
+            },
+            {
+              "label": "web.dev — Performance",
+              "url": "https://web.dev/performance/"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "Performance Budgets for Marketing and App Routes",
+      "excerpt": "Marketing pages and authenticated app shells fail for different reasons, but they share one rule: without budgets, every launch adds weight until search and conversion quietly suffer.",
+      "description": "How staff engineers set per-route performance budgets, wire them to CI, and keep marketing and product surfaces inside measurable LCP and INP guardrails.",
+      "sections": [
+        {
+          "heading": "Templates need their own budgets",
+          "paragraphs": [
+            "Landing pages compete on first paint; dashboards compete on interaction readiness. A single global bundle budget hides which team regressed which surface.",
+            "Split budgets by route class and third-party tag ownership so marketing experiments do not inherit engineering defaults."
+          ]
+        },
+        {
+          "heading": "Ship perf with the release train",
+          "paragraphs": [
+            "Attach budget checks to preview deployments for high-traffic templates. Block merges that blow LCP without an explicit waiver tied to an owner.",
+            "Roll back feature flags when INP crosses thresholds in canary, not after a week of complaints."
+          ],
+          "points": [
+            "Budget LCP and INP per template, not only globally",
+            "Tie perf regressions to release trains and rollback rules",
+            "Measure real devices and slow networks in CI smoke",
+            "Publish perf dashboards beside error rate for product"
+          ]
+        },
+        {
+          "heading": "Test slow networks deliberately",
+          "paragraphs": [
+            "Lab tests on fast laptops lie. Run smoke perf on representative mobile profiles and cache states.",
+            "Track hero image bytes, font loading strategy, and hydration cost as first-class metrics."
+          ]
+        },
+        {
+          "heading": "Make perf visible to product",
+          "paragraphs": [
+            "Product managers should see perf trends next to conversion, not in a quarterly infra review.",
+            "Budgets are how you keep SEO and UX from becoming a postmortem theme."
+          ],
+          "links": [
+            {
+              "label": "Google Search Central — Core Web Vitals",
+              "url": "https://developers.google.com/search/docs/appearance/core-web-vitals"
+            },
+            {
+              "label": "web.dev — Performance",
+              "url": "https://web.dev/performance/"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

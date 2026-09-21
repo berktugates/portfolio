@@ -21,4 +21,9 @@ pnpm blog:publish:dry
 pnpm blog:publish
 ```
 
-Keep at least 7–14 days of inventory in this folder so the daily cron never goes empty.
+Keep at least 7–14 days of inventory in this folder so the weekly cron never goes empty.
+
+```bash
+pnpm blog-queue:sync
+pnpm check:queues
+```

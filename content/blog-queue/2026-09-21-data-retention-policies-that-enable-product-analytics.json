@@ -1,0 +1,449 @@
+{
+  "slug": "data-retention-policies-that-enable-product-analytics",
+  "title": "Data Retention Policies That Enable Product Analytics",
+  "excerpt": "Keeping everything forever is a compliance and cost trap. Deleting everything is a product blindfold. Good retention design preserves the questions product still needs to ask.",
+  "description": "How staff engineers design data retention that satisfies privacy while keeping product analytics useful: tiered events, rollups, lawful basis documentation, and observable deletion jobs.",
+  "readingMinutes": 7,
+  "keywords": [
+    "data retention",
+    "product analytics",
+    "GDPR",
+    "privacy engineering",
+    "event pipelines",
+    "data governance"
+  ],
+  "socialThreadTr": [
+    "Her şeyi sonsuza saklamak hukuk ve maliyet tuzağı; her şeyi silmek ürünü kör eder. İyi saklama, hâlâ sorulacak soruları korur. 🧵",
+    "Katmanlı olaylar, rollup, hukuki dayanak ve gözlemlenebilir silme. Detay: https://berktugberke.com/tr/blogs/data-retention-policies-that-enable-product-analytics"
+  ],
+  "sections": [
+    {
+      "heading": "Retention is a product surface",
+      "paragraphs": [
+        "Legal teams ask how long you keep personal data. Product teams ask whether last quarter's funnel still works. If one policy answers both with 'delete everything at 30 days,' you traded compliance theater for analytics amnesia.",
+        "Staff engineers classify data by purpose and risk, then attach retention to each class with explicit owners—not a single TTL copied from a blog post."
+      ]
+    },
+    {
+      "heading": "Tier events by purpose",
+      "paragraphs": [
+        "Separate product analytics events from audit logs, support attachments, and model-training corpora. They have different lawful bases, deletion SLAs, and downstream consumers.",
+        "Minimize identifiers in analytics tiers. Pseudonymous user keys with rotation beat shipping emails to your warehouse because it was convenient in v1."
+      ],
+      "points": [
+        "Define event tiers: product analytics vs audit vs model training",
+        "Use aggregated rollups before deleting raw events",
+        "Document lawful basis and deletion SLAs per data class",
+        "Make retention config code-reviewed like schema migrations"
+      ]
+    },
+    {
+      "heading": "Roll up before you purge",
+      "paragraphs": [
+        "Delete raw high-cardinality events on schedule while retaining weekly cohort rollups and feature adoption summaries that answer roadmap questions without resurrecting PII.",
+        "Document which dashboards break when raw data ages out, and migrate those questions to aggregates before enforcement day."
+      ]
+    },
+    {
+      "heading": "Operate deletion like migrations",
+      "paragraphs": [
+        "Retention configuration should be version-controlled and reviewed. Deletion jobs need metrics: rows removed, failures, and lag. Silent gaps show up as mysterious metric cliffs in product reviews.",
+        "Retention done well is a competitive advantage: you can tell users what you keep, why, and for how long—while still learning from behavior at scale."
+      ],
+      "links": [
+        {
+          "label": "GDPR — Storage limitation",
+          "url": "https://gdpr-info.eu/art-5-gdpr/"
+        },
+        {
+          "label": "Snowplow — Data retention",
+          "url": "https://docs.snowplow.io/docs/understanding-your-pipeline/retention/"
+        },
+        {
+          "label": "Amplitude — Data governance",
+          "url": "https://amplitude.com/docs/data/data-governance"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Ürün Analitiğini Mümkün Kılan Veri Saklama Politikaları",
+      "excerpt": "Saklama yasal zorunluluk; analitik ise ürün kararı. İkisini aynı çöp kutusuna atmayın.",
+      "description": "Ham olayları silip özetleri koruyarak analitiği sürdüren saklama: katmanlar, rollup, hukuki dayanak ve gözlemlenebilir silme.",
+      "sections": [
+        {
+          "heading": "Saklama ürün yüzeyidir",
+          "paragraphs": [
+            [
+              "Her şeyi sonsuza kadar tutmak ölçek ve hukuk riski; her şeyi silmek trend körleştirir.",
+              "Staff ekipler veri sınıflarına göre politika yazar."
+            ]
+          ]
+        },
+        {
+          "heading": "Katmanlı olay sınıfları",
+          "paragraphs": [
+            [
+              "Ürün analitiği, denetim ve model eğitimi aynı TTL'i paylaşmamalı.",
+              "PII ile anonim metrikleri ayırın."
+            ]
+          ],
+          "points": [
+            "Define event tiers: product analytics vs audit vs model training",
+            "Use aggregated rollups before deleting raw events",
+            "Document lawful basis and deletion SLAs per data class",
+            "Make retention config code-reviewed like schema migrations"
+          ]
+        },
+        {
+          "heading": "Rollup ile hafıza",
+          "paragraphs": [
+            [
+              "Ham olayları silmeden önce haftalık/aylık rollup üretin.",
+              "Funnel ve kohort soruları özetlerde cevaplanabilmeli."
+            ]
+          ]
+        },
+        {
+          "heading": "Operasyonel disiplin",
+          "paragraphs": [
+            [
+              "Saklama config'i şema migrasyonu gibi review edilsin.",
+              "Silme işlerini metrikleyin; sessiz boşluklar analitik sürprizidir."
+            ]
+          ],
+          "links": [
+            {
+              "label": "GDPR — Storage limitation",
+              "url": "https://gdpr-info.eu/art-5-gdpr/"
+            },
+            {
+              "label": "Snowplow — Data retention",
+              "url": "https://docs.snowplow.io/docs/understanding-your-pipeline/retention/"
+            },
+            {
+              "label": "Amplitude — Data governance",
+              "url": "https://amplitude.com/docs/data/data-governance"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Datenaufbewahrung die Produktanalytik ermöglicht",
+      "excerpt": "Aufbewahrung ist Compliance; Analytik ist Produkt. Nicht alles in eine TTL.",
+      "description": "Schichten, Rollups, Rechtsgrundlage und beobachtbare Löschung statt Alles-oder-Nichts.",
+      "sections": [
+        {
+          "heading": "Retention ist Produktfläche",
+          "paragraphs": [
+            [
+              "Alles für immer skaliert und riskiert Recht.",
+              "Alles löschen macht blind."
+            ]
+          ]
+        },
+        {
+          "heading": "Gestufte Event-Tiers",
+          "paragraphs": [
+            [
+              "Analytics, Audit, Training getrennte TTLs.",
+              "PII von anonymen Metriken trennen."
+            ]
+          ],
+          "points": [
+            "Define event tiers: product analytics vs audit vs model training",
+            "Use aggregated rollups before deleting raw events",
+            "Document lawful basis and deletion SLAs per data class",
+            "Make retention config code-reviewed like schema migrations"
+          ]
+        },
+        {
+          "heading": "Rollups vor Löschung",
+          "paragraphs": [
+            [
+              "Rollups vor Rohdaten-Löschung.",
+              "Funnels auf Aggregaten."
+            ]
+          ]
+        },
+        {
+          "heading": "Operative Disziplin",
+          "paragraphs": [
+            [
+              "Retention wie Schema reviewen.",
+              "Deletion jobs metrieren."
+            ]
+          ],
+          "links": [
+            {
+              "label": "GDPR — Storage limitation",
+              "url": "https://gdpr-info.eu/art-5-gdpr/"
+            },
+            {
+              "label": "Snowplow — Data retention",
+              "url": "https://docs.snowplow.io/docs/understanding-your-pipeline/retention/"
+            },
+            {
+              "label": "Amplitude — Data governance",
+              "url": "https://amplitude.com/docs/data/data-governance"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Politiques de rétention compatibles analytics produit",
+      "excerpt": "La rétention est compliance; l'analytics est produit.",
+      "description": "Couches, rollups, base légale et suppression observable.",
+      "sections": [
+        {
+          "heading": "La rétention est surface produit",
+          "paragraphs": [
+            [
+              "Tout garder scale et juridique; tout effacer aveugle.",
+              "Politiques par classe de données."
+            ]
+          ]
+        },
+        {
+          "heading": "Tiers d'événements",
+          "paragraphs": [
+            [
+              "Analytics, audit, entraînement: TTL distincts.",
+              "Séparer PII et métriques anonymes."
+            ]
+          ],
+          "points": [
+            "Define event tiers: product analytics vs audit vs model training",
+            "Use aggregated rollups before deleting raw events",
+            "Document lawful basis and deletion SLAs per data class",
+            "Make retention config code-reviewed like schema migrations"
+          ]
+        },
+        {
+          "heading": "Rollups avant suppression",
+          "paragraphs": [
+            [
+              "Rollups avant suppression brute.",
+              "Entonnoirs sur agrégats."
+            ]
+          ]
+        },
+        {
+          "heading": "Discipline opérationnelle",
+          "paragraphs": [
+            [
+              "Config reviewée comme schéma.",
+              "Métriquer les jobs de suppression."
+            ]
+          ],
+          "links": [
+            {
+              "label": "GDPR — Storage limitation",
+              "url": "https://gdpr-info.eu/art-5-gdpr/"
+            },
+            {
+              "label": "Snowplow — Data retention",
+              "url": "https://docs.snowplow.io/docs/understanding-your-pipeline/retention/"
+            },
+            {
+              "label": "Amplitude — Data governance",
+              "url": "https://amplitude.com/docs/data/data-governance"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Politiche di retention che abilitano product analytics",
+      "excerpt": "Retention è compliance; analytics è prodotto.",
+      "description": "Strati, rollup, base legale e cancellazione osservabile.",
+      "sections": [
+        {
+          "heading": "Retention è superficie prodotto",
+          "paragraphs": [
+            [
+              "Tenere tutto scala e rischia; cancellare tutto acceca.",
+              "Politiche per classe dati."
+            ]
+          ]
+        },
+        {
+          "heading": "Tier di eventi",
+          "paragraphs": [
+            [
+              "Analytics, audit, training: TTL separati.",
+              "Separare PII e metriche anonime."
+            ]
+          ],
+          "points": [
+            "Define event tiers: product analytics vs audit vs model training",
+            "Use aggregated rollups before deleting raw events",
+            "Document lawful basis and deletion SLAs per data class",
+            "Make retention config code-reviewed like schema migrations"
+          ]
+        },
+        {
+          "heading": "Rollup prima della delete",
+          "paragraphs": [
+            [
+              "Rollup prima dei raw event.",
+              "Funnel su aggregati."
+            ]
+          ]
+        },
+        {
+          "heading": "Disciplina operativa",
+          "paragraphs": [
+            [
+              "Config reviewata come schema.",
+              "Metricare job di cancellazione."
+            ]
+          ],
+          "links": [
+            {
+              "label": "GDPR — Storage limitation",
+              "url": "https://gdpr-info.eu/art-5-gdpr/"
+            },
+            {
+              "label": "Snowplow — Data retention",
+              "url": "https://docs.snowplow.io/docs/understanding-your-pipeline/retention/"
+            },
+            {
+              "label": "Amplitude — Data governance",
+              "url": "https://amplitude.com/docs/data/data-governance"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "在合规前提下支撑产品分析的数据保留",
+      "excerpt": "保留是合规，分析是产品，不能同一 TTL。",
+      "description": "分层、汇总、法律依据与可观测删除。",
+      "sections": [
+        {
+          "heading": "保留是产品面",
+          "paragraphs": [
+            [
+              "永久保留有规模与法律风险；全删则失明。",
+              "按数据类写政策。"
+            ]
+          ]
+        },
+        {
+          "heading": "事件分层",
+          "paragraphs": [
+            [
+              "分析、审计、训练分开 TTL。",
+              "PII 与匿名指标分离。"
+            ]
+          ],
+          "points": [
+            "Define event tiers: product analytics vs audit vs model training",
+            "Use aggregated rollups before deleting raw events",
+            "Document lawful basis and deletion SLAs per data class",
+            "Make retention config code-reviewed like schema migrations"
+          ]
+        },
+        {
+          "heading": "删除前汇总",
+          "paragraphs": [
+            [
+              "删原始前先 rollup。",
+              "漏斗在聚合上回答。"
+            ]
+          ]
+        },
+        {
+          "heading": "运营纪律",
+          "paragraphs": [
+            [
+              "保留配置像 schema 一样评审。",
+              "度量删除作业。"
+            ]
+          ],
+          "links": [
+            {
+              "label": "GDPR — Storage limitation",
+              "url": "https://gdpr-info.eu/art-5-gdpr/"
+            },
+            {
+              "label": "Snowplow — Data retention",
+              "url": "https://docs.snowplow.io/docs/understanding-your-pipeline/retention/"
+            },
+            {
+              "label": "Amplitude — Data governance",
+              "url": "https://amplitude.com/docs/data/data-governance"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "プロダクト分析を可能にするデータ保持ポリシー",
+      "excerpt": "保持はコンプライアンス、分析はプロダクト。",
+      "description": "層、ロールアップ、法的根拠、可観測な削除。",
+      "sections": [
+        {
+          "heading": "保持はプロダクト面",
+          "paragraphs": [
+            [
+              "永久保持はスケールと法リスク。",
+              "全削除は盲目。"
+            ]
+          ]
+        },
+        {
+          "heading": "イベント階層",
+          "paragraphs": [
+            [
+              "分析・監査・学習でTTL分離。",
+              "PIIと匿名指標を分離。"
+            ]
+          ],
+          "points": [
+            "Define event tiers: product analytics vs audit vs model training",
+            "Use aggregated rollups before deleting raw events",
+            "Document lawful basis and deletion SLAs per data class",
+            "Make retention config code-reviewed like schema migrations"
+          ]
+        },
+        {
+          "heading": "削除前ロールアップ",
+          "paragraphs": [
+            [
+              "生削除前にロールアップ。",
+              "ファネルは集計で。"
+            ]
+          ]
+        },
+        {
+          "heading": "運用規律",
+          "paragraphs": [
+            [
+              "保持設定をスキーマ同様レビュー。",
+              "削除ジョブを計測。"
+            ]
+          ],
+          "links": [
+            {
+              "label": "GDPR — Storage limitation",
+              "url": "https://gdpr-info.eu/art-5-gdpr/"
+            },
+            {
+              "label": "Snowplow — Data retention",
+              "url": "https://docs.snowplow.io/docs/understanding-your-pipeline/retention/"
+            },
+            {
+              "label": "Amplitude — Data governance",
+              "url": "https://amplitude.com/docs/data/data-governance"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

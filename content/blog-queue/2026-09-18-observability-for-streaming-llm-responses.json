@@ -1,0 +1,401 @@
+{
+  "slug": "observability-for-streaming-llm-responses",
+  "title": "Observability for Streaming LLM Responses",
+  "excerpt": "Time-to-first-token and partial output change how users judge quality. If your traces stop at the HTTP boundary, you are flying blind through the longest part of the request.",
+  "description": "Staff-engineer patterns for observability on streaming LLM responses: span models for SSE, token and latency budgets, client disconnect semantics, quality signals mid-stream, and dashboards that separate model from product regressions.",
+  "readingMinutes": 7,
+  "keywords": [
+    "LLM observability",
+    "streaming responses",
+    "OpenTelemetry",
+    "SSE",
+    "AI product metrics",
+    "production LLM"
+  ],
+  "socialThreadTr": [
+    "Streaming yanıtta kalite algısı ilk tokenden başlar. Trace HTTP sınırında bitiyorsa, isteğin en uzun kısmında körsünüz. 🧵",
+    "Span modeli, TTFT, disconnect ve mid-stream sinyaller. Detay: https://berktugberke.com/tr/blogs/observability-for-streaming-llm-responses"
+  ],
+  "sections": [
+    {
+      "heading": "Streaming is a different failure surface",
+      "paragraphs": [
+        "Batch inference hides latency behind a single completion event. Streaming exposes partial failure: slow first token, stalled chunks, truncated JSON, or a confident preamble before a policy violation. Product teams feel these as 'the assistant froze' long before your error rate spikes.",
+        "Treat the stream as a first-class workload. Instrument from client render through gateway, router, model provider, and tool side effects. A trace that ends when headers return misses the user-visible story."
+      ]
+    },
+    {
+      "heading": "Span the stream, not only the socket",
+      "paragraphs": [
+        "Model one trace per user turn with child spans for retrieval, routing, first token, tool calls, and finalization. Record time-to-first-token (TTFT), inter-chunk gaps, total tokens, and whether the client aborted mid-flight.",
+        "Propagate trace context through SSE or WebSocket frames where your stack allows. When it cannot, correlate with a stable turn id and log structured events at chunk boundaries so you can reconstruct stall points without storing full prompts in logs."
+      ],
+      "points": [
+        "Separate metrics for provider TTFT versus your gateway overhead",
+        "Track client disconnect rate and whether billing still accrues",
+        "Sample full transcripts for eval, not for default metrics cardinality",
+        "Alert on rising stall gaps before hard timeouts fire"
+      ]
+    },
+    {
+      "heading": "Quality signals belong in the same timeline",
+      "paragraphs": [
+        "Attach lightweight checks as the stream progresses: citation coverage, refusal patterns, tool-call shape, or retrieval hit rate. You do not need to block every chunk—aggregate signals at end-of-stream for dashboards and at thresholds for automatic degrade.",
+        "Compare streaming cohorts to batch baselines when you A/B route models. A model that wins on final BLEU can lose on perceived speed if TTFT regresses. Observability should make that trade visible to product, not only to infra."
+      ]
+    },
+    {
+      "heading": "Operate streams like a product SLO",
+      "paragraphs": [
+        "Define SLOs on TTFT p95, stall-free completion rate, and successful tool finalization—not only 5xx rate. Runbooks should distinguish provider brownouts, prompt bloat, retrieval timeouts, and client network loss.",
+        "Streaming observability is how AI products earn the right to feel instant. Measure the experience users actually see, or you will optimize the wrong graph while churn quietly rises."
+      ],
+      "links": [
+        {
+          "label": "OpenTelemetry — Semantic conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/"
+        },
+        {
+          "label": "MDN — Server-sent events",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events"
+        },
+        {
+          "label": "Vercel AI SDK — Streaming",
+          "url": "https://sdk.vercel.ai/docs/ai-sdk-core/streaming"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Streaming LLM Yanıtları için Observability",
+      "excerpt": "İlk token süresi ve kısmi çıktı kalite algısını değiştirir. Trace'leriniz HTTP sınırında bitiyorsa, isteğin en uzun kısmında körsünüz.",
+      "description": "Streaming LLM yanıtlarında observability için staff mühendis kalıpları: SSE span modelleri, token ve gecikme bütçeleri, client disconnect semantiği, akış ortası kalite sinyalleri ve model ile ürün regresyonlarını ayıran panolar.",
+      "sections": [
+        {
+          "heading": "Streaming farklı bir hata yüzeyidir",
+          "paragraphs": [
+            "Batch çıkarım gecikmeyi tek tamamlanma olayının arkasına gizler. Streaming kısmi hatayı açığa çıkarır: yavaş ilk token, takılan chunk'lar, kesik JSON veya politika ihlalinden önce gelen kendinden emin giriş.",
+            "Akışı birinci sınıf iş yükü sayın. Client render'dan gateway, router, model sağlayıcı ve tool yan etkilerine kadar ölçün."
+          ]
+        },
+        {
+          "heading": "Yalnızca soketi değil, akışı span'leyin",
+          "paragraphs": [
+            "Kullanıcı turu başına bir trace modelleyin; retrieval, routing, ilk token, tool çağrıları ve finalize için child span'ler ekleyin.",
+            "Stack izin verdiğinde trace context'i SSE veya WebSocket frame'leri boyunca taşıyın; değilse stabil turn id ile chunk sınırında yapılandırılmış olaylar loglayın."
+          ],
+          "points": [
+            "Sağlayıcı TTFT ile gateway ek yükünü ayrı metrikleyin",
+            "Client disconnect oranını ve faturalamanın sürüp sürmediğini izleyin",
+            "Eval için tam transkript örnekleyin, varsayılan kardinalite için değil",
+            "Sert timeout'lardan önce artan stall aralıklarına alarm kurun"
+          ]
+        },
+        {
+          "heading": "Kalite sinyalleri aynı zaman çizgisinde olmalı",
+          "paragraphs": [
+            "Akış ilerlerken hafif kontroller ekleyin: atıf kapsamı, red kalıpları, tool-call şekli veya retrieval isabet oranı.",
+            "Modelleri A/B yönlendirirken streaming kohortlarını batch baz çizgileriyle karşılaştırın; TTFT regresyonu algılanan hızı bozar."
+          ]
+        },
+        {
+          "heading": "Akışları ürün SLO'su gibi işletin",
+          "paragraphs": [
+            "TTFT p95, takılmadan tamamlanma oranı ve başarılı tool finalize üzerine SLO tanımlayın.",
+            "Streaming observability, kullanıcının gerçekten gördüğü deneyimi ölçmeden anında hissettirme hakkını kazanamazsınız."
+          ],
+          "links": [
+            {
+              "label": "OpenTelemetry — Semantic conventions",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            },
+            {
+              "label": "MDN — Server-sent events",
+              "url": "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events"
+            },
+            {
+              "label": "Vercel AI SDK — Streaming",
+              "url": "https://sdk.vercel.ai/docs/ai-sdk-core/streaming"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Observability für gestreamte LLM-Antworten",
+      "excerpt": "Time-to-first-token und Teiloutput ändern die Qualitätswahrnehmung. Enden Traces an der HTTP-Grenze, fliegen Sie blind durch den längsten Teil der Anfrage.",
+      "description": "Staff-Engineer-Muster für Observability bei gestreamten LLM-Antworten: Span-Modelle für SSE, Token- und Latenz-Budgets, Client-Disconnect-Semantik und Dashboards die Modell- von Produkt-Regressionen trennen.",
+      "sections": [
+        {
+          "heading": "Streaming ist eine andere Failure-Oberfläche",
+          "paragraphs": [
+            "Batch-Inferenz versteckt Latenz hinter einem Completion-Event. Streaming legt Teilfehler offen: langsames erstes Token, stockende Chunks oder abgeschnittenes JSON.",
+            "Behandeln Sie den Stream als First-Class-Workload von Client-Render bis Tool-Nebenwirkungen."
+          ]
+        },
+        {
+          "heading": "Den Stream spannen, nicht nur den Socket",
+          "paragraphs": [
+            "Ein Trace pro User-Turn mit Child-Spans für Retrieval, Routing, First Token, Tools und Finalisierung.",
+            "Trace-Context durch SSE/WebSocket propagieren oder mit stabiler Turn-ID an Chunk-Grenzen korrelieren."
+          ],
+          "points": [
+            "Provider-TTFT und Gateway-Overhead getrennt metrieren",
+            "Client-Disconnect-Rate und Billing-Fortlauf tracken",
+            "Volle Transkripte für Eval sampeln",
+            "Stall-Gaps vor harten Timeouts alarmieren"
+          ]
+        },
+        {
+          "heading": "Qualitätssignale gehören auf dieselbe Timeline",
+          "paragraphs": [
+            "Leichte Checks während des Streams: Zitationsabdeckung, Refusal-Muster, Tool-Form, Retrieval-Treffer.",
+            "Streaming-Kohorten mit Batch-Baselines bei A/B-Routing vergleichen."
+          ]
+        },
+        {
+          "heading": "Streams wie ein Produkt-SLO betreiben",
+          "paragraphs": [
+            "SLOs auf TTFT p95, stall-freie Completion und Tool-Finalisierung definieren.",
+            "Messen Sie die nutzersichtbare Erfahrung, nicht nur 5xx."
+          ],
+          "links": [
+            {
+              "label": "OpenTelemetry — Semantic conventions",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            },
+            {
+              "label": "MDN — Server-sent events",
+              "url": "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events"
+            },
+            {
+              "label": "Vercel AI SDK — Streaming",
+              "url": "https://sdk.vercel.ai/docs/ai-sdk-core/streaming"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Observabilité des réponses LLM en streaming",
+      "excerpt": "Le time-to-first-token change la perception qualité. Si vos traces s'arrêtent à HTTP, vous volez à l'aveugle pendant la plus longue partie de la requête.",
+      "description": "Patterns staff engineer : spans SSE, budgets token/latence, déconnexion client, signaux mid-stream et tableaux de bord séparant régressions modèle et produit.",
+      "sections": [
+        {
+          "heading": "Le streaming est une surface d'échec différente",
+          "paragraphs": [
+            "L'inférence batch cache la latence. Le streaming expose échecs partiels : premier token lent, chunks bloqués, JSON tronqué.",
+            "Instrumentez du rendu client aux effets de bord outils."
+          ]
+        },
+        {
+          "heading": "Span le flux, pas seulement le socket",
+          "paragraphs": [
+            "Une trace par tour avec spans enfants pour retrieval, routage, premier token, outils, finalisation.",
+            "Propagez le contexte via SSE/WebSocket ou corrélez avec un turn id stable."
+          ],
+          "points": [
+            "Métriques séparées TTFT fournisseur vs gateway",
+            "Taux de déconnexion client et facturation",
+            "Transcriptions complètes échantillonnées pour eval",
+            "Alertes sur gaps de stall avant timeouts"
+          ]
+        },
+        {
+          "heading": "Les signaux qualité sur la même timeline",
+          "paragraphs": [
+            "Contrôles légers en cours de stream : citations, refus, forme d'appel outil, hit retrieval.",
+            "Comparez cohortes streaming et baselines batch en A/B."
+          ]
+        },
+        {
+          "heading": "Exploiter les streams comme SLO produit",
+          "paragraphs": [
+            "SLO sur TTFT p95, complétion sans stall, finalisation outil.",
+            "Mesurez l'expérience visible, pas seulement les 5xx."
+          ],
+          "links": [
+            {
+              "label": "OpenTelemetry — Semantic conventions",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            },
+            {
+              "label": "MDN — Server-sent events",
+              "url": "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events"
+            },
+            {
+              "label": "Vercel AI SDK — Streaming",
+              "url": "https://sdk.vercel.ai/docs/ai-sdk-core/streaming"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Observability per risposte LLM in streaming",
+      "excerpt": "Time-to-first-token e output parziale cambiano il giudizio sulla qualità. Trace che finiscono a HTTP lasciano ciechi nella parte più lunga.",
+      "description": "Pattern staff engineer: span SSE, budget token/latenza, disconnect client, segnali mid-stream e dashboard che separano regressioni modello e prodotto.",
+      "sections": [
+        {
+          "heading": "Lo streaming è una superficie di failure diversa",
+          "paragraphs": [
+            "L'inferenza batch nasconde la latenza. Lo streaming espone failure parziali: primo token lento, chunk bloccati, JSON troncato.",
+            "Strumenta dal render client agli effetti collaterali tool."
+          ]
+        },
+        {
+          "heading": "Span lo stream, non solo il socket",
+          "paragraphs": [
+            "Una trace per turno con span figli per retrieval, routing, primo token, tool, finalizzazione.",
+            "Propaga contesto via SSE/WebSocket o correla con turn id stabile."
+          ],
+          "points": [
+            "Metriche separate TTFT provider vs gateway",
+            "Tasso disconnect client e fatturazione",
+            "Trascrizioni complete per eval",
+            "Allerta su gap di stall prima dei timeout"
+          ]
+        },
+        {
+          "heading": "Segnali qualità sulla stessa timeline",
+          "paragraphs": [
+            "Controlli leggeri in stream: citazioni, rifiuti, forma tool-call, hit retrieval.",
+            "Confronta cohort streaming con baseline batch in A/B."
+          ]
+        },
+        {
+          "heading": "Operare gli stream come SLO di prodotto",
+          "paragraphs": [
+            "SLO su TTFT p95, completamento senza stall, finalizzazione tool.",
+            "Misura l'esperienza che l'utente vede davvero."
+          ],
+          "links": [
+            {
+              "label": "OpenTelemetry — Semantic conventions",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            },
+            {
+              "label": "MDN — Server-sent events",
+              "url": "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events"
+            },
+            {
+              "label": "Vercel AI SDK — Streaming",
+              "url": "https://sdk.vercel.ai/docs/ai-sdk-core/streaming"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "流式 LLM 响应的可观测性",
+      "excerpt": "首 token 时间与部分输出改变质量判断。追踪在 HTTP 边界结束意味着在最长一段请求中盲目飞行。",
+      "description": "流式 LLM 可观测性模式：SSE span、token 与延迟预算、客户端断开语义、流中质量信号，以及区分模型与产品回归的看板。",
+      "sections": [
+        {
+          "heading": "流式是不同的失败面",
+          "paragraphs": [
+            "批式推理隐藏延迟。流式暴露部分失败：首 token 慢、块停滞、JSON 截断。",
+            "从客户端渲染到工具副作用全程埋点。"
+          ]
+        },
+        {
+          "heading": "为流建 span",
+          "paragraphs": [
+            "每轮一条追踪，子 span 覆盖检索、路由、首 token、工具与收尾。",
+            "通过 SSE/WebSocket 传播上下文，或用稳定 turn id 在块边界关联。"
+          ],
+          "points": [
+            "分开提供商 TTFT 与网关开销",
+            "跟踪客户端断开与计费",
+            "评测抽样完整转录",
+            "硬超时前对停滞间隔告警"
+          ]
+        },
+        {
+          "heading": "质量信号在同一时间线",
+          "paragraphs": [
+            "流中轻量检查：引用、拒绝、工具形态、检索命中。",
+            "A/B 时将流式人群与批式基线对比。"
+          ]
+        },
+        {
+          "heading": "像产品 SLO 运营流",
+          "paragraphs": [
+            "在 TTFT p95、无停滞完成、工具收尾上定义 SLO。",
+            "测量用户真正看到的体验。"
+          ],
+          "links": [
+            {
+              "label": "OpenTelemetry — Semantic conventions",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            },
+            {
+              "label": "MDN — Server-sent events",
+              "url": "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events"
+            },
+            {
+              "label": "Vercel AI SDK — Streaming",
+              "url": "https://sdk.vercel.ai/docs/ai-sdk-core/streaming"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "ストリーミングLLM応答の可観測性",
+      "excerpt": "初回トークンと部分出力は品質の見え方を変えます。HTTP境界でトレースが終わると最長区間を盲目で飛ばします。",
+      "description": "SSEスパン、トークン/レイテンシ予算、クライアント切断、ストリーム途中の品質シグナル、モデルとプロダクト回帰を分けるダッシュボード。",
+      "sections": [
+        {
+          "heading": "ストリーミングは別の失敗面",
+          "paragraphs": [
+            "バッチ推論はレイテンシを隠す。ストリーミングは部分失敗を露わにする。",
+            "クライアント描画からツール副作用まで計測。"
+          ]
+        },
+        {
+          "heading": "ストリームをスパンする",
+          "paragraphs": [
+            "ターンごとに1トレース、取得・ルーティング・初トークン・ツール・終了の子スパン。",
+            "SSE/WebSocketでコンテキスト伝播、またはturn idで相関。"
+          ],
+          "points": [
+            "プロバイダTTFTとゲートウェイを分離",
+            "クライアント切断と課金を追跡",
+            "評価用に全文サンプル",
+            "ハードタイムアウト前に停滞ギャップをアラート"
+          ]
+        },
+        {
+          "heading": "品質シグナルは同じタイムライン",
+          "paragraphs": [
+            "ストリーム中の軽量チェック：引用、拒否、ツール形状、取得ヒット。",
+            "A/Bでストリーミングコホートとバッチ基準を比較。"
+          ]
+        },
+        {
+          "heading": "ストリームをプロダクトSLOとして運用",
+          "paragraphs": [
+            "TTFT p95、停滞なし完了、ツール終了でSLO定義。",
+            "ユーザーが見る体験を測る。"
+          ],
+          "links": [
+            {
+              "label": "OpenTelemetry — Semantic conventions",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            },
+            {
+              "label": "MDN — Server-sent events",
+              "url": "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events"
+            },
+            {
+              "label": "Vercel AI SDK — Streaming",
+              "url": "https://sdk.vercel.ai/docs/ai-sdk-core/streaming"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

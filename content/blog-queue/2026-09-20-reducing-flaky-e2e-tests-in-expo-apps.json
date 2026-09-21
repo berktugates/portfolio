@@ -1,0 +1,449 @@
+{
+  "slug": "reducing-flaky-e2e-tests-in-expo-apps",
+  "title": "Reducing Flaky E2E Tests in Expo Apps",
+  "excerpt": "A green CI badge means nothing if engineers rerun the pipeline until luck strikes. Flaky mobile E2E is a product risk signal, not a nuisance ticket.",
+  "description": "Practical staff-engineer tactics to reduce flaky end-to-end tests in Expo apps: deterministic fixtures, network stubs, quarantine policy, and a realistic device matrix in CI.",
+  "readingMinutes": 7,
+  "keywords": [
+    "Expo E2E",
+    "Detox",
+    "Maestro",
+    "mobile testing",
+    "flaky tests",
+    "CI reliability"
+  ],
+  "socialThreadTr": [
+    "Yeşil CI rozeti şansla üçüncü rerun'da geliyorsa güven yoktur. Expo E2E flake bir gürültü değil, ürün risk sinyalidir. 🧵",
+    "Deterministik fixture, ağ stub'ı, karantina ve cihaz matrisi. Detay: https://berktugberke.com/tr/blogs/reducing-flaky-e2e-tests-in-expo-apps"
+  ],
+  "sections": [
+    {
+      "heading": "Flaky E2E is a trust problem",
+      "paragraphs": [
+        "Animation races, Metro reload timing, and real network dependencies turn mobile E2E into a lottery. Teams that 'just retry' teach themselves to ignore red builds until a release is blocked.",
+        "Staff engineers track flake rate like error budget: visible, owned, and trending down. Reliability of the test system is part of shipping confidence for Expo products."
+      ]
+    },
+    {
+      "heading": "Wait on contracts, not clocks",
+      "paragraphs": [
+        "Use fixed test accounts, seeded data, and known API responses. Stub HTTP at the client boundary when the goal is UI flow, not backend integration—reserve a smaller integration suite for cross-service truth.",
+        "Replace arbitrary sleeps with visibility and network idle predicates from your runner. If a test needs a five-second sleep, it is documenting a missing synchronization contract."
+      ],
+      "points": [
+        "Reset app state and server fixtures deterministically between specs",
+        "Stub network at the boundary; avoid sleeping on animations",
+        "Quarantine flaky tests with owner and SLA, do not mute forever",
+        "Run a subset on every PR, full matrix nightly on real devices"
+      ]
+    },
+    {
+      "heading": "Quarantine with discipline",
+      "paragraphs": [
+        "Move flaky specs to a quarantine job with an owner and fix-by date. Unlimited retries in the main pipeline hide debt and burn CI minutes.",
+        "When a quarantined test fails consistently, that is progress—it is now deterministic enough to debug."
+      ]
+    },
+    {
+      "heading": "Layer CI realistically",
+      "paragraphs": [
+        "Run a fast smoke suite on every pull request; run the full device matrix nightly or pre-release. Emulators catch logic; real devices catch keyboard, push permissions, and native module edge cases.",
+        "Reducing flake is how Expo teams keep shipping weekly without pretending mobile is just small web."
+      ],
+      "links": [
+        {
+          "label": "Detox — Getting started",
+          "url": "https://wix.github.io/Detox/docs/introduction/getting-started/"
+        },
+        {
+          "label": "Expo — E2E testing",
+          "url": "https://docs.expo.dev/develop/development-builds/introduction/"
+        },
+        {
+          "label": "Maestro — Mobile UI testing",
+          "url": "https://maestro.mobile.dev/"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Expo Uygulamalarında Flaky E2E Testleri Azaltmak",
+      "excerpt": "Flaky E2E güveni öldürür; retry maskesi değil deterministik kurulum ister.",
+      "description": "Expo'da flaky E2E'yi azaltma: deterministik fixture, ağ stub'ları, karantina politikası ve gerçek cihaz matrisi.",
+      "sections": [
+        {
+          "heading": "Flaky test bir ürün riskidir",
+          "paragraphs": [
+            [
+              "Animasyon ve ağ yarışları Expo E2E'de en sık kök nedenlerdir.",
+              "Staff ekipler flake oranını release metriği sayar."
+            ]
+          ]
+        },
+        {
+          "heading": "Zamanlayıcı değil sözleşme bekle",
+          "paragraphs": [
+            [
+              "Sabit test kullanıcıları ve bilinen backend durumu kullanın.",
+              "sleep yerine görünürlük ve API yanıtı bekleyin."
+            ]
+          ],
+          "points": [
+            "Reset app state and server fixtures deterministically between specs",
+            "Stub network at the boundary; avoid sleeping on animations",
+            "Quarantine flaky tests with owner and SLA, do not mute forever",
+            "Run a subset on every PR, full matrix nightly on real devices"
+          ]
+        },
+        {
+          "heading": "Karantina disiplini",
+          "paragraphs": [
+            [
+              "Flaky testleri sahipsiz retry ile sonsuza kadar susturmayın.",
+              "Sahip ve düzeltme SLA'sı olan karantina listesi tutun."
+            ]
+          ]
+        },
+        {
+          "heading": "CI'ı gerçekçi katmanla",
+          "paragraphs": [
+            [
+              "Her PR'da smoke, gece tam matris.",
+              "Gerçek cihazda Metro ve native modül farklarını yakalayın."
+            ]
+          ],
+          "links": [
+            {
+              "label": "Detox — Getting started",
+              "url": "https://wix.github.io/Detox/docs/introduction/getting-started/"
+            },
+            {
+              "label": "Expo — E2E testing",
+              "url": "https://docs.expo.dev/develop/development-builds/introduction/"
+            },
+            {
+              "label": "Maestro — Mobile UI testing",
+              "url": "https://maestro.mobile.dev/"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Flaky E2E-Tests in Expo-Apps reduzieren",
+      "excerpt": "Flaky E2E tötet Vertrauen; Retries sind kein Setup.",
+      "description": "Deterministische Fixtures, Netzwerk-Stubs, Quarantäne und Device-Matrix für Expo E2E.",
+      "sections": [
+        {
+          "heading": "Flaky ist Produktrisiko",
+          "paragraphs": [
+            [
+              "Animation und Netzwerk-Races sind häufige Ursachen.",
+              "Flake-Rate ist Release-Metrik."
+            ]
+          ]
+        },
+        {
+          "heading": "Auf Vertrag warten",
+          "paragraphs": [
+            [
+              "Feste Testnutzer und bekannte Backend-Zustände.",
+              "Kein sleep—auf Sichtbarkeit warten."
+            ]
+          ],
+          "points": [
+            "Reset app state and server fixtures deterministically between specs",
+            "Stub network at the boundary; avoid sleeping on animations",
+            "Quarantine flaky tests with owner and SLA, do not mute forever",
+            "Run a subset on every PR, full matrix nightly on real devices"
+          ]
+        },
+        {
+          "heading": "Quarantäne-Disziplin",
+          "paragraphs": [
+            [
+              "Keine endlosen Retries ohne Owner.",
+              "Quarantäne mit SLA."
+            ]
+          ]
+        },
+        {
+          "heading": "CI realistisch schichten",
+          "paragraphs": [
+            [
+              "Smoke pro PR, volle Matrix nachts.",
+              "Echte Geräte für Native-Unterschiede."
+            ]
+          ],
+          "links": [
+            {
+              "label": "Detox — Getting started",
+              "url": "https://wix.github.io/Detox/docs/introduction/getting-started/"
+            },
+            {
+              "label": "Expo — E2E testing",
+              "url": "https://docs.expo.dev/develop/development-builds/introduction/"
+            },
+            {
+              "label": "Maestro — Mobile UI testing",
+              "url": "https://maestro.mobile.dev/"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Réduire les tests E2E flaky dans Expo",
+      "excerpt": "Les E2E flaky tuent la confiance; les retries ne remplacent pas un setup déterministe.",
+      "description": "Fixtures déterministes, stubs réseau, quarantaine et matrice appareils pour Expo.",
+      "sections": [
+        {
+          "heading": "Le flaky est un risque produit",
+          "paragraphs": [
+            [
+              "Courses animation/réseau sont fréquentes.",
+              "Le taux de flake est métrique release."
+            ]
+          ]
+        },
+        {
+          "heading": "Attendre le contrat",
+          "paragraphs": [
+            [
+              "Utilisateurs test fixes et état backend connu.",
+              "Pas de sleep—attendre visibilité."
+            ]
+          ],
+          "points": [
+            "Reset app state and server fixtures deterministically between specs",
+            "Stub network at the boundary; avoid sleeping on animations",
+            "Quarantine flaky tests with owner and SLA, do not mute forever",
+            "Run a subset on every PR, full matrix nightly on real devices"
+          ]
+        },
+        {
+          "heading": "Discipline de quarantaine",
+          "paragraphs": [
+            [
+              "Pas de retry infini sans owner.",
+              "Quarantaine avec SLA."
+            ]
+          ]
+        },
+        {
+          "heading": "CI en couches réalistes",
+          "paragraphs": [
+            [
+              "Smoke à chaque PR, matrice complète la nuit.",
+              "Vrais appareils pour écarts natifs."
+            ]
+          ],
+          "links": [
+            {
+              "label": "Detox — Getting started",
+              "url": "https://wix.github.io/Detox/docs/introduction/getting-started/"
+            },
+            {
+              "label": "Expo — E2E testing",
+              "url": "https://docs.expo.dev/develop/development-builds/introduction/"
+            },
+            {
+              "label": "Maestro — Mobile UI testing",
+              "url": "https://maestro.mobile.dev/"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Ridurre test E2E flaky in app Expo",
+      "excerpt": "E2E flaky uccide la fiducia; i retry non sostituiscono setup deterministico.",
+      "description": "Fixture deterministiche, stub di rete, quarantena e matrice dispositivi per Expo.",
+      "sections": [
+        {
+          "heading": "Flaky è rischio prodotto",
+          "paragraphs": [
+            [
+              "Race di animazione e rete sono cause comuni.",
+              "Il flake rate è metrica di release."
+            ]
+          ]
+        },
+        {
+          "heading": "Aspettare il contratto",
+          "paragraphs": [
+            [
+              "Utenti test fissi e stato backend noto.",
+              "Niente sleep—attendere visibilità."
+            ]
+          ],
+          "points": [
+            "Reset app state and server fixtures deterministically between specs",
+            "Stub network at the boundary; avoid sleeping on animations",
+            "Quarantine flaky tests with owner and SLA, do not mute forever",
+            "Run a subset on every PR, full matrix nightly on real devices"
+          ]
+        },
+        {
+          "heading": "Disciplina quarantena",
+          "paragraphs": [
+            [
+              "Niente retry infiniti senza owner.",
+              "Quarantena con SLA."
+            ]
+          ]
+        },
+        {
+          "heading": "CI a strati realistici",
+          "paragraphs": [
+            [
+              "Smoke ogni PR, matrice piena di notte.",
+              "Dispositivi reali per gap nativi."
+            ]
+          ],
+          "links": [
+            {
+              "label": "Detox — Getting started",
+              "url": "https://wix.github.io/Detox/docs/introduction/getting-started/"
+            },
+            {
+              "label": "Expo — E2E testing",
+              "url": "https://docs.expo.dev/develop/development-builds/introduction/"
+            },
+            {
+              "label": "Maestro — Mobile UI testing",
+              "url": "https://maestro.mobile.dev/"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "减少 Expo 应用中的不稳定 E2E 测试",
+      "excerpt": "不稳定 E2E 摧毁信心；重试不能替代确定性环境。",
+      "description": "Expo E2E：确定性夹具、网络桩、隔离纪律与真机矩阵。",
+      "sections": [
+        {
+          "heading": "不稳定是产品风险",
+          "paragraphs": [
+            [
+              "动画与网络竞态是常见根因。",
+              "flake 率应是发布指标。"
+            ]
+          ]
+        },
+        {
+          "heading": "等契约而非计时",
+          "paragraphs": [
+            [
+              "固定测试用户与已知后端状态。",
+              "用可见性等待而非 sleep。"
+            ]
+          ],
+          "points": [
+            "Reset app state and server fixtures deterministically between specs",
+            "Stub network at the boundary; avoid sleeping on animations",
+            "Quarantine flaky tests with owner and SLA, do not mute forever",
+            "Run a subset on every PR, full matrix nightly on real devices"
+          ]
+        },
+        {
+          "heading": "隔离纪律",
+          "paragraphs": [
+            [
+              "勿无限重试无主测试。",
+              "有 SLA 的隔离列表。"
+            ]
+          ]
+        },
+        {
+          "heading": "分层 CI",
+          "paragraphs": [
+            [
+              "每 PR 冒烟，夜间全矩阵。",
+              "真机覆盖原生差异。"
+            ]
+          ],
+          "links": [
+            {
+              "label": "Detox — Getting started",
+              "url": "https://wix.github.io/Detox/docs/introduction/getting-started/"
+            },
+            {
+              "label": "Expo — E2E testing",
+              "url": "https://docs.expo.dev/develop/development-builds/introduction/"
+            },
+            {
+              "label": "Maestro — Mobile UI testing",
+              "url": "https://maestro.mobile.dev/"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "ExpoアプリでフレーキーE2Eを減らす",
+      "excerpt": "フレーキーE2Eは信頼を壊す。リトライは決定的セットアップの代わりにならない。",
+      "description": "決定的フィクスチャ、ネットワークスタブ、隔離規律、実機マトリクス。",
+      "sections": [
+        {
+          "heading": "フレーキーはプロダクトリスク",
+          "paragraphs": [
+            [
+              "アニメーションとネットワーク競合が典型。",
+              "フレーク率はリリース指標。"
+            ]
+          ]
+        },
+        {
+          "heading": "契約を待つ",
+          "paragraphs": [
+            [
+              "固定テストユーザーと既知のバックエンド状態。",
+              "sleepではなく可視性を待つ。"
+            ]
+          ],
+          "points": [
+            "Reset app state and server fixtures deterministically between specs",
+            "Stub network at the boundary; avoid sleeping on animations",
+            "Quarantine flaky tests with owner and SLA, do not mute forever",
+            "Run a subset on every PR, full matrix nightly on real devices"
+          ]
+        },
+        {
+          "heading": "隔離の規律",
+          "paragraphs": [
+            [
+              "オーナーなし無限リトライ禁止。",
+              "SLA付き隔離リスト。"
+            ]
+          ]
+        },
+        {
+          "heading": "現実的なCI層",
+          "paragraphs": [
+            [
+              "PRごとにスモーク、夜間フルマトリクス。",
+              "実機でネイティブ差分を捕捉。"
+            ]
+          ],
+          "links": [
+            {
+              "label": "Detox — Getting started",
+              "url": "https://wix.github.io/Detox/docs/introduction/getting-started/"
+            },
+            {
+              "label": "Expo — E2E testing",
+              "url": "https://docs.expo.dev/develop/development-builds/introduction/"
+            },
+            {
+              "label": "Maestro — Mobile UI testing",
+              "url": "https://maestro.mobile.dev/"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

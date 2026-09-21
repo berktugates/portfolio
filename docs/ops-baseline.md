@@ -4,6 +4,8 @@
 
 ## Faz 0 DoD
 
+**Durum:** `pnpm check:ops` → 0 hata (blog kuyruğu ≥7, prod smoke, Vercel token CI’da).
+
 | Kontrol | Otomasyon |
 |---------|-----------|
 | Prod sitemap / robots / haberler / gündem redirect | `scripts/lib/ops-probes.ts` |
