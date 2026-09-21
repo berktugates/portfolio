@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-21T22:20:21.893Z",
+  "generatedAt": "2026-09-21T22:20:58.313Z",
   "faz": [
     0,
     5
@@ -83,15 +83,15 @@
   },
   "queues": {
     "blogJson": 7,
-    "gundemJson": 1,
+    "gundemJson": 0,
     "blogMinRecommended": 7
   },
   "git": {
-    "blogRelatedCommits90d": 21
+    "blogRelatedCommits90d": 1
   },
   "vercel": {
     "ok": true,
-    "totalListed": 11,
+    "totalListed": 12,
     "retention": {
       "expirationDays": 30,
       "expirationDaysProduction": 30,
@@ -99,7 +99,7 @@
       "expirationDaysErrored": 30,
       "deploymentsToKeep": 10
     },
-    "note": "Son 11 deployment listelendi (limit 100)."
+    "note": "Son 12 deployment listelendi (limit 100)."
   },
   "gscBaseline": {
     "exportedAt": "2026-09-22",
