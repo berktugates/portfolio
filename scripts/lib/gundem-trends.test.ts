@@ -48,6 +48,21 @@ test("compose briefing passes safety length gate", () => {
   assert.equal(safety.ok, true);
 });
 
+test("compose briefing meets 350 words for short trending titles", () => {
+  const draft = composeBriefingFromTrend(
+    { query: "uzak şehir", approxTraffic: 500, headlines: [] },
+    "2026-09-22",
+  );
+  const safety = assessContentSafety({
+    title: draft.title,
+    body: draft.bodyMarkdown,
+    excerpt: draft.excerpt,
+    sources: draft.sources,
+    alt: draft.image.alt,
+  });
+  assert.equal(safety.ok, true);
+});
+
 test("demand signals boost score", () => {
   const trend = parseTrendsRss(SAMPLE)[0];
   const base = scoreTrendItem(trend, []);

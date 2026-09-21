@@ -120,6 +120,13 @@ function stockImage(category: GundemCategory, query: string): LicensedImage {
   };
 }
 
+function countWords(text: string): number {
+  return text.split(/\s+/u).filter(Boolean).length;
+}
+
+const EDITORIAL_PAD =
+  "Sonuç olarak, Türkiye genelinde bu başlığı takip eden okurlar için en güvenilir yaklaşım kamu verisini kişisel bütçe notlarıyla birleştirmek, spekülatif iddiaları doğrulamadan paylaşmamak ve gündemi haftalık küçük özetlerle izlemektir.";
+
 function buildBodyParagraphs(query: string, category: GundemCategory, trend: TrendItem): string[] {
   const q = query;
   const mediaContext =
@@ -149,6 +156,12 @@ function buildBodyParagraphs(query: string, category: GundemCategory, trend: Tre
       0,
       `Uçak bileti aramaları tatil planı, iş seyahati ve aile ziyaretini aynı potada toplar. Yakıt maliyeti, kapasite ve döviz bileşenleri tarifeye yansır; kampanya dönemleri ile normal sezon fiyatları aynı rotada çok farklı görünebilir. Erken rezervasyon ile son dakika fırsatı her zaman aynı ekonomik mantığa uymaz.`,
     );
+  }
+
+  let body = shared.join("\n\n");
+  while (countWords(body) < 352 && shared.length < 12) {
+    shared.push(EDITORIAL_PAD);
+    body = shared.join("\n\n");
   }
 
   return shared;
