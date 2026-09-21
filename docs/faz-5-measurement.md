@@ -7,7 +7,9 @@
 | Komut | Ne yapar |
 |--------|-----------|
 | `pnpm check:measurement` | Prod GTM (çift tag yok), llms haberler, sitemap sayıları |
+| `pnpm ops:fetch-gsc` | Search Console API → `data/gsc-performance-export.json` (`GSC_SERVICE_ACCOUNT_JSON`) |
 | `pnpm ops:merge-gsc-demand` | `data/gsc-performance-export.json` → `gundem-demand-signals.json` |
+| `pnpm ops:gsc-sync` | fetch + merge |
 | `pnpm ops:collect` | Snapshot’a `measurement` bloğu ekler |
 
 ## GSC export (manuel veya API)

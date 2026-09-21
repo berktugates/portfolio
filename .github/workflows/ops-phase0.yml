@@ -42,6 +42,16 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: GSC export + demand merge (when SA secret set)
+        env:
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+        run: |
+          set -euo pipefail
+          pnpm ops:fetch-gsc
+          if [ -f data/gsc-performance-export.json ]; then
+            pnpm ops:merge-gsc-demand
+          fi
+
       - name: Collect ops snapshot
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -70,12 +80,18 @@ jobs:
       - name: Commit snapshot
         run: |
           set -euo pipefail
-          if git diff --quiet docs/ops-baseline.snapshot.json; then
-            echo "Snapshot unchanged."
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/ops-baseline.snapshot.json
-          git commit -m "chore(ops): Faz 0 baseline snapshot"
+          changed=0
+          for f in docs/ops-baseline.snapshot.json data/gundem-demand-signals.json; do
+            if [ -f "$f" ] && ! git diff --quiet "$f"; then
+              git add "$f"
+              changed=1
+            fi
+          done
+          if [ "$changed" -eq 0 ]; then
+            echo "Snapshot / demand signals unchanged."
+            exit 0
+          fi
+          git commit -m "chore(ops): baseline snapshot and/or GSC demand merge"
           git push

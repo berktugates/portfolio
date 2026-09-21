@@ -19,6 +19,14 @@ Otomasyon: `pnpm check:ops`, `pnpm ops:collect`, `pnpm ops:prune-deployments`.
 - Sitemap: `https://berktugberke.com/sitemap.xml`, `https://haberler.berktugberke.com/sitemap-gundem.xml`
 - 28 günlük tıklama/gösterim rakamlarını `docs/ops-baseline.md` tablosuna elle işleyin (API anahtarı opsiyonel sonraki faz).
 
+### GSC → gündem talep sinyalleri (Faz 5)
+
+**Otomatik (önerilen):** GCP service account → Search Console’da `sc-domain:berktugberke.com` için **Tam** veya **Kısıtlı** erişim → JSON’u GitHub secret `GSC_SERVICE_ACCOUNT_JSON`. Haftalık ops job: `pnpm ops:gsc-sync` (fetch + merge).
+
+**Yerel:** `pnpm ops:gsc-sync` (aynı env) veya manuel export → `data/gsc-performance-export.json` → `pnpm ops:merge-gsc-demand`.
+
+`data/gsc-performance-export.json` gitignore; `pnpm check:measurement` dosya yoksa uyarı verir (CI’da secret yoksa beklenen).
+
 ## GA4 / GTM
 
 - Container: `GTM-K2PXS8ZC` (canlı)

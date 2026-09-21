@@ -526,7 +526,19 @@ def en_only_locales(title, excerpt, description, headings, paras, points, links)
     return {code: block for code in ["tr", "de", "fr", "it", "zh", "ja"]}
 
 
-def seo_post(filename, slug, title, excerpt, description, keywords, social_tr, h, paras, points, links):
+def locales_tr_plus_en_mirror(tr, points_tr, title, excerpt, description, headings, paras, points, links):
+    """Tam TR çeviri; diğer locale'ler EN ile aynı (hreflang overlay yayın pipeline'ı için)."""
+    tr_block = loc(tr[0], tr[1], tr[2], tr[3], tr[4], points_tr, links)
+    en_block = loc(title, excerpt, description, headings, paras, points, links)
+    return {"tr": tr_block, "de": en_block, "fr": en_block, "it": en_block, "zh": en_block, "ja": en_block}
+
+
+def seo_post(filename, slug, title, excerpt, description, keywords, social_tr, h, paras, points, links, tr=None, points_tr=None):
+    locales = (
+        locales_tr_plus_en_mirror(tr, points_tr, title, excerpt, description, h, paras, points, links)
+        if tr is not None and points_tr is not None
+        else en_only_locales(title, excerpt, description, h, paras, points, links)
+    )
     write_post(
         filename,
         {
@@ -538,7 +550,7 @@ def seo_post(filename, slug, title, excerpt, description, keywords, social_tr, h
             "keywords": keywords,
             "socialThreadTr": social_tr,
             "sections": en_sections(h[0], paras[0], h[1], paras[1], points, h[2], paras[2], h[3], paras[3], links),
-            "locales": en_only_locales(title, excerpt, description, h, paras, points, links),
+            "locales": locales,
         },
     )
 
@@ -590,6 +602,41 @@ seo_post(
     ],
     pts5,
     links5,
+    tr=(
+        "PII Biriktirmeden LLM Etkileşimlerini Loglama",
+        "Üretim copilot'larını traces olmadan debug edemezsiniz; ama her sohbeti kalıcı veri ambarı yakıtı sayamazsınız. Log tasarımı gizlilik ve maliyet kararıdır.",
+        "LLM etkileşim logları için staff kalıpları: redaksiyon katmanları, örnekleme, saklama sınıfları ve uyum incelemesinden geçen observability.",
+        [
+            "Loglar ücretsiz arşiv değildir",
+            "Transkriptleri hassasiyete göre katmanla",
+            "Kalite için örnekle, trend için aggregate et",
+            "Export'ları güvenlik olayı gibi işlet",
+        ],
+        [
+            [
+                "Varsayılan olarak tam prompt loglayan ekipler, bunları analitik araçları, destek export'ları ve geniş erişim rolleriyle zamanla sızdırır.",
+                "LLM transkriptlerini kimlik bilgisine yakın veri gibi ele alın: minimize edin, redakte edin, erişimi döndürün ve programlı süre sonunda silin.",
+            ],
+            [
+                "Olay debug için sıcak, örneklem eval için ılık, ürün trendleri için soğuk aggregate saklama tanımlayın.",
+                "Pazarlama ambarlarının ham sohbet çekmesine, belgelenmiş hukuki dayanak ve silme job'u olmadan izin vermeyin.",
+            ],
+            [
+                "Kalite ekiplerinin tam geçmişe değil, temsili örneklere ihtiyacı var. Sonuç, gecikme ve red türüne göre tabakalı örnekleme kullanın.",
+                "Mümkün olduğunda kullanıcı metni saklamadan token kullanımı ve hata kodlarını aggregate edin.",
+            ],
+            [
+                "Toplu export uçları ve notebook indirmeleri, veritabanı dump'larıyla aynı alarmları tetiklemeli.",
+                "İyi loglama, Mart'ta KVKK/GDPR talebi açıklamak zorunda kalmadan Salı günü debug etmenizi sağlar.",
+            ],
+        ],
+    ),
+    points_tr=[
+        "Varsayılan ham dump yerine redaksiyon katmanlı prompt/çıktı loglayın",
+        "PII taşıyan transkriptleri aggregate kalite metriklerinden ayırın",
+        "Katman bazlı saklamayı hukuk ve ürün onayıyla tanımlayın",
+        "Export hacmi sıçramalarını veri sızıntısı yolu gibi alarm layın",
+    ],
 )
 
 links6 = [
@@ -639,6 +686,41 @@ seo_post(
     ],
     pts6,
     links6,
+    tr=(
+        "Pazarlama ve Uygulama Rotaları için Performans Bütçeleri",
+        "Pazarlama sayfaları ve kimlik doğrulamalı app shell'ler farklı nedenlerle çöker; ortak kural: bütçe yoksa her lansman ağırlık ekler, arama ve dönüşüm sessizce zarar görür.",
+        "Staff mühendislerin rota bazlı performans bütçesi, CI bağlantısı ve pazarlama ile ürün yüzeylerini ölçülebilir LCP/INP sınırlarında tutma yöntemi.",
+        [
+            "Şablonların kendi bütçesi olmalı",
+            "Performansı release train ile birlikte gönder",
+            "Yavaş ağları kasıtlı test et",
+            "Performansı ürüne görünür kıl",
+        ],
+        [
+            [
+                "Landing sayfaları ilk boyamada yarışır; dashboard'lar etkileşim hazırlığında. Tek global bundle bütçesi hangi ekibin hangi yüzeyi bozduğunu gizler.",
+                "Rota sınıfı ve üçüncü taraf etiket sahipliğine göre bütçe ayırın; pazarlama deneyleri mühendislik varsayılanını miras almasın.",
+            ],
+            [
+                "Yoğun trafikli şablonlar için preview deploy'lara bütçe kontrolü ekleyin. LCP'yi patlatan merge'leri sahibi olan açık waiver olmadan bloklayın.",
+                "INP eşiği canary'de aşıldığında bir haftalık şikayetten önce feature flag geri alın.",
+            ],
+            [
+                "Hızlı laptop lab testleri yalan söyler. Temsili mobil profil ve önbellek durumlarında smoke perf çalıştırın.",
+                "Hero görsel baytları, font yükleme stratejisi ve hydration maliyetini birinci sınıf metrik sayın.",
+            ],
+            [
+                "Ürün yöneticileri dönüşümün yanında perf trendini görmeli, yıllık infra review'da değil.",
+                "Bütçeler, SEO ve UX'in postmortem teması olmasını engeller.",
+            ],
+        ],
+    ),
+    points_tr=[
+        "LCP ve INP'yi yalnızca global değil şablon bazında bütçele",
+        "Perf regresyonlarını release train ve rollback kurallarına bağla",
+        "CI smoke'ta gerçek cihaz ve yavaş ağ ölç",
+        "Hata oranının yanında perf panolarını ürüne aç",
+    ],
 )
 
 links7 = [
@@ -688,4 +770,39 @@ seo_post(
     ],
     pts7,
     links7,
+    tr=(
+        "Ajans Kopyası Değil, Editöryal Brifing için SEO",
+        "Trafik için manşet yeniden yayınlamak, tarayıcıları düşük güvenilir kopya olarak görmeye alıştırır. Analiz, net tarih ve dürüst yapılandırılmış veri ekleyen brifingler aramayla farklı ilişki kurar.",
+        "Editöryal brifing siteleri için staff SEO: schema disiplini, alt alan canonical'ları, ölçüm ve ajans kopyası tuzaklarından kaçınan kalite kapıları.",
+        [
+            "Brifingler yeniden yazım değildir",
+            "Yapılandırılmış veri sayfayla uyumlu olmalı",
+            "Host ve hreflang dürüst kalır",
+            "İçerik yüzeyine göre analitik",
+        ],
+        [
+            [
+                "Arama sistemleri net yazım, güncelleme tarihi ve özgün sentezi ödüllendirir. Trend sorgularının ince yeniden yazımları crawl bütçesini yakar, marka inşa etmez.",
+                "Editöryal brifingler ne olduklarını açıkça söylemeli: atıflı birincil kaynaklarla analiz, canlı haber telgrafı değil.",
+            ],
+            [
+                "NewsArticle işaretlemesi görünen başlık, görsel ve tarihlerle örtüşmeli. Uyumsuzluk, hiç işaretlemeden daha kötüdür.",
+                "Stok görsellerde UI'da lisans metadatası olmalı; sahte foto muhabirliği ipuçları kullanılmamalı.",
+            ],
+            [
+                "Haberler ayrı host'ta yaşarken sitemap ve iç linkleme, ilgisiz site graflarına sızmak yerine bu sınırı korumalı.",
+                "Yönlendirme ve canonical etiketleri kullanıcı ve tarayıcıyı doğru yüzeye indirmeli.",
+            ],
+            [
+                "Analitikte içerik grubu etiketleyin; ürün, blog ve haber yüzeyleri çift sayım olmadan karşılaştırılabilir olsun.",
+                "Brifing SEO'su uzun oyun: tutarlılık, dürüstlük ve ölçülebilir kalite günlük kopyala-yapıştıyı geçer.",
+            ],
+        ],
+    ),
+    points_tr=[
+        "Editöryal brifingleri tel kopyasından schema ve UI'da ayır",
+        "Stok görseli dürüst atıfla kullan, olay fotoğrafı gibi gösterme",
+        "Host bazında hreflang ve canonical hizalı tut",
+        "Yüzey bazında content_group ile ölç",
+    ],
 )

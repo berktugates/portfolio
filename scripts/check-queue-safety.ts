@@ -38,6 +38,15 @@ async function scanDir(relative: string) {
     if (!result.ok) {
       throw new Error(`${relative}/${name}: ${result.code} ${result.hits.join(",")}`);
     }
+    if (relative === "content/blog-queue") {
+      const tr = (raw.locales as { tr?: { title?: string } } | undefined)?.tr;
+      const enTitle = String(raw.title ?? "");
+      if (tr?.title && enTitle && tr.title === enTitle) {
+        throw new Error(
+          `${relative}/${name}: locales.tr.title mirrors English; add Turkish overlay (pnpm blog-queue:sync).`,
+        );
+      }
+    }
   }
 }
 

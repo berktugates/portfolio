@@ -31,9 +31,26 @@ async function gitBlogCommits90d(): Promise<number> {
   }
 }
 
+async function vercelProjectRetention(
+  token: string,
+  projectId: string,
+  teamId: string,
+): Promise<Record<string, unknown> | null> {
+  try {
+    const url = `https://api.vercel.com/v9/projects/${projectId}?teamId=${teamId}`;
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { deploymentExpiration?: Record<string, unknown> };
+    return data.deploymentExpiration ?? null;
+  } catch {
+    return null;
+  }
+}
+
 async function vercelDeploymentSummary(): Promise<{
   ok: boolean;
   totalListed?: number;
+  retention?: Record<string, unknown> | null;
   note: string;
 }> {
   const token = process.env.VERCEL_TOKEN;
@@ -60,7 +77,13 @@ async function vercelDeploymentSummary(): Promise<{
     }
     const data = (await res.json()) as { deployments?: unknown[] };
     const n = data.deployments?.length ?? 0;
-    return { ok: true, totalListed: n, note: `Son ${n} deployment listelendi (limit 100).` };
+    const retention = await vercelProjectRetention(token, projectId!, teamId!);
+    return {
+      ok: true,
+      totalListed: n,
+      retention,
+      note: `Son ${n} deployment listelendi (limit 100).`,
+    };
   } catch (error) {
     return { ok: false, note: error instanceof Error ? error.message : String(error) };
   }

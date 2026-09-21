@@ -63,42 +63,42 @@
   ],
   "locales": {
     "tr": {
-      "title": "Performance Budgets for Marketing and App Routes",
-      "excerpt": "Marketing pages and authenticated app shells fail for different reasons, but they share one rule: without budgets, every launch adds weight until search and conversion quietly suffer.",
-      "description": "How staff engineers set per-route performance budgets, wire them to CI, and keep marketing and product surfaces inside measurable LCP and INP guardrails.",
+      "title": "Pazarlama ve Uygulama Rotaları için Performans Bütçeleri",
+      "excerpt": "Pazarlama sayfaları ve kimlik doğrulamalı app shell'ler farklı nedenlerle çöker; ortak kural: bütçe yoksa her lansman ağırlık ekler, arama ve dönüşüm sessizce zarar görür.",
+      "description": "Staff mühendislerin rota bazlı performans bütçesi, CI bağlantısı ve pazarlama ile ürün yüzeylerini ölçülebilir LCP/INP sınırlarında tutma yöntemi.",
       "sections": [
         {
-          "heading": "Templates need their own budgets",
+          "heading": "Şablonların kendi bütçesi olmalı",
           "paragraphs": [
-            "Landing pages compete on first paint; dashboards compete on interaction readiness. A single global bundle budget hides which team regressed which surface.",
-            "Split budgets by route class and third-party tag ownership so marketing experiments do not inherit engineering defaults."
+            "Landing sayfaları ilk boyamada yarışır; dashboard'lar etkileşim hazırlığında. Tek global bundle bütçesi hangi ekibin hangi yüzeyi bozduğunu gizler.",
+            "Rota sınıfı ve üçüncü taraf etiket sahipliğine göre bütçe ayırın; pazarlama deneyleri mühendislik varsayılanını miras almasın."
           ]
         },
         {
-          "heading": "Ship perf with the release train",
+          "heading": "Performansı release train ile birlikte gönder",
           "paragraphs": [
-            "Attach budget checks to preview deployments for high-traffic templates. Block merges that blow LCP without an explicit waiver tied to an owner.",
-            "Roll back feature flags when INP crosses thresholds in canary, not after a week of complaints."
+            "Yoğun trafikli şablonlar için preview deploy'lara bütçe kontrolü ekleyin. LCP'yi patlatan merge'leri sahibi olan açık waiver olmadan bloklayın.",
+            "INP eşiği canary'de aşıldığında bir haftalık şikayetten önce feature flag geri alın."
           ],
           "points": [
-            "Budget LCP and INP per template, not only globally",
-            "Tie perf regressions to release trains and rollback rules",
-            "Measure real devices and slow networks in CI smoke",
-            "Publish perf dashboards beside error rate for product"
+            "LCP ve INP'yi yalnızca global değil şablon bazında bütçele",
+            "Perf regresyonlarını release train ve rollback kurallarına bağla",
+            "CI smoke'ta gerçek cihaz ve yavaş ağ ölç",
+            "Hata oranının yanında perf panolarını ürüne aç"
           ]
         },
         {
-          "heading": "Test slow networks deliberately",
+          "heading": "Yavaş ağları kasıtlı test et",
           "paragraphs": [
-            "Lab tests on fast laptops lie. Run smoke perf on representative mobile profiles and cache states.",
-            "Track hero image bytes, font loading strategy, and hydration cost as first-class metrics."
+            "Hızlı laptop lab testleri yalan söyler. Temsili mobil profil ve önbellek durumlarında smoke perf çalıştırın.",
+            "Hero görsel baytları, font yükleme stratejisi ve hydration maliyetini birinci sınıf metrik sayın."
           ]
         },
         {
-          "heading": "Make perf visible to product",
+          "heading": "Performansı ürüne görünür kıl",
           "paragraphs": [
-            "Product managers should see perf trends next to conversion, not in a quarterly infra review.",
-            "Budgets are how you keep SEO and UX from becoming a postmortem theme."
+            "Ürün yöneticileri dönüşümün yanında perf trendini görmeli, yıllık infra review'da değil.",
+            "Bütçeler, SEO ve UX'in postmortem teması olmasını engeller."
           ],
           "links": [
             {

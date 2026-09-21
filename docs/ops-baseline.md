@@ -18,13 +18,15 @@
 
 GSC/GA4 **rakamları** dashboard’dan; snapshot’ta property ID’leri referans.
 
-## Vercel Deployment Storage (son 30 gün)
+## Vercel Deployment Storage
 
 | Tarih | GB-Hours (30g) | Not |
 |-------|----------------|-----|
-| 2026-09-21 | **16.9 GB / 10 GB** (Hobby limit aşımı) | Retention + prune + ignoreCommand sonrası izlenmeli |
+| 2026-09-21 | **16.9 GB / 10 GB** (Hobby limit aşımı) | Prune + ignoreCommand; retention API’de `deploymentsToKeep: 10` |
 
-**Hedef:** Production retention 5–10 gün, preview 1 gün; `ops:prune-deployments --apply` ile eski artifact temizliği.
+**Otomasyon:** `pnpm ops:collect` → `vercel.retention` + deployment sayısı. Prune: `VERCEL_TOKEN` + `pnpm ops:prune-deployments --apply` (preview >24s, prod fazlalık).
+
+**Konsol hedefi (API ile PATCH desteklenmiyor):** preview `expirationDays` 1, production `expirationDaysProduction` 5–10.
 
 ## Google Search Console (son 28 gün) — manuel
 

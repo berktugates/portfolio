@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-21T21:23:28.063Z",
+  "generatedAt": "2026-09-21T22:00:31.814Z",
   "faz": [
     0,
     5
@@ -79,11 +79,19 @@
     "blogMinRecommended": 7
   },
   "git": {
-    "blogRelatedCommits90d": 1
+    "blogRelatedCommits90d": 21
   },
   "vercel": {
     "ok": true,
-    "note": "VERCEL_TOKEN veya .vercel/project.json yok; deployment sayımı atlandı."
+    "totalListed": 10,
+    "retention": {
+      "expirationDays": 30,
+      "expirationDaysProduction": 30,
+      "expirationDaysCanceled": 30,
+      "expirationDaysErrored": 30,
+      "deploymentsToKeep": 10
+    },
+    "note": "Son 10 deployment listelendi (limit 100)."
   },
   "manualDashboard": {
     "gscProperty": "sc-domain:berktugberke.com",

@@ -63,42 +63,42 @@
   ],
   "locales": {
     "tr": {
-      "title": "SEO for Editorial Briefings, Not Wire Copy",
-      "excerpt": "Republishing headlines for traffic trains crawlers to treat you as low-trust duplication. Briefings that add analysis, clear dates, and honest structured data earn a different relationship with search.",
-      "description": "Staff SEO for editorial briefing sites: schema discipline, subdomain canonicals, measurement, and quality gates that avoid agency copy pitfalls.",
+      "title": "Ajans Kopyası Değil, Editöryal Brifing için SEO",
+      "excerpt": "Trafik için manşet yeniden yayınlamak, tarayıcıları düşük güvenilir kopya olarak görmeye alıştırır. Analiz, net tarih ve dürüst yapılandırılmış veri ekleyen brifingler aramayla farklı ilişki kurar.",
+      "description": "Editöryal brifing siteleri için staff SEO: schema disiplini, alt alan canonical'ları, ölçüm ve ajans kopyası tuzaklarından kaçınan kalite kapıları.",
       "sections": [
         {
-          "heading": "Briefings are not rewrites",
+          "heading": "Brifingler yeniden yazım değildir",
           "paragraphs": [
-            "Search systems reward documents with clear authorship, modification dates, and original synthesis. Thin rewrites of trending queries burn crawl budget without building brand.",
-            "Editorial briefings should declare what they are: analysis with cited primary sources, not breaking news wires."
+            "Arama sistemleri net yazım, güncelleme tarihi ve özgün sentezi ödüllendirir. Trend sorgularının ince yeniden yazımları crawl bütçesini yakar, marka inşa etmez.",
+            "Editöryal brifingler ne olduklarını açıkça söylemeli: atıflı birincil kaynaklarla analiz, canlı haber telgrafı değil."
           ]
         },
         {
-          "heading": "Structured data must match the page",
+          "heading": "Yapılandırılmış veri sayfayla uyumlu olmalı",
           "paragraphs": [
-            "NewsArticle markup must reflect visible headlines, images, and dates. Mismatch is worse than omission.",
-            "Stock photos need license metadata in the UI, not fake photojournalism cues."
+            "NewsArticle işaretlemesi görünen başlık, görsel ve tarihlerle örtüşmeli. Uyumsuzluk, hiç işaretlemeden daha kötüdür.",
+            "Stok görsellerde UI'da lisans metadatası olmalı; sahte foto muhabirliği ipuçları kullanılmamalı."
           ],
           "points": [
-            "Separate editorial briefings from wire copy in schema and UI",
-            "Use stock imagery with honest credit, not event photos",
-            "Keep hreflang and canonicals aligned per host",
-            "Measure content_group in analytics per surface"
+            "Editöryal brifingleri tel kopyasından schema ve UI'da ayır",
+            "Stok görseli dürüst atıfla kullan, olay fotoğrafı gibi gösterme",
+            "Host bazında hreflang ve canonical hizalı tut",
+            "Yüzey bazında content_group ile ölç"
           ]
         },
         {
-          "heading": "Hosts and hreflang stay honest",
+          "heading": "Host ve hreflang dürüst kalır",
           "paragraphs": [
-            "When news lives on a dedicated host, sitemaps and internal linking should respect that boundary instead of leaking into unrelated site graphs.",
-            "Redirects and canonical tags should help users and crawlers land on the intended surface."
+            "Haberler ayrı host'ta yaşarken sitemap ve iç linkleme, ilgisiz site graflarına sızmak yerine bu sınırı korumalı.",
+            "Yönlendirme ve canonical etiketleri kullanıcı ve tarayıcıyı doğru yüzeye indirmeli."
           ]
         },
         {
-          "heading": "Analytics by content surface",
+          "heading": "İçerik yüzeyine göre analitik",
           "paragraphs": [
-            "Tag analytics by content group so product, blog, and news surfaces are comparable without double-counting journeys.",
-            "SEO for briefings is a long game: consistency, honesty, and measurable quality beat daily copy-paste."
+            "Analitikte içerik grubu etiketleyin; ürün, blog ve haber yüzeyleri çift sayım olmadan karşılaştırılabilir olsun.",
+            "Brifing SEO'su uzun oyun: tutarlılık, dürüstlük ve ölçülebilir kalite günlük kopyala-yapıştıyı geçer."
           ],
           "links": [
             {

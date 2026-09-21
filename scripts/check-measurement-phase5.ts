@@ -21,9 +21,16 @@ async function main() {
   }
 
   const gsc = await loadGscExport(root);
+  const gscConfigured = Boolean(
+    process.env.GSC_SERVICE_ACCOUNT_JSON?.trim() || process.env.GSC_SERVICE_ACCOUNT_PATH?.trim(),
+  );
   if (!gsc?.totals?.clicks && !gsc?.queries?.length) {
-    console.warn("WARN gsc-export: data/gsc-performance-export.json missing or empty (dashboard export)");
-    warns += 1;
+    if (gscConfigured) {
+      console.error("FAIL gsc-export: GSC credentials set but data/gsc-performance-export.json missing or empty");
+      errors += 1;
+    } else {
+      console.log("OK gsc-export: skipped (set GSC_SERVICE_ACCOUNT_JSON for Search Console API sync)");
+    }
   } else {
     console.log(
       `OK gsc-export: ${gsc.queries?.length ?? 0} queries, clicks=${gsc.totals?.clicks ?? "?"}`,

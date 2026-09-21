@@ -63,42 +63,42 @@
   ],
   "locales": {
     "tr": {
-      "title": "Logging LLM Interactions Without Hoarding PII",
-      "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
-      "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+      "title": "PII Biriktirmeden LLM Etkileşimlerini Loglama",
+      "excerpt": "Üretim copilot'larını traces olmadan debug edemezsiniz; ama her sohbeti kalıcı veri ambarı yakıtı sayamazsınız. Log tasarımı gizlilik ve maliyet kararıdır.",
+      "description": "LLM etkileşim logları için staff kalıpları: redaksiyon katmanları, örnekleme, saklama sınıfları ve uyum incelemesinden geçen observability.",
       "sections": [
         {
-          "heading": "Logs are not a free archive",
+          "heading": "Loglar ücretsiz arşiv değildir",
           "paragraphs": [
-            "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
-            "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule."
+            "Varsayılan olarak tam prompt loglayan ekipler, bunları analitik araçları, destek export'ları ve geniş erişim rolleriyle zamanla sızdırır.",
+            "LLM transkriptlerini kimlik bilgisine yakın veri gibi ele alın: minimize edin, redakte edin, erişimi döndürün ve programlı süre sonunda silin."
           ]
         },
         {
-          "heading": "Tier transcripts by sensitivity",
+          "heading": "Transkriptleri hassasiyete göre katmanla",
           "paragraphs": [
-            "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
-            "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job."
+            "Olay debug için sıcak, örneklem eval için ılık, ürün trendleri için soğuk aggregate saklama tanımlayın.",
+            "Pazarlama ambarlarının ham sohbet çekmesine, belgelenmiş hukuki dayanak ve silme job'u olmadan izin vermeyin."
           ],
           "points": [
-            "Log prompts and outputs with redaction tiers, not raw dumps by default",
-            "Separate PII-bearing transcripts from aggregate quality metrics",
-            "Define retention per tier with legal and product sign-off",
-            "Alert on export volume spikes like any other data exfil path"
+            "Varsayılan ham dump yerine redaksiyon katmanlı prompt/çıktı loglayın",
+            "PII taşıyan transkriptleri aggregate kalite metriklerinden ayırın",
+            "Katman bazlı saklamayı hukuk ve ürün onayıyla tanımlayın",
+            "Export hacmi sıçramalarını veri sızıntısı yolu gibi alarm layın"
           ]
         },
         {
-          "heading": "Sample for quality, aggregate for trends",
+          "heading": "Kalite için örnekle, trend için aggregate et",
           "paragraphs": [
-            "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
-            "Aggregate token usage and error codes without storing user text when possible."
+            "Kalite ekiplerinin tam geçmişe değil, temsili örneklere ihtiyacı var. Sonuç, gecikme ve red türüne göre tabakalı örnekleme kullanın.",
+            "Mümkün olduğunda kullanıcı metni saklamadan token kullanımı ve hata kodlarını aggregate edin."
           ]
         },
         {
-          "heading": "Operate exports as security events",
+          "heading": "Export'ları güvenlik olayı gibi işlet",
           "paragraphs": [
-            "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
-            "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March."
+            "Toplu export uçları ve notebook indirmeleri, veritabanı dump'larıyla aynı alarmları tetiklemeli.",
+            "İyi loglama, Mart'ta KVKK/GDPR talebi açıklamak zorunda kalmadan Salı günü debug etmenizi sağlar."
           ],
           "links": [
             {
