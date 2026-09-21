@@ -6,6 +6,7 @@ import { readFile, readdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { collectMeasurement } from "./lib/measurement-collect";
 import { runPublicSurfaceProbes } from "./lib/ops-probes";
+import { fetchDeploymentExpiration, loadVercelProjectIds } from "./lib/vercel-project";
 
 const root = resolve(import.meta.dirname, "..");
 const outPath = resolve(root, "docs/ops-baseline.snapshot.json");
@@ -31,22 +32,6 @@ async function gitBlogCommits90d(): Promise<number> {
   }
 }
 
-async function vercelProjectRetention(
-  token: string,
-  projectId: string,
-  teamId: string,
-): Promise<Record<string, unknown> | null> {
-  try {
-    const url = `https://api.vercel.com/v9/projects/${projectId}?teamId=${teamId}`;
-    const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" });
-    if (!res.ok) return null;
-    const data = (await res.json()) as { deploymentExpiration?: Record<string, unknown> };
-    return data.deploymentExpiration ?? null;
-  } catch {
-    return null;
-  }
-}
-
 async function vercelDeploymentSummary(): Promise<{
   ok: boolean;
   totalListed?: number;
@@ -54,21 +39,14 @@ async function vercelDeploymentSummary(): Promise<{
   note: string;
 }> {
   const token = process.env.VERCEL_TOKEN;
-  let projectId = process.env.VERCEL_PROJECT_ID;
-  let teamId = process.env.VERCEL_TEAM_ID;
-  if (!projectId || !teamId) {
-    try {
-      const raw = await readFile(resolve(root, ".vercel/project.json"), "utf8");
-      const j = JSON.parse(raw) as { projectId: string; orgId: string };
-      projectId = projectId ?? j.projectId;
-      teamId = teamId ?? j.orgId;
-    } catch {
-      return { ok: true, note: "VERCEL_TOKEN veya .vercel/project.json yok; deployment sayımı atlandı." };
-    }
+  const ids = await loadVercelProjectIds(root);
+  if (!ids) {
+    return { ok: true, note: "VERCEL_TOKEN veya .vercel/project.json yok; deployment sayımı atlandı." };
   }
   if (!token) {
     return { ok: true, note: "VERCEL_TOKEN yok; deployment sayımı atlandı (CI secret ile doldurulur)." };
   }
+  const { projectId, teamId } = ids;
   try {
     const url = `https://api.vercel.com/v6/deployments?projectId=${projectId}&teamId=${teamId}&limit=100`;
     const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" });
@@ -77,7 +55,7 @@ async function vercelDeploymentSummary(): Promise<{
     }
     const data = (await res.json()) as { deployments?: unknown[] };
     const n = data.deployments?.length ?? 0;
-    const retention = await vercelProjectRetention(token, projectId!, teamId!);
+    const retention = await fetchDeploymentExpiration(token, projectId, teamId);
     return {
       ok: true,
       totalListed: n,

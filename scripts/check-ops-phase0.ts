@@ -5,6 +5,7 @@ import { execSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { runPublicSurfaceProbes } from "./lib/ops-probes";
+import { fetchDeploymentExpiration, loadVercelProjectIds } from "./lib/vercel-project";
 
 const root = resolve(import.meta.dirname, "..");
 
@@ -89,11 +90,28 @@ async function main() {
     console.log(`OK blog-queue: ${blogCount} posts`);
   }
 
-  if (!process.env.VERCEL_TOKEN) {
+  const vercelToken = process.env.VERCEL_TOKEN;
+  if (!vercelToken) {
     log("warn", "vercel-token", "VERCEL_TOKEN unset; deployment prune/metrics CI’da secret gerekir");
     warns += 1;
   } else {
     console.log("OK vercel-token: set");
+    const ids = await loadVercelProjectIds(root);
+    if (ids) {
+      const retention = await fetchDeploymentExpiration(vercelToken, ids.projectId, ids.teamId);
+      const previewDays = retention?.expirationDays ?? 0;
+      const prodDays = retention?.expirationDaysProduction ?? 0;
+      if (previewDays > 1 || prodDays > 10) {
+        log(
+          "warn",
+          "vercel-retention",
+          `preview=${previewDays}d prod=${prodDays}d (hedef preview≤1, prod≤10); konsol Build and Deployment → Retention`,
+        );
+        warns += 1;
+      } else {
+        console.log(`OK vercel-retention: preview=${previewDays}d prod=${prodDays}d`);
+      }
+    }
   }
 
   console.log(`\nFaz 0 check: ${errors} error(s), ${warns} warning(s).`);
