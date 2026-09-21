@@ -1,0 +1,78 @@
+# Faz 0 — operasyon baseline (prod yüzey + ops snapshot; Vercel prune opsiyonel)
+name: Ops phase 0
+
+on:
+  schedule:
+    - cron: "30 5 * * 1"
+  workflow_dispatch:
+    inputs:
+      prune_apply:
+        description: "Vercel deployment prune (--apply)"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ops-phase0
+  cancel-in-progress: false
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.8.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Collect ops snapshot
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_TEAM_ID: ${{ secrets.VERCEL_TEAM_ID }}
+        run: pnpm ops:collect
+
+      - name: Faz 0 checks (fail-closed)
+        run: pnpm check:ops
+
+      - name: Vercel prune (dry-run)
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.prune_apply != 'true'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: pnpm ops:prune-deployments || true
+
+      - name: Vercel prune (apply)
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.prune_apply == 'true'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: pnpm ops:prune-deployments --apply
+
+      - name: Commit snapshot
+        run: |
+          set -euo pipefail
+          if git diff --quiet docs/ops-baseline.snapshot.json; then
+            echo "Snapshot unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/ops-baseline.snapshot.json
+          git commit -m "chore(ops): Faz 0 baseline snapshot"
+          git push

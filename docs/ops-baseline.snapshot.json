@@ -1,0 +1,52 @@
+{
+  "generatedAt": "2026-09-21T21:17:37.391Z",
+  "faz": 0,
+  "probes": [
+    {
+      "name": "sitemap-main",
+      "ok": true,
+      "detail": "https://berktugberke.com/sitemap.xml → 200"
+    },
+    {
+      "name": "sitemap-gundem",
+      "ok": true,
+      "detail": "https://haberler.berktugberke.com/sitemap-gundem.xml → 200"
+    },
+    {
+      "name": "robots",
+      "ok": true,
+      "detail": "https://berktugberke.com/robots.txt → 200"
+    },
+    {
+      "name": "haberler-index",
+      "ok": true,
+      "detail": "https://haberler.berktugberke.com/ → 200"
+    },
+    {
+      "name": "gundem-redirect",
+      "ok": true,
+      "detail": "308 → https://haberler.berktugberke.com/"
+    }
+  ],
+  "queues": {
+    "blogJson": 0,
+    "gundemJson": 0,
+    "blogMinRecommended": 7
+  },
+  "git": {
+    "blogRelatedCommits90d": 21
+  },
+  "vercel": {
+    "ok": true,
+    "note": "VERCEL_TOKEN yok; deployment sayımı atlandı (CI secret ile doldurulur)."
+  },
+  "manualDashboard": {
+    "gscProperty": "sc-domain:berktugberke.com",
+    "gtmContainer": "GTM-K2PXS8ZC",
+    "ga4": "G-5H6GDB1CRH",
+    "retentionTarget": {
+      "productionDays": "5-10",
+      "previewDays": 1
+    }
+  }
+}
