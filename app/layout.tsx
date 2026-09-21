@@ -83,10 +83,7 @@ const structuredData = {
         { "@type": "Language", name: "Turkish", alternateName: "tr" },
         { "@type": "Language", name: "English", alternateName: "en" },
       ],
-      worksFor: [
-        { "@type": "Organization", name: "Figtures", url: "https://figtures.com" },
-        { "@type": "Organization", name: "bradi.tech", url: "https://www.bradi.tech" },
-      ],
+      worksFor: [{ "@type": "Organization", name: "bradi.tech", url: "https://www.bradi.tech" }],
       sameAs: [GITHUB_PROFILE, LINKEDIN_PROFILE],
       knowsAbout: [
         "Software architecture",

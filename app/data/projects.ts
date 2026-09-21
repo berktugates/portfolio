@@ -60,38 +60,6 @@ export const projects: readonly Project[] = [
     ],
   },
   {
-    slug: "medula-eczane",
-    title: "Medula Eczane",
-    summary: "A multi-tenant pharmacy ERP spanning web and cross-platform mobile.",
-    description:
-      "Medula Eczane is a multi-tenant pharmacy ERP designed around the operational reality of Turkish pharmacies. It unifies products, patients, prescriptions, stock, purchases, returns, finance, reporting, and full point-of-sale workflows across web and mobile clients.",
-    details: [
-      "The web platform is a React 19 and Vite monorepo organized into domain packages for UI, OpenAPI-generated API access, shared utilities, and permission-aware product features. TanStack Query manages remote state, Zustand handles focused client state, React Router provides the application shell, and MUI supplies the accessible component foundation.",
-      "The companion Expo application brings the same domain model to iOS and Android with typed API contracts, secure credential storage, camera-based barcode and QR scanning, responsive operational screens, and feature modules that mirror the web workflows. Both clients are backed by automated unit, responsive, accessibility, and end-to-end test suites.",
-    ],
-    highlights: [
-      "Products, master data, prescriptions, inventory, purchases, returns, and reporting",
-      "Draft-to-payment POS flow with barcode/QR input, terminals, receipts, and cancellation",
-      "Shared OpenAPI contracts with responsive web, iOS, and Android clients",
-    ],
-    period: "In development",
-    image: "/projects/medula-eczane.webp",
-    imageAlt: "Medula Eczane app icon",
-    visualClassName: "project-visual-medula",
-    stack: [
-      "React 19",
-      "React Native",
-      "Expo",
-      "TypeScript",
-      "Vite",
-      "MUI",
-      "TanStack Query",
-      "Zustand",
-      "OpenAPI",
-      "Playwright",
-    ],
-  },
-  {
     slug: "strumai",
     title: "StrumAI",
     summary: "A complete guitar practice system with real-time audio and an AI mentor.",

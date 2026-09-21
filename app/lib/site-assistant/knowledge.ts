@@ -77,7 +77,7 @@ ${monolingualRules(locale)}
 
 <facts>
 - Contact: ${CONTACT_EMAIL}. GitHub: berktugates. LinkedIn: linkedin.com/in/berktugates.
-- Co-founder Figtures (Istanbul); engineer at bradi.tech (London). Remote across Türkiye and abroad.
+- Full-stack software engineer at bradi.tech (London). Remote across Türkiye and abroad.
 - GEO = generative / AI search visibility (llms.txt, structured data, citable content) — not a lecture on how Google ranks pages.
 - Regions served (no fake offices): ${turkeyRegionNamesForLlms()}.
 - No invented clients, revenue, rankings, or guarantees.

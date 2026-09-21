@@ -19,22 +19,6 @@ export const projectCopies = {
       period: "2026",
       imageAlt: "Celestial Insights uygulama ikonu",
     },
-    "medula-eczane": {
-      summary: "Web ve mobil istemcileri kapsayan çok kiracılı eczane ERP sistemi.",
-      description:
-        "Medula Eczane, Türkiye’deki eczanelerin operasyonel gerçekliğine göre tasarlanmış çok kiracılı bir eczane ERP’sidir. Ürünler, hastalar, reçeteler, stok, satın alma, iadeler, finans, raporlama ve uçtan uca POS akışlarını web ile mobil istemcilerde birleştirir.",
-      details: [
-        "Web platformu, UI, OpenAPI ile üretilmiş API erişimi, ortak yardımcılar ve yetki bilincine sahip ürün özelliklerine ayrılmış React 19 ve Vite monoreposudur. TanStack Query uzak durumu, Zustand odaklı istemci durumunu yönetir; React Router uygulama kabuğunu, MUI ise erişilebilir bileşen temelini sağlar.",
-        "Expo tabanlı tamamlayıcı uygulama aynı alan modelini iOS ve Android’e taşır: tipli API sözleşmeleri, güvenli kimlik bilgisi saklama, kamera ile barkod/QR tarama, duyarlı operasyon ekranları ve web akışlarını yansıtan özellik modülleri. Her iki istemci de birim, responsive, erişilebilirlik ve uçtan uca test paketleriyle desteklenir.",
-      ],
-      highlights: [
-        "Ürünler, master data, reçeteler, envanter, satın alma, iadeler ve raporlama",
-        "Barkod/QR, terminaller, fişler ve iptal ile taslaktan ödemeye POS akışı",
-        "Duyarlı web, iOS ve Android istemcileriyle paylaşılan OpenAPI sözleşmeleri",
-      ],
-      period: "Geliştiriliyor",
-      imageAlt: "Medula Eczane uygulama ikonu",
-    },
     strumai: {
       summary: "Gerçek zamanlı ses analizi ve yapay zekâ mentoruna sahip gitar çalışma sistemi.",
       description:
@@ -68,22 +52,6 @@ export const projectCopies = {
       ],
       period: "2026",
       imageAlt: "Celestial Insights App-Icon",
-    },
-    "medula-eczane": {
-      summary: "Multi-Tenant-Apotheken-ERP für Web und plattformübergreifendes Mobile.",
-      description:
-        "Medula Eczane ist ein Multi-Tenant-Apotheken-ERP, das auf die operative Realität türkischer Apotheken ausgelegt ist. Es vereint Produkte, Patienten, Rezepte, Bestand, Einkauf, Retouren, Finanzen, Reporting und vollständige POS-Workflows über Web- und Mobile-Clients.",
-      details: [
-        "Die Web-Plattform ist ein React-19- und Vite-Monorepo mit Domain-Paketen für UI, OpenAPI-generierten API-Zugriff, Shared Utilities und berechtigungssensible Features. TanStack Query steuert Remote-State, Zustand fokussierten Client-State, React Router die App-Shell und MUI die barrierefreie Komponentenbasis.",
-        "Die begleitende Expo-App bringt dasselbe Domänenmodell auf iOS und Android: typisierte API-Verträge, sichere Credential-Speicherung, kamera-basiertes Barcode-/QR-Scanning, responsive Operationsscreens und Feature-Module, die die Web-Workflows spiegeln. Beide Clients werden durch Unit-, Responsive-, Accessibility- und E2E-Tests abgesichert.",
-      ],
-      highlights: [
-        "Produkte, Stammdaten, Rezepte, Inventar, Einkauf, Retouren und Reporting",
-        "POS von Entwurf bis Zahlung mit Barcode/QR, Terminals, Belegen und Storno",
-        "Geteilte OpenAPI-Verträge mit responsive Web-, iOS- und Android-Clients",
-      ],
-      period: "In Entwicklung",
-      imageAlt: "Medula Eczane App-Icon",
     },
     strumai: {
       summary: "Komplettes Gitarren-Übesystem mit Echtzeit-Audio und KI-Mentor.",
@@ -119,22 +87,6 @@ export const projectCopies = {
       period: "2026",
       imageAlt: "Icône de l’app Celestial Insights",
     },
-    "medula-eczane": {
-      summary: "ERP pharmacie multi-tenant couvrant le web et le mobile multiplateforme.",
-      description:
-        "Medula Eczane est un ERP pharmacie multi-tenant conçu pour la réalité opérationnelle des pharmacies turques. Il unifie produits, patients, ordonnances, stock, achats, retours, finance, reporting et flux POS complets sur clients web et mobile.",
-      details: [
-        "La plateforme web est un monorepo React 19 et Vite organisé en packages de domaine pour l’UI, l’accès API généré OpenAPI, les utilitaires partagés et les fonctionnalités sensibles aux permissions. TanStack Query gère l’état distant, Zustand l’état client ciblé, React Router la coque applicative et MUI la base de composants accessibles.",
-        "L’application Expo compagnon porte le même modèle de domaine sur iOS et Android : contrats API typés, stockage sécurisé des identifiants, scan code-barres/QR par caméra, écrans opérationnels responsives et modules qui reflètent les flux web. Les deux clients sont couverts par des suites de tests unitaires, responsives, accessibilité et E2E.",
-      ],
-      highlights: [
-        "Produits, données de référence, ordonnances, inventaire, achats, retours et reporting",
-        "Flux POS du brouillon au paiement avec code-barres/QR, terminaux, reçus et annulation",
-        "Contrats OpenAPI partagés avec clients web, iOS et Android responsives",
-      ],
-      period: "En développement",
-      imageAlt: "Icône de l’app Medula Eczane",
-    },
     strumai: {
       summary: "Système complet de pratique guitare avec audio temps réel et mentor IA.",
       description:
@@ -168,22 +120,6 @@ export const projectCopies = {
       ],
       period: "2026",
       imageAlt: "Icona dell’app Celestial Insights",
-    },
-    "medula-eczane": {
-      summary: "ERP farmacia multi-tenant per web e mobile multipiattaforma.",
-      description:
-        "Medula Eczane è un ERP farmacia multi-tenant progettato sulla realtà operativa delle farmacie turche. Unifica prodotti, pazienti, ricette, stock, acquisti, resi, finanza, reporting e flussi POS completi su client web e mobile.",
-      details: [
-        "La piattaforma web è un monorepo React 19 e Vite organizzato in package di dominio per UI, accesso API generato OpenAPI, utility condivise e feature sensibili ai permessi. TanStack Query gestisce lo stato remoto, Zustand lo stato client mirato, React Router lo shell e MUI la base di componenti accessibili.",
-        "L’app Expo companion porta lo stesso modello di dominio su iOS e Android: contratti API tipizzati, storage credenziali sicuro, scansione barcode/QR via fotocamera, schermate operative responsive e moduli che rispecchiano i flussi web. Entrambi i client sono coperti da suite di test unitari, responsive, accessibilità ed E2E.",
-      ],
-      highlights: [
-        "Prodotti, master data, ricette, inventario, acquisti, resi e reporting",
-        "Flusso POS da bozza a pagamento con barcode/QR, terminali, scontrini e annulli",
-        "Contratti OpenAPI condivisi con client web, iOS e Android responsive",
-      ],
-      period: "In sviluppo",
-      imageAlt: "Icona dell’app Medula Eczane",
     },
     strumai: {
       summary: "Sistema completo di pratica chitarra con audio in tempo reale e mentor IA.",
@@ -219,22 +155,6 @@ export const projectCopies = {
       period: "2026",
       imageAlt: "Celestial Insights 应用图标",
     },
-    "medula-eczane": {
-      summary: "覆盖 Web 与跨平台移动端的多租户药店 ERP。",
-      description:
-        "Medula Eczane 是面向土耳其药店运营现实设计的多租户药店 ERP。它在 Web 与移动客户端统一产品、患者、处方、库存、采购、退货、财务、报表以及完整收银（POS）流程。",
-      details: [
-        "Web 平台是 React 19 与 Vite 单体仓库，按领域拆分为 UI、OpenAPI 生成的 API 访问、共享工具与权限感知功能。TanStack Query 管理远程状态，Zustand 处理聚焦的客户端状态，React Router 提供应用壳层，MUI 提供无访问组件基础。",
-        "配套 Expo 应用将同一领域模型带到 iOS 与 Android：类型化 API 契约、安全凭证存储、摄像头条码/二维码扫描、响应式运营界面，以及镜像 Web 流程的功能模块。两端均有单元、响应式、无障碍与端到端测试覆盖。",
-      ],
-      highlights: [
-        "产品、主数据、处方、库存、采购、退货与报表",
-        "从草稿到支付的 POS 流程，支持条码/二维码、终端、小票与取消",
-        "共享 OpenAPI 契约，覆盖响应式 Web、iOS 与 Android 客户端",
-      ],
-      period: "开发中",
-      imageAlt: "Medula Eczane 应用图标",
-    },
     strumai: {
       summary: "具备实时音频分析与 AI 导师的完整吉他练习系统。",
       description:
@@ -268,22 +188,6 @@ export const projectCopies = {
       ],
       period: "2026",
       imageAlt: "Celestial Insights アプリアイコン",
-    },
-    "medula-eczane": {
-      summary: "Web とクロスプラットフォームモバイルをまたぐマルチテナント薬局 ERP。",
-      description:
-        "Medula Eczane は、トルコの薬局の運用現実に合わせて設計されたマルチテナント薬局 ERP です。商品、患者、処方箋、在庫、仕入、返品、財務、レポート、完全な POS ワークフローを Web とモバイルクライアントで統合します。",
-      details: [
-        "Web プラットフォームは React 19 と Vite のモノレポで、UI、OpenAPI 生成 API、共有ユーティリティ、権限対応機能のドメインパッケージに整理されています。TanStack Query がリモート状態、Zustand が焦点のあるクライアント状態、React Router がアプリシェル、MUI がアクセシブルなコンポーネント基盤を担います。",
-        "併設の Expo アプリは同じドメインモデルを iOS / Android に展開。型付き API 契約、安全な資格情報保管、カメラによるバーコード/QR スキャン、レスポンシブな運用画面、Web フローを映す機能モジュールを備え、両クライアントは単体・レスポンシブ・アクセシビリティ・E2E テストで支えられます。",
-      ],
-      highlights: [
-        "商品、マスタデータ、処方箋、在庫、仕入、返品、レポート",
-        "下書きから決済までの POS（バーコード/QR、端末、レシート、取消）",
-        "レスポンシブ Web・iOS・Android 向けの共有 OpenAPI 契約",
-      ],
-      period: "開発中",
-      imageAlt: "Medula Eczane アプリアイコン",
     },
     strumai: {
       summary: "リアルタイム音声と AI メンターを備えたギター練習システム。",

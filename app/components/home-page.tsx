@@ -71,14 +71,14 @@ export async function HomePage({ locale }: { locale: Locale }) {
   const homeHref = localePath(locale);
   const cjk = locale === "zh" || locale === "ja";
   const carouselProjects = localizedProjects.map((project) => ({
-    slug: project.slug,
-    title: project.title,
-    summary: project.summary,
-    image: project.image,
-    imageAlt: project.imageAlt,
-    visualClassName: project.visualClassName,
-    href: projectPath(locale, project.slug),
-  }));
+      slug: project.slug,
+      title: project.title,
+      summary: project.summary,
+      image: project.image,
+      imageAlt: project.imageAlt,
+      visualClassName: project.visualClassName,
+      href: projectPath(locale, project.slug),
+    }));
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -142,31 +142,6 @@ export async function HomePage({ locale }: { locale: Locale }) {
               {dict.experience}
             </h2>
             <div className="space-y-2">
-              <GlowCard href="https://figtures.com">
-                <span className="flex min-h-12 w-full items-start justify-between gap-4">
-                  <span className="flex items-start gap-3">
-                    <span className="mt-1 grid size-10 shrink-0 place-items-center overflow-hidden rounded-lg bg-zinc-900 transition-colors duration-200 group-hover:bg-zinc-800">
-                      <Image
-                        src="/figtures-logo.webp"
-                        alt={dict.figturesLogoAlt}
-                        width={40}
-                        height={40}
-                        className="h-full w-full object-cover"
-                      />
-                    </span>
-                    <span>
-                      <span className="block">{dict.coFounder}</span>
-                      <span className="inline-flex items-center gap-1 text-zinc-500 dark:text-zinc-400">
-                        {dict.figturesLine}{" "}
-                        <ArrowUpRight className="hidden size-4 shrink-0 text-zinc-400 transition-all delay-100 duration-200 group-hover:block group-hover:text-zinc-600 dark:group-hover:text-zinc-300" />
-                      </span>
-                    </span>
-                  </span>
-                  <span className="hidden shrink-0 text-sm text-zinc-600 dark:text-zinc-400 sm:block">
-                    {dict.figturesPeriod}
-                  </span>
-                </span>
-              </GlowCard>
               <GlowCard href="https://www.bradi.tech">
                 <span className="flex min-h-12 w-full items-start justify-between gap-4">
                   <span className="flex items-start gap-3">
