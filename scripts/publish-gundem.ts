@@ -32,7 +32,11 @@ async function main() {
   const queuePath = resolve(queueDir, selected);
   const draft = JSON.parse(await readFile(queuePath, "utf8")) as GundemBriefing;
 
-  const body = draft.bodyMarkdown ?? "";
+  const legacyBody =
+    "draftBody" in draft && typeof (draft as Record<string, unknown>).draftBody === "string"
+      ? String((draft as Record<string, unknown>).draftBody)
+      : "";
+  const body = draft.bodyMarkdown ?? legacyBody;
   const safety = assessContentSafety({
     title: draft.title,
     body,

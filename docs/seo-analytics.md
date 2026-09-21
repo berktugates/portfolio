@@ -24,7 +24,8 @@ Prefer **one** client-side tag path to avoid double-counting:
 1. **GA4** — [analytics.google.com](https://analytics.google.com) → Admin → Create GA4 property for `berktugberke.com` → copy Measurement ID (`G-…`).
 2. **GTM** — container already created (`GTM-K2PXS8ZC`). Add tag **Google Analytics: GA4 Configuration** → Measurement ID → Trigger **All Pages** → **Submit** / Publish.
 3. **Search Console** — Domain property is preferred (DNS). Optional HTML-tag token → `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`.
-4. GSC → Sitemaps → submit `https://berktugberke.com/sitemap.xml`.
+4. GSC → Sitemaps → submit `https://berktugberke.com/sitemap.xml` ve `https://haberler.berktugberke.com/sitemap-gundem.xml` (veya ana sitemap üzerinden gündem URL’leri).
+5. GTM → GA4 event: `page_context` ile `content_group` = `gundem` (haberler host ve `/gundem` yolları).
 5. After env changes on Vercel → Redeploy Production.
 
 ## Daily SEO blogs

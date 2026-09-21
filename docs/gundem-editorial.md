@@ -18,8 +18,10 @@ Kodda tek kaynak: `app/lib/gundem/editorial.ts`.
 | Örnek / dev fallback | `content/gundem-seed.json` |
 | Kuyruk | `content/gundem-queue/*.json` |
 | Güvenlik | `scripts/check-queue-safety.ts`, `app/lib/content-safety.ts` |
-| Trends → kuyruk iskeleti | `scripts/gundem-from-csv.mjs` (varsayılan `angle` ulusal okur etkisi) |
-| Yayın | `scripts/publish-gundem.ts`, `.github/workflows/publish-gundem.yml` |
+| Trends TR RSS + talep sinyalleri | `scripts/refresh-gundem-queue.ts`, `data/gundem-demand-signals.json` |
+| Manuel CSV (KWP export) | `scripts/gundem-from-csv.mjs` |
+| Yayın | `pnpm gundem:publish` → `publish-gundem.ts`, cron `.github/workflows/publish-gundem.yml` |
+| Ölçüm | GTM `content_group=gundem` (`ContentGroupBeacon`); GSC `haberler` sitemap |
 | İlk Blob / DoD | `scripts/seed-gundem-blob.ts`, `.github/workflows/seed-gundem-blob.yml` |
 
 ## Kuyruk JSON alanları

@@ -38,6 +38,11 @@ jobs:
           pnpm check:queues
           node scripts/assert-no-gundem-links.mjs
 
+      - name: Trends + GSC demand → queue
+        env:
+          BLOB_PUBLIC_BASE_URL: ${{ secrets.BLOB_PUBLIC_BASE_URL }}
+        run: pnpm exec node --import tsx scripts/refresh-gundem-queue.ts
+
       - name: Safety + publish to Blob
         env:
           BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
