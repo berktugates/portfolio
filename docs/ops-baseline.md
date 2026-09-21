@@ -38,8 +38,10 @@ git log --since=90.days --oneline -- app/data/blogs.ts | wc -l
 
 ## Kuyruk
 
-- `content/blog-queue/*.json` sayısı: _
-- `content/gundem-queue/*.json` sayısı: _
+- `content/blog-queue/*.json` sayısı: 0 (2026-09-21)
+- `content/gundem-queue/*.json` sayısı: 0 (2026-09-21; boş kuyruk → `publish-gundem` exit 0)
+
+**CI:** [Publish gundem briefing](https://github.com/berktugates/portfolio/actions/workflows/publish-gundem.yml) — `workflow_dispatch` doğrulandı (Run #35651699963, success).
 
 ## IndexNow (repo’da hazır)
 

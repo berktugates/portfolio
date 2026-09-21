@@ -1,10 +1,17 @@
 name: Publish gundem briefing
 
 on:
+  schedule:
+    # 07:00 UTC — blog haftalık batch’ten ayrı saat (plan Faz 4 G.4)
+    - cron: "0 7 * * *"
   workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: publish-gundem
+  cancel-in-progress: false
 
 jobs:
   publish:
@@ -23,6 +30,12 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+
+      - name: Validate queues and gundem leak guard
+        run: |
+          set -euo pipefail
+          pnpm check:queues
+          node scripts/assert-no-gundem-links.mjs
 
       - name: Safety + publish to Blob
         env:
