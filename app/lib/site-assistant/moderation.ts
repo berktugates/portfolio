@@ -1,4 +1,5 @@
 import type { Locale } from "../i18n";
+import { assessContentSafety } from "../content-safety";
 
 function normUserText(text: string): string {
   return text.trim().toLocaleLowerCase("tr");
@@ -159,7 +160,28 @@ export function sanitizeAssistantReply(reply: string, userMessage: string, local
 
   out = ensureCompleteSentences(out);
   out = limitSentences(out, 3);
-  return out.trim();
+  if (!/contact@/i.test(out) && /contact@/i.test(reply)) {
+    const idx = reply.toLowerCase().indexOf("contact@");
+    if (idx >= 0) {
+      let start = reply.lastIndexOf(".", idx);
+      if (start < 0) start = reply.lastIndexOf("!", idx);
+      if (start < 0) start = reply.lastIndexOf("?", idx);
+      if (start < 0) start = 0;
+      else start += 1;
+      const tail = reply.slice(start).trim();
+      if (tail) out = `${out} ${tail}`.trim();
+    }
+  }
+  out = out.trim();
+  const safety = assessContentSafety({
+    title: "assistant-reply",
+    body: out,
+    mode: "assistant",
+  });
+  if (!safety.ok) {
+    return getRefusalReply(locale ?? "en");
+  }
+  return out;
 }
 
 function limitSentences(text: string, maxSentences: number): string {

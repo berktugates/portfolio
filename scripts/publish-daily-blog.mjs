@@ -38,8 +38,8 @@ const queueFiles = (await readdir(queueDir))
   .sort();
 
 if (queueFiles.length === 0) {
-  console.error("Blog queue is empty. Add files under content/blog-queue/");
-  process.exit(1);
+  console.log("::warning::Blog queue is empty; skipping publish.");
+  process.exit(0);
 }
 
 const preferred = queueFiles.find((name) => name.startsWith(`${targetDate}-`));

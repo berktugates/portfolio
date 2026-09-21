@@ -1,0 +1,33 @@
+{
+  "posts": [
+    {
+      "slug": "turkiye-yazilim-ekipleri-icin-bulut-maliyetleri",
+      "title": "Türkiye yazılım ekipleri için bulut maliyetlerinde yeni denge",
+      "excerpt": "Altyapı faturaları büyürken ekipler kapasiteyi daha şeffaf ölçmek zorunda. Bu brifing, ürün kararlarını etkileyen maliyet sinyallerini özetler; olay fotoğrafı değildir.",
+      "bodyMarkdown": "Türkiye'deki ürün ekipleri son çeyrekte bulut harcamalarını daha sık sprint planlamasına taşıyor. Maliyet artışı tek başına kriz değil; ölçülmeyen idle kaynak ve öngörülemeyen trafik dalgaları asıl risk.\n\nMühendislik tarafında üç pratik adım öne çıkıyor: autoscaling eşiklerini iş metrikleriyle eşleştirmek, staging ortamlarında gerçekçi yük testi koşturmak ve veri katmanında soğuk depolama katmanlarını erken tanımlamak.\n\nBu sayfa bir haber ajansı kopyası değildir; birincil kaynaklara dayanan kısa bir ürün brifingidir.",
+      "publishedAt": "2026-09-20",
+      "dateModified": "2026-09-20",
+      "sources": [
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP",
+          "title": "HTTP overview"
+        },
+        {
+          "url": "https://nextjs.org/docs",
+          "title": "Next.js documentation"
+        }
+      ],
+      "image": {
+        "src": "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
+        "alt": "Dünya üzerinde dijital ağ bağlantıları, stok görsel, olay fotoğrafı değil",
+        "creditName": "Unsplash",
+        "creditUrl": "https://unsplash.com",
+        "license": "unsplash",
+        "query": "digital network globe"
+      },
+      "trendQuery": "bulut maliyet",
+      "angle": "Yazılım ekiplerinin kapasite planlaması",
+      "lang": "tr"
+    }
+  ]
+}

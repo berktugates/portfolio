@@ -4,9 +4,10 @@ import {
   createBlogMetadata,
 } from "../../components/blog-detail";
 
-export const dynamicParams = false;
+export const dynamicParams = true;
+export const revalidate = 3600;
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   return blogStaticParams();
 }
 

@@ -10,7 +10,9 @@
     "dev": "next dev --turbopack",
     "prebuild": "node scripts/generate-blogs-feed.mjs",
     "build": "next build",
-    "postbuild": "node scripts/validate-project-i18n.mjs",
+    "postbuild": "node scripts/assert-no-gundem-links.mjs",
+    "test:unit": "node --import tsx --test app/lib/content-safety.test.ts app/lib/image-license.test.ts",
+    "check:queues": "node --import tsx scripts/check-queue-safety.ts",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -26,6 +28,7 @@
     "@radix-ui/react-slot": "^1.3.3",
     "@radix-ui/react-tooltip": "^1.2.16",
     "@vercel/analytics": "^1.5.0",
+    "@vercel/blob": "^2.0.0",
     "@vercel/speed-insights": "^1.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -45,6 +48,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.20.5",
     "typescript": "^5.9"
   }
 }

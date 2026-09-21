@@ -1,6 +1,7 @@
 import type { Locale } from "../i18n/config";
 import type { BlogPost } from "../../data/blogs";
-import { BLOGS_PER_PAGE, blogPosts, sortedBlogPosts } from "../../data/blogs";
+import { BLOGS_PER_PAGE } from "../../data/blogs";
+import { getCatalogBlogPost, getCatalogBlogPosts } from "./blog-catalog";
 import type { Project } from "../../data/projects";
 import { getProject, projects } from "../../data/projects";
 import { getLocaleContent } from "./load-locale";
@@ -25,14 +26,15 @@ export async function getLocalizedProject(
 
 export async function getLocalizedBlogPosts(locale: Locale): Promise<readonly LocalizedBlogPost[]> {
   const content = await getLocaleContent(locale);
-  return sortedBlogPosts.map((post) => mergeBlog(post, content.blogs[post.slug]));
+  const posts = await getCatalogBlogPosts();
+  return posts.map((post) => mergeBlog(post, content.blogs[post.slug]));
 }
 
 export async function getLocalizedBlogPost(
   locale: Locale,
   slug: string,
 ): Promise<LocalizedBlogPost | undefined> {
-  const post = blogPosts.find((item) => item.slug === slug);
+  const post = await getCatalogBlogPost(slug);
   if (!post) return undefined;
   const content = await getLocaleContent(locale);
   return mergeBlog(post, content.blogs[slug]);
@@ -44,7 +46,7 @@ export async function getLocalizedBlogPage(locale: Locale, page: number) {
   return posts.slice(start, start + BLOGS_PER_PAGE);
 }
 
-export function getBlogTotalPagesFromCount(count = sortedBlogPosts.length) {
+export function getBlogTotalPagesFromCount(count: number) {
   return Math.max(1, Math.ceil(count / BLOGS_PER_PAGE));
 }
 

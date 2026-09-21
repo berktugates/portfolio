@@ -11,6 +11,8 @@ export type BlogPost = {
   excerpt: string;
   description: string;
   publishedAt: string;
+  /** ISO date; defaults to publishedAt in metadata when omitted */
+  dateModified?: string;
   readingMinutes: number;
   keywords: readonly string[];
   sections: readonly BlogSection[];

@@ -140,10 +140,33 @@ const COPY: Record<Locale, SiteAssistantCopy> = {
   ja,
 };
 
-export function getSiteAssistantCopy(locale: Locale): SiteAssistantCopy {
+export type AssistantSurface = "default" | "gundem";
+
+const gundemTrSuggestions = [
+  "Bu konuda ürün nasıl kurulur?",
+  "Remote çalışır mısın?",
+  "İletişim e-postası nedir?",
+];
+
+const gundemEnSuggestions = [
+  "How would you shape a product for this topic?",
+  "Do you work remotely?",
+  "What is the contact email?",
+];
+
+export function getSiteAssistantCopy(
+  locale: Locale,
+  surface: AssistantSurface = "default",
+): SiteAssistantCopy {
   const copy = COPY[locale] ?? en;
+  const suggestions =
+    surface === "gundem"
+      ? locale === "tr"
+        ? gundemTrSuggestions
+        : gundemEnSuggestions
+      : copy.suggestions;
   return {
     ...copy,
-    suggestions: copy.suggestions.slice(0, DOCK_SUGGESTION_COUNT),
+    suggestions: suggestions.slice(0, DOCK_SUGGESTION_COUNT),
   };
 }

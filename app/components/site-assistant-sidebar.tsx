@@ -2,8 +2,10 @@
 
 import { MessageCircle } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { usePathname } from "next/navigation";
 import type { Locale } from "../lib/i18n";
 import { getSiteAssistantCopy } from "../lib/site-assistant/copy";
+import { stripLocalePrefix } from "../lib/content/paths";
 import { sendAssistantMessage, trackAssistantEvent } from "../lib/site-assistant/chat-client";
 import type { ChatMessage } from "../lib/site-assistant/knowledge";
 import { AssistantMessageContent } from "../lib/site-assistant/render-message";
@@ -60,7 +62,10 @@ function SendIcon() {
 }
 
 export function SiteAssistantSidebar({ locale }: { locale: Locale }) {
-  const copy = getSiteAssistantCopy(locale);
+  const pathname = usePathname() ?? "";
+  const normalized = stripLocalePrefix(pathname.replace(/\/$/, "") || "/");
+  const onGundem = normalized === "/gundem" || normalized.startsWith("/gundem/");
+  const copy = getSiteAssistantCopy(locale, onGundem ? "gundem" : "default");
   const [isOpen, setIsOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [prompt, setPrompt] = useState("");

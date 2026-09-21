@@ -3,6 +3,7 @@ import { Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
+import { ContentGroupBeacon } from "./components/content-group-beacon";
 import { GoogleAnalytics, GoogleTagManager } from "./components/google-tags";
 import { SiteAssistantRoot } from "./components/site-assistant-shell";
 import {
@@ -230,6 +231,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body className={`${geistMono.className} tracking-tight`}>
         <GoogleTagManager />
+        <ContentGroupBeacon />
         <a href="#main-content" className="sr-only focus:not-sr-only">
           Skip to content
         </a>

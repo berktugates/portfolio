@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { notFound } from "next/navigation";
-import { blogPosts } from "../data/blogs";
+import { notFound, permanentRedirect } from "next/navigation";
+import { getCatalogBlogSlugs } from "../lib/content/blog-catalog";
+import { blogHreflangLocalesForSlug, hasBlogLocaleOverlay } from "../lib/content/blog-locale-overlay";
 import { getLocaleContent, getLocalizedBlogPost } from "../lib/content/get-content";
 import { blogPostPath, blogsIndexPath } from "../lib/content/paths";
 import type { Locale } from "../lib/i18n";
-import { getDictionary, hreflangLanguages, localeMeta, localePath } from "../lib/i18n";
+import { getDictionary, localeMeta, localePath } from "../lib/i18n";
 import { formatMessage } from "../lib/i18n/format";
 import {
   AUTHOR_ID,
@@ -21,8 +22,9 @@ import { LanguageSwitcher } from "./language-switcher";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 
-export function blogStaticParams() {
-  return blogPosts.map(({ slug }) => ({ slug }));
+export async function blogStaticParams() {
+  const slugs = await getCatalogBlogSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 type BlogPageProps = { params: Promise<{ slug: string }> };
@@ -35,25 +37,29 @@ export async function createBlogMetadata(
   if (!post) return {};
 
   const path = blogPostPath(locale, post.slug);
+  const availableLocales = blogHreflangLocalesForSlug(post.slug);
   const languages: Record<string, string> = {
     "x-default": absoluteUrl(`/blogs/${post.slug}`),
   };
-  for (const [hreflang, homeUrl] of Object.entries(hreflangLanguages())) {
-    if (hreflang === "x-default") continue;
-    const loc = Object.entries(localeMeta).find(([, meta]) => meta.hreflang === hreflang)?.[0] as
-      | Locale
-      | undefined;
-    if (!loc) continue;
-    languages[hreflang] = absoluteUrl(blogPostPath(loc, post.slug));
-    void homeUrl;
+  for (const loc of availableLocales) {
+    languages[localeMeta[loc].hreflang] = absoluteUrl(blogPostPath(loc, post.slug));
   }
+
+  const modified = post.dateModified ?? post.publishedAt;
 
   return {
     title: post.title,
     description: post.description,
     keywords: [...post.keywords],
     authors: [{ name: SITE_NAME, url: absoluteUrl() }],
-    alternates: { canonical: absoluteUrl(path), languages },
+    alternates: {
+      canonical: absoluteUrl(path),
+      languages,
+      types: {
+        "application/rss+xml": absoluteUrl("/blogs/rss.xml"),
+        "text/markdown": absoluteUrl(`/blogs/${post.slug}/md`),
+      },
+    },
     openGraph: {
       type: "article",
       locale: localeMeta[locale].ogLocale,
@@ -61,6 +67,7 @@ export async function createBlogMetadata(
       description: post.description,
       url: path,
       publishedTime: post.publishedAt,
+      modifiedTime: modified,
       authors: ["Berktug Berke Ates"],
       tags: [...post.keywords],
       images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: post.title }],
@@ -82,6 +89,9 @@ export async function BlogDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const slug = (await params).slug;
+  if (locale !== "en" && !hasBlogLocaleOverlay(locale, slug)) {
+    permanentRedirect(`/blogs/${slug}`);
+  }
   const [post, content, dict] = await Promise.all([
     getLocalizedBlogPost(locale, slug),
     getLocaleContent(locale),
@@ -133,7 +143,7 @@ export async function BlogDetailPage({
         description: post.description,
         image: absoluteUrl("/opengraph-image"),
         datePublished: post.publishedAt,
-        dateModified: post.publishedAt,
+        dateModified: post.dateModified ?? post.publishedAt,
         mainEntityOfPage: { "@type": "WebPage", "@id": absoluteUrl(path) },
         isPartOf: { "@id": WEBSITE_ID },
         inLanguage: meta.htmlLang,

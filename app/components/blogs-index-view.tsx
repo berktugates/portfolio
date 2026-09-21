@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { ArrowUpRight } from "lucide-react";
-import { getBlogTotalPages } from "../data/blogs";
+import { getCatalogBlogPosts } from "../lib/content/blog-catalog";
 import {
+  getBlogTotalPagesFromCount,
   getLocaleContent,
   getLocalizedBlogPage,
 } from "../lib/content/get-content";
@@ -72,7 +73,8 @@ export async function BlogsIndexView({
     getDictionary(locale),
     getLocalizedBlogPage(locale, page),
   ]);
-  const totalPages = getBlogTotalPages();
+  const catalog = await getCatalogBlogPosts();
+  const totalPages = getBlogTotalPagesFromCount(catalog.length);
   const meta = localeMeta[locale];
   const homeHref = localePath(locale);
   const dateFormatter = new Intl.DateTimeFormat(meta.htmlLang, {

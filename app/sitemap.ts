@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { projects } from "./data/projects";
 import { blogPosts, getBlogPage, getBlogTotalPages } from "./data/blogs";
+import { blogHreflangLocalesForSlug } from "./lib/content/blog-locale-overlay";
 import {
   blogPostPath,
   blogsIndexPath,
@@ -15,6 +16,7 @@ import { SITE_LAST_MODIFIED, absoluteUrl } from "./lib/seo";
 import { SERVICE_SLUGS } from "./lib/services";
 
 export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const homeLanguages = hreflangLanguages();
@@ -94,21 +96,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }));
   }).flat();
 
-  const blogPostEntries = blogPosts.flatMap((post) =>
-    LOCALES.map((locale) => ({
+  const blogPostEntries = blogPosts.flatMap((post) => {
+    const locales = blogHreflangLocalesForSlug(post.slug);
+    return locales.map((locale) => ({
       url: absoluteUrl(blogPostPath(locale, post.slug)),
-      lastModified: post.publishedAt,
+      lastModified: post.dateModified ?? post.publishedAt,
       alternates: {
         languages: Object.fromEntries([
           ["x-default", absoluteUrl(blogPostPath("en", post.slug))],
-          ...LOCALES.map((targetLocale) => [
+          ...locales.map((targetLocale) => [
             localeMeta[targetLocale].hreflang,
             absoluteUrl(blogPostPath(targetLocale, post.slug)),
           ]),
         ]),
       },
-    })),
-  );
+    }));
+  });
 
   return [
     ...localeHomes,

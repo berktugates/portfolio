@@ -106,6 +106,8 @@ ${articleLinks}
 ## Optional
 
 - [XML sitemap](${SITE_URL}/sitemap.xml): Canonical indexable URLs and verified modification dates.
+- [Gündem sitemap](${SITE_URL}/sitemap-gundem.xml): Turkish technology briefings (\`/gundem\`). Not linked from the portfolio home graph; first-party summaries only (not wire copy).
+- [Gündem RSS](${SITE_URL}/gundem/rss.xml): Same briefings feed for syndication tools.
 `;
 
   return new Response(body, {
