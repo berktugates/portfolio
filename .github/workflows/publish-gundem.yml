@@ -30,4 +30,5 @@ jobs:
           REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
           REVALIDATE_URL: ${{ secrets.REVALIDATE_URL }}
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
-        run: pnpm dlx tsx scripts/publish-gundem.ts
+          BLOB_PUBLIC_BASE_URL: ${{ secrets.BLOB_PUBLIC_BASE_URL }}
+        run: pnpm exec node --import tsx scripts/publish-gundem.ts

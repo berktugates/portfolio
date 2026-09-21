@@ -61,4 +61,5 @@ git log --since=90.days --oneline -- app/data/blogs.ts | wc -l
 1. Vercel → Settings → Deployment Retention (production 5–10, preview 1 gün).
 2. Eski production deployment’ları sil (14g+).
 3. Spend alert: Deployment Storage %70.
-4. GSC → Sitemaps: `sitemap.xml`, `sitemap-gundem.xml`, blog RSS (Faz 5 sonrası).
+4. GSC → Sitemaps: `https://berktugberke.com/sitemap.xml`, `https://haberler.berktugberke.com/sitemap.xml`, blog RSS.
+5. Vercel → Domains: `haberler.berktugberke.com` (Cloudflare CNAME → `*.vercel-dns-*.com`, DNS only önerilir).
