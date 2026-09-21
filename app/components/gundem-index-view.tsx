@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { getAllGundemBriefings } from "../lib/gundem/catalog";
-import { absoluteUrl, SITE_NAME } from "../lib/seo";
+import { haberlerArticlePath, haberlerUrl } from "../lib/gundem/hosts";
+import { SITE_NAME } from "../lib/seo";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 
@@ -15,14 +16,15 @@ export async function createGundemIndexMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: { canonical: absoluteUrl("/gundem") },
+    alternates: { canonical: haberlerUrl("/") },
+    metadataBase: new URL(haberlerUrl("/")),
     robots: { index: true, follow: true },
     openGraph: {
       type: "website",
       locale: "tr_TR",
       title,
       description,
-      url: "/gundem",
+      url: haberlerUrl("/"),
     },
   };
 }
@@ -32,7 +34,7 @@ export async function GundemIndexView() {
   return (
     <div lang="tr" className="mx-auto flex min-h-screen w-full max-w-screen-sm flex-col px-4 pt-20">
       <SiteHeader
-        homeHref="/"
+        homeHref={haberlerUrl("/")}
         name={SITE_NAME}
         role="Software Engineer"
         ariaLabel="Ana sayfa"
@@ -45,7 +47,7 @@ export async function GundemIndexView() {
         </p>
         <div className="space-y-1">
           {posts.map((post) => (
-            <Link key={post.slug} href={`/gundem/${post.slug}`} className="blog-card group block">
+            <Link key={post.slug} href={haberlerUrl(haberlerArticlePath(post.slug))} className="blog-card group block">
               <span className="z-10 min-w-0 pr-4">
                 <span className="flex items-center gap-2 font-medium text-zinc-950 dark:text-zinc-50">
                   {post.title}

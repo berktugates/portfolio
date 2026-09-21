@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { DEFAULT_LOCALE, isLocale } from "../lib/i18n";
 import { SiteAssistantDock } from "./site-assistant";
@@ -17,7 +18,11 @@ function localeFromPathname(pathname: string) {
 export function SiteAssistantRoot() {
   const pathname = usePathname() ?? "";
   const locale = localeFromPathname(pathname || "/");
-  const fabSurface = usesFabAssistant(pathname);
+  const [hostname, setHostname] = useState("");
+  useEffect(() => {
+    setHostname(window.location.hostname);
+  }, []);
+  const fabSurface = usesFabAssistant(pathname, hostname || undefined);
 
   if (fabSurface) {
     return <SiteAssistantSidebar key={pathname} locale={locale} />;

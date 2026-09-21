@@ -27,12 +27,20 @@ async function walk(dir, acc = []) {
 const hireFiles = await walk(resolve(root, "app"), []);
 const files = [...new Set([...scanRoots, ...hireFiles.filter((f) => /\/hire\//.test(f))])];
 
-const forbidden = ["/gundem", "href=\"/gundem", "href='/gundem", "`/gundem"];
+const forbidden = [
+  "/gundem",
+  "href=\"/gundem",
+  "href='/gundem",
+  "`/gundem",
+  "haberler.berktugberke.com",
+];
 
 for (const file of files) {
   if (file.includes("/app/gundem/")) continue;
   if (file.includes("gundem-index-view") || file.includes("gundem-detail-view")) continue;
   if (file.includes("assert-no-gundem-links")) continue;
+  if (file.includes("llms.txt/route")) continue;
+  if (file.includes("gundem/hosts")) continue;
   const text = await readFile(file, "utf8");
   for (const needle of forbidden) {
     if (text.includes(needle)) {

@@ -106,8 +106,9 @@ ${articleLinks}
 ## Optional
 
 - [XML sitemap](${SITE_URL}/sitemap.xml): Canonical indexable URLs and verified modification dates.
-- [Gündem sitemap](${SITE_URL}/sitemap-gundem.xml): Turkish technology briefings (\`/gundem\`). Not linked from the portfolio home graph; first-party summaries only (not wire copy).
-- [Gündem RSS](${SITE_URL}/gundem/rss.xml): Same briefings feed for syndication tools.
+- [Haberler (Gündem)](https://haberler.berktugberke.com/): Turkish technology briefings on subdomain \`haberler.berktugberke.com\`. Not linked from the portfolio home graph; first-party summaries only (not wire copy).
+- [Haberler sitemap](https://haberler.berktugberke.com/sitemap.xml): Indexable briefing URLs.
+- [Haberler RSS](https://haberler.berktugberke.com/rss.xml): Syndication feed.
 `;
 
   return new Response(body, {

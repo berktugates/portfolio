@@ -1,7 +1,9 @@
 import { stripLocalePrefix } from "../../lib/content/paths";
+import { isHaberlerHost } from "../../lib/gundem/hosts";
 
 /** FAB + bottom-right dock (blogs, project detail, legal docs under /projects/...). */
-export function usesFabAssistant(pathname: string): boolean {
+export function usesFabAssistant(pathname: string, hostname?: string): boolean {
+  if (hostname && isHaberlerHost(hostname)) return true;
   const normalized = stripLocalePrefix(pathname.replace(/\/$/, "") || "/");
   if (normalized === "/blogs" || normalized.startsWith("/blogs/")) return true;
   if (normalized === "/gundem" || normalized.startsWith("/gundem/")) return true;

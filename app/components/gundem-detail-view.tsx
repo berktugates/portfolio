@@ -5,7 +5,8 @@ import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getGundemBySlug, getGundemSlugs } from "../lib/gundem/catalog";
 import { validateLicensedImage } from "../lib/image-license";
-import { AUTHOR_ID, SITE_NAME, absoluteUrl, jsonLd } from "../lib/seo";
+import { haberlerArticlePath, haberlerUrl } from "../lib/gundem/hosts";
+import { AUTHOR_ID, SITE_NAME, jsonLd } from "../lib/seo";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 
@@ -21,18 +22,19 @@ type Props = { params: Promise<{ slug: string }> };
 export async function createGundemDetailMetadata({ params }: Props): Promise<Metadata> {
   const briefing = await getGundemBySlug((await params).slug);
   if (!briefing) return {};
-  const path = `/gundem/${briefing.slug}`;
+  const canonical = haberlerUrl(haberlerArticlePath(briefing.slug));
   return {
     title: briefing.title,
     description: briefing.excerpt,
-    alternates: { canonical: absoluteUrl(path) },
+    alternates: { canonical },
+    metadataBase: new URL(haberlerUrl("/")),
     robots: { index: true, follow: true },
     openGraph: {
       type: "article",
       locale: "tr_TR",
       title: briefing.title,
       description: briefing.excerpt,
-      url: path,
+      url: canonical,
       publishedTime: briefing.publishedAt,
       modifiedTime: briefing.dateModified,
       images: [{ url: briefing.image.src, alt: briefing.image.alt }],
@@ -48,7 +50,7 @@ export async function GundemDetailView({ params }: Props) {
   const imageCheck = validateLicensedImage(briefing.image);
   if (!imageCheck.ok) notFound();
 
-  const path = `/gundem/${briefing.slug}`;
+  const canonical = haberlerUrl(haberlerArticlePath(briefing.slug));
   const paragraphs = briefing.bodyMarkdown.split(/\n\n+/).filter(Boolean);
 
   const structuredData = {
@@ -57,8 +59,8 @@ export async function GundemDetailView({ params }: Props) {
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Gündem", item: absoluteUrl("/gundem") },
-          { "@type": "ListItem", position: 2, name: briefing.title, item: absoluteUrl(path) },
+          { "@type": "ListItem", position: 1, name: "Gündem", item: haberlerUrl("/") },
+          { "@type": "ListItem", position: 2, name: briefing.title, item: canonical },
         ],
       },
       {
@@ -68,7 +70,7 @@ export async function GundemDetailView({ params }: Props) {
         datePublished: briefing.publishedAt,
         dateModified: briefing.dateModified,
         inLanguage: "tr-TR",
-        mainEntityOfPage: absoluteUrl(path),
+        mainEntityOfPage: canonical,
         author: { "@id": AUTHOR_ID },
         citation: briefing.sources.map((s) => s.url),
         image: {
@@ -85,7 +87,7 @@ export async function GundemDetailView({ params }: Props) {
   return (
     <div lang="tr" className="relative mx-auto min-h-screen w-full max-w-screen-sm px-4 pt-20">
       <SiteHeader
-        homeHref="/"
+        homeHref={haberlerUrl("/")}
         name={SITE_NAME}
         role="Software Engineer"
         ariaLabel="Ana sayfa"
@@ -93,7 +95,7 @@ export async function GundemDetailView({ params }: Props) {
       />
       <main className="blog-prose mt-12 pb-20">
         <Link
-          href="/gundem"
+          href={haberlerUrl("/")}
           className="mb-12 inline-flex items-center gap-1 text-sm text-zinc-500 transition-colors hover:text-zinc-950 dark:hover:text-zinc-50"
         >
           <ArrowLeft className="size-4" />

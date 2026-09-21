@@ -4,7 +4,7 @@
  * Env: INDEXNOW_KEY, SITE_HOST (default berktugberke.com)
  */
 const key = process.env.INDEXNOW_KEY;
-const host = process.env.SITE_HOST ?? "berktugberke.com";
+const host = process.env.HABERLER_HOST ?? process.env.SITE_HOST ?? "haberler.berktugberke.com";
 const urls = process.argv.slice(2).filter((arg) => arg.startsWith("https://"));
 
 if (!key) {

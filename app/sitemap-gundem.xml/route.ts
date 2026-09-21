@@ -1,15 +1,15 @@
 import { getAllGundemBriefings } from "../lib/gundem/catalog";
-import { absoluteUrl } from "../lib/seo";
+import { haberlerArticlePath, haberlerUrl } from "../lib/gundem/hosts";
 
 export const revalidate = 1800;
 
 export async function GET() {
   const posts = await getAllGundemBriefings();
   const urls = [
-    `<url><loc>${absoluteUrl("/gundem")}</loc></url>`,
+    `<url><loc>${haberlerUrl("/")}</loc></url>`,
     ...posts.map(
       (post) =>
-        `<url><loc>${absoluteUrl(`/gundem/${post.slug}`)}</loc><lastmod>${post.dateModified}</lastmod></url>`,
+        `<url><loc>${haberlerUrl(haberlerArticlePath(post.slug))}</loc><lastmod>${post.dateModified}</lastmod></url>`,
     ),
   ];
 

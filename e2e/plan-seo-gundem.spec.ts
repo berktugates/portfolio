@@ -15,6 +15,7 @@ test.describe("NAV gundem leak", () => {
       await page.goto(path);
       const html = await page.content();
       expect(html).not.toMatch(/href=["']\/gundem/);
+      expect(html).not.toContain("haberler.berktugberke.com");
     });
   }
 
@@ -26,10 +27,20 @@ test.describe("NAV gundem leak", () => {
     await expect(suggestions.first()).toBeVisible({ timeout: 10_000 });
     const text = await suggestions.allTextContents();
     expect(text.join(" ")).not.toContain("/gundem");
+    expect(text.join(" ")).not.toContain("haberler.berktugberke.com");
   });
 });
 
 test.describe("Gündem surface", () => {
+  test("GUN-0 prod redirect /gundem to subdomain", async ({ request }) => {
+    if (!process.env.CI) {
+      test.skip();
+    }
+    const res = await request.get("https://berktugberke.com/gundem", { maxRedirects: 0 });
+    expect([301, 308]).toContain(res.status());
+    expect(res.headers().location).toMatch(/^https:\/\/haberler\.berktugberke\.com/);
+  });
+
   test("GUN-1 index 200", async ({ page }) => {
     const res = await page.goto("/gundem");
     expect(res?.status()).toBe(200);
@@ -48,7 +59,7 @@ test.describe("Gündem surface", () => {
     const res = await request.get("/sitemap-gundem.xml");
     expect(res.ok()).toBeTruthy();
     const xml = await res.text();
-    expect(xml).toContain("/gundem/turkiye-yazilim-ekipleri-icin-bulut-maliyetleri");
+    expect(xml).toContain("haberler.berktugberke.com/turkiye-yazilim-ekipleri-icin-bulut-maliyetleri");
   });
 });
 
@@ -75,6 +86,7 @@ test.describe("GTM content_group", () => {
       window.dataLayer = [];
     });
     await page.goto("/gundem");
+    // Local dev serves /gundem; production uses haberler subdomain redirect.
     await page.waitForFunction(() => {
       const events = (window as unknown as { dataLayer?: { content_group?: string }[] }).dataLayer ?? [];
       return events.some((e) => e.content_group === "gundem");

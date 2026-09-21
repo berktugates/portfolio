@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { put } from "@vercel/blob";
 import { assessContentSafety } from "../app/lib/content-safety";
 import { validateLicensedImage } from "../app/lib/image-license";
+import { haberlerArticlePath, HABERLER_ORIGIN } from "../app/lib/gundem/hosts";
 import type { GundemBriefing } from "../app/lib/gundem/types";
 
 const root = resolve(import.meta.dirname, "..");
@@ -81,22 +82,23 @@ if (revalidateUrl && secret) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      paths: ["/gundem", `/gundem/${draft.slug}`, "/sitemap-gundem.xml"],
+      paths: ["/gundem", `/gundem/${draft.slug}`, "/sitemap-gundem.xml", "/gundem/rss.xml"],
       tags: ["gundem"],
     }),
   });
   console.log(`Revalidate status: ${res.status}`);
 }
 
-const host = process.env.SITE_HOST ?? "berktugberke.com";
+const indexHost = process.env.HABERLER_HOST ?? new URL(HABERLER_ORIGIN).host;
 if (process.env.INDEXNOW_KEY) {
   const { execFileSync } = await import("node:child_process");
+  const articlePath = haberlerArticlePath(draft.slug);
   execFileSync(
     "node",
     [
       "scripts/indexnow-submit.mjs",
-      `https://${host}/gundem/${draft.slug}`,
-      `https://${host}/gundem`,
+      `https://${indexHost}${articlePath}`,
+      `https://${indexHost}/`,
     ],
     { stdio: "inherit", cwd: root },
   );
