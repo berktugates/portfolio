@@ -26,6 +26,14 @@ const DEFAMATION_RE =
 const SOURCE_HOST_ALLOWLIST = new Set([
   "berktugberke.com",
   "www.berktugberke.com",
+  // Ulusal gündem brifingleri — kamu verisi ve düzenleyici kurumlar (docs/gundem-editorial.md)
+  "tcmb.gov.tr",
+  "www.tcmb.gov.tr",
+  "tuik.gov.tr",
+  "www.tuik.gov.tr",
+  "data.tuik.gov.tr",
+  "btk.gov.tr",
+  "www.btk.gov.tr",
   "developer.mozilla.org",
   "nextjs.org",
   "schema.org",
