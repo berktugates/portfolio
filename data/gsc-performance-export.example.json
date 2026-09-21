@@ -1,0 +1,11 @@
+{
+  "exportedAt": "2026-09-21",
+  "period": "28d",
+  "totals": {
+    "clicks": 0,
+    "impressions": 0
+  },
+  "queries": [
+    { "query": "örnek sorgu", "clicks": 12, "impressions": 400, "ctr": 0.03 }
+  ]
+}

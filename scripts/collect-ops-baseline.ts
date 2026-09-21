@@ -4,6 +4,7 @@
 import { execSync } from "node:child_process";
 import { readFile, readdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { collectMeasurement } from "./lib/measurement-collect";
 import { runPublicSurfaceProbes } from "./lib/ops-probes";
 
 const root = resolve(import.meta.dirname, "..");
@@ -66,11 +67,12 @@ async function vercelDeploymentSummary(): Promise<{
 }
 
 async function main() {
-  const probes = await runPublicSurfaceProbes();
+  const [probes, measurement] = await Promise.all([runPublicSurfaceProbes(), collectMeasurement(root)]);
   const snapshot = {
     generatedAt: new Date().toISOString(),
-    faz: 0,
+    faz: [0, 5],
     probes,
+    measurement,
     queues: {
       blogJson: await countJson("content/blog-queue"),
       gundemJson: await countJson("content/gundem-queue"),

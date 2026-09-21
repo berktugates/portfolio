@@ -52,6 +52,9 @@ jobs:
       - name: Faz 0 checks (fail-closed)
         run: pnpm check:ops
 
+      - name: Faz 5 measurement checks
+        run: pnpm check:measurement
+
       - name: Vercel prune (dry-run)
         if: github.event_name != 'workflow_dispatch' || github.event.inputs.prune_apply != 'true'
         env:

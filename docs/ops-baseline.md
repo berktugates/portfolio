@@ -58,6 +58,12 @@ git log --since=90.days --oneline -- app/data/blogs.ts content/posts | wc -l
 
 Günlük cron: **Publish gundem briefing** 07:00 UTC. Detay: `docs/gundem-editorial.md`.
 
+## Faz 5 (ölçüm) — GTM / GSC / GA4
+
+**DoD:** `pnpm check:measurement` (GTM çift tag yok, llms, sitemap sayıları). Detay: `docs/faz-5-measurement.md`.
+
+GSC Performance export → `data/gsc-performance-export.json` (örnek: `.example.json`) → `pnpm ops:merge-gsc-demand`.
+
 ## IndexNow
 
 - Key: `public/bberke2026indexnowkey.txt`

@@ -1,6 +1,9 @@
 {
-  "generatedAt": "2026-09-21T21:18:25.698Z",
-  "faz": 0,
+  "generatedAt": "2026-09-21T21:23:01.198Z",
+  "faz": [
+    0,
+    5
+  ],
   "probes": [
     {
       "name": "sitemap-main",
@@ -28,17 +31,60 @@
       "detail": "308 → https://haberler.berktugberke.com/"
     }
   ],
+  "measurement": {
+    "gtmGa": {
+      "container": "GTM-K2PXS8ZC",
+      "ga4": "G-5H6GDB1CRH",
+      "gscProperty": "sc-domain:berktugberke.com",
+      "probes": [
+        {
+          "id": "gtm-portfolio",
+          "ok": true,
+          "detail": "portfolio: GTM present, no duplicate gtag"
+        },
+        {
+          "id": "gtm-blogs",
+          "ok": true,
+          "detail": "blogs: GTM present, no duplicate gtag"
+        },
+        {
+          "id": "gtm-haberler",
+          "ok": true,
+          "detail": "haberler: GTM present, no duplicate gtag"
+        },
+        {
+          "id": "llms-haberler",
+          "ok": true,
+          "detail": "llms.txt cites haberler gündem"
+        },
+        {
+          "id": "sitemap-main-count",
+          "ok": true,
+          "detail": "main sitemap locs: 462"
+        },
+        {
+          "id": "sitemap-gundem-count",
+          "ok": true,
+          "detail": "haberler sitemap locs: 5"
+        }
+      ]
+    },
+    "gscExport": {
+      "note": "data/gsc-performance-export.json yok; GSC dashboard export eklenebilir"
+    }
+  },
   "queues": {
-    "blogJson": 0,
+    "blogJson": 7,
     "gundemJson": 0,
     "blogMinRecommended": 7
   },
   "git": {
-    "blogRelatedCommits90d": 1
+    "blogRelatedCommits90d": 21
   },
   "vercel": {
     "ok": true,
-    "note": "VERCEL_TOKEN veya .vercel/project.json yok; deployment sayımı atlandı."
+    "totalListed": 13,
+    "note": "Son 13 deployment listelendi (limit 100)."
   },
   "manualDashboard": {
     "gscProperty": "sc-domain:berktugberke.com",
