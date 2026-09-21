@@ -53,11 +53,6 @@ export type HomeDictionary = {
   socialNav: string;
   latestBlog: string;
   viewAll: string;
-  coFounder: string;
-  coFounderAria: string;
-  figturesLine: string;
-  figturesPeriod: string;
-  figturesLogoAlt: string;
   engineer: string;
   engineerAria: string;
   bradiLine: string;

@@ -50,7 +50,7 @@ export function usesCuratedStartReply(text: string): boolean {
 }
 
 const PROJECT_NAME_RE =
-  /Celestial\s+Insights|Medula\s+Eczane|StrumAI|Figtures|bradi\.tech/gi;
+  /Celestial\s+Insights|StrumAI|bradi\.tech/gi;
 
 const FULL_NAME_RE =
   /Berktu[gğ]\s*Berke\s*Ate[sş]|Berktug\s*Berke\s*Ates|Berktu[gğ]'?[uü]n|Berktu[gğ]\s*Berke\s*Ate[sş]'?in/giu;

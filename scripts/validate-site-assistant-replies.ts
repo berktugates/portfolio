@@ -19,7 +19,7 @@ function assertFirstPersonTr(text: string) {
 }
 
 function assertNoProjectDump(text: string) {
-  assert.ok(!/Celestial|Medula|StrumAI/i.test(text), `project name dump: ${text}`);
+  assert.ok(!/Celestial|StrumAI/i.test(text), `project name dump: ${text}`);
 }
 
 // Curated TR paths
@@ -53,7 +53,7 @@ assert.equal(usesCuratedStartReply("Web veya mobil projeme nasıl başlarız?"),
 
 // Sanitize bad LLM-style reply
 const bad =
-  "Evet, Berktuğ Berke Ateş, Türkiye'de birçok web ve mobil projeyi geliştirmiştir. Örnek olarak Celestial Insights, Medula Eczane ve StrumAI gibi projeleri geliştirmiştim. Bu projeler, Berktuğ Berke Ateş'in uzmanlığımız temelinde geliştirilmiştir.";
+  "Evet, Berktuğ Berke Ateş, Türkiye'de birçok web ve mobil projeyi geliştirmiştir. Örnek olarak Celestial Insights ve StrumAI gibi projeleri geliştirmiştim. Bu projeler, Berktuğ Berke Ateş'in uzmanlığımız temelinde geliştirilmiştir.";
 const cleaned = sanitizeAssistantReply(bad, "Hangi projelerde çalıştın?", "tr");
 assertNoFullName(cleaned);
 assertNoProjectDump(cleaned);
