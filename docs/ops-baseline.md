@@ -54,12 +54,12 @@ git log --since=90.days --oneline -- app/data/blogs.ts | wc -l
 
 | DoD | Durum |
 |-----|--------|
-| T4-01…04,07,09,11,14,27 (E2E) | `pnpm test:e2e` — plan-seo-gundem |
-| 1 gerçek brifing **prod Blob** | `Seed gundem Blob` workflow + `pnpm gundem:verify-blob` |
-| Kuyruk → publish | `refresh-gundem-queue` (Trends TR + `data/gundem-demand-signals.json`) → `publish-gundem` |
-| Trends / GTM / GSC | Günlük cron publish öncesi RSS; GA4 `content_group=gundem`; GSC haberler sitemap |
+| T4-01…04,07,09,11,14,27 (E2E) | `pnpm test:e2e` — plan-seo-gundem ✅ |
+| Prod Blob brifingler | **Seed gundem Blob** + Trends publish ✅ |
+| Kuyruk → publish | `refresh-gundem-queue` → `publish-gundem` — Run [#35655502759](https://github.com/berktugates/portfolio/actions/runs/35655502759) ✅ |
+| Trends / GTM / GSC | RSS + `data/gundem-demand-signals.json`; GTM `content_group=gundem`; GSC haberler sitemap |
 
-İlk Blob seed: Actions → **Seed gundem Blob (Faz 4)**. Günlük yayın: **Publish gundem briefing** (07:00 UTC).
+**Faz 4:** kapalı (2026-09-21). Günlük cron: **Publish gundem briefing** 07:00 UTC.
 
 ## IndexNow (repo’da hazır)
 

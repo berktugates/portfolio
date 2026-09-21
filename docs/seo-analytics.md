@@ -26,7 +26,7 @@ Prefer **one** client-side tag path to avoid double-counting:
 3. **Search Console** — Domain property is preferred (DNS). Optional HTML-tag token → `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`.
 4. GSC → Sitemaps → submit `https://berktugberke.com/sitemap.xml` ve `https://haberler.berktugberke.com/sitemap-gundem.xml` (veya ana sitemap üzerinden gündem URL’leri).
 5. GTM → GA4 event: `page_context` ile `content_group` = `gundem` (haberler host ve `/gundem` yolları).
-5. After env changes on Vercel → Redeploy Production.
+6. After env changes on Vercel → Redeploy Production.
 
 ## Daily SEO blogs
 
