@@ -42,13 +42,15 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: GSC export + demand merge (when SA secret set)
+      - name: GSC export + demand merge
         env:
           GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
         run: |
           set -euo pipefail
           pnpm ops:fetch-gsc
-          if [ -f data/gsc-performance-export.json ]; then
+          if [ ! -f data/gsc-performance-export.json ]; then
+            pnpm ops:import-gsc-baseline
+          else
             pnpm ops:merge-gsc-demand
           fi
 

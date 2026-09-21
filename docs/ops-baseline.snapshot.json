@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-21T22:01:28.990Z",
+  "generatedAt": "2026-09-21T22:20:21.893Z",
   "faz": [
     0,
     5
@@ -65,21 +65,29 @@
         {
           "id": "sitemap-gundem-count",
           "ok": true,
-          "detail": "haberler sitemap locs: 5"
+          "detail": "haberler sitemap locs: 6"
         }
       ]
     },
     "gscExport": {
-      "note": "data/gsc-performance-export.json yok; GSC dashboard export eklenebilir"
+      "exportedAt": "2026-09-22",
+      "period": "28d",
+      "totals": {
+        "clicks": 7,
+        "impressions": 329,
+        "ctr": 0.021,
+        "position": 44.2
+      },
+      "queryCount": 46
     }
   },
   "queues": {
     "blogJson": 7,
-    "gundemJson": 0,
+    "gundemJson": 1,
     "blogMinRecommended": 7
   },
   "git": {
-    "blogRelatedCommits90d": 1
+    "blogRelatedCommits90d": 21
   },
   "vercel": {
     "ok": true,
@@ -92,6 +100,16 @@
       "deploymentsToKeep": 10
     },
     "note": "Son 11 deployment listelendi (limit 100)."
+  },
+  "gscBaseline": {
+    "exportedAt": "2026-09-22",
+    "totals": {
+      "clicks": 7,
+      "impressions": 329,
+      "ctr": 0.021,
+      "position": 44.2
+    },
+    "queryCount": 46
   },
   "manualDashboard": {
     "gscProperty": "sc-domain:berktugberke.com",

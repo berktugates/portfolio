@@ -89,8 +89,26 @@ async function vercelDeploymentSummary(): Promise<{
   }
 }
 
+async function loadGscBaselineTotals(): Promise<Record<string, unknown> | null> {
+  try {
+    const raw = await readFile(resolve(root, "docs/gsc-performance-baseline.snapshot.json"), "utf8");
+    const j = JSON.parse(raw) as { exportedAt?: string; totals?: unknown; queryCount?: number; queries?: unknown[] };
+    return {
+      exportedAt: j.exportedAt,
+      totals: j.totals,
+      queryCount: j.queries?.length ?? 0,
+    };
+  } catch {
+    return null;
+  }
+}
+
 async function main() {
-  const [probes, measurement] = await Promise.all([runPublicSurfaceProbes(), collectMeasurement(root)]);
+  const [probes, measurement, gscBaseline] = await Promise.all([
+    runPublicSurfaceProbes(),
+    collectMeasurement(root),
+    loadGscBaselineTotals(),
+  ]);
   const snapshot = {
     generatedAt: new Date().toISOString(),
     faz: [0, 5],
@@ -105,6 +123,7 @@ async function main() {
       blogRelatedCommits90d: await gitBlogCommits90d(),
     },
     vercel: await vercelDeploymentSummary(),
+    gscBaseline,
     manualDashboard: {
       gscProperty: "sc-domain:berktugberke.com",
       gtmContainer: "GTM-K2PXS8ZC",

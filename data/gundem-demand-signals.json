@@ -1,16 +1,287 @@
 {
   "updatedAt": "2026-09-21",
-  "source": "Google Trends TR RSS + GSC/KWP öncelik şeridi (haberler.berktugberke.com)",
+  "source": "Google Trends TR RSS + GSC export + manuel şerit",
+  "gscExportedAt": "2026-09-22",
   "queries": [
-    { "query": "gram altın", "weight": 18, "category": "ekonomi" },
-    { "query": "enflasyon", "weight": 16, "category": "ekonomi" },
-    { "query": "uçak bileti", "weight": 14, "category": "ekonomi" },
-    { "query": "emekli maaşı", "weight": 15, "category": "ekonomi" },
-    { "query": "asgari ücret", "weight": 14, "category": "ekonomi" },
-    { "query": "deprem", "weight": 17, "category": "toplum" },
-    { "query": "hava durumu", "weight": 10, "category": "toplum" },
-    { "query": "seçim", "weight": 16, "category": "siyaset" },
-    { "query": "meb", "weight": 12, "category": "toplum" },
-    { "query": "sağlık bakanlığı", "weight": 13, "category": "saglik" }
+    {
+      "query": "gram altın",
+      "weight": 18,
+      "category": "ekonomi"
+    },
+    {
+      "query": "deprem",
+      "weight": 17,
+      "category": "toplum"
+    },
+    {
+      "query": "enflasyon",
+      "weight": 16,
+      "category": "ekonomi"
+    },
+    {
+      "query": "seçim",
+      "weight": 16,
+      "category": "siyaset"
+    },
+    {
+      "query": "emekli maaşı",
+      "weight": 15,
+      "category": "ekonomi"
+    },
+    {
+      "query": "uçak bileti",
+      "weight": 14,
+      "category": "ekonomi"
+    },
+    {
+      "query": "asgari ücret",
+      "weight": 14,
+      "category": "ekonomi"
+    },
+    {
+      "query": "sağlık bakanlığı",
+      "weight": 13,
+      "category": "saglik"
+    },
+    {
+      "query": "meb",
+      "weight": 12,
+      "category": "toplum"
+    },
+    {
+      "query": "hava durumu",
+      "weight": 10,
+      "category": "toplum"
+    },
+    {
+      "query": "zero downtime database migration",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "migrazione del database senza downtime",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "api design",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "ゼロダウンタイムデータベース移行",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "medula eczane",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "zero downtime database migrations",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "feature flag",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "ki crawlbarkeit",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "berke ates",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "strumai",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "context engineering en ia",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "エージェントコントロールプレーン",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "eczane medula",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "feature flags",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "ai crawler",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "database migration without downtime",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "ki crawler",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "berke ateş",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "celestial insights",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "medulla eczane",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "eczane medulla",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "workflow agentici",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "medula ec",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "zero downtime migrations",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "berktug",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "medulaeczane",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "eczanem medula",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "rollback ai",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "zero downtime data migration",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "zero-downtime database migration",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "enterprise devops dönüşümü hizmetleri",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "staff mühendislik",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "workflows agentiques",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "medula eczne",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "medula ecz",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "accessible interfaces",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "medul eczane",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "medula eczanesi",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "med eczane",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "ecz medula",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "zero-downtime data migration",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "migrate database without downtime",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "software architecture consultant germany",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "ai-crawler",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "zero downtime deployment database",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "feature enabler",
+      "weight": 5,
+      "category": "diger"
+    }
   ]
 }

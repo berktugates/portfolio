@@ -28,13 +28,11 @@ GSC/GA4 **rakamları** dashboard’dan; snapshot’ta property ID’leri referan
 
 **Konsol hedefi (API ile PATCH desteklenmiyor):** preview `expirationDays` 1, production `expirationDaysProduction` 5–10.
 
-## Google Search Console (son 28 gün) — manuel
+## Google Search Console (son 28 gün)
 
 - Property: `sc-domain:berktugberke.com`
-- Toplam tıklama: _
-- Toplam gösterim: _
-- `/blogs/*` tıklama: _
-- `/hire` tıklama: _
+- Snapshot: `docs/gsc-performance-baseline.snapshot.json` (`pnpm ops:import-gsc-baseline` → merge)
+- **2026-09-22:** tıklama **7**, gösterim **329**, ort. TO **%2,1**, konum **44,2** (46 sorgu satırı)
 - Haberler sitemap: `https://haberler.berktugberke.com/sitemap-gundem.xml`
 
 ## GA4 — manuel

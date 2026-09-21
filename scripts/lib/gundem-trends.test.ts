@@ -50,7 +50,7 @@ test("compose briefing passes safety length gate", () => {
 
 test("compose briefing meets 350 words for short trending titles", () => {
   const draft = composeBriefingFromTrend(
-    { query: "uzak şehir", approxTraffic: 500, headlines: [] },
+    { query: "uzak şehir", approxTraffic: 500, headlines: [], pubDate: "2026-09-22" },
     "2026-09-22",
   );
   const safety = assessContentSafety({
