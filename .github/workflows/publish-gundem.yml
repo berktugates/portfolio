@@ -51,3 +51,6 @@ jobs:
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
           BLOB_PUBLIC_BASE_URL: ${{ secrets.BLOB_PUBLIC_BASE_URL }}
         run: pnpm exec node --import tsx scripts/publish-gundem.ts
+
+      - name: Prod smoke (haberler host)
+        run: pnpm exec node --import tsx scripts/gundem-smoke-prod.ts

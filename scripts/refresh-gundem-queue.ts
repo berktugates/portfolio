@@ -13,7 +13,7 @@ import {
   type DemandSignal,
   scoreTrendItem,
 } from "./lib/gundem-compose";
-import { fetchGundemBlobIndex, indexHasSlug, indexHasTrendQuery } from "./lib/gundem-blob-index";
+import { indexHasSlug, indexHasTrendQuery, resolveGundemPublishedIndex } from "./lib/gundem-blob-index";
 import { fetchTurkeyTrends } from "./lib/gundem-trends";
 
 const root = resolve(import.meta.dirname, "..");
@@ -43,7 +43,7 @@ async function main() {
   const [trends, demand, indexPosts] = await Promise.all([
     fetchTurkeyTrends(),
     loadDemandSignals(),
-    fetchGundemBlobIndex(),
+    resolveGundemPublishedIndex(),
   ]);
 
   const ranked = trends

@@ -17,6 +17,7 @@
     "gundem:verify-blob": "node --import tsx scripts/verify-gundem-blob.ts",
     "gundem:refresh-queue": "node --import tsx scripts/refresh-gundem-queue.ts",
     "gundem:publish": "node --import tsx scripts/refresh-gundem-queue.ts && node --import tsx scripts/publish-gundem.ts",
+    "gundem:smoke-prod": "node --import tsx scripts/gundem-smoke-prod.ts",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
