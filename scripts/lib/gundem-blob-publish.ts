@@ -24,7 +24,7 @@ export async function publishGundemBriefingToBlob(
   let index: { posts: GundemBriefing[] } = { posts: [] };
   if (indexUrl) {
     try {
-      const res = await fetch(indexUrl);
+      const res = await fetch(indexUrl, { cache: "no-store" });
       if (res.ok) index = (await res.json()) as { posts: GundemBriefing[] };
     } catch {
       /* start fresh */
