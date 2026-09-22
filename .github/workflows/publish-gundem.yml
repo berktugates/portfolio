@@ -54,3 +54,6 @@ jobs:
 
       - name: Prod smoke (haberler host)
         run: pnpm exec node --import tsx scripts/gundem-smoke-prod.ts
+
+      - name: Measurement surface (GTM / sitemap / GSC baseline)
+        run: pnpm check:measurement

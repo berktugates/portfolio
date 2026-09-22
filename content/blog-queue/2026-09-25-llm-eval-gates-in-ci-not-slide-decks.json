@@ -1,0 +1,372 @@
+{
+  "slug": "llm-eval-gates-in-ci-not-slide-decks",
+  "title": "LLM Eval Gates in CI, Not Slide Decks",
+  "excerpt": "Demo-quality prompts do not survive production traffic. If evals live only in notebooks, every model swap becomes a product lottery.",
+  "description": "Staff patterns for LLM evaluation in CI: golden datasets, regression thresholds, cost-aware sampling, and release gates that product teams can trust.",
+  "readingMinutes": 7,
+  "keywords": [
+    "LLM evals",
+    "CI",
+    "quality gates",
+    "regression testing",
+    "AI product"
+  ],
+  "socialThreadTr": [
+    "Notebook evals güven vermez; CI kapısı şart. 🧵",
+    "Golden set + regresyon eşiği. Detay: https://berktugberke.com/tr/blogs/llm-eval-gates-in-ci-not-slide-decks"
+  ],
+  "sections": [
+    {
+      "heading": "Evals are release infrastructure",
+      "paragraphs": [
+        "Teams that only eyeball outputs before launch discover failures in support tickets. Eval harnesses turn subjective 'looks fine' into comparable scores across prompts, tools, and locales.",
+        "Version datasets like code. When someone edits a golden case without review, you lose the ability to detect model regressions versus intentional behavior changes."
+      ]
+    },
+    {
+      "heading": "Golden sets need ownership",
+      "paragraphs": [
+        "Start with a small, high-signal golden set tied to revenue or compliance paths—not hundreds of vague prompts copied from marketing.",
+        "Each case should assert tool shape, citation presence, refusal behavior, or numeric bounds—not poetic similarity alone."
+      ],
+      "points": [
+        "Treat eval suites like unit tests with fixtures and versioned datasets",
+        "Block releases on regression thresholds, not single lucky runs",
+        "Separate offline eval from online shadow traffic",
+        "Publish eval dashboards next to error budgets"
+      ]
+    },
+    {
+      "heading": "Sample online, gate offline",
+      "paragraphs": [
+        "CI should run fast eval subsets on every PR and fuller suites nightly. Expensive judge models belong in scheduled jobs, not every push.",
+        "Shadow traffic in production complements offline eval; it should not replace gates because incidents are already user-visible."
+      ]
+    },
+    {
+      "heading": "Make regressions visible",
+      "paragraphs": [
+        "Publish eval trends beside latency and cost. When a model upgrade wins on quality score but doubles token spend, product should see that trade in one dashboard.",
+        "Eval gates earn the right to change models without heroics on launch night."
+      ],
+      "links": [
+        {
+          "label": "OpenAI — Evals guide",
+          "url": "https://platform.openai.com/docs/guides/evals"
+        },
+        {
+          "label": "NIST AI RMF",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "LLM Eval Kapıları CI'da, Slayt Değil",
+      "excerpt": "Demo kalitesinde prompt'lar prod trafiğinde çöker. Eval yalnızca notebook'ta yaşarsa her model değişimi ürün piyangosu olur.",
+      "description": "CI'da LLM değerlendirme için staff kalıpları: golden veri setleri, regresyon eşikleri, maliyet duyarlı örnekleme ve ürünün güvenebileceği release kapıları.",
+      "sections": [
+        {
+          "heading": "Eval'ler release altyapısıdır",
+          "paragraphs": [
+            "Yalnızca gözle kontrol eden ekipler hataları destek ticket'larında görür. Eval harness'leri 'iyi görünüyor'u prompt, tool ve locale boyunca karşılaştırılabilir skorlara çevirir.",
+            "Veri setlerini kod gibi versiyonlayın; onaysız golden case düzenlemesi model regresyonunu davranış değişikliğinden ayıramaz."
+          ]
+        },
+        {
+          "heading": "Golden set'in sahibi olmalı",
+          "paragraphs": [
+            "Gelir veya uyum yollarına bağlı küçük, yüksek sinyalli golden set ile başlayın—pazarlama kopyasından yüzlerce belirsiz prompt değil.",
+            "Her vaka tool şekli, atıf, red davranışı veya sayısal sınır assert etmeli; yalnızca benzerlik skoru yetmez."
+          ],
+          "points": [
+            "Eval suite'leri fixture ve versiyonlu veri setiyle unit test gibi işleyin",
+            "Tek şanslı koşuma değil regresyon eşiğine göre release bloklayın",
+            "Offline eval ile online shadow trafiğini ayırın",
+            "Eval panolarını hata bütçesinin yanında yayınlayın"
+          ]
+        },
+        {
+          "heading": "Online örnekle, offline kilitle",
+          "paragraphs": [
+            "CI her PR'da hızlı eval alt kümesi, gece tam suite çalıştırmalı. Pahalı judge modeller zamanlanmış job'larda olmalı, her push'ta değil.",
+            "Prod shadow trafik offline eval'i tamamlar; kapının yerini tutmaz çünkü olay zaten kullanıcıya görünür."
+          ]
+        },
+        {
+          "heading": "Regresyonları görünür kıl",
+          "paragraphs": [
+            "Eval trendlerini gecikme ve maliyetin yanında yayınlayın. Model yükseltmesi kalite skorunu kazanıp token maliyetini ikiye katlarsa ürün tek panoda görmeli.",
+            "Eval kapıları, lansman gecesi kahramanlık olmadan model değiştirme hakkı verir."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Evals guide",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            },
+            {
+              "label": "NIST AI RMF",
+              "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "LLM Eval Gates in CI, Not Slide Decks",
+      "excerpt": "Demo-quality prompts do not survive production traffic. If evals live only in notebooks, every model swap becomes a product lottery.",
+      "description": "Staff patterns for LLM evaluation in CI: golden datasets, regression thresholds, cost-aware sampling, and release gates that product teams can trust.",
+      "sections": [
+        {
+          "heading": "Evals are release infrastructure",
+          "paragraphs": [
+            "Teams that only eyeball outputs before launch discover failures in support tickets. Eval harnesses turn subjective 'looks fine' into comparable scores across prompts, tools, and locales.",
+            "Version datasets like code. When someone edits a golden case without review, you lose the ability to detect model regressions versus intentional behavior changes."
+          ]
+        },
+        {
+          "heading": "Golden sets need ownership",
+          "paragraphs": [
+            "Start with a small, high-signal golden set tied to revenue or compliance paths—not hundreds of vague prompts copied from marketing.",
+            "Each case should assert tool shape, citation presence, refusal behavior, or numeric bounds—not poetic similarity alone."
+          ],
+          "points": [
+            "Treat eval suites like unit tests with fixtures and versioned datasets",
+            "Block releases on regression thresholds, not single lucky runs",
+            "Separate offline eval from online shadow traffic",
+            "Publish eval dashboards next to error budgets"
+          ]
+        },
+        {
+          "heading": "Sample online, gate offline",
+          "paragraphs": [
+            "CI should run fast eval subsets on every PR and fuller suites nightly. Expensive judge models belong in scheduled jobs, not every push.",
+            "Shadow traffic in production complements offline eval; it should not replace gates because incidents are already user-visible."
+          ]
+        },
+        {
+          "heading": "Make regressions visible",
+          "paragraphs": [
+            "Publish eval trends beside latency and cost. When a model upgrade wins on quality score but doubles token spend, product should see that trade in one dashboard.",
+            "Eval gates earn the right to change models without heroics on launch night."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Evals guide",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            },
+            {
+              "label": "NIST AI RMF",
+              "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "LLM Eval Gates in CI, Not Slide Decks",
+      "excerpt": "Demo-quality prompts do not survive production traffic. If evals live only in notebooks, every model swap becomes a product lottery.",
+      "description": "Staff patterns for LLM evaluation in CI: golden datasets, regression thresholds, cost-aware sampling, and release gates that product teams can trust.",
+      "sections": [
+        {
+          "heading": "Evals are release infrastructure",
+          "paragraphs": [
+            "Teams that only eyeball outputs before launch discover failures in support tickets. Eval harnesses turn subjective 'looks fine' into comparable scores across prompts, tools, and locales.",
+            "Version datasets like code. When someone edits a golden case without review, you lose the ability to detect model regressions versus intentional behavior changes."
+          ]
+        },
+        {
+          "heading": "Golden sets need ownership",
+          "paragraphs": [
+            "Start with a small, high-signal golden set tied to revenue or compliance paths—not hundreds of vague prompts copied from marketing.",
+            "Each case should assert tool shape, citation presence, refusal behavior, or numeric bounds—not poetic similarity alone."
+          ],
+          "points": [
+            "Treat eval suites like unit tests with fixtures and versioned datasets",
+            "Block releases on regression thresholds, not single lucky runs",
+            "Separate offline eval from online shadow traffic",
+            "Publish eval dashboards next to error budgets"
+          ]
+        },
+        {
+          "heading": "Sample online, gate offline",
+          "paragraphs": [
+            "CI should run fast eval subsets on every PR and fuller suites nightly. Expensive judge models belong in scheduled jobs, not every push.",
+            "Shadow traffic in production complements offline eval; it should not replace gates because incidents are already user-visible."
+          ]
+        },
+        {
+          "heading": "Make regressions visible",
+          "paragraphs": [
+            "Publish eval trends beside latency and cost. When a model upgrade wins on quality score but doubles token spend, product should see that trade in one dashboard.",
+            "Eval gates earn the right to change models without heroics on launch night."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Evals guide",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            },
+            {
+              "label": "NIST AI RMF",
+              "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "LLM Eval Gates in CI, Not Slide Decks",
+      "excerpt": "Demo-quality prompts do not survive production traffic. If evals live only in notebooks, every model swap becomes a product lottery.",
+      "description": "Staff patterns for LLM evaluation in CI: golden datasets, regression thresholds, cost-aware sampling, and release gates that product teams can trust.",
+      "sections": [
+        {
+          "heading": "Evals are release infrastructure",
+          "paragraphs": [
+            "Teams that only eyeball outputs before launch discover failures in support tickets. Eval harnesses turn subjective 'looks fine' into comparable scores across prompts, tools, and locales.",
+            "Version datasets like code. When someone edits a golden case without review, you lose the ability to detect model regressions versus intentional behavior changes."
+          ]
+        },
+        {
+          "heading": "Golden sets need ownership",
+          "paragraphs": [
+            "Start with a small, high-signal golden set tied to revenue or compliance paths—not hundreds of vague prompts copied from marketing.",
+            "Each case should assert tool shape, citation presence, refusal behavior, or numeric bounds—not poetic similarity alone."
+          ],
+          "points": [
+            "Treat eval suites like unit tests with fixtures and versioned datasets",
+            "Block releases on regression thresholds, not single lucky runs",
+            "Separate offline eval from online shadow traffic",
+            "Publish eval dashboards next to error budgets"
+          ]
+        },
+        {
+          "heading": "Sample online, gate offline",
+          "paragraphs": [
+            "CI should run fast eval subsets on every PR and fuller suites nightly. Expensive judge models belong in scheduled jobs, not every push.",
+            "Shadow traffic in production complements offline eval; it should not replace gates because incidents are already user-visible."
+          ]
+        },
+        {
+          "heading": "Make regressions visible",
+          "paragraphs": [
+            "Publish eval trends beside latency and cost. When a model upgrade wins on quality score but doubles token spend, product should see that trade in one dashboard.",
+            "Eval gates earn the right to change models without heroics on launch night."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Evals guide",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            },
+            {
+              "label": "NIST AI RMF",
+              "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "LLM Eval Gates in CI, Not Slide Decks",
+      "excerpt": "Demo-quality prompts do not survive production traffic. If evals live only in notebooks, every model swap becomes a product lottery.",
+      "description": "Staff patterns for LLM evaluation in CI: golden datasets, regression thresholds, cost-aware sampling, and release gates that product teams can trust.",
+      "sections": [
+        {
+          "heading": "Evals are release infrastructure",
+          "paragraphs": [
+            "Teams that only eyeball outputs before launch discover failures in support tickets. Eval harnesses turn subjective 'looks fine' into comparable scores across prompts, tools, and locales.",
+            "Version datasets like code. When someone edits a golden case without review, you lose the ability to detect model regressions versus intentional behavior changes."
+          ]
+        },
+        {
+          "heading": "Golden sets need ownership",
+          "paragraphs": [
+            "Start with a small, high-signal golden set tied to revenue or compliance paths—not hundreds of vague prompts copied from marketing.",
+            "Each case should assert tool shape, citation presence, refusal behavior, or numeric bounds—not poetic similarity alone."
+          ],
+          "points": [
+            "Treat eval suites like unit tests with fixtures and versioned datasets",
+            "Block releases on regression thresholds, not single lucky runs",
+            "Separate offline eval from online shadow traffic",
+            "Publish eval dashboards next to error budgets"
+          ]
+        },
+        {
+          "heading": "Sample online, gate offline",
+          "paragraphs": [
+            "CI should run fast eval subsets on every PR and fuller suites nightly. Expensive judge models belong in scheduled jobs, not every push.",
+            "Shadow traffic in production complements offline eval; it should not replace gates because incidents are already user-visible."
+          ]
+        },
+        {
+          "heading": "Make regressions visible",
+          "paragraphs": [
+            "Publish eval trends beside latency and cost. When a model upgrade wins on quality score but doubles token spend, product should see that trade in one dashboard.",
+            "Eval gates earn the right to change models without heroics on launch night."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Evals guide",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            },
+            {
+              "label": "NIST AI RMF",
+              "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "LLM Eval Gates in CI, Not Slide Decks",
+      "excerpt": "Demo-quality prompts do not survive production traffic. If evals live only in notebooks, every model swap becomes a product lottery.",
+      "description": "Staff patterns for LLM evaluation in CI: golden datasets, regression thresholds, cost-aware sampling, and release gates that product teams can trust.",
+      "sections": [
+        {
+          "heading": "Evals are release infrastructure",
+          "paragraphs": [
+            "Teams that only eyeball outputs before launch discover failures in support tickets. Eval harnesses turn subjective 'looks fine' into comparable scores across prompts, tools, and locales.",
+            "Version datasets like code. When someone edits a golden case without review, you lose the ability to detect model regressions versus intentional behavior changes."
+          ]
+        },
+        {
+          "heading": "Golden sets need ownership",
+          "paragraphs": [
+            "Start with a small, high-signal golden set tied to revenue or compliance paths—not hundreds of vague prompts copied from marketing.",
+            "Each case should assert tool shape, citation presence, refusal behavior, or numeric bounds—not poetic similarity alone."
+          ],
+          "points": [
+            "Treat eval suites like unit tests with fixtures and versioned datasets",
+            "Block releases on regression thresholds, not single lucky runs",
+            "Separate offline eval from online shadow traffic",
+            "Publish eval dashboards next to error budgets"
+          ]
+        },
+        {
+          "heading": "Sample online, gate offline",
+          "paragraphs": [
+            "CI should run fast eval subsets on every PR and fuller suites nightly. Expensive judge models belong in scheduled jobs, not every push.",
+            "Shadow traffic in production complements offline eval; it should not replace gates because incidents are already user-visible."
+          ]
+        },
+        {
+          "heading": "Make regressions visible",
+          "paragraphs": [
+            "Publish eval trends beside latency and cost. When a model upgrade wins on quality score but doubles token spend, product should see that trade in one dashboard.",
+            "Eval gates earn the right to change models without heroics on launch night."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Evals guide",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            },
+            {
+              "label": "NIST AI RMF",
+              "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

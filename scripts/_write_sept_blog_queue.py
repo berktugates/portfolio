@@ -806,3 +806,171 @@ seo_post(
         "Yüzey bazında content_group ile ölç",
     ],
 )
+
+links8 = [
+    {"label": "OpenAI — Evals guide", "url": "https://platform.openai.com/docs/guides/evals"},
+    {"label": "NIST AI RMF", "url": "https://www.nist.gov/itl/ai-risk-management-framework"},
+]
+pts8 = [
+    "Treat eval suites like unit tests with fixtures and versioned datasets",
+    "Block releases on regression thresholds, not single lucky runs",
+    "Separate offline eval from online shadow traffic",
+    "Publish eval dashboards next to error budgets",
+]
+seo_post(
+    "2026-09-25-llm-eval-gates-in-ci-not-slide-decks.json",
+    "llm-eval-gates-in-ci-not-slide-decks",
+    "LLM Eval Gates in CI, Not Slide Decks",
+    "Demo-quality prompts do not survive production traffic. If evals live only in notebooks, every model swap becomes a product lottery.",
+    "Staff patterns for LLM evaluation in CI: golden datasets, regression thresholds, cost-aware sampling, and release gates that product teams can trust.",
+    ["LLM evals", "CI", "quality gates", "regression testing", "AI product"],
+    [
+        "Notebook evals güven vermez; CI kapısı şart. 🧵",
+        "Golden set + regresyon eşiği. Detay: https://berktugberke.com/tr/blogs/llm-eval-gates-in-ci-not-slide-decks",
+    ],
+    [
+        "Evals are release infrastructure",
+        "Golden sets need ownership",
+        "Sample online, gate offline",
+        "Make regressions visible",
+    ],
+    [
+        [
+            "Teams that only eyeball outputs before launch discover failures in support tickets. Eval harnesses turn subjective 'looks fine' into comparable scores across prompts, tools, and locales.",
+            "Version datasets like code. When someone edits a golden case without review, you lose the ability to detect model regressions versus intentional behavior changes.",
+        ],
+        [
+            "Start with a small, high-signal golden set tied to revenue or compliance paths—not hundreds of vague prompts copied from marketing.",
+            "Each case should assert tool shape, citation presence, refusal behavior, or numeric bounds—not poetic similarity alone.",
+        ],
+        [
+            "CI should run fast eval subsets on every PR and fuller suites nightly. Expensive judge models belong in scheduled jobs, not every push.",
+            "Shadow traffic in production complements offline eval; it should not replace gates because incidents are already user-visible.",
+        ],
+        [
+            "Publish eval trends beside latency and cost. When a model upgrade wins on quality score but doubles token spend, product should see that trade in one dashboard.",
+            "Eval gates earn the right to change models without heroics on launch night.",
+        ],
+    ],
+    pts8,
+    links8,
+    tr=(
+        "LLM Eval Kapıları CI'da, Slayt Değil",
+        "Demo kalitesinde prompt'lar prod trafiğinde çöker. Eval yalnızca notebook'ta yaşarsa her model değişimi ürün piyangosu olur.",
+        "CI'da LLM değerlendirme için staff kalıpları: golden veri setleri, regresyon eşikleri, maliyet duyarlı örnekleme ve ürünün güvenebileceği release kapıları.",
+        [
+            "Eval'ler release altyapısıdır",
+            "Golden set'in sahibi olmalı",
+            "Online örnekle, offline kilitle",
+            "Regresyonları görünür kıl",
+        ],
+        [
+            [
+                "Yalnızca gözle kontrol eden ekipler hataları destek ticket'larında görür. Eval harness'leri 'iyi görünüyor'u prompt, tool ve locale boyunca karşılaştırılabilir skorlara çevirir.",
+                "Veri setlerini kod gibi versiyonlayın; onaysız golden case düzenlemesi model regresyonunu davranış değişikliğinden ayıramaz.",
+            ],
+            [
+                "Gelir veya uyum yollarına bağlı küçük, yüksek sinyalli golden set ile başlayın—pazarlama kopyasından yüzlerce belirsiz prompt değil.",
+                "Her vaka tool şekli, atıf, red davranışı veya sayısal sınır assert etmeli; yalnızca benzerlik skoru yetmez.",
+            ],
+            [
+                "CI her PR'da hızlı eval alt kümesi, gece tam suite çalıştırmalı. Pahalı judge modeller zamanlanmış job'larda olmalı, her push'ta değil.",
+                "Prod shadow trafik offline eval'i tamamlar; kapının yerini tutmaz çünkü olay zaten kullanıcıya görünür.",
+            ],
+            [
+                "Eval trendlerini gecikme ve maliyetin yanında yayınlayın. Model yükseltmesi kalite skorunu kazanıp token maliyetini ikiye katlarsa ürün tek panoda görmeli.",
+                "Eval kapıları, lansman gecesi kahramanlık olmadan model değiştirme hakkı verir.",
+            ],
+        ],
+    ),
+    points_tr=[
+        "Eval suite'leri fixture ve versiyonlu veri setiyle unit test gibi işleyin",
+        "Tek şanslı koşuma değil regresyon eşiğine göre release bloklayın",
+        "Offline eval ile online shadow trafiğini ayırın",
+        "Eval panolarını hata bütçesinin yanında yayınlayın",
+    ],
+)
+
+links9 = [
+    {"label": "Google SRE — On-call", "url": "https://sre.google/sre-book/on-call-management/"},
+    {"label": "OWASP LLM Top 10", "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"},
+]
+pts9 = [
+    "Define SLOs on tool failure rate and policy violations, not only 5xx",
+    "Runbooks must cover model provider brownouts and prompt bloat",
+    "Escalation paths include safety and legal, not only infra",
+    "Post-incident reviews capture prompt and config diffs",
+]
+seo_post(
+    "2026-09-26-on-call-runbooks-for-ai-product-incidents.json",
+    "on-call-runbooks-for-ai-product-incidents",
+    "On-Call Runbooks for AI Product Incidents",
+    "When the model misbehaves, dashboards full of HTTP 200s lie. AI incidents need runbooks for policy, cost, and tool side effects—not only server restarts.",
+    "How staff engineers write on-call runbooks for LLM products: SLOs beyond 5xx, provider failures, retrieval drift, safety escalations, and postmortems that capture prompt changes.",
+    ["on-call", "incident response", "LLM", "SRE", "AI safety"],
+    [
+        "AI ürününde 200 OK yeterli değil; on-call runbook farklı. 🧵",
+        "Tool hatası, politika, maliyet. Detay: https://berktugberke.com/tr/blogs/on-call-runbooks-for-ai-product-incidents",
+    ],
+    [
+        "200 OK can still be an incident",
+        "Provider brownouts are common",
+        "Safety escalations need owners",
+        "Postmortems include prompts",
+    ],
+    [
+        [
+            "A toxic output or leaking retrieval chunk may return HTTP 200 with a polished apology. On-call playbooks must list user-visible harm, data exposure, and spend spikes as first-class pages—not appendix notes.",
+            "Tie paging to SLOs on refusal accuracy, tool success, and retrieval hit rate where those metrics exist.",
+        ],
+        [
+            "Model vendors brown out: elevated latency, truncated context, or silent tool schema changes. Runbooks should distinguish your gateway bug from provider degradation with clear dashboards.",
+            "Keep a kill switch for model routes and feature flags documented with who can pull it at 3am.",
+        ],
+        [
+            "Legal and trust-and-safety partners need defined escalation when policy violations spike or jailbreak patterns spread on social media.",
+            "Do not route every content complaint to infra on-call; triage tables save sleep.",
+        ],
+        [
+            "Post-incident reviews should diff prompts, retrieval indexes, and config—not only deploy SHAs.",
+            "AI incidents recur when organizations treat them as one-off model quirks instead of system changes.",
+        ],
+    ],
+    pts9,
+    links9,
+    tr=(
+        "AI Ürün Olayları için On-Call Runbook'ları",
+        "Model yanlış davrandığında HTTP 200 dolu panolar yalan söyler. AI olayları yalnızca restart değil; politika, maliyet ve tool yan etkileri için runbook ister.",
+        "LLM ürünleri için staff on-call runbook'ları: 5xx ötesi SLO'lar, sağlayıcı arızaları, retrieval drift, güvenlik eskalasyonu ve prompt değişikliklerini kaydeden postmortem.",
+        [
+            "200 OK hâlâ olay olabilir",
+            "Sağlayıcı brownout'ları yaygın",
+            "Güvenlik eskalasyonunun sahibi olsun",
+            "Postmortem prompt içerir",
+        ],
+        [
+            [
+                "Toksik çıktı veya sızan retrieval chunk HTTP 200 ile özür dönebilir. Playbook kullanıcıya görünen zarar, veri sızıntısı ve harcama sıçramasını birinci sınıf sayfa olarak listelemeli.",
+                "Sayfalamayı red doğruluğu, tool başarısı ve retrieval isabet SLO'larına bağlayın.",
+            ],
+            [
+                "Model sağlayıcıları brownout yapar: gecikme, kesik context veya sessiz tool schema değişimi. Runbook gateway hatasını sağlayıcı bozulmasından ayırmalı.",
+                "Model route kill switch ve feature flag'leri 03:00'te kim çekebilir belgelenmiş olsun.",
+            ],
+            [
+                "Politika ihlali sıçramasında hukuk ve trust-and-safety ortakları tanımlı eskalasyon yoluna ihtiyaç duyar.",
+                "Her içerik şikayetini infra on-call'a yönlendirmeyin; triage tablosu uyku kurtarır.",
+            ],
+            [
+                "Post-incident incelemeler prompt, retrieval index ve config diff'ini içermeli—yalnızca deploy SHA değil.",
+                "AI olayları tek seferlik model tuhaflığı sayılırsa tekrarlar.",
+            ],
+        ],
+    ),
+    points_tr=[
+        "Yalnızca 5xx değil tool hata oranı ve politika ihlali SLO'ları tanımlayın",
+        "Runbook sağlayıcı brownout ve prompt şişmesini kapsamalı",
+        "Eskalasyon yolu güvenlik/hukuku da içermeli",
+        "Post-incident prompt ve config diff'lerini kaydedin",
+    ],
+)

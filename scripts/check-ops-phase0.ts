@@ -86,6 +86,9 @@ async function main() {
   } else if (blogCount < 7) {
     log("warn", "blog-queue", `inventory ${blogCount}; hedef ≥7`);
     warns += 1;
+  } else if (blogCount < 9) {
+    log("warn", "blog-queue", `inventory ${blogCount}; runway hedef ≥9`);
+    warns += 1;
   } else {
     console.log(`OK blog-queue: ${blogCount} posts`);
   }

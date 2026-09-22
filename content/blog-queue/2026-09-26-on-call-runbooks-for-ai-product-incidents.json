@@ -1,0 +1,372 @@
+{
+  "slug": "on-call-runbooks-for-ai-product-incidents",
+  "title": "On-Call Runbooks for AI Product Incidents",
+  "excerpt": "When the model misbehaves, dashboards full of HTTP 200s lie. AI incidents need runbooks for policy, cost, and tool side effects—not only server restarts.",
+  "description": "How staff engineers write on-call runbooks for LLM products: SLOs beyond 5xx, provider failures, retrieval drift, safety escalations, and postmortems that capture prompt changes.",
+  "readingMinutes": 7,
+  "keywords": [
+    "on-call",
+    "incident response",
+    "LLM",
+    "SRE",
+    "AI safety"
+  ],
+  "socialThreadTr": [
+    "AI ürününde 200 OK yeterli değil; on-call runbook farklı. 🧵",
+    "Tool hatası, politika, maliyet. Detay: https://berktugberke.com/tr/blogs/on-call-runbooks-for-ai-product-incidents"
+  ],
+  "sections": [
+    {
+      "heading": "200 OK can still be an incident",
+      "paragraphs": [
+        "A toxic output or leaking retrieval chunk may return HTTP 200 with a polished apology. On-call playbooks must list user-visible harm, data exposure, and spend spikes as first-class pages—not appendix notes.",
+        "Tie paging to SLOs on refusal accuracy, tool success, and retrieval hit rate where those metrics exist."
+      ]
+    },
+    {
+      "heading": "Provider brownouts are common",
+      "paragraphs": [
+        "Model vendors brown out: elevated latency, truncated context, or silent tool schema changes. Runbooks should distinguish your gateway bug from provider degradation with clear dashboards.",
+        "Keep a kill switch for model routes and feature flags documented with who can pull it at 3am."
+      ],
+      "points": [
+        "Define SLOs on tool failure rate and policy violations, not only 5xx",
+        "Runbooks must cover model provider brownouts and prompt bloat",
+        "Escalation paths include safety and legal, not only infra",
+        "Post-incident reviews capture prompt and config diffs"
+      ]
+    },
+    {
+      "heading": "Safety escalations need owners",
+      "paragraphs": [
+        "Legal and trust-and-safety partners need defined escalation when policy violations spike or jailbreak patterns spread on social media.",
+        "Do not route every content complaint to infra on-call; triage tables save sleep."
+      ]
+    },
+    {
+      "heading": "Postmortems include prompts",
+      "paragraphs": [
+        "Post-incident reviews should diff prompts, retrieval indexes, and config—not only deploy SHAs.",
+        "AI incidents recur when organizations treat them as one-off model quirks instead of system changes."
+      ],
+      "links": [
+        {
+          "label": "Google SRE — On-call",
+          "url": "https://sre.google/sre-book/on-call-management/"
+        },
+        {
+          "label": "OWASP LLM Top 10",
+          "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "AI Ürün Olayları için On-Call Runbook'ları",
+      "excerpt": "Model yanlış davrandığında HTTP 200 dolu panolar yalan söyler. AI olayları yalnızca restart değil; politika, maliyet ve tool yan etkileri için runbook ister.",
+      "description": "LLM ürünleri için staff on-call runbook'ları: 5xx ötesi SLO'lar, sağlayıcı arızaları, retrieval drift, güvenlik eskalasyonu ve prompt değişikliklerini kaydeden postmortem.",
+      "sections": [
+        {
+          "heading": "200 OK hâlâ olay olabilir",
+          "paragraphs": [
+            "Toksik çıktı veya sızan retrieval chunk HTTP 200 ile özür dönebilir. Playbook kullanıcıya görünen zarar, veri sızıntısı ve harcama sıçramasını birinci sınıf sayfa olarak listelemeli.",
+            "Sayfalamayı red doğruluğu, tool başarısı ve retrieval isabet SLO'larına bağlayın."
+          ]
+        },
+        {
+          "heading": "Sağlayıcı brownout'ları yaygın",
+          "paragraphs": [
+            "Model sağlayıcıları brownout yapar: gecikme, kesik context veya sessiz tool schema değişimi. Runbook gateway hatasını sağlayıcı bozulmasından ayırmalı.",
+            "Model route kill switch ve feature flag'leri 03:00'te kim çekebilir belgelenmiş olsun."
+          ],
+          "points": [
+            "Yalnızca 5xx değil tool hata oranı ve politika ihlali SLO'ları tanımlayın",
+            "Runbook sağlayıcı brownout ve prompt şişmesini kapsamalı",
+            "Eskalasyon yolu güvenlik/hukuku da içermeli",
+            "Post-incident prompt ve config diff'lerini kaydedin"
+          ]
+        },
+        {
+          "heading": "Güvenlik eskalasyonunun sahibi olsun",
+          "paragraphs": [
+            "Politika ihlali sıçramasında hukuk ve trust-and-safety ortakları tanımlı eskalasyon yoluna ihtiyaç duyar.",
+            "Her içerik şikayetini infra on-call'a yönlendirmeyin; triage tablosu uyku kurtarır."
+          ]
+        },
+        {
+          "heading": "Postmortem prompt içerir",
+          "paragraphs": [
+            "Post-incident incelemeler prompt, retrieval index ve config diff'ini içermeli—yalnızca deploy SHA değil.",
+            "AI olayları tek seferlik model tuhaflığı sayılırsa tekrarlar."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — On-call",
+              "url": "https://sre.google/sre-book/on-call-management/"
+            },
+            {
+              "label": "OWASP LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "On-Call Runbooks for AI Product Incidents",
+      "excerpt": "When the model misbehaves, dashboards full of HTTP 200s lie. AI incidents need runbooks for policy, cost, and tool side effects—not only server restarts.",
+      "description": "How staff engineers write on-call runbooks for LLM products: SLOs beyond 5xx, provider failures, retrieval drift, safety escalations, and postmortems that capture prompt changes.",
+      "sections": [
+        {
+          "heading": "200 OK can still be an incident",
+          "paragraphs": [
+            "A toxic output or leaking retrieval chunk may return HTTP 200 with a polished apology. On-call playbooks must list user-visible harm, data exposure, and spend spikes as first-class pages—not appendix notes.",
+            "Tie paging to SLOs on refusal accuracy, tool success, and retrieval hit rate where those metrics exist."
+          ]
+        },
+        {
+          "heading": "Provider brownouts are common",
+          "paragraphs": [
+            "Model vendors brown out: elevated latency, truncated context, or silent tool schema changes. Runbooks should distinguish your gateway bug from provider degradation with clear dashboards.",
+            "Keep a kill switch for model routes and feature flags documented with who can pull it at 3am."
+          ],
+          "points": [
+            "Define SLOs on tool failure rate and policy violations, not only 5xx",
+            "Runbooks must cover model provider brownouts and prompt bloat",
+            "Escalation paths include safety and legal, not only infra",
+            "Post-incident reviews capture prompt and config diffs"
+          ]
+        },
+        {
+          "heading": "Safety escalations need owners",
+          "paragraphs": [
+            "Legal and trust-and-safety partners need defined escalation when policy violations spike or jailbreak patterns spread on social media.",
+            "Do not route every content complaint to infra on-call; triage tables save sleep."
+          ]
+        },
+        {
+          "heading": "Postmortems include prompts",
+          "paragraphs": [
+            "Post-incident reviews should diff prompts, retrieval indexes, and config—not only deploy SHAs.",
+            "AI incidents recur when organizations treat them as one-off model quirks instead of system changes."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — On-call",
+              "url": "https://sre.google/sre-book/on-call-management/"
+            },
+            {
+              "label": "OWASP LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "On-Call Runbooks for AI Product Incidents",
+      "excerpt": "When the model misbehaves, dashboards full of HTTP 200s lie. AI incidents need runbooks for policy, cost, and tool side effects—not only server restarts.",
+      "description": "How staff engineers write on-call runbooks for LLM products: SLOs beyond 5xx, provider failures, retrieval drift, safety escalations, and postmortems that capture prompt changes.",
+      "sections": [
+        {
+          "heading": "200 OK can still be an incident",
+          "paragraphs": [
+            "A toxic output or leaking retrieval chunk may return HTTP 200 with a polished apology. On-call playbooks must list user-visible harm, data exposure, and spend spikes as first-class pages—not appendix notes.",
+            "Tie paging to SLOs on refusal accuracy, tool success, and retrieval hit rate where those metrics exist."
+          ]
+        },
+        {
+          "heading": "Provider brownouts are common",
+          "paragraphs": [
+            "Model vendors brown out: elevated latency, truncated context, or silent tool schema changes. Runbooks should distinguish your gateway bug from provider degradation with clear dashboards.",
+            "Keep a kill switch for model routes and feature flags documented with who can pull it at 3am."
+          ],
+          "points": [
+            "Define SLOs on tool failure rate and policy violations, not only 5xx",
+            "Runbooks must cover model provider brownouts and prompt bloat",
+            "Escalation paths include safety and legal, not only infra",
+            "Post-incident reviews capture prompt and config diffs"
+          ]
+        },
+        {
+          "heading": "Safety escalations need owners",
+          "paragraphs": [
+            "Legal and trust-and-safety partners need defined escalation when policy violations spike or jailbreak patterns spread on social media.",
+            "Do not route every content complaint to infra on-call; triage tables save sleep."
+          ]
+        },
+        {
+          "heading": "Postmortems include prompts",
+          "paragraphs": [
+            "Post-incident reviews should diff prompts, retrieval indexes, and config—not only deploy SHAs.",
+            "AI incidents recur when organizations treat them as one-off model quirks instead of system changes."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — On-call",
+              "url": "https://sre.google/sre-book/on-call-management/"
+            },
+            {
+              "label": "OWASP LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "On-Call Runbooks for AI Product Incidents",
+      "excerpt": "When the model misbehaves, dashboards full of HTTP 200s lie. AI incidents need runbooks for policy, cost, and tool side effects—not only server restarts.",
+      "description": "How staff engineers write on-call runbooks for LLM products: SLOs beyond 5xx, provider failures, retrieval drift, safety escalations, and postmortems that capture prompt changes.",
+      "sections": [
+        {
+          "heading": "200 OK can still be an incident",
+          "paragraphs": [
+            "A toxic output or leaking retrieval chunk may return HTTP 200 with a polished apology. On-call playbooks must list user-visible harm, data exposure, and spend spikes as first-class pages—not appendix notes.",
+            "Tie paging to SLOs on refusal accuracy, tool success, and retrieval hit rate where those metrics exist."
+          ]
+        },
+        {
+          "heading": "Provider brownouts are common",
+          "paragraphs": [
+            "Model vendors brown out: elevated latency, truncated context, or silent tool schema changes. Runbooks should distinguish your gateway bug from provider degradation with clear dashboards.",
+            "Keep a kill switch for model routes and feature flags documented with who can pull it at 3am."
+          ],
+          "points": [
+            "Define SLOs on tool failure rate and policy violations, not only 5xx",
+            "Runbooks must cover model provider brownouts and prompt bloat",
+            "Escalation paths include safety and legal, not only infra",
+            "Post-incident reviews capture prompt and config diffs"
+          ]
+        },
+        {
+          "heading": "Safety escalations need owners",
+          "paragraphs": [
+            "Legal and trust-and-safety partners need defined escalation when policy violations spike or jailbreak patterns spread on social media.",
+            "Do not route every content complaint to infra on-call; triage tables save sleep."
+          ]
+        },
+        {
+          "heading": "Postmortems include prompts",
+          "paragraphs": [
+            "Post-incident reviews should diff prompts, retrieval indexes, and config—not only deploy SHAs.",
+            "AI incidents recur when organizations treat them as one-off model quirks instead of system changes."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — On-call",
+              "url": "https://sre.google/sre-book/on-call-management/"
+            },
+            {
+              "label": "OWASP LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "On-Call Runbooks for AI Product Incidents",
+      "excerpt": "When the model misbehaves, dashboards full of HTTP 200s lie. AI incidents need runbooks for policy, cost, and tool side effects—not only server restarts.",
+      "description": "How staff engineers write on-call runbooks for LLM products: SLOs beyond 5xx, provider failures, retrieval drift, safety escalations, and postmortems that capture prompt changes.",
+      "sections": [
+        {
+          "heading": "200 OK can still be an incident",
+          "paragraphs": [
+            "A toxic output or leaking retrieval chunk may return HTTP 200 with a polished apology. On-call playbooks must list user-visible harm, data exposure, and spend spikes as first-class pages—not appendix notes.",
+            "Tie paging to SLOs on refusal accuracy, tool success, and retrieval hit rate where those metrics exist."
+          ]
+        },
+        {
+          "heading": "Provider brownouts are common",
+          "paragraphs": [
+            "Model vendors brown out: elevated latency, truncated context, or silent tool schema changes. Runbooks should distinguish your gateway bug from provider degradation with clear dashboards.",
+            "Keep a kill switch for model routes and feature flags documented with who can pull it at 3am."
+          ],
+          "points": [
+            "Define SLOs on tool failure rate and policy violations, not only 5xx",
+            "Runbooks must cover model provider brownouts and prompt bloat",
+            "Escalation paths include safety and legal, not only infra",
+            "Post-incident reviews capture prompt and config diffs"
+          ]
+        },
+        {
+          "heading": "Safety escalations need owners",
+          "paragraphs": [
+            "Legal and trust-and-safety partners need defined escalation when policy violations spike or jailbreak patterns spread on social media.",
+            "Do not route every content complaint to infra on-call; triage tables save sleep."
+          ]
+        },
+        {
+          "heading": "Postmortems include prompts",
+          "paragraphs": [
+            "Post-incident reviews should diff prompts, retrieval indexes, and config—not only deploy SHAs.",
+            "AI incidents recur when organizations treat them as one-off model quirks instead of system changes."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — On-call",
+              "url": "https://sre.google/sre-book/on-call-management/"
+            },
+            {
+              "label": "OWASP LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "On-Call Runbooks for AI Product Incidents",
+      "excerpt": "When the model misbehaves, dashboards full of HTTP 200s lie. AI incidents need runbooks for policy, cost, and tool side effects—not only server restarts.",
+      "description": "How staff engineers write on-call runbooks for LLM products: SLOs beyond 5xx, provider failures, retrieval drift, safety escalations, and postmortems that capture prompt changes.",
+      "sections": [
+        {
+          "heading": "200 OK can still be an incident",
+          "paragraphs": [
+            "A toxic output or leaking retrieval chunk may return HTTP 200 with a polished apology. On-call playbooks must list user-visible harm, data exposure, and spend spikes as first-class pages—not appendix notes.",
+            "Tie paging to SLOs on refusal accuracy, tool success, and retrieval hit rate where those metrics exist."
+          ]
+        },
+        {
+          "heading": "Provider brownouts are common",
+          "paragraphs": [
+            "Model vendors brown out: elevated latency, truncated context, or silent tool schema changes. Runbooks should distinguish your gateway bug from provider degradation with clear dashboards.",
+            "Keep a kill switch for model routes and feature flags documented with who can pull it at 3am."
+          ],
+          "points": [
+            "Define SLOs on tool failure rate and policy violations, not only 5xx",
+            "Runbooks must cover model provider brownouts and prompt bloat",
+            "Escalation paths include safety and legal, not only infra",
+            "Post-incident reviews capture prompt and config diffs"
+          ]
+        },
+        {
+          "heading": "Safety escalations need owners",
+          "paragraphs": [
+            "Legal and trust-and-safety partners need defined escalation when policy violations spike or jailbreak patterns spread on social media.",
+            "Do not route every content complaint to infra on-call; triage tables save sleep."
+          ]
+        },
+        {
+          "heading": "Postmortems include prompts",
+          "paragraphs": [
+            "Post-incident reviews should diff prompts, retrieval indexes, and config—not only deploy SHAs.",
+            "AI incidents recur when organizations treat them as one-off model quirks instead of system changes."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — On-call",
+              "url": "https://sre.google/sre-book/on-call-management/"
+            },
+            {
+              "label": "OWASP LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

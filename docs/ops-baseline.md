@@ -14,7 +14,7 @@
 | Portfolio’da gündem sızıntısı yok | `scripts/assert-no-gundem-links.mjs` |
 | Gereksiz Vercel build azaltma | `scripts/vercel-ignore-build.sh` |
 | Deployment prune | `pnpm ops:prune-deployments` (+ `VERCEL_TOKEN`) |
-| Blog kuyruk envanteri | uyarı ≥7 (`content/blog-queue`) |
+| Blog kuyruk envanteri | uyarı 7 altı; runway hedef ≥9 (`content/blog-queue`) |
 
 GSC/GA4 **rakamları** dashboard’dan; snapshot’ta property ID’leri referans.
 

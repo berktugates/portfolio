@@ -95,7 +95,7 @@ async function main() {
     queues: {
       blogJson: await countJson("content/blog-queue"),
       gundemJson: await countJson("content/gundem-queue"),
-      blogMinRecommended: 7,
+      blogMinRecommended: 9,
     },
     git: {
       blogRelatedCommits90d: await gitBlogCommits90d(),
