@@ -13,10 +13,10 @@ import type { Locale } from "../lib/i18n";
 import { formatMessage, getDictionary, hreflangLanguages, localeMeta, localePath } from "../lib/i18n";
 import {
   AUTHOR_ID,
-  SITE_NAME,
   WEBSITE_ID,
   absoluteUrl,
   jsonLd,
+  visibleAuthorMeta,
 } from "../lib/seo";
 import { AppStoreBadge } from "./app-store-badge";
 import { AppStoreScreenshotGallery } from "./app-store-screenshot-gallery";
@@ -35,7 +35,10 @@ export async function createProjectMetadata(
   { params }: ProjectPageProps,
 ): Promise<Metadata> {
   const { slug } = await params;
-  const project = await getLocalizedProject(locale, slug);
+  const [project, dict] = await Promise.all([
+    getLocalizedProject(locale, slug),
+    getDictionary(locale),
+  ]);
   if (!project) return {};
 
   const path = projectPath(locale, project.slug);
@@ -52,6 +55,7 @@ export async function createProjectMetadata(
   return {
     title: project.title,
     description: project.summary,
+    ...visibleAuthorMeta(dict.headerName),
     alternates: {
       canonical: absoluteUrl(path),
       languages,
@@ -61,7 +65,7 @@ export async function createProjectMetadata(
       locale: localeMeta[locale].ogLocale,
       title: project.title,
       description: project.summary,
-      url: path,
+      url: absoluteUrl(path),
       images: [{ url: project.image, alt: project.imageAlt }],
     },
     twitter: {
@@ -99,9 +103,8 @@ export async function ProjectDetailPage({
     description: project.description,
     url: absoluteUrl(path),
     image: absoluteUrl(project.image),
-    applicationCategory: "SoftwareApplication",
     inLanguage: meta.htmlLang,
-    author: { "@id": AUTHOR_ID, "@type": "Person", name: SITE_NAME },
+    author: { "@id": AUTHOR_ID, "@type": "Person", name: dict.headerName },
     isPartOf: { "@id": WEBSITE_ID },
     ...(project.href
       ? { sameAs: localizeAppStoreUrl(project.href, locale) }
@@ -244,7 +247,7 @@ export async function ProjectDetailPage({
             </ul>
           </section>
         </main>
-        <SiteFooter>
+        <SiteFooter name={dict.headerName}>
           <LanguageSwitcher locale={locale} />
         </SiteFooter>
       </div>

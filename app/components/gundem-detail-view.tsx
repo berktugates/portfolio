@@ -7,7 +7,8 @@ import { getGundemBySlug, getGundemSlugs } from "../lib/gundem/catalog";
 import { validateLicensedImage } from "../lib/image-license";
 import { GUNDEM_DETAIL_ANALYSIS_NOTE, GUNDEM_HEADER_ROLE } from "../lib/gundem/editorial";
 import { haberlerArticlePath, haberlerUrl } from "../lib/gundem/hosts";
-import { AUTHOR_ID, SITE_NAME, jsonLd } from "../lib/seo";
+import { getDictionary } from "../lib/i18n";
+import { AUTHOR_ID, visibleAuthorMeta, jsonLd } from "../lib/seo";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 
@@ -21,12 +22,16 @@ export async function gundemStaticParams() {
 type Props = { params: Promise<{ slug: string }> };
 
 export async function createGundemDetailMetadata({ params }: Props): Promise<Metadata> {
-  const briefing = await getGundemBySlug((await params).slug);
+  const [briefing, dict] = await Promise.all([
+    getGundemBySlug((await params).slug),
+    getDictionary("tr"),
+  ]);
   if (!briefing) return {};
   const canonical = haberlerUrl(haberlerArticlePath(briefing.slug));
   return {
     title: briefing.title,
     description: briefing.excerpt,
+    ...visibleAuthorMeta(dict.headerName),
     alternates: { canonical },
     metadataBase: new URL(haberlerUrl("/")),
     robots: { index: true, follow: true },
@@ -45,7 +50,7 @@ export async function createGundemDetailMetadata({ params }: Props): Promise<Met
 
 export async function GundemDetailView({ params }: Props) {
   const slug = (await params).slug;
-  const briefing = await getGundemBySlug(slug);
+  const [briefing, dict] = await Promise.all([getGundemBySlug(slug), getDictionary("tr")]);
   if (!briefing) notFound();
 
   const imageCheck = validateLicensedImage(briefing.image);
@@ -89,10 +94,10 @@ export async function GundemDetailView({ params }: Props) {
     <div lang="tr" className="relative mx-auto min-h-screen w-full max-w-screen-sm px-4 pt-20">
       <SiteHeader
         homeHref={haberlerUrl("/")}
-        name={SITE_NAME}
+        name={dict.headerName}
         role={GUNDEM_HEADER_ROLE}
         ariaLabel="Ana sayfa"
-        imageAlt={SITE_NAME}
+        imageAlt={dict.headerName}
       />
       <main className="blog-prose mt-12 pb-20">
         <Link
@@ -144,7 +149,7 @@ export async function GundemDetailView({ params }: Props) {
           </ul>
         </article>
       </main>
-      <SiteFooter />
+      <SiteFooter name={dict.headerName} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
     </div>
   );

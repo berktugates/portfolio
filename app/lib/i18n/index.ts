@@ -7,6 +7,7 @@ export {
   LOCALE_REDIRECT_SCRIPT,
   PREFERRED_LOCALE_KEY,
   hreflangLanguages,
+  htmlLangFromPathname,
   isLocale,
   localeMeta,
   localePath,

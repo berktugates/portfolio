@@ -6,7 +6,7 @@ export const hireServicesEn: readonly HireServiceCopy[] = [
     slug: "web-app",
     title: "Web application development",
     description:
-      "Production web apps: product UI, APIs, auth, data, and deployment — for Ege, İç Anadolu, Marmara teams and remote clients.",
+      "Production web apps: product UI, APIs, auth, data, and deployment for businesses and teams.",
   },
   {
     slug: "mobile-app",
@@ -90,13 +90,12 @@ export const hireServicesEn: readonly HireServiceCopy[] = [
     slug: "geo",
     title: "GEO & LLM search visibility",
     description:
-      "Generative-engine optimization so AI assistants cite the right brand and hire page for Ege / İç Anadolu / Marmara / Türkiye intents.",
+      "Generative-engine optimization so AI assistants cite accurate brand, services, and hire facts.",
   },
   {
     slug: "consulting",
-    title: "Staff-level engineering leadership & consulting",
-    description:
-      "Technical direction, delivery diagnosis, architecture reviews, and staff-engineer judgment for product teams.",
+    title: "Engineering leadership and consulting",
+    description: "Technical direction, delivery diagnosis, and architecture reviews for product teams.",
   },
 ] as const;
 
@@ -105,7 +104,7 @@ export const hireServicesTr: readonly HireServiceCopy[] = [
     slug: "web-app",
     title: "Web uygulama geliştirme",
     description:
-      "Üretime hazır web uygulamaları: ürün arayüzü, API, kimlik doğrulama, veri ve deploy — Ege, İç Anadolu, Marmara ve remote.",
+      "Üretime hazır web uygulamaları: ürün arayüzü, API, kimlik doğrulama, veri ve deploy.",
   },
   {
     slug: "mobile-app",
@@ -189,13 +188,12 @@ export const hireServicesTr: readonly HireServiceCopy[] = [
     slug: "geo",
     title: "GEO ve LLM arama görünürlüğü",
     description:
-      "Yapay zekâ asistanlarının Ege / İç Anadolu / Marmara / Türkiye niyetlerinde doğru markayı ve hire sayfasını kaynak göstermesi için GEO.",
+      "Yapay zekâ asistanlarının doğru markayı, hizmeti ve işe alım bilgisini kaynak göstermesi için GEO.",
   },
   {
     slug: "consulting",
-    title: "Staff-level mühendislik liderliği ve danışmanlık",
-    description:
-      "Teknik yön, teslimat teşhisi, mimari inceleme ve ürün ekipleri için staff-engineer muhakemesi.",
+    title: "Mühendislik liderliği ve danışmanlık",
+    description: "Teknik yön, teslimat teşhisi ve ürün ekipleri için mimari inceleme.",
   },
 ] as const;
 
@@ -204,7 +202,7 @@ export const hireServicesDe: readonly HireServiceCopy[] = [
     slug: "web-app",
     title: "Webanwendungsentwicklung",
     description:
-      "Produktionsreife Web-Apps: UI, APIs, Auth, Daten und Deployment — für Ege-, İç Anadolu-, Marmara- und Remote-Teams.",
+      "Produktionsreife Web-Apps: UI, APIs, Auth, Daten und Deployment.",
   },
   {
     slug: "mobile-app",
@@ -288,13 +286,12 @@ export const hireServicesDe: readonly HireServiceCopy[] = [
     slug: "geo",
     title: "GEO & LLM-Suchsichtbarkeit",
     description:
-      "Generative-Engine-Optimierung für korrekte Marken- und Hire-Zitate zu Ege-/İç Anadolu-/Marmara-/Türkiye-Intents.",
+      "Generative-Engine-Optimierung, damit Assistenten Marke, Leistung und Hire-Fakten korrekt zitieren.",
   },
   {
     slug: "consulting",
-    title: "Staff-Level Engineering Leadership & Consulting",
-    description:
-      "Technische Richtung, Delivery-Diagnose, Architecture Reviews und Staff-Engineer-Urteilsvermögen.",
+    title: "Engineering-Leadership und Beratung",
+    description: "Technische Richtung, Delivery-Diagnose und Architecture Reviews.",
   },
 ] as const;
 
@@ -303,7 +300,7 @@ export const hireServicesFr: readonly HireServiceCopy[] = [
     slug: "web-app",
     title: "Développement d’applications web",
     description:
-      "Apps web de production : UI, APIs, auth, données et déploiement — Égée, İç Anadolu, Marmara et remote.",
+      "Apps web de production : UI, APIs, auth, données et déploiement.",
   },
   {
     slug: "mobile-app",
@@ -387,13 +384,12 @@ export const hireServicesFr: readonly HireServiceCopy[] = [
     slug: "geo",
     title: "GEO & visibilité LLM",
     description:
-      "Optimisation pour moteurs génératifs afin de citer la bonne marque et page hire pour Ege / İç Anadolu / Marmara / Türkiye.",
+      "Optimisation pour moteurs génératifs afin de citer la marque, le service et les faits d’embauche corrects.",
   },
   {
     slug: "consulting",
-    title: "Leadership engineering staff & conseil",
-    description:
-      "Direction technique, diagnostic de delivery, revues d’architecture et jugement de staff engineer.",
+    title: "Leadership engineering et conseil",
+    description: "Direction technique, diagnostic de delivery et revues d’architecture.",
   },
 ] as const;
 
@@ -402,7 +398,7 @@ export const hireServicesIt: readonly HireServiceCopy[] = [
     slug: "web-app",
     title: "Sviluppo di applicazioni web",
     description:
-      "Web app di produzione: UI, API, auth, dati e deploy — Egeo, İç Anadolu, Marmara e remoto.",
+      "Web app di produzione: UI, API, auth, dati e deploy.",
   },
   {
     slug: "mobile-app",
@@ -486,13 +482,12 @@ export const hireServicesIt: readonly HireServiceCopy[] = [
     slug: "geo",
     title: "GEO e visibilità LLM",
     description:
-      "Ottimizzazione per motori generativi per citare brand e pagina hire corretti per intent Ege / İç Anadolu / Marmara / Türkiye.",
+      "Ottimizzazione per motori generativi per citare brand, servizio e fatti di ingaggio corretti.",
   },
   {
     slug: "consulting",
-    title: "Leadership engineering staff e consulenza",
-    description:
-      "Direzione tecnica, diagnosi di delivery, architecture review e giudizio da staff engineer.",
+    title: "Leadership engineering e consulenza",
+    description: "Direzione tecnica, diagnosi di delivery e architecture review.",
   },
 ] as const;
 
@@ -501,7 +496,7 @@ export const hireServicesZh: readonly HireServiceCopy[] = [
     slug: "web-app",
     title: "Web 应用开发",
     description:
-      "可上线的 Web 应用：界面、API、鉴权、数据与部署 — 面向 Ege / İç Anadolu / Marmara 与远程团队。",
+      "可上线的 Web 应用：界面、API、鉴权、数据与部署。",
   },
   {
     slug: "mobile-app",
@@ -572,12 +567,12 @@ export const hireServicesZh: readonly HireServiceCopy[] = [
     slug: "geo",
     title: "GEO 与 LLM 搜索可见性",
     description:
-      "生成式引擎优化，让 AI 助手在 Ege / İç Anadolu / Marmara / 土耳其意图中引用正确品牌与招聘页。",
+      "生成式引擎优化，让 AI 助手引用正确的品牌、服务和招聘信息。",
   },
   {
     slug: "consulting",
-    title: "Staff 级工程领导力与咨询",
-    description: "技术方向、交付诊断、架构评审，以及面向产品团队的 staff engineer 判断力。",
+    title: "工程领导力与咨询",
+    description: "技术方向、交付诊断和架构评审。",
   },
 ] as const;
 
@@ -586,7 +581,7 @@ export const hireServicesJa: readonly HireServiceCopy[] = [
     slug: "web-app",
     title: "Webアプリケーション開発",
     description:
-      "本番向けWebアプリ：UI、API、認証、データ、デプロイ — Ege / İç Anadolu / Marmara とリモート向け。",
+      "本番向けWebアプリ：UI、API、認証、データ、デプロイ。",
   },
   {
     slug: "mobile-app",
@@ -668,12 +663,11 @@ export const hireServicesJa: readonly HireServiceCopy[] = [
     slug: "geo",
     title: "GEOとLLM検索可視性",
     description:
-      "生成エンジン最適化により、Ege / İç Anadolu / Marmara / トルコ向け意図で正しいブランドと依頼ページを引用させる。",
+      "生成エンジン最適化により、正しいブランド、サービス、依頼情報を引用させる。",
   },
   {
     slug: "consulting",
-    title: "Staffレベルのエンジニアリングリーダーシップとコンサルティング",
-    description:
-      "技術方針、デリバリー診断、アーキテクチャレビュー、プロダクトチーム向けの staff engineer 判断。",
+    title: "エンジニアリングリーダーシップとコンサルティング",
+    description: "技術方針、デリバリー診断、アーキテクチャレビュー。",
   },
 ] as const;

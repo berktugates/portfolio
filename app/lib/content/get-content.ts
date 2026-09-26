@@ -2,6 +2,7 @@ import type { Locale } from "../i18n/config";
 import type { BlogPost } from "../../data/blogs";
 import { BLOGS_PER_PAGE } from "../../data/blogs";
 import { getCatalogBlogPost, getCatalogBlogPosts } from "./blog-catalog";
+import { hasBlogLocaleOverlay } from "./blog-locale-overlay";
 import type { Project } from "../../data/projects";
 import { getProject, projects } from "../../data/projects";
 import { getLocaleContent } from "./load-locale";
@@ -27,7 +28,9 @@ export async function getLocalizedProject(
 export async function getLocalizedBlogPosts(locale: Locale): Promise<readonly LocalizedBlogPost[]> {
   const content = await getLocaleContent(locale);
   const posts = await getCatalogBlogPosts();
-  return posts.map((post) => mergeBlog(post, content.blogs[post.slug]));
+  return posts
+    .filter((post) => locale === "en" || hasBlogLocaleOverlay(locale, post.slug))
+    .map((post) => mergeBlog(post, content.blogs[post.slug]));
 }
 
 export async function getLocalizedBlogPost(

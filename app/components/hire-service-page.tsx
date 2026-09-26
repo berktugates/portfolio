@@ -11,12 +11,12 @@ import {
   relatedServiceSlugs,
 } from "../lib/hire-service-page-content";
 import { type Locale, getDictionary, localeMeta, localePath } from "../lib/i18n";
+import { shareImageMeta } from "../lib/share-image";
 import {
   AUTHOR_ID,
   AREA_SERVED,
   CONTACT_EMAIL,
-  SITE_LAST_MODIFIED,
-  SITE_NAME,
+  visibleAuthorMeta,
   WEBSITE_ID,
   absoluteUrl,
   jsonLd,
@@ -38,13 +38,18 @@ type HireServicePageProps = { params: Promise<{ service: string }> };
 export async function createHireServiceMetadata(locale: Locale, props: HireServicePageProps): Promise<Metadata> {
   const { service: raw } = await props.params;
   const slug = assertServiceParam(raw);
-  const copy = getHireServicePageCopy(locale, slug);
+  const [copy, dict] = await Promise.all([
+    Promise.resolve(getHireServicePageCopy(locale, slug)),
+    getDictionary(locale),
+  ]);
   const meta = localeMeta[locale];
   const canonical = absoluteUrl(hireServicePath(locale, slug));
+  const image = shareImageMeta(locale, copy.metaTitle);
 
   return {
     title: { absolute: copy.metaTitle },
     description: copy.metaDescription,
+    ...visibleAuthorMeta(dict.headerName),
     alternates: {
       canonical,
       languages: pathHreflangLanguages(`/hire/${slug}`),
@@ -53,16 +58,16 @@ export async function createHireServiceMetadata(locale: Locale, props: HireServi
       type: "website",
       locale: meta.ogLocale,
       url: canonical,
-      siteName: SITE_NAME,
+      siteName: dict.headerName,
       title: copy.metaTitle,
       description: copy.metaDescription,
-      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: copy.metaTitle }],
+      images: image.openGraph,
     },
     twitter: {
       card: "summary_large_image",
       title: copy.metaTitle,
       description: copy.metaDescription,
-      images: ["/opengraph-image"],
+      images: image.twitter,
     },
   };
 }
@@ -100,7 +105,6 @@ export async function HireServicePage({
         name: copy.metaTitle,
         description: copy.metaDescription,
         inLanguage: meta.htmlLang,
-        dateModified: SITE_LAST_MODIFIED,
         isPartOf: { "@id": WEBSITE_ID },
         about: { "@id": serviceEntityId(slug) },
         mainEntity: { "@id": serviceOfferId(slug) },
@@ -113,7 +117,7 @@ export async function HireServicePage({
           {
             "@type": "ListItem",
             position: 1,
-            name: SITE_NAME,
+            name: dict.headerName,
             item: absoluteUrl(homeHref === "/" ? "/" : homeHref),
           },
           {
@@ -286,7 +290,7 @@ export async function HireServicePage({
           </section>
 
         </main>
-        <SiteFooter>
+        <SiteFooter name={dict.headerName}>
           <LanguageSwitcher locale={locale} />
         </SiteFooter>
       </div>

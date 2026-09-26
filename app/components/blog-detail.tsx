@@ -9,9 +9,10 @@ import { blogPostPath, blogsIndexPath } from "../lib/content/paths";
 import type { Locale } from "../lib/i18n";
 import { getDictionary, localeMeta, localePath } from "../lib/i18n";
 import { formatMessage } from "../lib/i18n/format";
+import { shareImageMeta, shareImagePath } from "../lib/share-image";
 import {
   AUTHOR_ID,
-  SITE_NAME,
+  visibleAuthorMeta,
   WEBSITE_ID,
   absoluteUrl,
   jsonLd,
@@ -33,7 +34,9 @@ export async function createBlogMetadata(
   locale: Locale,
   { params }: BlogPageProps,
 ): Promise<Metadata> {
-  const post = await getLocalizedBlogPost(locale, (await params).slug);
+  const slug = (await params).slug;
+  if (locale !== "en" && !hasBlogLocaleOverlay(locale, slug)) return {};
+  const [post, dict] = await Promise.all([getLocalizedBlogPost(locale, slug), getDictionary(locale)]);
   if (!post) return {};
 
   const path = blogPostPath(locale, post.slug);
@@ -46,18 +49,18 @@ export async function createBlogMetadata(
   }
 
   const modified = post.dateModified ?? post.publishedAt;
+  const image = shareImageMeta(locale, post.title);
 
   return {
     title: post.title,
     description: post.description,
-    keywords: [...post.keywords],
-    authors: [{ name: SITE_NAME, url: absoluteUrl() }],
+    ...visibleAuthorMeta(dict.headerName),
     alternates: {
       canonical: absoluteUrl(path),
       languages,
       types: {
-        "application/rss+xml": absoluteUrl("/blogs/rss.xml"),
-        "text/markdown": absoluteUrl(`/blogs/${post.slug}/md`),
+        "application/rss+xml": absoluteUrl(`${blogsIndexPath(locale)}/rss.xml`),
+        "text/markdown": absoluteUrl(`${path}/md`),
       },
     },
     openGraph: {
@@ -65,18 +68,17 @@ export async function createBlogMetadata(
       locale: localeMeta[locale].ogLocale,
       title: post.title,
       description: post.description,
-      url: path,
+      url: absoluteUrl(path),
       publishedTime: post.publishedAt,
       modifiedTime: modified,
-      authors: ["Berktug Berke Ates"],
-      tags: [...post.keywords],
-      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: post.title }],
+      authors: [dict.headerName],
+      images: image.openGraph,
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      images: ["/opengraph-image"],
+      images: image.twitter,
     },
   };
 }
@@ -119,7 +121,7 @@ export async function BlogDetailPage({
           {
             "@type": "ListItem",
             position: 1,
-            name: SITE_NAME,
+            name: dict.headerName,
             item: absoluteUrl(homeHref),
           },
           {
@@ -141,16 +143,15 @@ export async function BlogDetailPage({
         "@id": `${absoluteUrl(path)}#article`,
         headline: post.title,
         description: post.description,
-        image: absoluteUrl("/opengraph-image"),
+        image: absoluteUrl(shareImagePath(locale)),
         datePublished: post.publishedAt,
         dateModified: post.dateModified ?? post.publishedAt,
         mainEntityOfPage: { "@type": "WebPage", "@id": absoluteUrl(path) },
         isPartOf: { "@id": WEBSITE_ID },
         inLanguage: meta.htmlLang,
-        keywords: post.keywords,
         timeRequired: `PT${post.readingMinutes}M`,
-        author: { "@id": AUTHOR_ID, "@type": "Person", name: SITE_NAME },
-        publisher: { "@id": AUTHOR_ID, "@type": "Person", name: SITE_NAME },
+        author: { "@id": AUTHOR_ID, "@type": "Person", name: dict.headerName },
+        publisher: { "@id": AUTHOR_ID, "@type": "Person", name: dict.headerName },
       },
     ],
   };
@@ -216,7 +217,7 @@ export async function BlogDetailPage({
           </p>
         </article>
       </main>
-      <SiteFooter>
+      <SiteFooter name={dict.headerName}>
         <LanguageSwitcher locale={locale} />
       </SiteFooter>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />

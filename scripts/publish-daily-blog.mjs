@@ -11,7 +11,6 @@ import { resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 const queueDir = resolve(root, "content/blog-queue");
 const blogsPath = resolve(root, "app/data/blogs.ts");
-const seoPath = resolve(root, "app/lib/seo.ts");
 const localeFiles = {
   tr: resolve(root, "app/content/blogs-tr.ts"),
   de: resolve(root, "app/content/blogs-de.ts"),
@@ -91,11 +90,6 @@ for (const [locale, filePath] of Object.entries(localeFiles)) {
   nextLocales[locale] = { filePath, source: source.replace(needle, `${needle}${entry}`) };
 }
 
-const nextSeo = (await readFile(seoPath, "utf8")).replace(
-  /export const SITE_LAST_MODIFIED = "[^"]+";/,
-  `export const SITE_LAST_MODIFIED = "${targetDate}T09:00:00+03:00";`,
-);
-
 if (dryRun) {
   console.log(`[dry-run] Would publish ${post.slug} for ${targetDate} from ${selectedName}`);
   process.exit(0);
@@ -105,7 +99,6 @@ await writeFile(blogsPath, nextBlogs);
 for (const locale of Object.values(nextLocales)) {
   await writeFile(locale.filePath, locale.source);
 }
-await writeFile(seoPath, nextSeo);
 await unlink(selectedPath);
 
 console.log(`Published ${post.slug} for ${targetDate} (from ${selectedName})`);

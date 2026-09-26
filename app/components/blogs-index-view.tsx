@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
 import { ArrowUpRight } from "lucide-react";
-import { getCatalogBlogPosts } from "../lib/content/blog-catalog";
+import { blogIndexHreflangLocales, blogIndexPageCount } from "../lib/content/blog-locale-overlay";
 import {
   getBlogTotalPagesFromCount,
   getLocaleContent,
   getLocalizedBlogPage,
+  getLocalizedBlogPosts,
 } from "../lib/content/get-content";
 import { blogPostPath, blogsIndexPath } from "../lib/content/paths";
 import type { Locale } from "../lib/i18n";
-import { getDictionary, hreflangLanguages, localeMeta, localePath } from "../lib/i18n";
+import { getDictionary, localeMeta, localePath } from "../lib/i18n";
 import { formatMessage } from "../lib/i18n/format";
-import { absoluteUrl } from "../lib/seo";
+import { absoluteUrl, visibleAuthorMeta } from "../lib/seo";
+import { shareImageMeta } from "../lib/share-image";
 import { BlogPagination } from "./blog-pagination";
 import { BlogSubscribeModal } from "./blog-subscribe-modal";
 import { BlogTransitionLink } from "./blog-transition-link";
@@ -22,43 +24,53 @@ export async function createBlogsIndexMetadata(
   locale: Locale,
   page = 1,
 ): Promise<Metadata> {
-  const content = await getLocaleContent(locale);
+  const [content, dict] = await Promise.all([getLocaleContent(locale), getDictionary(locale)]);
   const path = blogsIndexPath(locale, page);
   const title =
     page > 1
       ? formatMessage(content.ui.blogsMetaTitlePaged, { page })
       : content.ui.blogsMetaTitle;
 
+  const siblings = blogIndexHreflangLocales(locale, page);
   const languages: Record<string, string> = {
-    "x-default": absoluteUrl(page > 1 ? `/blogs/pages/${page}` : "/blogs"),
+    "x-default": absoluteUrl(blogsIndexPath(siblings.includes("en") ? "en" : locale, page)),
   };
-  for (const [hreflang] of Object.entries(hreflangLanguages())) {
-    if (hreflang === "x-default") continue;
-    const loc = Object.entries(localeMeta).find(([, meta]) => meta.hreflang === hreflang)?.[0] as
-      | Locale
-      | undefined;
-    if (!loc) continue;
-    languages[hreflang] = absoluteUrl(blogsIndexPath(loc, page));
+  for (const loc of siblings) {
+    languages[localeMeta[loc].hreflang] = absoluteUrl(blogsIndexPath(loc, page));
   }
 
+  const image = shareImageMeta(locale, title);
   return {
     title,
     description: content.ui.blogsMetaDescription,
+    ...visibleAuthorMeta(dict.headerName),
     alternates: { canonical: absoluteUrl(path), languages },
     openGraph: {
       type: "website",
       locale: localeMeta[locale].ogLocale,
       title,
       description: content.ui.blogsMetaDescription,
-      url: path,
+      url: absoluteUrl(path),
+      images: image.openGraph,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description: content.ui.blogsMetaDescription,
-      images: ["/opengraph-image"],
+      images: image.twitter,
     },
   };
+}
+
+export function blogPagedStaticParams(locale: Locale) {
+  const totalPages = blogIndexPageCount(locale);
+  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, index) => ({
+    page: String(index + 2),
+  }));
+}
+
+export function isBlogIndexPage(locale: Locale, page: number) {
+  return Number.isInteger(page) && page >= 2 && page <= blogIndexPageCount(locale);
 }
 
 export async function BlogsIndexView({
@@ -68,13 +80,13 @@ export async function BlogsIndexView({
   locale: Locale;
   page?: number;
 }) {
-  const [content, dict, posts] = await Promise.all([
+  const [content, dict, posts, allPosts] = await Promise.all([
     getLocaleContent(locale),
     getDictionary(locale),
     getLocalizedBlogPage(locale, page),
+    getLocalizedBlogPosts(locale),
   ]);
-  const catalog = await getCatalogBlogPosts();
-  const totalPages = getBlogTotalPagesFromCount(catalog.length);
+  const totalPages = getBlogTotalPagesFromCount(allPosts.length);
   const meta = localeMeta[locale];
   const homeHref = localePath(locale);
   const dateFormatter = new Intl.DateTimeFormat(meta.htmlLang, {
@@ -137,7 +149,7 @@ export async function BlogsIndexView({
           />
         </div>
       </main>
-      <SiteFooter className="mt-8 border-t border-zinc-100 px-0 py-4 dark:border-zinc-800">
+      <SiteFooter name={dict.headerName} className="mt-8 border-t border-zinc-100 px-0 py-4 dark:border-zinc-800">
         <LanguageSwitcher locale={locale} />
       </SiteFooter>
       <BlogSubscribeModal copy={content.ui.subscribe} />

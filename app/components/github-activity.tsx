@@ -26,7 +26,7 @@ export type GitHubActivityCopy = {
 };
 
 export function GitHubActivity({ copy }: { copy: GitHubActivityCopy }) {
-  const [streaks, setStreaks] = useState({ current: 0, longest: 0 });
+  const [streaks, setStreaks] = useState<{ current: number; longest: number } | null>(null);
   const [colorScheme, setColorScheme] = useState<"light" | "dark">("light");
   const contributionDateFormatter = new Intl.DateTimeFormat(copy.dateLocale, {
     month: "short",
@@ -75,7 +75,9 @@ export function GitHubActivity({ copy }: { copy: GitHubActivityCopy }) {
         }
         if (active) setStreaks({ current, longest });
       })
-      .catch(() => undefined);
+      .catch(() => {
+        if (active) setStreaks(null);
+      });
     return () => {
       active = false;
     };
@@ -121,16 +123,18 @@ export function GitHubActivity({ copy }: { copy: GitHubActivityCopy }) {
             }}
           />
         </div>
-        <div className="mt-5 grid grid-cols-2 border-t border-zinc-100 pt-4 text-center dark:border-zinc-800">
-          <div className="border-r border-zinc-100 dark:border-zinc-800">
-            <p className="text-xl font-medium text-zinc-900 dark:text-zinc-100">{streaks.current}</p>
-            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{copy.currentStreak}</p>
+        {streaks ? (
+          <div className="mt-5 grid grid-cols-2 border-t border-zinc-100 pt-4 text-center dark:border-zinc-800">
+            <div className="border-r border-zinc-100 dark:border-zinc-800">
+              <p className="text-xl font-medium text-zinc-900 dark:text-zinc-100">{streaks.current}</p>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{copy.currentStreak}</p>
+            </div>
+            <div>
+              <p className="text-xl font-medium text-zinc-900 dark:text-zinc-100">{streaks.longest}</p>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{copy.longestStreak}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-xl font-medium text-zinc-900 dark:text-zinc-100">{streaks.longest}</p>
-            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{copy.longestStreak}</p>
-          </div>
-        </div>
+        ) : null}
       </div>
     </div>
   );

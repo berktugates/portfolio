@@ -47,6 +47,16 @@ export function hreflangLanguages() {
   return languages;
 }
 
+/** BCP 47 language of the document for a public pathname. Unknown prefixes stay English. */
+export function htmlLangFromPathname(pathname: string): string {
+  const segment = pathname.split("/").filter(Boolean)[0] ?? "";
+  if (segment === "zh") return localeMeta.zh.htmlLang;
+  if (segment === "tr" || segment === "de" || segment === "fr" || segment === "it" || segment === "ja") {
+    return localeMeta[segment].htmlLang;
+  }
+  return localeMeta.en.htmlLang;
+}
+
 export function matchLocale(tags: readonly string[]): Locale {
   for (const raw of tags) {
     const tag = raw.trim().toLowerCase();

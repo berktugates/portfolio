@@ -8,13 +8,13 @@ import { SiteHeader } from "./site-header";
 import { getLocaleContent, getLocalizedProjects } from "../lib/content/get-content";
 import { hirePath, hireServicePath, pathHreflangLanguages, projectPath } from "../lib/content/paths";
 import { type Locale, getDictionary, localeMeta, localePath } from "../lib/i18n";
+import { shareImageMeta } from "../lib/share-image";
 import {
   AUTHOR_ID,
   CONTACT_EMAIL,
   GITHUB_PROFILE,
   LINKEDIN_PROFILE,
-  SITE_LAST_MODIFIED,
-  SITE_NAME,
+  visibleAuthorMeta,
   WEBSITE_ID,
   absoluteUrl,
   jsonLd,
@@ -33,10 +33,12 @@ export async function createHireMetadata(locale: Locale): Promise<Metadata> {
   const dict = await getDictionary(locale);
   const meta = localeMeta[locale];
   const canonical = absoluteUrl(hirePath(locale));
+  const image = shareImageMeta(locale, dict.hire.metaTitle);
 
   return {
     title: { absolute: dict.hire.metaTitle },
     description: dict.hire.metaDescription,
+    ...visibleAuthorMeta(dict.headerName),
     alternates: {
       canonical,
       languages: pathHreflangLanguages("/hire"),
@@ -45,16 +47,16 @@ export async function createHireMetadata(locale: Locale): Promise<Metadata> {
       type: "website",
       locale: meta.ogLocale,
       url: canonical,
-      siteName: SITE_NAME,
+      siteName: dict.headerName,
       title: dict.hire.metaTitle,
       description: dict.hire.metaDescription,
-      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: dict.hire.metaTitle }],
+      images: image.openGraph,
     },
     twitter: {
       card: "summary_large_image",
       title: dict.hire.metaTitle,
       description: dict.hire.metaDescription,
-      images: ["/opengraph-image"],
+      images: image.twitter,
     },
   };
 }
@@ -80,7 +82,6 @@ export async function HirePage({ locale }: { locale: Locale }) {
         name: dict.hire.metaTitle,
         description: dict.hire.metaDescription,
         inLanguage: meta.htmlLang,
-        dateModified: SITE_LAST_MODIFIED,
         isPartOf: { "@id": WEBSITE_ID },
         mainEntity: { "@id": AUTHOR_ID },
         about: { "@id": AUTHOR_ID },
@@ -277,7 +278,7 @@ export async function HirePage({ locale }: { locale: Locale }) {
             </dl>
           </section>
         </main>
-        <SiteFooter>
+        <SiteFooter name={dict.headerName}>
           <LanguageSwitcher locale={locale} />
         </SiteFooter>
       </div>

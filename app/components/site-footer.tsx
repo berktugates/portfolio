@@ -3,11 +3,12 @@ import type { ReactNode } from "react";
 import { ThemeToggle } from "./theme-toggle";
 
 type SiteFooterProps = {
+  name: string;
   children?: ReactNode;
   className?: string;
 };
 
-export function SiteFooter({ children, className }: SiteFooterProps = {}) {
+export function SiteFooter({ name, children, className }: SiteFooterProps) {
   return (
     <footer
       className={
@@ -16,7 +17,7 @@ export function SiteFooter({ children, className }: SiteFooterProps = {}) {
     >
       <div className="flex items-center justify-between">
         <Link href="https://github.com/berktugates" target="_blank" rel="noreferrer">
-          <p className="text-xs text-zinc-500">© {new Date().getFullYear()} Berktug Berke Ates</p>
+          <p className="text-xs text-zinc-500">© {new Date().getFullYear()} {name}</p>
         </Link>
         <div className="flex items-center gap-3">
           {children}

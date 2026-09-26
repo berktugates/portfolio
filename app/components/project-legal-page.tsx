@@ -16,7 +16,7 @@ import {
   localeMeta,
   localePath,
 } from "../lib/i18n";
-import { absoluteUrl } from "../lib/seo";
+import { absoluteUrl, visibleAuthorMeta } from "../lib/seo";
 import { LanguageSwitcher } from "./language-switcher";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
@@ -46,9 +46,10 @@ export async function createProjectLegalMetadata(
 ): Promise<Metadata> {
   const { slug, document } = await params;
   if (!isLegalDocument(document)) return {};
-  const [project, content] = await Promise.all([
+  const [project, content, dict] = await Promise.all([
     getLocalizedProject(locale, slug),
     getLocaleContent(locale),
+    getDictionary(locale),
   ]);
   const legal = content.legal[slug]?.[document];
   if (!project || !legal) return {};
@@ -66,13 +67,14 @@ export async function createProjectLegalMetadata(
   return {
     title: `${legal.title} · ${project.title}`,
     description: legal.introduction,
+    ...visibleAuthorMeta(dict.headerName),
     alternates: { canonical: absoluteUrl(path), languages },
     openGraph: {
       type: "website",
       locale: localeMeta[locale].ogLocale,
       title: `${legal.title} · ${project.title}`,
       description: legal.introduction,
-      url: path,
+      url: absoluteUrl(path),
     },
   };
 }
@@ -139,7 +141,7 @@ export async function ProjectLegalPage({
             ))}
           </article>
         </main>
-        <SiteFooter>
+        <SiteFooter name={dict.headerName}>
           <LanguageSwitcher locale={locale} />
         </SiteFooter>
       </div>

@@ -3,10 +3,23 @@ import type { NextRequest } from "next/server";
 import { HABERLER_ORIGIN, isHaberlerHost } from "./app/lib/gundem/hosts";
 
 const PROD_REDIRECT_GUNDEM = process.env.VERCEL_ENV === "production";
+const APEX_HOST = "berktugberke.com";
+
+function hostnameOf(host: string) {
+  return host.split(":")[0]?.toLowerCase() ?? "";
+}
 
 export function middleware(request: NextRequest) {
   const host = request.headers.get("host") ?? "";
   const { pathname } = request.nextUrl;
+
+  if (hostnameOf(host) === `www.${APEX_HOST}`) {
+    const url = request.nextUrl.clone();
+    url.protocol = "https:";
+    url.hostname = APEX_HOST;
+    url.port = "";
+    return NextResponse.redirect(url, 308);
+  }
 
   if (isHaberlerHost(host)) {
     if (pathname.startsWith("/_next") || pathname.startsWith("/api")) {

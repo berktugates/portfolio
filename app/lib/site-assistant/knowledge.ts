@@ -2,7 +2,7 @@ import type { Locale } from "../i18n";
 import { hireServicePath } from "../content/paths";
 import { CONTACT_EMAIL, SITE_URL } from "../seo";
 import { SERVICE_SLUGS } from "../services";
-import { turkeyRegionNamesForLlms } from "../regions";
+
 import {
   usesCuratedSearchReply,
   usesCuratedProjectReply,
@@ -79,7 +79,7 @@ ${monolingualRules(locale)}
 - Contact: ${CONTACT_EMAIL}. GitHub: berktugates. LinkedIn: linkedin.com/in/berktugates.
 - Full-stack software engineer at bradi.tech (London). Remote across Türkiye and abroad.
 - GEO = generative / AI search visibility (llms.txt, structured data, citable content) — not a lecture on how Google ranks pages.
-- Regions served (no fake offices): ${turkeyRegionNamesForLlms()}.
+- Delivery across Türkiye and abroad is mostly remote. There is no local office in every city. Do not state a residence or city of residence.
 - No invented clients, revenue, rankings, or guarantees.
 </facts>
 

@@ -19,7 +19,8 @@ import {
   localePath,
   localeUrl,
 } from "../lib/i18n";
-import { AUTHOR_ID, SITE_LAST_MODIFIED, SITE_NAME, WEBSITE_ID, jsonLd } from "../lib/seo";
+import { shareImageMeta } from "../lib/share-image";
+import { AUTHOR_ID, visibleAuthorMeta, WEBSITE_ID, jsonLd } from "../lib/seo";
 
 function ArrowIcon() {
   return (
@@ -34,10 +35,12 @@ export async function createHomeMetadata(locale: Locale): Promise<Metadata> {
   const dict = await getDictionary(locale);
   const meta = localeMeta[locale];
   const url = localeUrl(locale);
+  const image = shareImageMeta(locale, dict.metaTitle);
 
   return {
     title: { absolute: dict.metaTitle },
     description: dict.metaDescription,
+    ...visibleAuthorMeta(dict.headerName),
     alternates: {
       canonical: url,
       languages: hreflangLanguages(),
@@ -46,16 +49,16 @@ export async function createHomeMetadata(locale: Locale): Promise<Metadata> {
       type: "profile",
       locale: meta.ogLocale,
       url,
-      siteName: SITE_NAME,
+      siteName: dict.headerName,
       title: dict.metaTitle,
       description: dict.metaDescription,
-      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: dict.metaTitle }],
+      images: image.openGraph,
     },
     twitter: {
       card: "summary_large_image",
       title: dict.metaTitle,
       description: dict.metaDescription,
-      images: ["/opengraph-image"],
+      images: image.twitter,
     },
   };
 }
@@ -86,9 +89,8 @@ export async function HomePage({ locale }: { locale: Locale }) {
     "@id": `${localeUrl(locale)}#profile-page`,
     url: localeUrl(locale),
     name: dict.metaTitle,
-    description: dict.metaDescription,
+    description: dict.intro,
     inLanguage: meta.htmlLang,
-    dateModified: SITE_LAST_MODIFIED,
     isPartOf: { "@id": WEBSITE_ID },
     mainEntity: { "@id": AUTHOR_ID },
   };
@@ -279,7 +281,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
             </BlogTransitionLink>
           </section>
         </main>
-        <SiteFooter>
+        <SiteFooter name={dict.headerName}>
           <LanguageSwitcher locale={locale} />
         </SiteFooter>
       </div>

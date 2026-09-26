@@ -11,7 +11,7 @@
     "prebuild": "node scripts/generate-blogs-feed.mjs",
     "build": "next build",
     "postbuild": "node scripts/assert-no-gundem-links.mjs",
-    "test:unit": "node --import tsx --test app/lib/content-safety.test.ts app/lib/image-license.test.ts scripts/lib/gundem-trends.test.ts scripts/lib/blog-queue-body.test.ts",
+    "test:unit": "node --import tsx --test app/lib/content-safety.test.ts app/lib/image-license.test.ts app/lib/hire-evidence-pages.test.ts app/lib/content/blog-index-locale.test.ts scripts/lib/gundem-trends.test.ts scripts/lib/blog-queue-body.test.ts",
     "check:queues": "node --import tsx scripts/check-queue-safety.ts",
     "check:ops": "node --import tsx scripts/check-ops-phase0.ts",
     "check:measurement": "node --import tsx scripts/check-measurement-phase5.ts",

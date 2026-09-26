@@ -9,18 +9,21 @@ import {
   formatGundemCategory,
 } from "../lib/gundem/editorial";
 import { haberlerArticlePath, haberlerUrl } from "../lib/gundem/hosts";
-import { SITE_NAME } from "../lib/seo";
+import { getDictionary } from "../lib/i18n";
+import { visibleAuthorMeta } from "../lib/seo";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 
 export const revalidate = 1800;
 
 export async function createGundemIndexMetadata(): Promise<Metadata> {
+  const dict = await getDictionary("tr");
   const title = "Gündem";
   const description = GUNDEM_META_DESCRIPTION;
   return {
     title,
     description,
+    ...visibleAuthorMeta(dict.headerName),
     alternates: { canonical: haberlerUrl("/") },
     metadataBase: new URL(haberlerUrl("/")),
     robots: { index: true, follow: true },
@@ -35,15 +38,15 @@ export async function createGundemIndexMetadata(): Promise<Metadata> {
 }
 
 export async function GundemIndexView() {
-  const posts = await getAllGundemBriefings();
+  const [posts, dict] = await Promise.all([getAllGundemBriefings(), getDictionary("tr")]);
   return (
     <div lang="tr" className="mx-auto flex min-h-screen w-full max-w-screen-sm flex-col px-4 pt-20">
       <SiteHeader
         homeHref={haberlerUrl("/")}
-        name={SITE_NAME}
+        name={dict.headerName}
         role={GUNDEM_HEADER_ROLE}
         ariaLabel="Ana sayfa"
-        imageAlt={SITE_NAME}
+        imageAlt={dict.headerName}
       />
       <main className="flex flex-1 flex-col">
         <h1 className="mb-3 text-xl font-medium">Gündem</h1>
@@ -70,7 +73,7 @@ export async function GundemIndexView() {
           ))}
         </div>
       </main>
-      <SiteFooter className="mt-8 border-t border-zinc-100 px-0 py-4 dark:border-zinc-800" />
+      <SiteFooter name={dict.headerName} className="mt-8 border-t border-zinc-100 px-0 py-4 dark:border-zinc-800" />
     </div>
   );
 }

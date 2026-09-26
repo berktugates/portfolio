@@ -2,16 +2,19 @@ import { buildAreaServedFromRegions } from "./regions";
 
 export const SITE_URL = "https://berktugberke.com";
 export const SITE_NAME = "Berktug Berke Ates";
+
+export function visibleAuthorMeta(name: string) {
+  return {
+    authors: [{ name, url: SITE_URL }],
+    creator: name,
+    publisher: name,
+  };
+}
 export const SITE_TITLE = "Berktug Berke Ates — Software Engineer and Product Builder";
 export const SITE_DESCRIPTION =
-  "Software engineer and product builder delivering end-to-end software: web and mobile products, frontend and backend, architecture, SaaS, AI systems, DevOps, data, security, integrations, technical SEO, GEO, and staff-level engineering leadership.";
+  "Software engineer and product builder delivering end-to-end software: web and mobile products, frontend and backend, architecture, SaaS, AI systems, DevOps, data, security, integrations, technical SEO, GEO, and production delivery.";
 export const SITE_INTRO =
-  "Based in Marmaris, Muğla, in Türkiye's Aegean (Ege) region, Berktuğ Berke Ates is a software engineer and product builder who designs and ships scalable software products and complex digital systems end-to-end. His work covers software architecture, frontend and backend engineering, infrastructure, DevOps, data, security, integrations, AI-powered systems, automation, technical SEO, GEO, and production delivery. He is available for freelance, full-time, and part-time engagements across all regions of Türkiye (Ege, Marmara, İç Anadolu, Akdeniz, Karadeniz, Doğu Anadolu, Güneydoğu Anadolu) and for remote and international work.";
-/**
- * Human-edited profile metadata timestamp. Keep the timezone explicit so
- * structured-data consumers receive an unambiguous ISO 8601 DateTime.
- */
-export const SITE_LAST_MODIFIED = "2026-09-17T09:00:00+03:00";
+  "Berktuğ Berke Ates is a software engineer and product builder who designs and ships scalable software products and complex digital systems end-to-end. His work covers software architecture, frontend and backend engineering, infrastructure, DevOps, data, security, integrations, AI-powered systems, automation, technical SEO, GEO, and production delivery. He is available for freelance, full-time, and part-time engagements, remote and international.";
 
 export const CONTACT_EMAIL = "contact@berktugberke.com";
 export const GITHUB_PROFILE = "https://github.com/berktugates";
