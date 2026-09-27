@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import {
   HABERLER_BRAND,
   formatGundemCategory,
@@ -32,6 +33,82 @@ function mobileSheetRowClass(active: boolean): string {
   }`;
 }
 
+function HaberlerMobileCategorySheet({
+  open,
+  onClose,
+  children,
+}: {
+  open: boolean;
+  onClose: () => void;
+  children: ReactNode;
+}) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
+    <div
+      data-haberler-mobile-sheet
+      data-state={open ? "open" : "closed"}
+      aria-hidden={!open}
+      className={`fixed inset-0 z-[80] flex items-end justify-center md:hidden ${
+        open ? "pointer-events-auto" : "pointer-events-none"
+      }`}
+    >
+      <button
+        type="button"
+        aria-label="Kategorileri kapat"
+        tabIndex={open ? 0 : -1}
+        onClick={onClose}
+        className={`absolute inset-0 bg-zinc-950/50 backdrop-blur-sm transition-opacity duration-300 motion-reduce:transition-none ${
+          open ? "opacity-100" : "opacity-0"
+        }`}
+      />
+      <div
+        id="haberler-mobile-menu"
+        role="dialog"
+        aria-modal={open}
+        aria-label="Haber kategorileri"
+        inert={!open}
+        onClick={(e) => e.stopPropagation()}
+        className={`relative z-[1] flex max-h-[min(88dvh,36rem)] w-full max-w-lg flex-col rounded-t-[1.75rem] border border-b-0 border-zinc-200/80 bg-white shadow-[0_-12px_40px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-black/50 ${
+          open ? "translate-y-0" : "translate-y-full"
+        }`}
+        style={{ paddingBottom: "max(0px, env(safe-area-inset-bottom))" }}
+      >
+        <div className="flex shrink-0 justify-center pt-3 pb-2">
+          <span className="h-1 w-11 rounded-full bg-zinc-300 dark:bg-zinc-600" aria-hidden />
+        </div>
+        <div className="flex items-center justify-between border-b border-zinc-100 px-5 pb-3 dark:border-zinc-800">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-zinc-500">Kategoriler</p>
+            <p className="mt-0.5 text-sm text-zinc-600 dark:text-zinc-400">Gündem alanı seçin</p>
+          </div>
+          <button
+            type="button"
+            aria-label="Kapat"
+            onClick={onClose}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+          >
+            <X className="size-4" aria-hidden />
+          </button>
+        </div>
+        <nav
+          aria-label="Haber kategorileri"
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4"
+        >
+          {children}
+        </nav>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
 export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
   const home = haberlerUrl("/");
   const allActive = activeCategory == null;
@@ -47,13 +124,16 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
   }, [menuOpen]);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    if (!menuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = prev;
     };
   }, [menuOpen]);
 
   const closeMenu = () => setMenuOpen(false);
+  const toggleMenu = () => setMenuOpen((o) => !o);
 
   const desktopCategoryLinks = (
     <>
@@ -84,7 +164,7 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
   );
 
   const mobileCategoryLinks = (
-    <ul className="flex flex-col gap-2">
+    <ul className="flex flex-col gap-2 pb-2">
       <li>
         <Link
           href={home}
@@ -125,8 +205,8 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
             aria-expanded={menuOpen}
             aria-controls="haberler-mobile-menu"
             aria-label={menuOpen ? "Kategorileri kapat" : "Kategorileri aç"}
-            onClick={() => setMenuOpen((o) => !o)}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 shadow-sm md:hidden dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            onClick={toggleMenu}
+            className="relative z-[51] flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 shadow-sm md:hidden dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           >
             {menuOpen ? <X className="size-5" aria-hidden /> : <Menu className="size-5" aria-hidden />}
           </button>
@@ -154,52 +234,9 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
         </div>
       </div>
 
-      <div className="md:hidden" data-haberler-mobile-sheet>
-        <button
-          type="button"
-          aria-label="Kategorileri kapat"
-          aria-hidden={!menuOpen}
-          tabIndex={menuOpen ? 0 : -1}
-          onClick={closeMenu}
-          className={`fixed inset-0 z-[60] bg-zinc-950/50 backdrop-blur-sm transition-opacity duration-300 motion-reduce:transition-none ${
-            menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
-          }`}
-        />
-        <div
-          id="haberler-mobile-menu"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Haber kategorileri"
-          aria-hidden={!menuOpen}
-          className={`fixed inset-x-0 bottom-0 z-[70] flex max-h-[min(88dvh,36rem)] flex-col rounded-t-[1.75rem] border border-zinc-200/80 bg-white shadow-[0_-12px_40px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-black/50 ${
-            menuOpen ? "translate-y-0" : "pointer-events-none translate-y-full"
-          }`}
-        >
-          <div className="flex shrink-0 justify-center pt-3 pb-2">
-            <span className="h-1 w-11 rounded-full bg-zinc-300 dark:bg-zinc-600" aria-hidden />
-          </div>
-          <div className="flex items-center justify-between border-b border-zinc-100 px-5 pb-3 dark:border-zinc-800">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-zinc-500">Kategoriler</p>
-              <p className="mt-0.5 text-sm text-zinc-600 dark:text-zinc-400">Gündem alanı seçin</p>
-            </div>
-            <button
-              type="button"
-              aria-label="Kapat"
-              onClick={closeMenu}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
-            >
-              <X className="size-4" aria-hidden />
-            </button>
-          </div>
-          <nav
-            aria-label="Haber kategorileri"
-            className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]"
-          >
-            {mobileCategoryLinks}
-          </nav>
-        </div>
-      </div>
+      <HaberlerMobileCategorySheet open={menuOpen} onClose={closeMenu}>
+        {mobileCategoryLinks}
+      </HaberlerMobileCategorySheet>
     </header>
   );
 }

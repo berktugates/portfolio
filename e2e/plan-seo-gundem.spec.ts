@@ -49,6 +49,31 @@ test.describe("Gündem surface", () => {
     await expect(page.getByRole("link", { name: "BBA ana sayfa" })).toBeVisible();
   });
 
+  test("GUN-5 mobile category sheet anchors to viewport bottom", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/gundem");
+    await page.getByRole("button", { name: "Kategorileri aç" }).click();
+    const overlay = page.locator("[data-haberler-mobile-sheet]");
+    const sheet = page.locator("#haberler-mobile-menu");
+    await expect(overlay).toHaveAttribute("data-state", "open");
+    await expect(sheet.getByText("Gündem alanı seçin")).toBeVisible();
+    await page.waitForFunction(() => {
+      const root = document.querySelector("[data-haberler-mobile-sheet]");
+      const el = document.getElementById("haberler-mobile-menu");
+      if (!root || root.getAttribute("data-state") !== "open" || !el) return false;
+      const rect = el.getBoundingClientRect();
+      return Math.abs(rect.bottom - window.innerHeight) <= 2;
+    });
+    const viewport = page.viewportSize();
+    expect(viewport).not.toBeNull();
+    const rect = await sheet.evaluate((el) => el.getBoundingClientRect());
+    expect(rect.bottom).toBeGreaterThanOrEqual(viewport!.height - 2);
+    expect(rect.bottom).toBeLessThanOrEqual(viewport!.height + 2);
+    await sheet.getByRole("button", { name: "Kapat" }).click();
+    await expect(overlay).toHaveAttribute("data-state", "closed");
+    await expect(overlay).toHaveAttribute("aria-hidden", "true");
+  });
+
   test("GUN-2 detail has a cover, sources, and one portfolio link", async ({ page }) => {
     await page.goto("/gundem/turkiye-gram-altin-brifing");
     const html = await page.content();
