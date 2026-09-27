@@ -1,5 +1,5 @@
-# İlk / idempotent Blob seed — ulusal gündem örnekleri (content/gundem-seed.json). docs/gundem-editorial.md
-name: Seed gundem Blob (Faz 4)
+# İlk / idempotent R2 seed — ulusal gündem örnekleri (content/gundem-seed.json). docs/gundem-editorial.md
+name: Seed gundem R2 (Faz 4)
 
 on:
   workflow_dispatch:
@@ -29,16 +29,19 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Seed editorial briefings to Blob
+      - name: Seed editorial briefings to R2
         env:
-          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
           REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
           REVALIDATE_URL: ${{ secrets.REVALIDATE_URL }}
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
-          BLOB_PUBLIC_BASE_URL: ${{ secrets.BLOB_PUBLIC_BASE_URL }}
-        run: pnpm exec node --import tsx scripts/seed-gundem-blob.ts
+          CONTENT_PUBLIC_BASE_URL: ${{ secrets.CONTENT_PUBLIC_BASE_URL }}
+        run: pnpm exec node --import tsx scripts/seed-gundem-r2.ts
 
-      - name: Verify Blob index (Faz 4 DoD)
+      - name: Verify R2 index (Faz 4 DoD)
         env:
-          BLOB_PUBLIC_BASE_URL: ${{ secrets.BLOB_PUBLIC_BASE_URL }}
-        run: pnpm exec node --import tsx scripts/verify-gundem-blob.ts
+          CONTENT_PUBLIC_BASE_URL: ${{ secrets.CONTENT_PUBLIC_BASE_URL }}
+        run: pnpm exec node --import tsx scripts/verify-gundem-r2.ts

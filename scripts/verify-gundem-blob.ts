@@ -1,13 +1,14 @@
 /**
- * Faz 4 DoD: prod Blob index, seed brifingleriyle hizalı (ulusal gündem — docs/gundem-editorial.md).
+ * @deprecated — use verify-gundem-r2.ts (CONTENT_PUBLIC_BASE_URL).
  */
+import { contentPublicBaseUrl } from "./lib/content-public-base";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 async function main() {
-  const base = process.env.BLOB_PUBLIC_BASE_URL?.replace(/\/$/, "");
+  const base = contentPublicBaseUrl();
   if (!base) {
-    console.error("BLOB_PUBLIC_BASE_URL is required.");
+    console.error("CONTENT_PUBLIC_BASE_URL (or legacy BLOB_PUBLIC_BASE_URL) is required.");
     process.exit(1);
   }
 
@@ -24,7 +25,7 @@ async function main() {
   const indexUrl = `${base}/gundem/index.json`;
   const res = await fetch(indexUrl, { cache: "no-store" });
   if (!res.ok) {
-    console.error(`Blob index fetch failed: ${res.status} ${indexUrl}`);
+    console.error(`Content index fetch failed: ${res.status} ${indexUrl}`);
     process.exit(1);
   }
   const data = (await res.json()) as { posts: { slug: string }[] };
@@ -32,11 +33,11 @@ async function main() {
   const missing = expectedSlugs.filter((slug) => !indexSlugs.has(slug));
   if (missing.length > 0) {
     console.error(
-      `Blob index missing seed slugs: ${missing.join(", ")}; index has: ${[...indexSlugs].join(", ") || "none"}`,
+      `Content index missing seed slugs: ${missing.join(", ")}; index has: ${[...indexSlugs].join(", ") || "none"}`,
     );
     process.exit(1);
   }
-  console.log(`Blob index OK (${expectedSlugs.length} seed slugs): ${expectedSlugs.join(", ")}`);
+  console.log(`Content index OK (${expectedSlugs.length} seed slugs): ${expectedSlugs.join(", ")}`);
 }
 
 main().catch((error) => {

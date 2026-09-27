@@ -1,8 +1,10 @@
 import type { GundemBriefing } from "../../app/lib/gundem/types";
 import { HABERLER_ORIGIN } from "../../app/lib/gundem/hosts";
 
+import { contentPublicBaseUrl } from "./content-public-base";
+
 export async function fetchGundemBlobIndex(): Promise<GundemBriefing[]> {
-  const base = process.env.BLOB_PUBLIC_BASE_URL?.replace(/\/$/, "");
+  const base = contentPublicBaseUrl();
   if (!base) return [];
   try {
     const res = await fetch(`${base}/gundem/index.json`, { cache: "no-store" });

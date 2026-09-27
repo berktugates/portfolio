@@ -5,13 +5,14 @@ import { validateLicensedImage } from "../app/lib/image-license";
 import type { GundemBriefing } from "../app/lib/gundem/types";
 import { GUNDEM_EDITORIAL_MISSION } from "../app/lib/gundem/editorial";
 import { gundemImageMatchesStory } from "../app/lib/gundem/cover";
-import { publishGundemBriefingToBlob } from "./lib/gundem-blob-publish";
+import { publishGundemBriefingToR2 } from "./lib/content-r2-publish";
+import { contentPublicBaseUrl } from "./lib/content-public-base";
 
 const root = resolve(import.meta.dirname, "..");
 const queueDir = resolve(root, "content/gundem-queue");
 
-async function blobBriefingIfExists(slug: string): Promise<GundemBriefing | null> {
-  const base = process.env.BLOB_PUBLIC_BASE_URL?.replace(/\/$/, "");
+async function remoteBriefingIfExists(slug: string): Promise<GundemBriefing | null> {
+  const base = contentPublicBaseUrl();
   if (!base) return null;
   try {
     const res = await fetch(`${base}/gundem/${slug}.json`);
@@ -44,6 +45,7 @@ async function main() {
     excerpt: draft.excerpt,
     alt: draft.image?.alt,
     sources: draft.sources,
+    channel: "gundem",
   });
   if (!safety.ok) {
     console.error(`Safety rejected: ${safety.code}`, safety.hits);
@@ -61,16 +63,16 @@ async function main() {
     draft.cover = "photo";
   }
 
-  const existing = await blobBriefingIfExists(draft.slug);
+  const existing = await remoteBriefingIfExists(draft.slug);
   if (existing?.dateModified === draft.dateModified && existing?.title === draft.title) {
     await unlink(queuePath);
-    console.log(`Blob already has ${draft.slug} (${draft.dateModified}); removed queue file.`);
+    console.log(`R2 already has ${draft.slug} (${draft.dateModified}); removed queue file.`);
     return;
   }
 
-  await publishGundemBriefingToBlob(draft, root);
+  await publishGundemBriefingToR2(draft);
   await unlink(queuePath);
-  console.log(`Published gundem briefing ${draft.slug} to Blob.`);
+  console.log(`Published gundem briefing ${draft.slug} to R2.`);
 }
 
 main().catch((error) => {

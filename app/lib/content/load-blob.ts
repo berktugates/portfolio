@@ -15,7 +15,9 @@ async function fetchJson<T>(url: string, tag: string): Promise<T | null> {
 }
 
 function blobBaseUrl(): string | null {
-  const base = process.env.BLOB_PUBLIC_BASE_URL?.replace(/\/$/, "");
+  const base =
+    process.env.CONTENT_PUBLIC_BASE_URL?.replace(/\/$/, "") ??
+    process.env.BLOB_PUBLIC_BASE_URL?.replace(/\/$/, "");
   return base || null;
 }
 

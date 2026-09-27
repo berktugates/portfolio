@@ -5,12 +5,11 @@ import { notFound } from "next/navigation";
 import { GundemCover, gundemShowsPhoto } from "./gundem-cover";
 import { getGundemBySlug, getGundemSlugs } from "../lib/gundem/catalog";
 import { validateLicensedImage } from "../lib/image-license";
-import { GUNDEM_DETAIL_ANALYSIS_NOTE, GUNDEM_HEADER_ROLE, formatGundemCategory, formatGundemDate } from "../lib/gundem/editorial";
+import { GUNDEM_DETAIL_ANALYSIS_NOTE, HABERLER_PAGE_TITLE, formatGundemCategory, formatGundemDate } from "../lib/gundem/editorial";
 import { haberlerArticlePath, haberlerUrl } from "../lib/gundem/hosts";
 import { getDictionary } from "../lib/i18n";
 import { AUTHOR_ID, SITE_URL, visibleAuthorMeta, jsonLd } from "../lib/seo";
 import { SiteFooter } from "./site-footer";
-import { SiteHeader } from "./site-header";
 
 export const revalidate = 1800;
 
@@ -67,7 +66,7 @@ export async function GundemDetailView({ params }: Props) {
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Gündem", item: haberlerUrl("/") },
+          { "@type": "ListItem", position: 1, name: HABERLER_PAGE_TITLE, item: haberlerUrl("/") },
           { "@type": "ListItem", position: 2, name: briefing.title, item: canonical },
         ],
       },
@@ -95,22 +94,16 @@ export async function GundemDetailView({ params }: Props) {
   };
 
   return (
-    <div lang="tr" className="relative mx-auto min-h-screen w-full max-w-[1100px] px-4 pt-20">
-      <SiteHeader
-        homeHref={haberlerUrl("/")}
-        name={dict.headerName}
-        role={GUNDEM_HEADER_ROLE}
-        ariaLabel="Ana sayfa"
-        imageAlt={dict.headerName}
-      />
-      <main className="blog-prose mt-12 pb-20">
-        <Link
-          href={haberlerUrl("/")}
-          className="mb-12 inline-flex items-center gap-1 text-sm text-zinc-500 transition-colors hover:text-zinc-950 dark:hover:text-zinc-50"
-        >
-          <ArrowLeft className="size-4" />
-          Gündem
-        </Link>
+    <div lang="tr" className="flex min-h-screen w-full flex-col">
+      <div className="relative mx-auto w-full max-w-screen-sm flex-1 px-4 pt-20">
+        <main className="blog-prose pb-20">
+          <Link
+            href={haberlerUrl("/")}
+            className="mb-10 inline-flex items-center gap-1 text-sm text-zinc-500 transition-colors hover:text-zinc-950 dark:hover:text-zinc-50"
+          >
+            <ArrowLeft className="size-4" />
+            {HABERLER_PAGE_TITLE}
+          </Link>
         <article>
           <header className="mb-8">
             <p className="text-xs font-medium text-zinc-500">{formatGundemCategory(briefing.category)}</p>
@@ -154,8 +147,9 @@ export async function GundemDetailView({ params }: Props) {
             </aside>
           </div>
         </article>
-      </main>
-      <SiteFooter name={dict.headerName} />
+        </main>
+        <SiteFooter name={dict.headerName} />
+      </div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
     </div>
   );

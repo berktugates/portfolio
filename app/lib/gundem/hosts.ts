@@ -1,6 +1,7 @@
 /** Public origin for Turkish briefings (subdomain). */
-export const HABERLER_ORIGIN =
-  process.env.NEXT_PUBLIC_HABERLER_URL ?? "https://haberler.berktugberke.com";
+export const HABERLER_ORIGIN = (
+  process.env.NEXT_PUBLIC_HABERLER_URL ?? "https://haberler.berktugberke.com"
+).trim();
 
 const HABERLER_HOSTS = new Set([
   "haberler.berktugberke.com",

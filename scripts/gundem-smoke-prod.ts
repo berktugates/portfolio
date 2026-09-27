@@ -21,7 +21,7 @@ async function check(url: string, contains?: string[]): Promise<void> {
 }
 
 async function main() {
-  await check(`${HABERLER_ORIGIN}/`, ["Gündem", "Türkiye"]);
+  await check(`${HABERLER_ORIGIN}/`, ["Haberler", "gram altın"]);
   await check(`${HABERLER_ORIGIN}/turkiye-gram-altin-brifing`, [
     "NewsArticle",
     "https://berktugberke.com",
@@ -51,6 +51,22 @@ async function main() {
   const loc = redirectRes.headers.get("location") ?? "";
   if (!loc.startsWith(HABERLER_ORIGIN)) {
     throw new Error(`/gundem location must target haberler host, got ${loc}`);
+  }
+
+  const indexBase = process.env.CONTENT_PUBLIC_BASE_URL?.replace(/\/$/, "");
+  if (indexBase) {
+    const indexRes = await fetch(`${indexBase}/gundem/index.json`, { cache: "no-store" });
+    if (!indexRes.ok) throw new Error(`R2 gundem index HTTP ${indexRes.status}`);
+    const index = (await indexRes.json()) as { posts: { slug: string; image?: { src?: string } }[] };
+    for (const post of index.posts ?? []) {
+      const src = post.image?.src;
+      if (!src) continue;
+      if (/hurriyet|milliyet|haberturk|cnn/i.test(src)) {
+        throw new Error(`P5: forbidden host in image for ${post.slug}: ${src}`);
+      }
+      const imgRes = await fetch(src, { method: "HEAD", cache: "no-store" });
+      if (!imgRes.ok) throw new Error(`P1: image HTTP ${imgRes.status} for ${post.slug}`);
+    }
   }
 
   console.log(`Gundem prod smoke OK (${articleUrls.length} sitemap articles).`);

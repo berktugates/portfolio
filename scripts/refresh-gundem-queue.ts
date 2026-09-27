@@ -58,6 +58,10 @@ async function main() {
 
   for (const { trend } of ranked) {
     const draft = composeBriefingFromTrend(trend, today);
+    if (!draft) {
+      console.warn(`No editorial copy for trend: ${trend.query}`);
+      continue;
+    }
     if (indexHasTrendQuery(indexPosts, draft.trendQuery) || indexHasSlug(indexPosts, draft.slug)) {
       console.log(`Skip already published: ${draft.trendQuery} (${draft.slug})`);
       continue;
@@ -69,6 +73,7 @@ async function main() {
       excerpt: draft.excerpt,
       alt: draft.image?.alt,
       sources: draft.sources,
+      channel: "gundem",
     });
     if (!safety.ok) {
       console.warn(`Compose safety fail ${draft.slug}: ${safety.code}`, safety.hits);
@@ -91,7 +96,7 @@ async function main() {
     return;
   }
 
-  console.log("All ranked Trends items already exist in Blob index; queue unchanged.");
+  console.log("All ranked Trends items already exist in content index; queue unchanged.");
 }
 
 main().catch((error) => {

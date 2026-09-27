@@ -54,9 +54,13 @@ git log --since=90.days --oneline -- app/data/blogs.ts content/posts | wc -l
 - `content/blog-queue/*.json` — hedef ≥7, `pnpm check:queues` zorunlu
 - `content/gundem-queue` — CI `refresh-gundem-queue` (git’e yazılmaz)
 
-## Faz 4 (gündem) — kapalı
+## Faz 4 (gündem + blog içerik)
 
-Günlük cron: **Publish gundem briefing** 07:00 UTC. Detay: `docs/gundem-editorial.md`.
+- **Yayın:** Cloudflare Worker `workers/content-publisher` — haber günlük `0 4 * * *` UTC (~07:00 TR), blog haftalık `0 6 * * 1` UTC (~09:00 TR Pazartesi).
+- **Depo:** R2 `portfolio-content` → Vercel `CONTENT_PUBLIC_BASE_URL`.
+- **Manuel seed:** `pnpm gundem:seed-r2` / doğrulama `pnpm gundem:verify-r2` (GitHub: Seed gundem R2 workflow).
+- GitHub zamanlı `publish-gundem` / `weekly-seo-blog` **kapalı** (yalnızca `workflow_dispatch` rollback).
+- Detay: `docs/gundem-editorial.md`.
 
 ## Faz 5 (ölçüm) — GTM / GSC / GA4
 
@@ -74,7 +78,7 @@ GSC Performance export → `data/gsc-performance-export.json` (örnek: `.example
 | Değişken | Amaç |
 |----------|------|
 | `REVALIDATE_SECRET` | `/api/revalidate` |
-| `BLOB_READ_WRITE_TOKEN` | Gündem/blog Blob |
-| `BLOB_PUBLIC_BASE_URL` | Blob JSON base |
+| `CONTENT_PUBLIC_BASE_URL` | R2 public JSON base (gundem + blogs) |
 | `REVALIDATE_URL` | `https://berktugberke.com/api/revalidate` |
+| `R2_*` | Yerel/CI seed (Worker’da bucket binding) |
 | `VERCEL_TOKEN` | Ops prune + deployment metrics (GitHub secret) |

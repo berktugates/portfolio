@@ -1,10 +1,8 @@
 # Ulusal gündem brifingleri (tüm Türkiye; yalnızca bilişim değil). docs/gundem-editorial.md
 name: Publish gundem briefing
 
+# Zamanlı yayın: Cloudflare Worker `berktug-content-publisher` (cron 04:00 UTC ≈ 07:00 TR).
 on:
-  schedule:
-    # 07:00 UTC — blog haftalık batch’ten ayrı saat (plan Faz 4 G.4)
-    - cron: "0 7 * * *"
   workflow_dispatch:
 
 permissions:
@@ -40,16 +38,19 @@ jobs:
 
       - name: Trends + GSC demand → queue
         env:
-          BLOB_PUBLIC_BASE_URL: ${{ secrets.BLOB_PUBLIC_BASE_URL }}
+          CONTENT_PUBLIC_BASE_URL: ${{ secrets.CONTENT_PUBLIC_BASE_URL }}
         run: pnpm exec node --import tsx scripts/refresh-gundem-queue.ts
 
-      - name: Safety + publish to Blob
+      - name: Safety + publish to R2
         env:
-          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
           REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
           REVALIDATE_URL: ${{ secrets.REVALIDATE_URL }}
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
-          BLOB_PUBLIC_BASE_URL: ${{ secrets.BLOB_PUBLIC_BASE_URL }}
+          CONTENT_PUBLIC_BASE_URL: ${{ secrets.CONTENT_PUBLIC_BASE_URL }}
         run: pnpm exec node --import tsx scripts/publish-gundem.ts
 
       - name: Prod smoke (haberler host)

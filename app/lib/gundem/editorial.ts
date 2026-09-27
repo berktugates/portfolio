@@ -15,6 +15,8 @@ export const GUNDEM_INDEX_LEDE =
 export const GUNDEM_DETAIL_ANALYSIS_NOTE =
   "Bu metin bir haber ajansı servisi değildir; birincil kaynaklara dayanan özet ve editöryal analizdir. Yatırım, hukuk veya sağlık kararı için tek başına yeterli değildir.";
 
+export const HABERLER_PAGE_TITLE = "Haberler";
+
 export const GUNDEM_HEADER_ROLE = "Türkiye gündemi ve analiz";
 
 export const GUNDEM_RSS_DESCRIPTION =

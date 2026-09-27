@@ -1,9 +1,7 @@
 name: Weekly SEO blog
 
+# Haftalık blog: Cloudflare Worker `berktug-content-publisher` (cron Mon 06:00 UTC ≈ 09:00 TR).
 on:
-  schedule:
-    # Monday 06:00 UTC ≈ 09:00 Europe/Istanbul
-    - cron: "0 6 * * 1"
   workflow_dispatch:
     inputs:
       publish_date:

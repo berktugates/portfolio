@@ -38,27 +38,41 @@ test("skip lottery trends", () => {
 test("compose briefing passes safety length gate", () => {
   const trend = parseTrendsRss(SAMPLE)[0];
   const draft = composeBriefingFromTrend(trend, "2026-09-21");
+  assert.ok(draft);
   const safety = assessContentSafety({
     title: draft.title,
     body: draft.bodyMarkdown,
     excerpt: draft.excerpt,
     sources: draft.sources,
     alt: draft.image.alt,
+    channel: "gundem",
   });
   assert.equal(safety.ok, true);
 });
 
-test("compose briefing meets 350 words for short trending titles", () => {
+test("compose briefing from headlines when no curated copy", () => {
   const draft = composeBriefingFromTrend(
-    { query: "uzak şehir", approxTraffic: 500, headlines: [], pubDate: "2026-09-22" },
+    {
+      query: "uzak şehir",
+      approxTraffic: 500,
+      headlines: [
+        { title: "Uzak Şehir finalinde beklenmedik ayrılık", source: "Örnek" },
+        { title: "Dizinin reytingi zirveye çıktı", source: "Örnek" },
+        { title: "Yapım ekibinden açıklama geldi", source: "Örnek" },
+        { title: "Yeni sezon çekim takvimi açıklandı", source: "Örnek" },
+      ],
+      pubDate: "2026-09-22",
+    },
     "2026-09-22",
   );
+  assert.ok(draft);
   const safety = assessContentSafety({
-    title: draft.title,
-    body: draft.bodyMarkdown,
-    excerpt: draft.excerpt,
-    sources: draft.sources,
-    alt: draft.image.alt,
+    title: draft!.title,
+    body: draft!.bodyMarkdown,
+    excerpt: draft!.excerpt,
+    sources: draft!.sources,
+    alt: draft!.image.alt,
+    channel: "gundem",
   });
   assert.equal(safety.ok, true);
 });

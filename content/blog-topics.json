@@ -1,0 +1,24 @@
+{
+  "topics": [
+    {
+      "slugHint": "observability-for-streaming-llm-responses",
+      "prompt": "Write a staff-engineer blog on observability for streaming LLM responses: TTFT, disconnects, span model, production metrics. No news template language."
+    },
+    {
+      "slugHint": "permission-models-for-multi-tenant-ai-copilots",
+      "prompt": "Write on multi-tenant AI copilot permission models: tenant isolation, tool authz, audit trails. Practical production focus."
+    },
+    {
+      "slugHint": "designing-kill-switches-for-ai-features",
+      "prompt": "Write on designing kill switches for AI features in production: scope, degrade modes, operator UX."
+    },
+    {
+      "slugHint": "offline-first-sync-conflicts-in-mobile-apps",
+      "prompt": "Write on offline-first sync conflicts in mobile apps: idempotent mutations, merge UX, field telemetry."
+    },
+    {
+      "slugHint": "schema-validation-as-a-product-boundary",
+      "prompt": "Write on schema validation as a product boundary between services and clients."
+    }
+  ]
+}

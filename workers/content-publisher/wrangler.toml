@@ -1,0 +1,26 @@
+name = "berktug-content-publisher"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+
+[[r2_buckets]]
+binding = "CONTENT_BUCKET"
+bucket_name = "portfolio-content"
+
+[[d1_databases]]
+binding = "META"
+database_name = "content-meta"
+database_id = "acb84bb8-b10b-417c-a81e-269e8d70b7cb"
+migrations_dir = "migrations"
+
+[ai]
+binding = "AI"
+
+[triggers]
+crons = ["0 4 * * *", "0 6 * * 1"]
+
+[vars]
+REVALIDATE_URL = "https://berktugberke.com/api/revalidate"
+HABERLER_HOST = "haberler.berktugberke.com"
+
+# wrangler secret put REVALIDATE_SECRET
+# wrangler secret put INDEXNOW_KEY

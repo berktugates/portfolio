@@ -4,7 +4,7 @@ import { assessContentSafety } from "../app/lib/content-safety";
 import { validateLicensedImage } from "../app/lib/image-license";
 import type { GundemBriefing } from "../app/lib/gundem/types";
 import { GUNDEM_EDITORIAL_MISSION } from "../app/lib/gundem/editorial";
-import { seedGundemBriefingsToBlob } from "./lib/gundem-blob-publish";
+import { seedGundemBriefingsToR2 } from "./lib/content-r2-publish";
 
 const root = resolve(import.meta.dirname, "..");
 
@@ -26,6 +26,7 @@ async function main() {
       excerpt: draft.excerpt,
       alt: draft.image?.alt,
       sources: draft.sources,
+      channel: "gundem",
     });
     if (!safety.ok) {
       console.error(`Safety rejected ${draft.slug}: ${safety.code}`, safety.hits);
@@ -40,7 +41,7 @@ async function main() {
     validated.push(draft);
   }
 
-  await seedGundemBriefingsToBlob(validated, root);
+  await seedGundemBriefingsToR2(validated);
 }
 
 main().catch((error) => {

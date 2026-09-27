@@ -44,7 +44,7 @@ test.describe("Gündem surface", () => {
   test("GUN-1 index 200", async ({ page }) => {
     const res = await page.goto("/gundem");
     expect(res?.status()).toBe(200);
-    await expect(page.getByRole("heading", { name: "Gündem" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Haberler" })).toBeVisible();
   });
 
   test("GUN-2 detail has a cover, sources, and one portfolio link", async ({ page }) => {

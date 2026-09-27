@@ -1,0 +1,17 @@
+{
+  "name": "content-publisher",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "test:integration": "node --import tsx test/integration.test.ts"
+  },
+  "dependencies": {
+    "@berktug/editorial-gates": "workspace:*"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260926.1",
+    "tsx": "^4.20.5",
+    "wrangler": "^4.14.0"
+  }
+}

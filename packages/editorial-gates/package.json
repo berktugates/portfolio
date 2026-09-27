@@ -1,0 +1,21 @@
+{
+  "name": "@berktug/editorial-gates",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./content-safety": "./src/content-safety.ts",
+    "./content-safety-allowlist": "./src/content-safety-allowlist.ts",
+    "./image-license": "./src/image-license.ts",
+    "./media-url": "./src/media-url.ts",
+    "./gundem/types": "./src/gundem/types.ts",
+    "./gundem/categories": "./src/gundem/categories.ts",
+    "./gundem/cover": "./src/gundem/cover.ts",
+    "./gundem/briefing-copy": "./src/gundem/briefing-copy.ts",
+    "./gundem/compose": "./src/gundem/compose.ts",
+    "./gundem/trends": "./src/gundem/trends.ts",
+    "./blog/schema": "./src/blog/schema.ts",
+    "./publish/gates": "./src/publish/gates.ts"
+  }
+}
