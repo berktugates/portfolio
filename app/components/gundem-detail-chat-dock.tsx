@@ -2,6 +2,7 @@
 
 import { MessageCircle, X } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 type GundemDetailChatDockProps = {
   title: string;
@@ -11,8 +12,13 @@ type GundemDetailChatDockProps = {
 
 export function GundemDetailChatDock({ title, excerpt, snippets }: GundemDetailChatDockProps) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const panelId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -32,22 +38,32 @@ export function GundemDetailChatDock({ title, excerpt, snippets }: GundemDetailC
     };
   }, [open]);
 
-  return (
-    <div ref={panelRef} className="fixed bottom-6 right-4 z-40 sm:right-6" data-gundem-chat-dock>
+  if (!mounted) return null;
+
+  return createPortal(
+    <div
+      ref={panelRef}
+      data-gundem-chat-dock
+      className="fixed z-[100] flex flex-col items-end gap-3"
+      style={{
+        bottom: "max(1.25rem, env(safe-area-inset-bottom, 0px))",
+        right: "max(1rem, env(safe-area-inset-right, 0px))",
+      }}
+    >
       <div
         id={panelId}
         role="dialog"
         aria-label="Brifing sohbet özeti"
         aria-hidden={!open}
-        className={`mb-3 origin-bottom-right transition-all duration-200 ease-out ${
+        className={`origin-bottom-right transition-all duration-200 ease-out ${
           open
             ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
             : "pointer-events-none translate-y-2 scale-95 opacity-0"
         }`}
       >
-        <div className="flex w-[min(100vw-2rem,22rem)] flex-col overflow-hidden rounded-2xl border border-zinc-200/90 bg-white shadow-2xl shadow-zinc-900/15 dark:border-zinc-700 dark:bg-zinc-950 dark:shadow-black/50">
+        <div className="flex w-[min(calc(100vw-2rem),22rem)] flex-col overflow-hidden rounded-2xl border border-zinc-200/90 bg-white shadow-2xl shadow-zinc-900/15 dark:border-zinc-700 dark:bg-zinc-950 dark:shadow-black/50">
           <div className="flex items-center justify-between border-b border-zinc-100 bg-zinc-50/90 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900/80">
-            <div>
+            <div className="min-w-0 pr-2">
               <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Brifing notu</p>
               <p className="line-clamp-1 text-sm font-medium text-zinc-950 dark:text-zinc-50">{title}</p>
             </div>
@@ -55,7 +71,7 @@ export function GundemDetailChatDock({ title, excerpt, snippets }: GundemDetailC
               type="button"
               aria-label="Kapat"
               onClick={() => setOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-500 hover:bg-zinc-200/80 dark:hover:bg-zinc-800"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-zinc-500 hover:bg-zinc-200/80 dark:hover:bg-zinc-800"
             >
               <X className="size-4" aria-hidden />
             </button>
@@ -88,10 +104,11 @@ export function GundemDetailChatDock({ title, excerpt, snippets }: GundemDetailC
         aria-controls={panelId}
         aria-label={open ? "Brifing notunu kapat" : "Brifing notunu aç"}
         onClick={() => setOpen((v) => !v)}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-zinc-950 text-white shadow-lg shadow-zinc-900/25 transition-transform hover:scale-[1.03] active:scale-95 dark:bg-zinc-100 dark:text-zinc-950"
+        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-zinc-950 text-white shadow-lg shadow-zinc-900/25 transition-transform hover:scale-[1.03] active:scale-95 dark:bg-zinc-100 dark:text-zinc-950"
       >
         <MessageCircle className="size-6" aria-hidden />
       </button>
-    </div>
+    </div>,
+    document.body,
   );
 }
