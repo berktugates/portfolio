@@ -44,7 +44,9 @@ test.describe("Gündem surface", () => {
   test("GUN-1 index 200", async ({ page }) => {
     const res = await page.goto("/gundem");
     expect(res?.status()).toBe(200);
-    await expect(page.getByRole("heading", { name: "Haberler" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Türkiye Gündemi", level: 1 })).toBeVisible();
+    await expect(page.locator("[data-haberler-nav]")).toBeVisible();
+    await expect(page.getByText("BBA", { exact: true })).toBeVisible();
   });
 
   test("GUN-2 detail has a cover, sources, and one portfolio link", async ({ page }) => {
@@ -57,7 +59,10 @@ test.describe("Gündem surface", () => {
     await expect(page.locator("[data-gundem-cover]")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Kaynaklar" })).toBeVisible();
+    await expect(page.getByText("Okur özeti")).toBeVisible();
     await expect(page.locator('a[href="https://berktugberke.com"]')).toHaveCount(1);
+    await expect(page.getByText(/haber ajansı servisi değildir/i)).toHaveCount(0);
+    await expect(page.getByText(/Pexels \(pexels\)/i)).toHaveCount(0);
   });
 
   test("GUN-4 index is a pictured grid", async ({ page }) => {

@@ -6,18 +6,17 @@
 export const GUNDEM_EDITORIAL_MISSION =
   "Türkiye'deki herkesin okuyabileceği, ülkeyi ilgilendiren gündem başlıklarına kısa, kaynaklı analiz.";
 
+export const HABERLER_BRAND = "BBA Gündem";
+
 export const GUNDEM_META_DESCRIPTION =
-  "Türkiye gündemi: ekonomi, siyaset, toplum, sağlık, spor, kültür, bilim ve bilişim — okur odaklı brifing ve analiz. Ajans kopyası değildir.";
+  "Türkiye'de bugün konuşulan başlıklar: ekonomi, siyaset, toplum, sağlık, spor ve daha fazlası — kaynaklı gündem brifingleri.";
 
 export const GUNDEM_INDEX_LEDE =
-  "Ülke genelini ilgilendiren konularda kısa brifing ve analiz. Teknoloji yalnızca bir başlık; hedef kitle tüm Türkiye.";
+  "Arama ve sosyal gündemde öne çıkan ulusal konuları, birincil kaynaklara dayanan kısa brifinglerle okuyun. Her metin okura net bağlam ve analiz sunar.";
 
-export const GUNDEM_DETAIL_ANALYSIS_NOTE =
-  "Bu metin bir haber ajansı servisi değildir; birincil kaynaklara dayanan özet ve editöryal analizdir. Yatırım, hukuk veya sağlık kararı için tek başına yeterli değildir.";
+export const HABERLER_PAGE_TITLE = "Türkiye Gündemi";
 
-export const HABERLER_PAGE_TITLE = "Haberler";
-
-export const GUNDEM_HEADER_ROLE = "Türkiye gündemi ve analiz";
+export const GUNDEM_HEADER_ROLE = "Türkiye gündemi";
 
 export const GUNDEM_RSS_DESCRIPTION =
   "Türkiye gündemi — ekonomi, toplum, siyaset ve daha fazlası için kısa analiz brifingleri.";
@@ -69,6 +68,12 @@ export const GUNDEM_CATEGORY_LABELS: Record<GundemCategory, string> = {
 
 export function formatGundemCategory(category: GundemCategory | undefined): string {
   return category ? GUNDEM_CATEGORY_LABELS[category] : GUNDEM_CATEGORY_LABELS.diger;
+}
+
+const GUNDEM_CATEGORY_SET = new Set<string>(Object.keys(GUNDEM_CATEGORY_LABELS));
+
+export function isGundemCategory(value: string): value is GundemCategory {
+  return GUNDEM_CATEGORY_SET.has(value);
 }
 
 const GUNDEM_MONTHS = [

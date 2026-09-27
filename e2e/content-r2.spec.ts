@@ -26,5 +26,5 @@ test.describe("content R2 (optional staging)", () => {
 
 test("N3: /gundem UI shows Haberler (local merge)", async ({ page }) => {
   await page.goto("/gundem");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Haberler");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Türkiye Gündemi");
 });

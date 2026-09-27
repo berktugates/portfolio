@@ -34,6 +34,9 @@ export function middleware(request: NextRequest) {
     if (pathname === "/" || pathname === "/gundem") {
       return NextResponse.rewrite(new URL("/gundem", request.url));
     }
+    if (pathname.startsWith("/kategori/")) {
+      return NextResponse.rewrite(new URL(`/gundem${pathname}`, request.url));
+    }
     if (pathname.startsWith("/gundem/")) {
       return NextResponse.next();
     }

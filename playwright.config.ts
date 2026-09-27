@@ -26,5 +26,7 @@ export default defineConfig({
     url: "http://127.0.0.1:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    // Yerel .env.local içinde VERCEL_ENV=production olsa bile /gundem e2e'de localhost'ta kalsın.
+    env: { ...process.env, VERCEL_ENV: "preview" },
   },
 });
