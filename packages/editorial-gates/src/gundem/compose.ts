@@ -1,6 +1,8 @@
 import { gundemImageMatchesStory } from "./cover";
 import { GUNDEM_PEXELS, briefingCopyFromHeadlines, curatedGundemCopy } from "./briefing-copy";
 import type { GundemCategory } from "./categories";
+import { polishHeadlinesBriefing } from "./polish";
+import type { ParaphraseStrength } from "./paraphrase-tr";
 import type { GundemBriefing } from "./types";
 import type { LicensedImage } from "../image-license";
 import type { TrendItem } from "./trends";
@@ -16,6 +18,7 @@ type TopicProfile = {
   sources: { url: string; title: string }[];
   image: LicensedImage;
   bodyParagraphs: string[];
+  editorialSource: "curated" | "headlines";
 };
 
 function slugify(query: string): string {
@@ -121,15 +124,19 @@ function stockImage(category: GundemCategory, query: string): LicensedImage {
   };
 }
 
-function headlineTitles(trend: TrendItem): string[] {
-  return trend.headlines.map((h) => (typeof h === "string" ? h : h.title));
+function resolveParaphraseStrength(): ParaphraseStrength {
+  const raw = process.env.GUNDEM_PARAPHRASE_STRENGTH?.toLowerCase();
+  return raw === "medium" ? "medium" : "light";
 }
 
-function resolveCopy(trend: TrendItem): TopicProfile | null {
+function resolveCopy(trend: TrendItem, todayIso: string): TopicProfile | null {
   const category = classifyQuery(trend.query);
-  const curated = curatedGundemCopy(trend.query);
-  const fromHeadlines = briefingCopyFromHeadlines(trend.query, headlineTitles(trend), category);
-  const copy = curated ?? fromHeadlines;
+  const strength = resolveParaphraseStrength();
+  const fromHeadlines = briefingCopyFromHeadlines(trend.query, trend.headlines, category, {
+    paraphraseStrength: strength,
+    todayIso,
+  });
+  const copy = fromHeadlines ?? curatedGundemCopy(trend.query);
   if (!copy) return null;
 
   const image = stockImage(copy.category, trend.query);
@@ -141,6 +148,7 @@ function resolveCopy(trend: TrendItem): TopicProfile | null {
     sources: defaultSources(copy.category),
     image,
     bodyParagraphs: [...copy.paragraphs],
+    editorialSource: copy.editorialSource ?? (fromHeadlines ? "headlines" : "curated"),
   };
 }
 
@@ -149,10 +157,10 @@ export function shouldSkipTrendQuery(query: string): boolean {
 }
 
 export function composeBriefingFromTrend(trend: TrendItem, today: string): GundemBriefing | null {
-  const profile = resolveCopy(trend);
+  const profile = resolveCopy(trend, today);
   if (!profile) return null;
 
-  return {
+  let briefing: GundemBriefing = {
     slug: slugify(trend.query),
     title: profile.title,
     excerpt: profile.excerpt,
@@ -165,6 +173,7 @@ export function composeBriefingFromTrend(trend: TrendItem, today: string): Gunde
     trendQuery: trend.query,
     angle: profile.angle,
     lang: "tr",
+    editorialSource: profile.editorialSource,
     cover: gundemImageMatchesStory({
       title: profile.title,
       excerpt: profile.excerpt,
@@ -174,13 +183,26 @@ export function composeBriefingFromTrend(trend: TrendItem, today: string): Gunde
       ? "photo"
       : "type",
   };
+
+  if (profile.editorialSource === "headlines") {
+    briefing = polishHeadlinesBriefing(briefing, {
+      paraphraseStrength: resolveParaphraseStrength(),
+      referenceHeadlines: trend.headlines,
+    });
+  }
+
+  return briefing;
 }
 
 export type DemandSignal = { query: string; weight: number; category?: GundemCategory };
 
-export function scoreTrendItem(trend: TrendItem, demandSignals: DemandSignal[]): number {
+export function scoreTrendItem(
+  trend: TrendItem,
+  demandSignals: DemandSignal[],
+  extraBoost = 0,
+): number {
   if (shouldSkipTrendQuery(trend.query)) return -1;
-  let score = trend.approxTraffic;
+  let score = trend.approxTraffic + extraBoost;
   const q = trend.query.toLocaleLowerCase("tr");
   for (const signal of demandSignals) {
     const s = signal.query.toLocaleLowerCase("tr");

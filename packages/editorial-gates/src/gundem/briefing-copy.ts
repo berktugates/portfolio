@@ -1,10 +1,18 @@
 import type { GundemCategory } from "./categories";
+import {
+  buildGundemLede,
+  headlineToNewsSentence,
+  rankHeadlinesByFact,
+} from "./headline-facts";
+import { lightParaphraseTurkish, type ParaphraseStrength } from "./paraphrase-tr";
+import type { TrendNewsHeadline } from "./trends";
 
 export type GundemBriefingCopy = {
   title: string;
   excerpt: string;
   paragraphs: readonly string[];
   category: GundemCategory;
+  editorialSource?: "curated" | "headlines";
 };
 
 /** Pexels CDN — kısa path 404 veriyor; sıkıştırma parametresi zorunlu. */
@@ -14,6 +22,7 @@ export const GUNDEM_PEXELS = {
 } as const;
 
 const GRAM_ALTIN: GundemBriefingCopy = {
+  editorialSource: "curated",
   category: "ekonomi",
   title: "Gram altın fiyatı: kuyumcu vitrini ile külçe tarafı neden ayrışıyor?",
   excerpt:
@@ -27,6 +36,7 @@ const GRAM_ALTIN: GundemBriefingCopy = {
 };
 
 const UCAK_BILETI: GundemBriefingCopy = {
+  editorialSource: "curated",
   category: "ekonomi",
   title: "Uçak bileti: promosyon dönemi bittiğinde bilet neden birden pahalılaşıyor?",
   excerpt:
@@ -43,6 +53,7 @@ function normalizeQuery(query: string): string {
   return query.toLocaleLowerCase("tr").replace(/\s+/g, " ").trim();
 }
 
+/** Yalnızca Trends başlığı yokken dev fallback; otomatik yayında compose önceliği headlines. */
 export function curatedGundemCopy(query: string): GundemBriefingCopy | null {
   const q = normalizeQuery(query);
   if (/altın|altin/.test(q)) return GRAM_ALTIN;
@@ -50,33 +61,86 @@ export function curatedGundemCopy(query: string): GundemBriefingCopy | null {
   return null;
 }
 
-/** Trends başlıkları varsa şablonsuz kısa brifing; yoksa null (yayınlanmaz). */
+function normalizeHeadlines(
+  headlines: readonly TrendNewsHeadline[] | readonly string[],
+): TrendNewsHeadline[] {
+  const out: TrendNewsHeadline[] = [];
+  for (const h of headlines) {
+    if (typeof h === "string") {
+      const t = h.trim();
+      if (t.length >= 12) out.push({ title: t, source: "" });
+    } else if (h.title?.trim().length >= 12) {
+      out.push({ title: h.title.trim(), source: h.source?.trim() ?? "" });
+    }
+  }
+  return out;
+}
+
+function shortImpactLine(category: GundemCategory): string {
+  switch (category) {
+    case "ekonomi":
+      return "Bu gelişmeler doğrudan cebi etkileyebilir; kesin rakam ve tarih için TCMB ve TÜİK duyuruları esas alınmalıdır.";
+    case "spor":
+      return "Transfer ve kadro haberleri resmi kulüp veya lig duyurusu gelene kadar spekülasyon içerebilir.";
+    case "siyaset":
+      return "Meclis gündemi ve Resmi Gazete metni, medya yorumundan önce okunmalıdır.";
+    default:
+      return "Resmi kurum duyurusu gelmeden kesin sonuç sanılmamalıdır.";
+  }
+}
+
+/**
+ * Trends başlıkları → güncel olay özeti (tanım/usul değil).
+ * Her paragraf medyada konuşulan bir gelişmeyi cümle halinde taşır.
+ */
 export function briefingCopyFromHeadlines(
   query: string,
-  headlines: readonly string[],
+  headlines: readonly TrendNewsHeadline[] | readonly string[],
   category: GundemCategory,
+  options?: { paraphraseStrength?: ParaphraseStrength; todayIso?: string },
 ): GundemBriefingCopy | null {
-  const cleaned = headlines.map((h) => h.trim()).filter((h) => h.length >= 12);
+  const strength = options?.paraphraseStrength ?? "light";
+  const todayIso = options?.todayIso ?? new Date().toISOString().slice(0, 10);
+  const cleaned = normalizeHeadlines(headlines);
   if (cleaned.length < 2) return null;
 
-  const title =
-    cleaned[0].length <= 90
-      ? cleaned[0]
-      : `${query.charAt(0).toLocaleUpperCase("tr") + query.slice(1)}: günün başlıkları`;
+  const ranked = rankHeadlinesByFact(cleaned);
+  const top = ranked[0];
+  const rest = ranked.slice(1, 5);
 
-  const excerpt = `${cleaned[0]} ve benzeri başlıklar gündemde. Aşağıda konunun okura doğrudan yansıyan maddeleri var.`;
+  const titleCandidate = lightParaphraseTurkish(top.title, strength);
+  const title =
+    titleCandidate.length <= 92
+      ? titleCandidate
+      : `${query.charAt(0).toLocaleUpperCase("tr") + query.slice(1)}: günün gelişmeleri`;
+
+  const second = rest[0] ?? top;
+  const excerptLead = lightParaphraseTurkish(top.title, strength).replace(/[.!?…]$/, "");
+  const excerptSecond = lightParaphraseTurkish(second.title, strength).replace(/[.!?…]$/, "");
+  const excerpt = `${excerptLead}. ${excerptSecond}.`;
 
   const paragraphs: string[] = [];
-  for (const headline of cleaned.slice(0, 4)) {
-    paragraphs.push(
-      `${headline} — Bu başlık medyada geniş yer buldu. Okur tarafında soru genelde “bana ne oluyor?”: fiyat, erişim, tarih veya hizmet kalitesi değişiyor mu? Tek kaynaktan gelen kesilmiş görüntü yerine resmi duyuru ve birden fazla haber başlığını yan yana okumak daha güvenilir. Konu gelişirse resmi kurum veya yapım duyurusunu beklemek spekülasyonu azaltır.`,
-    );
+  paragraphs.push(buildGundemLede(query, top, todayIso, strength));
+  paragraphs.push("Bugün öne çıkan gelişmeler:");
+  paragraphs.push(headlineToNewsSentence(top, strength));
+  for (const h of rest) {
+    paragraphs.push(headlineToNewsSentence(h, strength));
   }
   paragraphs.push(
-    category === "ekonomi"
-      ? "Ekonomi başlıklarında enflasyon, kur ve ücret verisi TÜİK ve TCMB takviminde yayımlanır; günlük tartışma ile resmi veri aynı gün örtüşmeyebilir."
-      : "Kamu kurumlarının duyuruları ile yorum programları aynı ağırlıkta değildir; önce duyuru metni, sonra yorum.",
+    `Ne değişti? ${shortImpactLine(category)} Medyada aynı konu farklı rakam veya tarihle geçebilir; çelişki varsa resmi kaynak beklenmelidir.`,
+  );
+  paragraphs.push(
+    `${query.charAt(0).toLocaleUpperCase("tr") + query.slice(1)} gündeminde son saatlerde tablo hızlı değişebilir; en az iki bağımsız başlıkta geçen ortak noktayı (isim, tarih, skor, oran) eşleştirmek spekülasyonu azaltır. Resmi açıklama gelene kadar yalnızca medyada konuşulan gelişme düzeyinde okunmalıdır.`,
+  );
+  paragraphs.push(
+    "Doğrulama: Ajans tel metni veya tek ekran görüntüsü nihai kaynak değildir. Kamu kurumu, kulüp veya düzenleyici duyurusu yayımlandığında tablo netleşir; bu sayfa o ana kadar medya başlıklarının editöryal özetidir. Gelişmeler gün içinde güncellenebilir.",
   );
 
-  return { title, excerpt, paragraphs, category };
+  return {
+    title,
+    excerpt,
+    paragraphs,
+    category,
+    editorialSource: "headlines",
+  };
 }

@@ -4,7 +4,7 @@
  */
 
 export const GUNDEM_EDITORIAL_MISSION =
-  "Türkiye'deki herkesin okuyabileceği, ülkeyi ilgilendiren gündem başlıklarına kısa, kaynaklı analiz.";
+  "Türkiye'de bugün konuşulan güncel gelişmeleri (rakam, karar, transfer, zam) kısa olay özeti olarak sunmak; tanım rehberi değil.";
 
 export const HABERLER_BRAND = "BBA Gündem";
 
@@ -12,7 +12,7 @@ export const GUNDEM_META_DESCRIPTION =
   "Türkiye'de bugün konuşulan başlıklar: ekonomi, siyaset, toplum, sağlık, spor ve daha fazlası — kaynaklı gündem brifingleri.";
 
 export const GUNDEM_INDEX_LEDE =
-  "Arama ve sosyal gündemde öne çıkan ulusal konuları, birincil kaynaklara dayanan kısa brifinglerle okuyun.";
+  "Bugün Türkiye gündeminde ne oldu? Medya başlıklarından derlenen kısa gelişme özetleri — resmi duyuru için kaynak linkleriyle.";
 
 export const HABERLER_PAGE_TITLE = "Türkiye Gündemi";
 

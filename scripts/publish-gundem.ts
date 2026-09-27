@@ -46,6 +46,7 @@ async function main() {
     alt: draft.image?.alt,
     sources: draft.sources,
     channel: "gundem",
+    editorialSource: draft.editorialSource,
   });
   if (!safety.ok) {
     console.error(`Safety rejected: ${safety.code}`, safety.hits);

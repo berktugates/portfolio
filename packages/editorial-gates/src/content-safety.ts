@@ -1,4 +1,5 @@
 import { CONTENT_SAFETY_PHRASE_ALLOWLIST } from "./content-safety-allowlist";
+import { bodyHasCurrentEventSignals } from "./gundem/headline-facts";
 
 export type ContentSafetyInput = {
   title: string;
@@ -6,10 +7,13 @@ export type ContentSafetyInput = {
   excerpt?: string;
   alt?: string;
   sources?: readonly { url: string; title?: string }[];
+  /** Trends/medya ham başlıkları — gündem başlık kopyası kontrolü. */
+  referenceHeadlines?: readonly string[];
   /** Assistant replies skip length/source headline rules. */
   mode?: "publish" | "assistant";
   /** Haberler brifingleri daha kısa; şablon dolgusu yasak. */
   channel?: "blog" | "gundem";
+  editorialSource?: "headlines" | "curated" | "catalog";
 };
 
 export type ContentSafetyResult =
@@ -156,6 +160,11 @@ export function assessContentSafety(input: ContentSafetyInput): ContentSafetyRes
           return { ok: false, code: "template-spam", hits: [pattern.source] };
         }
       }
+      const needsCurrentEvents =
+        input.editorialSource === "headlines" || input.editorialSource === "catalog";
+      if (needsCurrentEvents && !bodyHasCurrentEventSignals(input.body)) {
+        return { ok: false, code: "no-current-events", hits: ["missing-event-or-number"] };
+      }
     }
   }
 
@@ -167,6 +176,14 @@ export function assessContentSafety(input: ContentSafetyInput): ContentSafetyRes
       }
       if (source.title && titleSimilarity(input.title, source.title) > 0.85) {
         return { ok: false, code: "headline-copy", hits: [source.title] };
+      }
+    }
+  }
+
+  if (input.mode !== "assistant" && input.channel === "gundem" && input.referenceHeadlines?.length) {
+    for (const ref of input.referenceHeadlines) {
+      if (titleSimilarity(input.title, ref) > 0.88) {
+        return { ok: false, code: "media-headline-copy", hits: [ref] };
       }
     }
   }

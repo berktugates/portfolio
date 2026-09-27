@@ -6,7 +6,8 @@
 
 - **Kitle:** Türkiye’deki herkes; yalnızca yazılım veya bilişim profesyonelleri değil.
 - **İçerik:** Ülkeyi ilgilendiren gündem (ekonomi, siyaset, toplum, sağlık, spor, kültür, bilim, bilişim, dünya bağlantıları).
-- **Biçim:** Kısa brifing + **editöryal analiz** (neden önemli, okura etkisi); ajans tel kopyası yok.
+- **Biçim:** **Güncel olay özeti** — “bugün ne oldu / ne güncellendi” (transfer, kur, zam, karar); tanım-usul rehberi birincil ürün değil. Ajans tel kopyası yok.
+- **Hukuk / telif:** Trends’te görünen medya başlıkları `packages/editorial-gates` içinde **hafif yeniden ifade** edilir (varsayılan `GUNDEM_PARAPHRASE_STRENGTH=light`, ~%80 anlam korunur); gövdeye kaynak notu ve birincil kamu kurumu bağlantıları eklenir. Ham ajans metni çekilmez.
 - **SEO/GEO:** Trends ve KWP ile **yüksek arama/tıklama potansiyeli** olan ulusal konular kuyruğa alınır; analiz dürüst ve kaynaklı kalır.
 
 Kodda tek kaynak: `app/lib/gundem/editorial.ts`.
@@ -18,7 +19,9 @@ Kodda tek kaynak: `app/lib/gundem/editorial.ts`.
 | Örnek / dev fallback | `content/gundem-seed.json` |
 | Kuyruk | `content/gundem-queue/*.json` |
 | Güvenlik | `scripts/check-queue-safety.ts`, `app/lib/content-safety.ts` |
-| Trends TR RSS + talep sinyalleri | `scripts/refresh-gundem-queue.ts`, `data/gundem-demand-signals.json` |
+| Trends TR RSS + talep sinyalleri | `scripts/refresh-gundem-queue.ts`, `data/gundem-demand-signals.json`, `data/tr-media-rss-feeds.json` (skor sinyali) |
+| Paraphrase + olay cümlesi | `headline-facts.ts`, `paraphrase-tr.ts`, `briefing-copy.ts`, `polish.ts` |
+| Elle brifing (örnek şablon) | `content/gundem-catalog/*.json` — `editorialSource: catalog`, gövdede somut gelişme zorunlu |
 | Manuel CSV (KWP export) | `scripts/gundem-from-csv.mjs` |
 | Yayın | `pnpm gundem:publish` → `publish-gundem.ts`, cron `.github/workflows/publish-gundem.yml` |
 | Ölçüm | GTM `content_group=gundem` (`ContentGroupBeacon`); GSC `haberler` sitemap |

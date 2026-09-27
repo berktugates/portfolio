@@ -20,4 +20,6 @@ export type GundemBriefing = {
   angle: string;
   category?: GundemCategory;
   lang: "tr";
+  /** headlines = Trends olay özeti; curated/catalog = elle veya fallback. */
+  editorialSource?: "headlines" | "curated" | "catalog";
 };

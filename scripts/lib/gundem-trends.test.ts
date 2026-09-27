@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { assessContentSafety } from "../../app/lib/content-safety";
+import { textSimilarity } from "@berktug/editorial-gates/gundem/paraphrase-tr";
 import { composeBriefingFromTrend, scoreTrendItem, shouldSkipTrendQuery } from "./gundem-compose";
 import { parseApproxTraffic, parseTrendsRss } from "./gundem-trends";
 
@@ -36,9 +37,17 @@ test("skip lottery trends", () => {
 });
 
 test("compose briefing passes safety length gate", () => {
-  const trend = parseTrendsRss(SAMPLE)[0];
+  const trend = {
+    ...parseTrendsRss(SAMPLE)[0],
+    headlines: [
+      { title: "Gram altın fiyatı yükseldi: kuyumcuda yeni rakam konuşuluyor", source: "AA" },
+      { title: "Gram altın ne kadar oldu? Piyasada günün tablosu", source: "TRT" },
+    ],
+  };
   const draft = composeBriefingFromTrend(trend, "2026-09-21");
   assert.ok(draft);
+  assert.equal(draft!.editorialSource, "headlines");
+  assert.match(draft!.bodyMarkdown, /Bugün öne çıkan gelişmeler/);
   const safety = assessContentSafety({
     title: draft.title,
     body: draft.bodyMarkdown,
@@ -46,26 +55,32 @@ test("compose briefing passes safety length gate", () => {
     sources: draft.sources,
     alt: draft.image.alt,
     channel: "gundem",
+    editorialSource: draft.editorialSource,
+    referenceHeadlines: trend.headlines.map((h) => h.title),
   });
   assert.equal(safety.ok, true);
 });
 
 test("compose briefing from headlines when no curated copy", () => {
+  const headlines = [
+    { title: "Uzak Şehir finalinde beklenmedik ayrılık", source: "Örnek" },
+    { title: "Dizinin reytingi zirveye çıktı", source: "Örnek" },
+    { title: "Yapım ekibinden açıklama geldi", source: "Örnek" },
+    { title: "Yeni sezon çekim takvimi açıklandı", source: "Örnek" },
+  ];
   const draft = composeBriefingFromTrend(
     {
       query: "uzak şehir",
       approxTraffic: 500,
-      headlines: [
-        { title: "Uzak Şehir finalinde beklenmedik ayrılık", source: "Örnek" },
-        { title: "Dizinin reytingi zirveye çıktı", source: "Örnek" },
-        { title: "Yapım ekibinden açıklama geldi", source: "Örnek" },
-        { title: "Yeni sezon çekim takvimi açıklandı", source: "Örnek" },
-      ],
+      headlines,
       pubDate: "2026-09-22",
     },
     "2026-09-22",
   );
   assert.ok(draft);
+  assert.ok(textSimilarity(draft!.title, headlines[0].title) <= 0.88);
+  assert.match(draft!.bodyMarkdown, /ajans tel metni/);
+  assert.match(draft!.bodyMarkdown, /sürpriz ayrılık|beklenmedik ayrılık/i);
   const safety = assessContentSafety({
     title: draft!.title,
     body: draft!.bodyMarkdown,
@@ -73,6 +88,8 @@ test("compose briefing from headlines when no curated copy", () => {
     sources: draft!.sources,
     alt: draft!.image.alt,
     channel: "gundem",
+    editorialSource: draft!.editorialSource,
+    referenceHeadlines: headlines.map((h) => h.title),
   });
   assert.equal(safety.ok, true);
 });

@@ -38,6 +38,13 @@ async function scanDir(relative: string) {
         relative === "content/gundem-queue" || relative === "content/gundem-catalog"
           ? "gundem"
           : "blog",
+      editorialSource:
+        relative === "content/gundem-catalog"
+          ? "catalog"
+          : relative === "content/gundem-queue"
+            ? ((raw.editorialSource as "headlines" | "curated" | "catalog" | undefined) ??
+              "headlines")
+            : undefined,
     });
     if (!result.ok) {
       throw new Error(`${relative}/${name}: ${result.code} ${result.hits.join(",")}`);

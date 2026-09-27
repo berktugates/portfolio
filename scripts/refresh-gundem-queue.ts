@@ -15,6 +15,7 @@ import {
 } from "./lib/gundem-compose";
 import { indexHasSlug, indexHasTrendQuery, resolveGundemPublishedIndex } from "./lib/gundem-blob-index";
 import { fetchTurkeyTrends } from "./lib/gundem-trends";
+import { loadTrMediaHeadlinesFromRepo, mediaHeadlineBoost } from "./lib/tr-media-rss";
 
 const root = resolve(import.meta.dirname, "..");
 const queueDir = resolve(root, "content/gundem-queue");
@@ -40,14 +41,18 @@ async function main() {
   const today = new Date().toISOString().slice(0, 10);
   console.log(`Gundem refresh mission: ${GUNDEM_EDITORIAL_MISSION}`);
 
-  const [trends, demand, indexPosts] = await Promise.all([
+  const [trends, demand, indexPosts, mediaHeadlines] = await Promise.all([
     fetchTurkeyTrends(),
     loadDemandSignals(),
     resolveGundemPublishedIndex(),
+    loadTrMediaHeadlinesFromRepo(),
   ]);
 
   const ranked = trends
-    .map((t) => ({ trend: t, score: scoreTrendItem(t, demand) }))
+    .map((t) => ({
+      trend: t,
+      score: scoreTrendItem(t, demand, mediaHeadlineBoost(t.query, mediaHeadlines)),
+    }))
     .filter((x) => x.score >= 0)
     .sort((a, b) => b.score - a.score);
 
@@ -74,6 +79,8 @@ async function main() {
       alt: draft.image?.alt,
       sources: draft.sources,
       channel: "gundem",
+      editorialSource: draft.editorialSource,
+      referenceHeadlines: trend.headlines.map((h) => h.title),
     });
     if (!safety.ok) {
       console.warn(`Compose safety fail ${draft.slug}: ${safety.code}`, safety.hits);
