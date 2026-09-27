@@ -47,19 +47,42 @@ test.describe("Gündem surface", () => {
     await expect(page.getByRole("heading", { name: "Gündem" })).toBeVisible();
   });
 
-  test("GUN-2 detail NewsArticle + credit", async ({ page }) => {
-    await page.goto("/gundem/turkiye-yazilim-ekipleri-icin-bulut-maliyetleri");
+  test("GUN-2 detail has a cover, sources, and one portfolio link", async ({ page }) => {
+    await page.goto("/gundem/turkiye-gram-altin-brifing");
     const html = await page.content();
     expect(html).toContain("NewsArticle");
-    expect(html).toContain("Stok görsel");
+    expect(html).not.toContain("Stok görsel");
+    expect(html).not.toContain("Olay fotoğrafı değildir");
     expect(html).not.toMatch(/i\.hurimg|gettyimages|shutterstock/);
+    await expect(page.locator("[data-gundem-cover]")).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Kaynaklar" })).toBeVisible();
+    await expect(page.locator('a[href="https://berktugberke.com"]')).toHaveCount(1);
+  });
+
+  test("GUN-4 index is a pictured grid", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("/gundem");
+    const cards = page.locator("[data-gundem-card]");
+    await expect(cards.first()).toBeVisible();
+    const count = await cards.count();
+    expect(count).toBeGreaterThan(0);
+    for (let i = 0; i < count; i++) {
+      await expect(cards.nth(i).locator("[data-gundem-cover]")).toBeVisible();
+    }
+    await expect(page.locator("[data-gundem-card='hero'] time")).not.toHaveText(/^\d{4}-\d{2}-\d{2}$/);
+    await expect(page.getByText("Stok görsel")).toHaveCount(0);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1);
+    expect(overflow).toBe(true);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(page.locator("[data-gundem-card='hero'] [data-gundem-cover]")).toBeVisible();
   });
 
   test("GUN-3 sitemap-gundem lists slug", async ({ request }) => {
     const res = await request.get("/sitemap-gundem.xml");
     expect(res.ok()).toBeTruthy();
     const xml = await res.text();
-    expect(xml).toContain("haberler.berktugberke.com/turkiye-yazilim-ekipleri-icin-bulut-maliyetleri");
+    expect(xml).toContain("haberler.berktugberke.com/turkiye-gram-altin-brifing");
   });
 });
 

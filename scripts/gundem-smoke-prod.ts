@@ -22,9 +22,10 @@ async function check(url: string, contains?: string[]): Promise<void> {
 
 async function main() {
   await check(`${HABERLER_ORIGIN}/`, ["Gündem", "Türkiye"]);
-  await check(`${HABERLER_ORIGIN}/turkiye-yazilim-ekipleri-icin-bulut-maliyetleri`, [
+  await check(`${HABERLER_ORIGIN}/turkiye-gram-altin-brifing`, [
     "NewsArticle",
-    "Stok görsel",
+    "https://berktugberke.com",
+    "Kaynaklar",
   ]);
   await check(`${HABERLER_ORIGIN}/turkiye-ucak-bileti-brifing`, ["NewsArticle"]);
   await check(`${HABERLER_ORIGIN}/gundem/rss.xml`, ["<rss", "<channel>"]);

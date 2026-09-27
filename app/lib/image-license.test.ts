@@ -10,6 +10,19 @@ test("accepts pexels host", () => {
   assert.equal(isAllowedImageHost("https://images.pexels.com/photos/1.jpeg"), true);
 });
 
+test("rejects stock disclaimer in alt text", () => {
+  const result = validateLicensedImage({
+    src: "https://images.pexels.com/photos/1.jpeg",
+    alt: "Şehir silüeti, stok görsel, olay fotoğrafı değil",
+    creditName: "Pexels",
+    creditUrl: "https://www.pexels.com",
+    license: "pexels",
+    query: "city",
+  });
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.code, "disclaimer-alt");
+});
+
 test("validates licensed image record", () => {
   const result = validateLicensedImage({
     src: "https://images.unsplash.com/photo-1",

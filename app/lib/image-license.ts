@@ -51,6 +51,9 @@ export function validateLicensedImage(image: LicensedImage): ImageLicenseResult 
   if (!allowedLicenses.includes(image.license)) {
     return { ok: false, code: "license", reason: image.license };
   }
+  if (/stok görsel|olay fotoğrafı değil/i.test(image.alt)) {
+    return { ok: false, code: "disclaimer-alt", reason: "alt must not use stock disclaimer copy" };
+  }
   return { ok: true, image };
 }
 

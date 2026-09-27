@@ -15,6 +15,8 @@ export type GundemBriefing = {
   dateModified: string;
   sources: readonly GundemSource[];
   image: LicensedImage;
+  /** type = lisanslı kare konuyu göstermiyor; stok kare basılmaz. */
+  cover?: "photo" | "type";
   trendQuery: string;
   angle: string;
   /** Ulusal gündem şeridi; bilişim zorunlu değil. */

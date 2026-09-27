@@ -1,3 +1,4 @@
+import { gundemImageMatchesStory } from "../../app/lib/gundem/cover";
 import type { GundemCategory } from "../../app/lib/gundem/editorial";
 import { GUNDEM_DEFAULT_ANGLE_PROMPT } from "../../app/lib/gundem/editorial";
 import type { GundemBriefing } from "../../app/lib/gundem/types";
@@ -80,39 +81,40 @@ function defaultSources(category: GundemCategory): { url: string; title: string 
 
 function stockImage(category: GundemCategory, query: string): LicensedImage {
   const q = query.slice(0, 40);
-  if (/altın/.test(query.toLocaleLowerCase("tr"))) {
+  const lower = query.toLocaleLowerCase("tr");
+  if (/altın/.test(lower)) {
     return {
       src: "https://images.pexels.com/photos/106152/pexels-photo-106152.jpeg",
-      alt: "Altın külçe ve madeni paralar, stok görsel, olay fotoğrafı değil",
+      alt: "Altın külçe ve madeni paralar, gram altın ve birikim bağlamında",
       creditName: "Pexels",
       creditUrl: "https://www.pexels.com",
       license: "pexels",
-      query: "gold bars coins",
+      query: "gram altın külçe",
     };
   }
-  if (/uçak|havayolu/.test(query.toLocaleLowerCase("tr"))) {
+  if (/uçak|bilet|havayolu/.test(lower)) {
     return {
       src: "https://images.pexels.com/photos/62623/wing-plane-flying-airplane-62623.jpeg",
-      alt: "Gökyüzünde uçak kanadı, stok görsel, olay fotoğrafı değil",
+      alt: "Uçak kanadı ve gökyüzü, uçak bileti ve seyahat maliyeti bağlamında",
       creditName: "Pexels",
       creditUrl: "https://www.pexels.com",
       license: "pexels",
-      query: "airplane wing sky",
+      query: "uçak bileti seyahat",
     };
   }
   if (category === "spor") {
     return {
       src: "https://images.pexels.com/photos/46798/the-ball-stadion-football-the-pitch-46798.jpeg",
-      alt: "Futbol topu ve saha, stok görsel, olay fotoğrafı değil",
+      alt: "Futbol topu ve stadyum sahası, maç ve spor gündemi bağlamında",
       creditName: "Pexels",
       creditUrl: "https://www.pexels.com",
       license: "pexels",
-      query: "football stadium",
+      query: "futbol maç stadyum",
     };
   }
   return {
     src: "https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg",
-    alt: "Türkiye gündemi brifing görseli, stok şehir silüeti, olay fotoğrafı değil",
+    alt: "Şehir silüeti ve gün batımı, genel gündem ve ekonomi bağlamında",
     creditName: "Pexels",
     creditUrl: "https://www.pexels.com",
     license: "pexels",
@@ -213,6 +215,14 @@ export function composeBriefingFromTrend(trend: TrendItem, today: string): Gunde
     trendQuery: trend.query,
     angle: profile.angle,
     lang: "tr",
+    cover: gundemImageMatchesStory({
+      title: profile.title,
+      excerpt: profile.excerpt,
+      trendQuery: trend.query,
+      image: profile.image,
+    })
+      ? "photo"
+      : "type",
   };
 }
 

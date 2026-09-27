@@ -67,8 +67,10 @@ test.describe("SEO program acceptance", () => {
       "Berktuğ Berke Ateş — Yazılım Mühendisi ve Ürün Geliştirici",
     );
     const home = page.locator("#main-content");
-    await expect(home).toContainText("React Native");
-    await expect(home).toContainText("Expo");
+    await expect(home).toContainText("uçtan uca ürün geliştirmeyi kapsıyor");
+    await expect(home).not.toContainText(
+      "Yayındaki Celestial Insights ve StrumAI uygulamaları React Native ve Expo ile kuruludur.",
+    );
 
     await page.goto("/tr/hire/mobile-app");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Mobil uygulama geliştirme");
@@ -246,8 +248,10 @@ test.describe("SEO program acceptance", () => {
     const profile = home.find((node) => node["@type"] === "ProfilePage");
     expect(person?.description).toBeUndefined();
     expect(website?.description).toBeUndefined();
-    expect(profile?.description).toContain("Celestial Insights");
-    expect(profile?.description).toContain("React Native");
+    expect(profile?.description).toContain("uçtan uca ürün geliştirmeyi kapsıyor");
+    expect(profile?.description).not.toContain(
+      "Yayındaki Celestial Insights ve StrumAI uygulamaları React Native ve Expo ile kuruludur.",
+    );
 
     const blog = nodes(await (await request.get("/tr/blogs")).text());
     expect(blog.find((node) => node["@type"] === "Person")?.description).toBeUndefined();

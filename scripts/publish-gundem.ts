@@ -4,6 +4,7 @@ import { assessContentSafety } from "../app/lib/content-safety";
 import { validateLicensedImage } from "../app/lib/image-license";
 import type { GundemBriefing } from "../app/lib/gundem/types";
 import { GUNDEM_EDITORIAL_MISSION } from "../app/lib/gundem/editorial";
+import { gundemImageMatchesStory } from "../app/lib/gundem/cover";
 import { publishGundemBriefingToBlob } from "./lib/gundem-blob-publish";
 
 const root = resolve(import.meta.dirname, "..");
@@ -53,6 +54,11 @@ async function main() {
   if (!imageCheck.ok) {
     console.error(`Image rejected: ${imageCheck.code}`, imageCheck.reason);
     process.exit(1);
+  }
+  if (!gundemImageMatchesStory(draft)) {
+    draft.cover = "type";
+  } else {
+    draft.cover = "photo";
   }
 
   const existing = await blobBriefingIfExists(draft.slug);

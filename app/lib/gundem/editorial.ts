@@ -10,7 +10,7 @@ export const GUNDEM_META_DESCRIPTION =
   "Türkiye gündemi: ekonomi, siyaset, toplum, sağlık, spor, kültür, bilim ve bilişim — okur odaklı brifing ve analiz. Ajans kopyası değildir.";
 
 export const GUNDEM_INDEX_LEDE =
-  "Ülke genelini ilgilendiren konularda kısa brifing ve analiz. Teknoloji yalnızca bir başlık; hedef kitle tüm Türkiye. Stok görseller olay fotoğrafı değildir.";
+  "Ülke genelini ilgilendiren konularda kısa brifing ve analiz. Teknoloji yalnızca bir başlık; hedef kitle tüm Türkiye.";
 
 export const GUNDEM_DETAIL_ANALYSIS_NOTE =
   "Bu metin bir haber ajansı servisi değildir; birincil kaynaklara dayanan özet ve editöryal analizdir. Yatırım, hukuk veya sağlık kararı için tek başına yeterli değildir.";
@@ -67,4 +67,27 @@ export const GUNDEM_CATEGORY_LABELS: Record<GundemCategory, string> = {
 
 export function formatGundemCategory(category: GundemCategory | undefined): string {
   return category ? GUNDEM_CATEGORY_LABELS[category] : GUNDEM_CATEGORY_LABELS.diger;
+}
+
+const GUNDEM_MONTHS = [
+  "Ocak",
+  "Şubat",
+  "Mart",
+  "Nisan",
+  "Mayıs",
+  "Haziran",
+  "Temmuz",
+  "Ağustos",
+  "Eylül",
+  "Ekim",
+  "Kasım",
+  "Aralık",
+] as const;
+
+export function formatGundemDate(iso: string): string {
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  if (!match) return iso;
+  const month = GUNDEM_MONTHS[Number(match[2]) - 1];
+  if (!month) return iso;
+  return `${Number(match[3])} ${month} ${match[1]}`;
 }
