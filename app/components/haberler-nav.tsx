@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import {
   HABERLER_BRAND,
@@ -59,12 +59,11 @@ function HaberlerMobileCategorySheet({
         open ? "pointer-events-auto" : "pointer-events-none"
       }`}
     >
-      <button
-        type="button"
-        aria-label="Kategorileri kapat"
-        tabIndex={open ? 0 : -1}
+      <div
+        role="presentation"
+        aria-hidden
         onClick={onClose}
-        className={`absolute inset-0 bg-zinc-950/50 backdrop-blur-sm transition-opacity duration-300 motion-reduce:transition-none ${
+        className={`absolute inset-0 z-0 bg-zinc-950/50 backdrop-blur-sm transition-opacity duration-300 motion-reduce:transition-none ${
           open ? "opacity-100" : "opacity-0"
         }`}
       />
@@ -73,17 +72,16 @@ function HaberlerMobileCategorySheet({
         role="dialog"
         aria-modal={open}
         aria-label="Haber kategorileri"
-        inert={!open}
-        onClick={(e) => e.stopPropagation()}
-        className={`relative z-[1] flex max-h-[min(88dvh,36rem)] w-full max-w-lg flex-col rounded-t-[1.75rem] border border-b-0 border-zinc-200/80 bg-white shadow-[0_-12px_40px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-black/50 ${
+        className={`relative z-10 flex w-full max-w-lg flex-col overflow-hidden rounded-t-[1.75rem] border border-b-0 border-zinc-200/80 bg-white shadow-[0_-12px_40px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-black/50 ${
           open ? "translate-y-0" : "translate-y-full"
         }`}
-        style={{ paddingBottom: "max(0px, env(safe-area-inset-bottom))" }}
+        style={{ maxHeight: "min(88dvh, 36rem)" }}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex shrink-0 justify-center pt-3 pb-2">
           <span className="h-1 w-11 rounded-full bg-zinc-300 dark:bg-zinc-600" aria-hidden />
         </div>
-        <div className="flex items-center justify-between border-b border-zinc-100 px-5 pb-3 dark:border-zinc-800">
+        <div className="relative z-20 flex shrink-0 items-center justify-between border-b border-zinc-100 px-5 pb-3 dark:border-zinc-800">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-widest text-zinc-500">Kategoriler</p>
             <p className="mt-0.5 text-sm text-zinc-600 dark:text-zinc-400">Gündem alanı seçin</p>
@@ -91,15 +89,19 @@ function HaberlerMobileCategorySheet({
           <button
             type="button"
             aria-label="Kapat"
-            onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            className="relative z-20 flex h-10 w-10 touch-manipulation items-center justify-center rounded-full bg-zinc-100 text-zinc-700 active:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:active:bg-zinc-700"
           >
             <X className="size-4" aria-hidden />
           </button>
         </div>
         <nav
           aria-label="Haber kategorileri"
-          className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4"
+          data-haberler-mobile-sheet-scroll
+          className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] [-webkit-overflow-scrolling:touch]"
         >
           {children}
         </nav>
@@ -132,8 +134,8 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
     };
   }, [menuOpen]);
 
-  const closeMenu = () => setMenuOpen(false);
-  const toggleMenu = () => setMenuOpen((o) => !o);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+  const toggleMenu = useCallback(() => setMenuOpen((o) => !o), []);
 
   const desktopCategoryLinks = (
     <>

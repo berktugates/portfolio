@@ -69,6 +69,13 @@ test.describe("Gündem surface", () => {
     const rect = await sheet.evaluate((el) => el.getBoundingClientRect());
     expect(rect.bottom).toBeGreaterThanOrEqual(viewport!.height - 2);
     expect(rect.bottom).toBeLessThanOrEqual(viewport!.height + 2);
+    const scrollEl = sheet.locator("[data-haberler-mobile-sheet-scroll]");
+    const scrollable = await scrollEl.evaluate((el) => el.scrollHeight > el.clientHeight + 8);
+    expect(scrollable).toBe(true);
+    await scrollEl.evaluate((el) => {
+      el.scrollTop = el.scrollHeight;
+    });
+    await expect(sheet.getByRole("link", { name: "Dünya" })).toBeVisible();
     await sheet.getByRole("button", { name: "Kapat" }).click();
     await expect(overlay).toHaveAttribute("data-state", "closed");
     await expect(overlay).toHaveAttribute("aria-hidden", "true");
