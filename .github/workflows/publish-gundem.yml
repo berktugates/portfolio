@@ -4,6 +4,15 @@ name: Publish gundem briefing
 # Zamanlı yayın: Cloudflare Worker `berktug-content-publisher` (cron 04:00 UTC ≈ 07:00 TR).
 on:
   workflow_dispatch:
+    inputs:
+      skip_refresh:
+        description: Mevcut gundem-queue dosyasını Trends yenilemeden yayınla
+        type: boolean
+        default: false
+      catalog_slug:
+        description: skip_refresh ile content/gundem-catalog/<slug>.json kuyruğa alınır
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -37,9 +46,21 @@ jobs:
           node scripts/assert-no-gundem-links.mjs
 
       - name: Trends + GSC demand → queue
+        if: inputs.skip_refresh != true
         env:
           CONTENT_PUBLIC_BASE_URL: ${{ secrets.CONTENT_PUBLIC_BASE_URL }}
         run: pnpm exec node --import tsx scripts/refresh-gundem-queue.ts
+
+      - name: Catalog → queue (manuel brifing)
+        if: inputs.skip_refresh == true && inputs.catalog_slug != ''
+        run: |
+          set -euo pipefail
+          slug="${{ inputs.catalog_slug }}"
+          src="content/gundem-catalog/${slug}.json"
+          test -f "$src"
+          mkdir -p content/gundem-queue
+          rm -f content/gundem-queue/*.json
+          cp "$src" "content/gundem-queue/$(date -u +%F)-${slug}.json"
 
       - name: Safety + publish to R2
         env:

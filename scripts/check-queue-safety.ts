@@ -34,6 +34,10 @@ async function scanDir(relative: string) {
             typeof item === "string" ? { url: item } : (item as { url: string; title?: string }),
           )
         : undefined,
+      channel:
+        relative === "content/gundem-queue" || relative === "content/gundem-catalog"
+          ? "gundem"
+          : "blog",
     });
     if (!result.ok) {
       throw new Error(`${relative}/${name}: ${result.code} ${result.hits.join(",")}`);
@@ -53,6 +57,7 @@ async function scanDir(relative: string) {
 async function main() {
   await scanDir("content/blog-queue");
   await scanDir("content/gundem-queue");
+  await scanDir("content/gundem-catalog");
   console.log("Queue safety checks passed.");
 }
 

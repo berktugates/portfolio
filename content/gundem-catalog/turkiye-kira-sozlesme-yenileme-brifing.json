@@ -1,0 +1,31 @@
+{
+  "slug": "turkiye-kira-sozlesme-yenileme-brifing",
+  "title": "Kira sözleşmesi yenileme dönemi: tavan, bildirim süresi ve uyuşmazlıkta ilk adımlar",
+  "excerpt": "Kira yenileme aylarında tek soru “yüzde kaç?” değil. Bildirim süresi, sözleşme tipi, emsal ve resmi endeks aynı tabloda okunmadan net maliyet çıkmaz.",
+  "bodyMarkdown": "Kira yenileme döneminde ev sahibi ile kiracı arasında en sık çatışan nokta, tek bir zam oranı sanılmasıdır. Oysa tablo birkaç parçadan oluşur: mevcut sözleşmenin süresi, yenileme bildiriminin ne zaman yapıldığı, konutun emsal kirası ile resmi enflasyon endeksinin nasıl bir araya getirildiği ve tahliye/taahhüt maddelerinin hâlâ geçerli olup olmadığı. WhatsApp’ta dolaşan “standart yüzde” mesajları, sözleşmedeki özel şartları ve mahkeme uygulamasını yansıtmayabilir.\n\nBildirim süresi pratikte belirleyicidir. Süresi dolmak üzere olan sözleşmede taraflardan biri yazılı yol izlemeden yeni rakam dayatırsa, uyuşmazlık hızla büyür. Kiracı tarafında bütçe planı, ev sahibi tarafında ise kredi ve vergi yükü devreye girer; bu yüzden “aynı gün karar” baskısı çoğu zaman hatalı pazarlık üretir. Yazılı tebligat, ihtar ve tutanak alışkanlığı, sonradan ispat yükünü hafifletir.\n\nEmsal kira ve endeks tartışmaları aynı cümlede geçse de aynı şey değildir. Emsal, benzer konutun piyasadaki görünen kirasına bakar; endeks ise makro fiyat sepetinden türetilir. İkisi farklı yöne çekildiğinde okur “hangisi geçerli?” diye sorar; cevap sözleşme maddelerinde ve uyuşmazlık halinde başvurulan resmi süreçte aranır. Tek bir ilan ekran görüntüsü, emsal raporının yerine geçmez.\n\nUyuşmazlık çıktığında ilk adım genelde arabuluculuk veya resmi başvuru yollarını değerlendirmektir; sosyede paylaşılan “hemen tahliye” cümleleri çoğu zaman eksik bilgidir. Depozito, aidat, onarım ve faturaların kime ait olduğu ayrı satırlardır; kira rakamı ile birlikte hesaba katılmazsa toplam barınma maliyeti şişmiş görünür.\n\nHane bütçesi açısından kira, market ve ulaşım kalemleri birlikte hareket eder. TÜİK tüketici enflasyonu barınma grubunu ayrı izler; maaş veya emekli geliri aynı hızda güncellenmeyebilir. Karar verirken yalnızca aylık kira rakamına değil, taşınma maliyeti, okul–iş mesafesi ve sözleşme bitiş tarihine de bakmak gerekir.\n\nEditöryal çerçeve: Bu brifing, kamuoyunda konuşulan kira yenileme tartışmalarını okur etkisine göre özetler; bireysel sözleşme için hukuki danışmanlık yerine geçmez. Nihai hak ve yükümlülükler, imzalanan sözleşme metni ve resmi mercilerin güncel uygulamasıyla netleşir.",
+  "publishedAt": "2026-09-28",
+  "dateModified": "2026-09-28",
+  "category": "ekonomi",
+  "sources": [
+    {
+      "url": "https://data.tuik.gov.tr/",
+      "title": "TÜİK veri portalı"
+    },
+    {
+      "url": "https://www.tbmm.gov.tr/",
+      "title": "Türkiye Büyük Millet Meclisi"
+    }
+  ],
+  "image": {
+    "src": "https://images.pexels.com/photos/439391/pexels-photo-439391.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    "alt": "Apartman dairesi ve konut cephesi, kira sözleşmesi yenileme bağlamında",
+    "creditName": "Pexels",
+    "creditUrl": "https://www.pexels.com",
+    "license": "pexels",
+    "query": "apartment building rent"
+  },
+  "trendQuery": "kira zam",
+  "angle": "Kira sözleşmesi yenileme dönemi: tavan, bildirim süresi ve uyuşmazlıkta ilk adımlar",
+  "lang": "tr",
+  "cover": "photo"
+}
