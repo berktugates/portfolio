@@ -37,62 +37,68 @@ export function GundemHeroCarousel({ posts, intervalMs = 5500 }: GundemHeroCarou
   if (count === 0) return null;
 
   return (
-    <section aria-labelledby="gundem-hero-heading" data-gundem-carousel className="relative">
+    <section aria-labelledby="gundem-hero-heading" data-gundem-carousel className="relative w-full">
       <h2 id="gundem-hero-heading" className="sr-only">
         Öne çıkan haberler
       </h2>
       <div className="overflow-hidden rounded-2xl bg-zinc-300/30 p-px dark:bg-zinc-600/30">
-        <div className="relative overflow-hidden rounded-[15px] bg-white dark:bg-zinc-950">
-          <div
-            className="flex transition-transform duration-500 ease-out motion-reduce:transition-none"
-            style={{ transform: `translateX(-${index * 100}%)` }}
-          >
-            {posts.map((post, i) => (
-              <Link
-                key={post.slug}
-                href={haberlerUrl(haberlerArticlePath(post.slug))}
-                data-gundem-card={i === index ? "hero" : undefined}
-                aria-hidden={i !== index}
-                tabIndex={i === index ? 0 : -1}
-                className="group flex min-w-full shrink-0 flex-col sm:max-h-[220px] sm:flex-row"
-              >
-                <span className="relative h-40 w-full shrink-0 overflow-hidden bg-zinc-100 sm:h-auto sm:w-[42%] sm:max-h-[220px] dark:bg-zinc-900">
-                  <GundemCover post={post} priority={i === 0} fill className="sm:min-h-[220px]" />
-                </span>
-                <span className="flex min-w-0 flex-1 flex-col justify-center px-4 py-3 sm:px-5 sm:py-4">
-                  <span className="flex flex-wrap items-center gap-2 text-[11px] font-medium text-zinc-500">
-                    <span>{formatGundemCategory(post.category)}</span>
-                    {post.trendQuery ? (
-                      <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] text-zinc-600 dark:bg-zinc-900 dark:text-zinc-300">
-                        #{post.trendQuery}
+        <div className="overflow-hidden rounded-[15px] bg-white dark:bg-zinc-950">
+          <div className="relative w-full overflow-hidden">
+            <div
+              className="flex w-full transition-transform duration-500 ease-out motion-reduce:transition-none"
+              style={{ transform: `translateX(-${index * 100}%)` }}
+            >
+              {posts.map((post, i) => (
+                <div key={post.slug} className="w-full shrink-0 grow-0 basis-full">
+                  <Link
+                    href={haberlerUrl(haberlerArticlePath(post.slug))}
+                    data-gundem-card={i === index ? "hero" : undefined}
+                    aria-hidden={i !== index}
+                    tabIndex={i === index ? 0 : -1}
+                    className="group flex w-full flex-col md:flex-row md:items-stretch"
+                  >
+                    <span className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-zinc-100 md:aspect-auto md:min-h-[12rem] md:w-[44%] md:self-stretch lg:min-h-[14rem] xl:min-h-[16rem] dark:bg-zinc-900">
+                      <GundemCover post={post} priority={i === 0} fill />
+                    </span>
+                    <span className="flex min-w-0 flex-1 flex-col justify-center px-4 py-4 md:px-6 md:py-5 lg:py-6">
+                      <span className="flex flex-wrap items-center gap-2 text-xs font-medium text-zinc-500">
+                        <span>{formatGundemCategory(post.category)}</span>
+                        {post.trendQuery ? (
+                          <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] text-zinc-600 dark:bg-zinc-900 dark:text-zinc-300">
+                            #{post.trendQuery}
+                          </span>
+                        ) : null}
                       </span>
-                    ) : null}
-                  </span>
-                  <span className="mt-1.5 line-clamp-2 text-lg font-semibold leading-snug text-zinc-950 dark:text-zinc-50 sm:text-xl">
-                    {post.title}
-                  </span>
-                  <span className="mt-1 line-clamp-2 text-sm leading-5 text-zinc-600 dark:text-zinc-300">
-                    {post.excerpt}
-                  </span>
-                  <time className="mt-2 text-[11px] text-zinc-500" dateTime={post.publishedAt}>
-                    {formatGundemDate(post.publishedAt)}
-                  </time>
-                </span>
-              </Link>
-            ))}
+                      <span className="mt-2 line-clamp-3 text-xl font-semibold leading-snug text-zinc-950 dark:text-zinc-50 sm:text-2xl lg:line-clamp-2">
+                        {post.title}
+                      </span>
+                      <span className="mt-2 line-clamp-3 text-sm leading-6 text-zinc-600 dark:text-zinc-300 md:text-base lg:line-clamp-4">
+                        {post.excerpt}
+                      </span>
+                      <time className="mt-3 text-xs text-zinc-500" dateTime={post.publishedAt}>
+                        {formatGundemDate(post.publishedAt)}
+                      </time>
+                    </span>
+                  </Link>
+                </div>
+              ))}
+            </div>
           </div>
 
           {count > 1 ? (
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 px-3 pb-2 sm:px-4">
+            <div
+              className="flex items-center justify-center gap-3 border-t border-zinc-100 px-4 py-3 dark:border-zinc-800"
+              aria-label="Carousel kontrolleri"
+            >
               <button
                 type="button"
                 aria-label="Önceki haber"
                 onClick={() => go(index - 1)}
-                className="pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-lg text-zinc-800 shadow-sm ring-1 ring-zinc-200/80 backdrop-blur dark:bg-zinc-950/95 dark:text-zinc-100 dark:ring-zinc-700"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-lg text-zinc-800 transition-colors hover:bg-zinc-200 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
               >
                 ‹
               </button>
-              <div className="pointer-events-auto flex gap-1.5" aria-label="Slayt seçimi">
+              <div className="flex flex-wrap justify-center gap-1.5" aria-label="Slayt seçimi">
                 {posts.map((post, i) => (
                   <button
                     key={post.slug}
@@ -100,8 +106,8 @@ export function GundemHeroCarousel({ posts, intervalMs = 5500 }: GundemHeroCarou
                     aria-label={`${post.title} (${i + 1}/${count})`}
                     aria-current={i === index ? "true" : undefined}
                     onClick={() => go(i)}
-                    className={`h-1.5 rounded-full transition-all ${
-                      i === index ? "w-5 bg-zinc-950 dark:bg-zinc-100" : "w-1.5 bg-zinc-400/90 dark:bg-zinc-500"
+                    className={`h-2 rounded-full transition-all ${
+                      i === index ? "w-7 bg-zinc-950 dark:bg-zinc-100" : "w-2 bg-zinc-300 dark:bg-zinc-600"
                     }`}
                   />
                 ))}
@@ -110,7 +116,7 @@ export function GundemHeroCarousel({ posts, intervalMs = 5500 }: GundemHeroCarou
                 type="button"
                 aria-label="Sonraki haber"
                 onClick={() => go(index + 1)}
-                className="pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-lg text-zinc-800 shadow-sm ring-1 ring-zinc-200/80 backdrop-blur dark:bg-zinc-950/95 dark:text-zinc-100 dark:ring-zinc-700"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-lg text-zinc-800 transition-colors hover:bg-zinc-200 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
               >
                 ›
               </button>

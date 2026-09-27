@@ -10,6 +10,7 @@ import { HABERLER_PAGE_TITLE, formatGundemCategory, formatGundemDate } from "../
 import { haberlerArticlePath, haberlerUrl } from "../lib/gundem/hosts";
 import { getDictionary } from "../lib/i18n";
 import { AUTHOR_ID, SITE_URL, visibleAuthorMeta, jsonLd } from "../lib/seo";
+import { GundemDetailChatDock } from "./gundem-detail-chat-dock";
 import { GundemViewBeacon } from "./gundem-view-beacon";
 import { SiteFooter } from "./site-footer";
 
@@ -61,7 +62,7 @@ export async function GundemDetailView({ params }: Props) {
 
   const canonical = haberlerUrl(haberlerArticlePath(briefing.slug));
   const paragraphs = briefing.bodyMarkdown.split(/\n\n+/).filter(Boolean);
-  const highlights = briefingHighlights(briefing.bodyMarkdown, 4);
+  const chatSnippets = briefingHighlights(briefing.bodyMarkdown, 3);
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -124,20 +125,6 @@ export async function GundemDetailView({ params }: Props) {
             <GundemCover post={briefing} priority />
           </figure>
 
-          {highlights.length > 0 ? (
-            <aside className="not-prose mb-10 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">Okur özeti</h2>
-              <ul className="mt-3 space-y-2 text-sm leading-6 text-zinc-700 dark:text-zinc-200">
-                {highlights.map((line) => (
-                  <li key={line.slice(0, 48)} className="flex gap-2">
-                    <span aria-hidden className="mt-2 size-1.5 shrink-0 rounded-full bg-zinc-400" />
-                    <span>{line}</span>
-                  </li>
-                ))}
-              </ul>
-            </aside>
-          ) : null}
-
           <div className="max-w-none">
             {paragraphs.map((paragraph) => (
               <p key={paragraph.slice(0, 40)}>{paragraph}</p>
@@ -162,6 +149,7 @@ export async function GundemDetailView({ params }: Props) {
           </div>
         </article>
       </main>
+      <GundemDetailChatDock title={briefing.title} excerpt={briefing.excerpt} snippets={chatSnippets} />
       <SiteFooter name={dict.headerName} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
     </HaberlerShell>
