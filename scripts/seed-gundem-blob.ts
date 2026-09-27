@@ -4,7 +4,7 @@ import { assessContentSafety } from "../app/lib/content-safety";
 import { validateLicensedImage } from "../app/lib/image-license";
 import type { GundemBriefing } from "../app/lib/gundem/types";
 import { GUNDEM_EDITORIAL_MISSION } from "../app/lib/gundem/editorial";
-import { publishGundemBriefingToBlob } from "./lib/gundem-blob-publish";
+import { seedGundemBriefingsToBlob } from "./lib/gundem-blob-publish";
 
 const root = resolve(import.meta.dirname, "..");
 
@@ -17,6 +17,7 @@ async function main() {
     return;
   }
 
+  const validated: GundemBriefing[] = [];
   for (const draft of posts) {
     const body = draft.bodyMarkdown ?? "";
     const safety = assessContentSafety({
@@ -36,10 +37,10 @@ async function main() {
       console.error(`Image rejected ${draft.slug}: ${imageCheck.code}`, imageCheck.reason);
       process.exit(1);
     }
-
-    await publishGundemBriefingToBlob(draft, root);
-    console.log(`Seeded gundem briefing ${draft.slug} to Blob.`);
+    validated.push(draft);
   }
+
+  await seedGundemBriefingsToBlob(validated, root);
 }
 
 main().catch((error) => {

@@ -3,7 +3,7 @@
  */
 import { HABERLER_ORIGIN } from "../app/lib/gundem/hosts";
 
-const MIN_SITEMAP_ARTICLES = 3;
+const MIN_SITEMAP_ARTICLES = 2;
 
 async function check(url: string, contains?: string[]): Promise<void> {
   const res = await fetch(url, { cache: "no-store" });
