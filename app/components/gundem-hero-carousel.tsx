@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { GundemCover } from "./gundem-cover";
 import { formatGundemCategory, formatGundemDate } from "../lib/gundem/editorial";
 import { haberlerArticlePath, haberlerUrl } from "../lib/gundem/hosts";
@@ -16,14 +16,6 @@ export function GundemHeroCarousel({ posts, intervalMs = 5500 }: GundemHeroCarou
   const [index, setIndex] = useState(0);
   const count = posts.length;
 
-  const go = useCallback(
-    (next: number) => {
-      if (count === 0) return;
-      setIndex(((next % count) + count) % count);
-    },
-    [count],
-  );
-
   useEffect(() => {
     if (count <= 1) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -37,7 +29,13 @@ export function GundemHeroCarousel({ posts, intervalMs = 5500 }: GundemHeroCarou
   if (count === 0) return null;
 
   return (
-    <section aria-labelledby="gundem-hero-heading" data-gundem-carousel className="relative w-full">
+    <section
+      aria-labelledby="gundem-hero-heading"
+      aria-roledescription="carousel"
+      aria-live="off"
+      data-gundem-carousel
+      className="relative w-full"
+    >
       <h2 id="gundem-hero-heading" className="sr-only">
         Öne çıkan haberler
       </h2>
@@ -84,44 +82,6 @@ export function GundemHeroCarousel({ posts, intervalMs = 5500 }: GundemHeroCarou
               ))}
             </div>
           </div>
-
-          {count > 1 ? (
-            <div
-              className="flex items-center justify-center gap-3 border-t border-zinc-100 px-4 py-3 dark:border-zinc-800"
-              aria-label="Carousel kontrolleri"
-            >
-              <button
-                type="button"
-                aria-label="Önceki haber"
-                onClick={() => go(index - 1)}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-lg text-zinc-800 transition-colors hover:bg-zinc-200 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
-              >
-                ‹
-              </button>
-              <div className="flex flex-wrap justify-center gap-1.5" aria-label="Slayt seçimi">
-                {posts.map((post, i) => (
-                  <button
-                    key={post.slug}
-                    type="button"
-                    aria-label={`${post.title} (${i + 1}/${count})`}
-                    aria-current={i === index ? "true" : undefined}
-                    onClick={() => go(i)}
-                    className={`h-2 rounded-full transition-all ${
-                      i === index ? "w-7 bg-zinc-950 dark:bg-zinc-100" : "w-2 bg-zinc-300 dark:bg-zinc-600"
-                    }`}
-                  />
-                ))}
-              </div>
-              <button
-                type="button"
-                aria-label="Sonraki haber"
-                onClick={() => go(index + 1)}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-lg text-zinc-800 transition-colors hover:bg-zinc-200 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
-              >
-                ›
-              </button>
-            </div>
-          ) : null}
         </div>
       </div>
     </section>
