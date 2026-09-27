@@ -14,6 +14,8 @@ export type ContentSafetyInput = {
   /** Haberler brifingleri daha kısa; şablon dolgusu yasak. */
   channel?: "blog" | "gundem";
   editorialSource?: "headlines" | "curated" | "catalog";
+  /** RSS description parçaları — gövdeye kopya kontrolü. */
+  referenceSnippets?: readonly string[];
 };
 
 export type ContentSafetyResult =
@@ -125,8 +127,6 @@ function hostFromUrl(url: string): string | null {
   }
 }
 
-const GUNDEM_MIN_WORDS = 200;
-
 const GUNDEM_TEMPLATE_BAN: RegExp[] = [
   /«[^»]+» araması yükseldiğinde/i,
   /Google Trends/i,
@@ -150,8 +150,8 @@ export function assessContentSafety(input: ContentSafetyInput): ContentSafetyRes
 
   if (input.mode !== "assistant") {
     const bodyWords = wordCount(input.body);
-    const minWords = input.channel === "gundem" ? GUNDEM_MIN_WORDS : 350;
-    if (bodyWords < minWords) {
+    const minWords = 350;
+    if (input.channel !== "gundem" && bodyWords < minWords) {
       return { ok: false, code: "thin-content", hits: [`word-count:${bodyWords}`] };
     }
     if (input.channel === "gundem") {
@@ -171,7 +171,15 @@ export function assessContentSafety(input: ContentSafetyInput): ContentSafetyRes
   if (input.mode !== "assistant" && input.sources?.length) {
     for (const source of input.sources) {
       const host = hostFromUrl(source.url);
-      if (!host || !SOURCE_HOST_ALLOWLIST.has(host)) {
+      const isSafeNewsUrl = input.channel === "gundem" && (() => {
+        try {
+          const url = new URL(source.url);
+          return url.protocol === "https:" && !/^(localhost|127\.|10\.|192\.168\.|169\.254\.)/.test(url.hostname);
+        } catch {
+          return false;
+        }
+      })();
+      if (!host || (!SOURCE_HOST_ALLOWLIST.has(host) && !isSafeNewsUrl)) {
         return { ok: false, code: "source-host", hits: [source.url] };
       }
       if (source.title && titleSimilarity(input.title, source.title) > 0.85) {
@@ -184,6 +192,16 @@ export function assessContentSafety(input: ContentSafetyInput): ContentSafetyRes
     for (const ref of input.referenceHeadlines) {
       if (titleSimilarity(input.title, ref) > 0.88) {
         return { ok: false, code: "media-headline-copy", hits: [ref] };
+      }
+    }
+  }
+
+  if (input.mode !== "assistant" && input.channel === "gundem" && input.referenceSnippets?.length) {
+    const normBody = normalizeForCompare(input.body);
+    for (const snip of input.referenceSnippets) {
+      const chunk = normalizeForCompare(snip).slice(0, 80);
+      if (chunk.length >= 40 && normBody.includes(chunk)) {
+        return { ok: false, code: "wire-snippet-copy", hits: [chunk.slice(0, 40)] };
       }
     }
   }

@@ -22,7 +22,7 @@ import type { GundemBriefing } from "../lib/gundem/types";
 export const revalidate = 1800;
 
 export async function createGundemIndexMetadata(activeCategory?: GundemCategory | null): Promise<Metadata> {
-  const dict = await getDictionary("tr");
+  const [dict, allPosts] = await Promise.all([getDictionary("tr"), getAllGundemBriefings()]);
   const categoryLabel = activeCategory ? formatGundemCategory(activeCategory) : null;
   const title = categoryLabel ? `${categoryLabel} — ${HABERLER_PAGE_TITLE}` : HABERLER_PAGE_TITLE;
   const description = categoryLabel
@@ -35,7 +35,10 @@ export async function createGundemIndexMetadata(activeCategory?: GundemCategory 
     ...visibleAuthorMeta(dict.headerName),
     alternates: { canonical: haberlerUrl(canonicalPath) },
     metadataBase: new URL(haberlerUrl("/")),
-    robots: { index: true, follow: true },
+    robots: {
+      index: !activeCategory || allPosts.filter((post) => (post.category ?? "diger") === activeCategory).length >= 3,
+      follow: true,
+    },
     openGraph: {
       type: "website",
       locale: "tr_TR",
@@ -110,7 +113,6 @@ export async function GundemIndexView({ activeCategory = null }: GundemIndexView
   const popularPosts = [...posts].sort(
     (a, b) => (viewCounts[b.slug] ?? 0) - (viewCounts[a.slug] ?? 0),
   );
-  const trendingTopics = [...new Set(allPosts.map((p) => p.trendQuery).filter(Boolean))].slice(0, 8);
   const todayLabel = formatGundemDate(todayIstanbulIsoDate());
   const categoryTitle = activeCategory ? formatGundemCategory(activeCategory) : null;
 
@@ -122,21 +124,6 @@ export async function GundemIndexView({ activeCategory = null }: GundemIndexView
           {categoryTitle ?? HABERLER_PAGE_TITLE}
         </h1>
         <p className="mt-4 max-w-3xl text-base leading-7 text-zinc-600 dark:text-zinc-300">{GUNDEM_INDEX_LEDE}</p>
-        {trendingTopics.length > 0 ? (
-          <div className="mt-6">
-            <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">Bugün konuşulanlar</p>
-            <ul className="mt-2 flex flex-wrap gap-2">
-              {trendingTopics.map((topic) => (
-                <li
-                  key={topic}
-                  className="rounded-md border border-zinc-200 bg-white px-2.5 py-1 text-xs text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
-                >
-                  {topic}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : null}
       </div>
 
       <main className="space-y-10">
@@ -174,7 +161,11 @@ export async function GundemIndexView({ activeCategory = null }: GundemIndexView
         ) : null}
       </main>
 
-      <SiteFooter name={dict.headerName} />
+      <SiteFooter name={dict.headerName}>
+        <Link href={haberlerUrl("/kunye")} className="text-xs text-zinc-500">Künye</Link>
+        <Link href={haberlerUrl("/editorial-policy")} className="text-xs text-zinc-500">Editöryal politika</Link>
+        <Link href={haberlerUrl("/duzeltme-talebi")} className="text-xs text-zinc-500">Düzeltme</Link>
+      </SiteFooter>
     </HaberlerShell>
   );
 }

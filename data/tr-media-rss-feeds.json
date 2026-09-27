@@ -1,0 +1,65 @@
+{
+  "policyVersion": 1,
+  "allowHtmlArticleScrape": false,
+  "minDistinctFeedsForAutoPublish": 2,
+  "minIndependentPublisherGroups": 2,
+  "evidenceWindowHours": 36,
+  "feeds": [
+    {
+      "id": "aa-guncel",
+      "url": "https://www.aa.com.tr/tr/rss/default?cat=guncel",
+      "label": "Anadolu Ajansı",
+      "tier": "rss-headline-only",
+      "publisherGroupId": "anadolu-ajansi",
+      "sourceType": "media",
+      "allowedFields": ["title", "link", "pubDate", "description"],
+      "termsUrl": "https://www.aa.com.tr/tr/p/kullanim-kosullari",
+      "rightsReviewedAt": "2026-09-28",
+      "trustTier": 2,
+      "pollIntervalMinutes": 15,
+      "enabled": true
+    },
+    {
+      "id": "trt-gundem",
+      "url": "https://www.trthaber.com/rss/gundem.rss",
+      "label": "TRT Haber",
+      "tier": "rss-headline-only",
+      "publisherGroupId": "trt",
+      "sourceType": "media",
+      "allowedFields": ["title", "link", "pubDate", "description"],
+      "termsUrl": "https://www.trthaber.com/",
+      "rightsReviewedAt": "2026-09-28",
+      "trustTier": 2,
+      "pollIntervalMinutes": 15,
+      "enabled": true
+    },
+    {
+      "id": "haberturk-manset",
+      "url": "https://www.haberturk.com/rss/manset.xml",
+      "label": "Habertürk",
+      "tier": "rss-headline-only",
+      "publisherGroupId": "ciner-haberturk",
+      "sourceType": "media",
+      "allowedFields": ["title", "link", "pubDate", "description"],
+      "termsUrl": "https://www.haberturk.com/kullanim-kosullari",
+      "rightsReviewedAt": "2026-09-28",
+      "trustTier": 1,
+      "pollIntervalMinutes": 15,
+      "enabled": true
+    },
+    {
+      "id": "ntv-gundem",
+      "url": "https://www.ntv.com.tr/gundem.rss",
+      "label": "NTV",
+      "tier": "rss-headline-only",
+      "publisherGroupId": "dogus-ntv",
+      "sourceType": "media",
+      "allowedFields": ["title", "link", "pubDate", "description"],
+      "termsUrl": "https://www.ntv.com.tr/kullanim-kosullari",
+      "rightsReviewedAt": "2026-09-28",
+      "trustTier": 1,
+      "pollIntervalMinutes": 15,
+      "enabled": true
+    }
+  ]
+}

@@ -18,6 +18,10 @@
     "./gundem/paraphrase-tr": "./src/gundem/paraphrase-tr.ts",
     "./gundem/polish": "./src/gundem/polish.ts",
     "./gundem/tr-media-rss": "./src/gundem/tr-media-rss.ts",
+    "./gundem/feed-ingest": "./src/gundem/feed-ingest.ts",
+    "./gundem/story-cluster": "./src/gundem/story-cluster.ts",
+    "./gundem/feed-compose": "./src/gundem/feed-compose.ts",
+    "./gundem/news-quality": "./src/gundem/news-quality.ts",
     "./gundem/trends": "./src/gundem/trends.ts",
     "./blog/schema": "./src/blog/schema.ts",
     "./publish/gates": "./src/publish/gates.ts"

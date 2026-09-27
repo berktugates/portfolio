@@ -1,8 +1,10 @@
 import { runBlogCron } from "./blog-cron";
 import { runHaberCron } from "./haber-cron";
 import { flushRevalidatePending } from "./revalidate";
+import { handleAdminRequest } from "./admin";
+import { handleCorrectionRequest } from "./corrections";
 
-const HABER_CRON = "0 4 * * *";
+const HABER_CRON = "7,22,37,52 * * * *";
 const BLOG_CRON = "0 6 * * 1";
 
 export default {
@@ -25,6 +27,14 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === "/health") {
       return new Response(null, { status: 204 });
+    }
+
+    if (url.pathname === "/admin" || url.pathname.startsWith("/admin/")) {
+      return handleAdminRequest(request, env);
+    }
+
+    if (url.pathname === "/public/corrections" && request.method === "POST") {
+      return handleCorrectionRequest(request, env);
     }
 
     if (url.pathname === "/cron/haber" && request.method === "POST") {

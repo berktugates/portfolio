@@ -9,7 +9,7 @@ function hostnameOf(host: string) {
   return host.split(":")[0]?.toLowerCase() ?? "";
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const host = request.headers.get("host") ?? "";
   const { pathname } = request.nextUrl;
 
@@ -25,8 +25,12 @@ export function middleware(request: NextRequest) {
     if (pathname.startsWith("/_next") || pathname.startsWith("/api")) {
       return NextResponse.next();
     }
-    if (pathname === "/sitemap.xml" || pathname === "/sitemap-gundem.xml") {
-      return NextResponse.rewrite(new URL("/sitemap-gundem.xml", request.url));
+    if (pathname === "/robots.txt") return NextResponse.rewrite(new URL("/gundem/robots.txt", request.url));
+    if (pathname === "/llms.txt") return NextResponse.rewrite(new URL("/gundem/llms.txt", request.url));
+    if (pathname === "/sitemap.xml") return NextResponse.rewrite(new URL("/sitemap-haberler.xml", request.url));
+    if (pathname === "/sitemap-news.xml") return NextResponse.next();
+    if (pathname === "/sitemap-gundem.xml") {
+      return NextResponse.rewrite(new URL("/sitemap-news.xml", request.url));
     }
     if (pathname === "/rss.xml" || pathname === "/gundem/rss.xml") {
       return NextResponse.rewrite(new URL("/gundem/rss.xml", request.url));
@@ -35,6 +39,9 @@ export function middleware(request: NextRequest) {
       return NextResponse.rewrite(new URL("/gundem", request.url));
     }
     if (pathname.startsWith("/kategori/")) {
+      return NextResponse.rewrite(new URL(`/gundem${pathname}`, request.url));
+    }
+    if (["/kunye", "/editorial-policy", "/duzeltme-talebi"].includes(pathname) || pathname.startsWith("/yazar/")) {
       return NextResponse.rewrite(new URL(`/gundem${pathname}`, request.url));
     }
     if (pathname.startsWith("/gundem/")) {
@@ -64,5 +71,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|.*\\.(?:ico|png|webp|svg|txt|json)$).*)"],
+  matcher: ["/robots.txt", "/llms.txt", "/((?!_next/static|_next/image|.*\\.(?:ico|png|webp|svg|json)$).*)"],
 };

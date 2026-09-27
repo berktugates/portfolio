@@ -16,11 +16,13 @@ migrations_dir = "migrations"
 binding = "AI"
 
 [triggers]
-crons = ["0 4 * * *", "0 6 * * 1"]
+crons = ["7,22,37,52 * * * *", "0 6 * * 1"]
 
 [vars]
 REVALIDATE_URL = "https://berktugberke.com/api/revalidate"
 HABERLER_HOST = "haberler.berktugberke.com"
+NEWS_AUTO_PUBLISH = "false"
+PUBLICATION_LEGAL_READY = "false"
 
 # wrangler secret put REVALIDATE_SECRET
 # wrangler secret put INDEXNOW_KEY

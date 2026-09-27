@@ -7,7 +7,7 @@
 - **Kitle:** Türkiye’deki herkes; yalnızca yazılım veya bilişim profesyonelleri değil.
 - **İçerik:** Ülkeyi ilgilendiren gündem (ekonomi, siyaset, toplum, sağlık, spor, kültür, bilim, bilişim, dünya bağlantıları).
 - **Biçim:** **Güncel olay özeti** — “bugün ne oldu / ne güncellendi” (transfer, kur, zam, karar); tanım-usul rehberi birincil ürün değil. Ajans tel kopyası yok.
-- **Hukuk / telif:** Trends’te görünen medya başlıkları `packages/editorial-gates` içinde **hafif yeniden ifade** edilir (varsayılan `GUNDEM_PARAPHRASE_STRENGTH=light`, ~%80 anlam korunur); gövdeye kaynak notu ve birincil kamu kurumu bağlantıları eklenir. Ham ajans metni çekilmez.
+- **Hukuk / telif:** HTML scrape yok; yalnızca RSS başlık/küme sentezi ([gundem-syndication.md](./gundem-syndication.md)). Paraphrase ile olay cümlesi; çok kaynak kuralı (≥2 feed). Ham ajans gövdesi çekilmez.
 - **SEO/GEO:** Trends ve KWP ile **yüksek arama/tıklama potansiyeli** olan ulusal konular kuyruğa alınır; analiz dürüst ve kaynaklı kalır.
 
 Kodda tek kaynak: `app/lib/gundem/editorial.ts`.

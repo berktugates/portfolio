@@ -1,10 +1,12 @@
-/** Kamu / ajans RSS — yalnızca kuyruk skoru sinyali; metin kopyalanmaz. */
+/** @deprecated Skor sinyali — tam ingest için feed-ingest.ts kullanın. */
+import {
+  fetchTrMediaFeedItems,
+  parseRssFeedItems,
+  type TrMediaFeedConfig,
+  type TrMediaRssFeed,
+} from "./feed-ingest";
 
-export type TrMediaRssFeed = {
-  id: string;
-  url: string;
-  label?: string;
-};
+export type { TrMediaRssFeed };
 
 export type TrMediaHeadline = {
   title: string;
@@ -12,56 +14,25 @@ export type TrMediaHeadline = {
   pubDate?: string;
 };
 
-function decodeXml(text: string): string {
-  return text
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'");
-}
-
-export function parseSimpleRssTitles(xml: string, feedId: string): TrMediaHeadline[] {
-  const items: TrMediaHeadline[] = [];
-  const blocks = xml.split(/<item>/i).slice(1);
-  for (const block of blocks) {
-    const titleMatch = block.match(/<title>([^<]*)<\/title>/i);
-    const pubMatch = block.match(/<pubDate>([^<]*)<\/pubDate>/i);
-    const title = decodeXml(titleMatch?.[1]?.trim() ?? "");
-    if (title.length < 8) continue;
-    items.push({ title, feedId, pubDate: pubMatch?.[1]?.trim() });
-    if (items.length >= 40) break;
-  }
-  return items;
-}
-
 export async function fetchTrMediaHeadlines(
   feeds: readonly TrMediaRssFeed[],
 ): Promise<TrMediaHeadline[]> {
-  const all: TrMediaHeadline[] = [];
-  await Promise.all(
-    feeds.map(async (feed) => {
-      try {
-        const res = await fetch(feed.url, {
-          headers: { "User-Agent": "berktug-haberler-editorial/1.0" },
-          cache: "no-store",
-        });
-        if (!res.ok) return;
-        const xml = await res.text();
-        all.push(...parseSimpleRssTitles(xml, feed.id));
-      } catch {
-        /* feed opsiyonel */
-      }
-    }),
-  );
-  return all;
+  const items = await fetchTrMediaFeedItems(feeds);
+  return items.map((i) => ({ title: i.title, feedId: i.feedId, pubDate: i.pubDate }));
+}
+
+export function parseSimpleRssTitles(xml: string, feedId: string): TrMediaHeadline[] {
+  return parseRssFeedItems(xml, { id: feedId, url: "" }).map((i) => ({
+    title: i.title,
+    feedId: i.feedId,
+    pubDate: i.pubDate,
+  }));
 }
 
 function normalizeToken(text: string): string {
   return text.toLocaleLowerCase("tr").replace(/[^\p{L}\p{N}\s]/gu, " ").replace(/\s+/g, " ").trim();
 }
 
-/** Trends sorgusu ile RSS başlığı örtüşürse ek skor. */
 export function mediaHeadlineBoost(query: string, headlines: readonly TrMediaHeadline[]): number {
   const q = normalizeToken(query);
   if (!q) return 0;
@@ -80,4 +51,44 @@ export function mediaHeadlineBoost(query: string, headlines: readonly TrMediaHea
     if (hits >= Math.min(2, qTokens.length)) boost += 40;
   }
   return boost;
+}
+
+export function loadFeedConfigDefaults(): TrMediaFeedConfig {
+  return {
+    policyVersion: 1,
+    allowHtmlArticleScrape: false,
+    minDistinctFeedsForAutoPublish: 2,
+    minIndependentPublisherGroups: 2,
+    evidenceWindowHours: 36,
+    feeds: [
+      {
+        id: "aa-guncel",
+        url: "https://www.aa.com.tr/tr/rss/default?cat=guncel",
+        label: "Anadolu Ajansı",
+        tier: "rss-headline-only",
+        publisherGroupId: "anadolu-ajansi",
+        sourceType: "media",
+        allowedFields: ["title", "link", "pubDate", "description"],
+        termsUrl: "https://www.aa.com.tr/tr/p/kullanim-kosullari",
+        rightsReviewedAt: "2026-09-28",
+        trustTier: 2,
+        pollIntervalMinutes: 15,
+        enabled: true,
+      },
+      {
+        id: "trt-gundem",
+        url: "https://www.trthaber.com/rss/gundem.rss",
+        label: "TRT Haber",
+        tier: "rss-headline-only",
+        publisherGroupId: "trt",
+        sourceType: "media",
+        allowedFields: ["title", "link", "pubDate", "description"],
+        termsUrl: "https://www.trthaber.com/",
+        rightsReviewedAt: "2026-09-28",
+        trustTier: 2,
+        pollIntervalMinutes: 15,
+        enabled: true,
+      },
+    ],
+  };
 }

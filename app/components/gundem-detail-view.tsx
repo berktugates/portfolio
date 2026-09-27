@@ -13,6 +13,7 @@ import { AUTHOR_ID, SITE_URL, visibleAuthorMeta, jsonLd } from "../lib/seo";
 import { GundemDetailChatDock } from "./gundem-detail-chat-dock";
 import { GundemViewBeacon } from "./gundem-view-beacon";
 import { SiteFooter } from "./site-footer";
+import { newsPublisherJsonLd } from "../lib/gundem/publication";
 
 export const revalidate = 1800;
 
@@ -36,7 +37,7 @@ export async function createGundemDetailMetadata({ params }: Props): Promise<Met
     ...visibleAuthorMeta(dict.headerName),
     alternates: { canonical },
     metadataBase: new URL(haberlerUrl("/")),
-    robots: { index: true, follow: true },
+    robots: { index: briefing.status !== "RETRACTED", follow: briefing.status !== "RETRACTED" },
     openGraph: {
       type: "article",
       locale: "tr_TR",
@@ -82,7 +83,10 @@ export async function GundemDetailView({ params }: Props) {
         dateModified: briefing.dateModified,
         inLanguage: "tr-TR",
         mainEntityOfPage: canonical,
-        author: { "@id": AUTHOR_ID },
+        author: { "@type": "Person", "@id": AUTHOR_ID, name: dict.headerName, url: haberlerUrl("/yazar/berktug-berke-ates") },
+        publisher: { "@id": "https://haberler.berktugberke.com/#publisher" },
+        articleSection: formatGundemCategory(briefing.category),
+        isAccessibleForFree: true,
         citation: briefing.sources.map((s) => s.url),
         ...(gundemShowsPhoto(briefing)
           ? {
@@ -94,6 +98,7 @@ export async function GundemDetailView({ params }: Props) {
             }
           : {}),
       },
+      newsPublisherJsonLd(),
     ],
   };
 
@@ -115,7 +120,10 @@ export async function GundemDetailView({ params }: Props) {
                   Gündem: {briefing.trendQuery}
                 </span>
               ) : null}
-              <time dateTime={briefing.publishedAt}>{formatGundemDate(briefing.publishedAt)}</time>
+              <span>Yayımlandı: <time dateTime={briefing.publishedAt}>{formatGundemDate(briefing.publishedAt)}</time></span>
+              {briefing.dateModified !== briefing.publishedAt ? (
+                <span>Güncellendi: <time dateTime={briefing.dateModified}>{formatGundemDate(briefing.dateModified)}</time></span>
+              ) : null}
             </div>
             <h1 className="mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">{briefing.title}</h1>
             <p className="!my-0 mt-5 text-lg leading-8 text-zinc-600 dark:text-zinc-300">{briefing.excerpt}</p>
@@ -126,6 +134,16 @@ export async function GundemDetailView({ params }: Props) {
           </figure>
 
           <div className="max-w-none">
+            {briefing.status === "RETRACTED" ? (
+              <p className="rounded-lg border border-red-300 bg-red-50 p-4 text-red-900 dark:border-red-900 dark:bg-red-950/30 dark:text-red-200">
+                Bu haber geri çekilmiştir. Aşağıdaki düzeltme geçmişi kaydın nedenini açıklar.
+              </p>
+            ) : null}
+            {briefing.correctionNotice ? (
+              <p className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-amber-950 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-100">
+                <strong>Düzeltme:</strong> {briefing.correctionNotice}
+              </p>
+            ) : null}
             {paragraphs.map((paragraph) => (
               <p key={paragraph.slice(0, 40)}>{paragraph}</p>
             ))}
@@ -136,9 +154,27 @@ export async function GundemDetailView({ params }: Props) {
                   <a href={source.url} rel="noreferrer noopener" target="_blank">
                     {source.title}
                   </a>
+                  {source.sourceType ? ` · ${source.sourceType === "official" ? "Resmî kaynak" : "Medya kaynağı"}` : null}
                 </li>
               ))}
             </ul>
+            {briefing.illustrativeImage ? (
+              <p className="text-xs text-zinc-500">Görsel temsilidir; olay fotoğrafı olarak sunulmamıştır.</p>
+            ) : null}
+            {briefing.revisions?.length ? (
+              <section aria-labelledby="revision-history">
+                <h2 id="revision-history" className="text-base font-medium">Güncelleme ve düzeltme geçmişi</h2>
+                <ol className="text-sm text-zinc-600 dark:text-zinc-400">
+                  {briefing.revisions.map((revision) => (
+                    <li key={revision.revisionId}>
+                      <time dateTime={revision.createdAt}>{formatGundemDate(revision.createdAt)}</time>
+                      {` · ${revision.kind === "publish" ? "İlk yayın" : revision.kind === "update" ? "Güncelleme" : revision.kind === "correction" ? "Düzeltme" : "Geri çekme"}`}
+                      {revision.note ? ` — ${revision.note}` : null}
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            ) : null}
             <aside className="mt-10 border-t border-zinc-200 pt-6 dark:border-zinc-800">
               <p className="font-medium text-zinc-950 dark:text-zinc-50">{dict.headerName}</p>
               <p className="text-sm text-zinc-500">Editör</p>
@@ -150,7 +186,11 @@ export async function GundemDetailView({ params }: Props) {
         </article>
       </main>
       <GundemDetailChatDock title={briefing.title} excerpt={briefing.excerpt} snippets={chatSnippets} />
-      <SiteFooter name={dict.headerName} />
+      <SiteFooter name={dict.headerName}>
+        <Link href={haberlerUrl("/kunye")} className="text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100">Künye</Link>
+        <Link href={haberlerUrl("/editorial-policy")} className="text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100">Editöryal politika</Link>
+        <Link href={haberlerUrl("/duzeltme-talebi")} className="text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100">Düzeltme</Link>
+      </SiteFooter>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
     </HaberlerShell>
   );
