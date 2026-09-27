@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { GundemCategory } from "../lib/gundem/editorial";
-import { HABERLER_CONTAINER_CLASS } from "../lib/gundem/layout";
+import { HABERLER_CONTAINER_CLASS } from "../lib/gundem/haberler-container";
 import { HaberlerNav } from "./haberler-nav";
 
 type HaberlerShellProps = {

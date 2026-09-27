@@ -43,10 +43,10 @@ export function GundemCover({
         src={post.image.src}
         alt={post.image.alt}
         fill
-        sizes="(max-width: 1024px) 100vw, 58vw"
+        sizes="(max-width: 640px) 100vw, 42vw"
         priority={priority}
         unoptimized
-        className="object-cover"
+        className={`object-cover ${className}`}
       />
     );
   }

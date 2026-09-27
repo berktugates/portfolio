@@ -6,7 +6,7 @@ import {
 } from "../lib/gundem/editorial";
 import { HABERLER_NAV_CATEGORIES, haberlerCategoryPath } from "../lib/gundem/nav-categories";
 import { haberlerUrl } from "../lib/gundem/hosts";
-import { HABERLER_CONTAINER_CLASS } from "../lib/gundem/layout";
+import { HABERLER_CONTAINER_CLASS } from "../lib/gundem/haberler-container";
 
 type HaberlerNavProps = {
   activeCategory?: GundemCategory | null;
@@ -21,21 +21,27 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
       data-haberler-nav
       className="sticky top-0 z-50 border-b border-zinc-200/90 bg-white/95 backdrop-blur-md dark:border-zinc-800/90 dark:bg-zinc-950/95"
     >
-      <div className={`${HABERLER_CONTAINER_CLASS} flex items-center gap-4 py-3`}>
-        <Link href={home} className="flex shrink-0 items-center gap-2.5" aria-label={`${HABERLER_BRAND} ana sayfa`}>
-          <span className="flex h-9 w-9 items-center justify-center rounded-md bg-zinc-950 text-[11px] font-bold tracking-tight text-white dark:bg-zinc-100 dark:text-zinc-950">
-            BBA
-          </span>
-          <span className="hidden leading-tight sm:block">
-            <span className="block text-sm font-semibold text-zinc-950 dark:text-zinc-50">{HABERLER_BRAND}</span>
-            <span className="block text-[11px] text-zinc-500">Türkiye gündemi</span>
-          </span>
-        </Link>
+      <div className={`${HABERLER_CONTAINER_CLASS} flex flex-col gap-3 py-3`}>
+        <div className="flex w-full items-center">
+          <Link
+            href={home}
+            className="flex shrink-0 items-center gap-2.5"
+            aria-label={`${HABERLER_BRAND} ana sayfa`}
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-md bg-zinc-950 text-[11px] font-bold tracking-tight text-white dark:bg-zinc-100 dark:text-zinc-950">
+              BBA
+            </span>
+            <span className="hidden leading-tight sm:block">
+              <span className="block text-sm font-semibold text-zinc-950 dark:text-zinc-50">{HABERLER_BRAND}</span>
+              <span className="block text-[11px] text-zinc-500">Türkiye gündemi</span>
+            </span>
+          </Link>
+        </div>
         <nav
           aria-label="Haber kategorileri"
-          className="min-w-0 flex-1 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="-mx-1 w-full overflow-x-auto px-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          <ul className="flex w-max items-center gap-1 pb-0.5">
+          <ul className="flex w-max max-w-full items-center gap-1 pb-0.5 sm:flex-wrap">
             <li>
               <Link
                 href={home}
