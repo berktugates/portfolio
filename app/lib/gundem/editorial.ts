@@ -12,7 +12,7 @@ export const GUNDEM_META_DESCRIPTION =
   "Türkiye'de bugün konuşulan başlıklar: ekonomi, siyaset, toplum, sağlık, spor ve daha fazlası — kaynaklı gündem brifingleri.";
 
 export const GUNDEM_INDEX_LEDE =
-  "Arama ve sosyal gündemde öne çıkan ulusal konuları, birincil kaynaklara dayanan kısa brifinglerle okuyun. Her metin okura net bağlam ve analiz sunar.";
+  "Arama ve sosyal gündemde öne çıkan ulusal konuları, birincil kaynaklara dayanan kısa brifinglerle okuyun.";
 
 export const HABERLER_PAGE_TITLE = "Türkiye Gündemi";
 

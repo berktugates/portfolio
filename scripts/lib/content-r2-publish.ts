@@ -2,6 +2,7 @@ import type { GundemBriefing } from "../../app/lib/gundem/types";
 import type { BlogPost } from "../../app/data/blogs";
 import { haberlerArticlePath, HABERLER_ORIGIN } from "../../app/lib/gundem/hosts";
 import { contentPublicBaseUrl } from "./content-public-base";
+import { baselineGundemViews } from "../../app/lib/gundem/view-counts";
 import { createR2Client, putR2Json } from "./r2-s3-client";
 
 function bucketName(): string {
@@ -60,12 +61,27 @@ export async function mergeGundemIndexEntryR2(draft: GundemBriefing): Promise<vo
   await putR2Json(client, bucketName(), "gundem/index.json", { posts: merged });
 }
 
+async function seedGundemViewCountsR2(posts: readonly GundemBriefing[]): Promise<void> {
+  const existing =
+    (await fetchJsonIndex<{ views: Record<string, number> }>("gundem/views.json")) ?? { views: {} };
+  const views = { ...existing.views };
+  for (const post of posts) {
+    if (views[post.slug] == null) {
+      views[post.slug] = baselineGundemViews(post.slug, post.publishedAt);
+    }
+  }
+  const client = createR2Client();
+  await putR2Json(client, bucketName(), "gundem/views.json", { views });
+  console.log(`R2 gundem/views.json synced (${Object.keys(views).length} slug).`);
+}
+
 export async function seedGundemBriefingsToR2(posts: readonly GundemBriefing[]): Promise<void> {
   for (const draft of posts) {
     await putGundemBriefingR2(draft);
     console.log(`Seeded gundem briefing ${draft.slug} to R2.`);
   }
   await replaceGundemIndexR2(posts);
+  await seedGundemViewCountsR2(posts);
   const slugs = posts.map((p) => p.slug);
   await revalidatePaths(
     ["/gundem", "/sitemap-gundem.xml", "/gundem/rss.xml", ...slugs.map((s) => `/gundem/${s}`)],

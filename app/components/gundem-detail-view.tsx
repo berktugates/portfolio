@@ -10,6 +10,7 @@ import { HABERLER_PAGE_TITLE, formatGundemCategory, formatGundemDate } from "../
 import { haberlerArticlePath, haberlerUrl } from "../lib/gundem/hosts";
 import { getDictionary } from "../lib/i18n";
 import { AUTHOR_ID, SITE_URL, visibleAuthorMeta, jsonLd } from "../lib/seo";
+import { GundemViewBeacon } from "./gundem-view-beacon";
 import { SiteFooter } from "./site-footer";
 
 export const revalidate = 1800;
@@ -97,6 +98,7 @@ export async function GundemDetailView({ params }: Props) {
 
   return (
     <HaberlerShell activeCategory={briefing.category ?? null}>
+      <GundemViewBeacon slug={briefing.slug} />
       <main className="blog-prose mx-auto max-w-3xl pb-12">
         <article>
           <header className="mb-8 border-b border-zinc-200 pb-8 dark:border-zinc-800">

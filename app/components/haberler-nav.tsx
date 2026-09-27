@@ -6,6 +6,7 @@ import {
 } from "../lib/gundem/editorial";
 import { HABERLER_NAV_CATEGORIES, haberlerCategoryPath } from "../lib/gundem/nav-categories";
 import { haberlerUrl } from "../lib/gundem/hosts";
+import { HABERLER_CONTAINER_CLASS } from "../lib/gundem/layout";
 
 type HaberlerNavProps = {
   activeCategory?: GundemCategory | null;
@@ -20,7 +21,7 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
       data-haberler-nav
       className="sticky top-0 z-50 border-b border-zinc-200/90 bg-white/95 backdrop-blur-md dark:border-zinc-800/90 dark:bg-zinc-950/95"
     >
-      <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3">
+      <div className={`${HABERLER_CONTAINER_CLASS} flex items-center gap-4 py-3`}>
         <Link href={home} className="flex shrink-0 items-center gap-2.5" aria-label={`${HABERLER_BRAND} ana sayfa`}>
           <span className="flex h-9 w-9 items-center justify-center rounded-md bg-zinc-950 text-[11px] font-bold tracking-tight text-white dark:bg-zinc-100 dark:text-zinc-950">
             BBA

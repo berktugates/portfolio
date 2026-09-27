@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@aws-sdk/client-s3':
+        specifier: ^3.888.0
+        version: 3.1141.0
       '@berktug/editorial-gates':
         specifier: workspace:*
         version: link:packages/editorial-gates
@@ -48,9 +51,6 @@ importers:
         specifier: ^3.6.0
         version: 3.6.0
     devDependencies:
-      '@aws-sdk/client-s3':
-        specifier: ^3.888.0
-        version: 3.1141.0
       '@playwright/test':
         specifier: ^1.63.0
         version: 1.63.0

@@ -75,12 +75,16 @@ test.describe("Gündem surface", () => {
     for (let i = 0; i < count; i++) {
       await expect(cards.nth(i).locator("[data-gundem-cover]")).toBeVisible();
     }
-    await expect(page.locator("[data-gundem-card='hero'] time")).not.toHaveText(/^\d{4}-\d{2}-\d{2}$/);
+    await expect(page.locator("[data-gundem-carousel] [data-gundem-card='hero'] time")).not.toHaveText(
+      /^\d{4}-\d{2}-\d{2}$/,
+    );
     await expect(page.getByText("Stok görsel")).toHaveCount(0);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1);
     expect(overflow).toBe(true);
     await page.setViewportSize({ width: 390, height: 844 });
-    await expect(page.locator("[data-gundem-card='hero'] [data-gundem-cover]")).toBeVisible();
+    await expect(page.locator("[data-gundem-carousel] [data-gundem-cover]").first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: "En çok okunanlar" })).toBeVisible();
+    await expect(page.getByText(/\d[\d.]* okuma/).first()).toBeVisible();
   });
 
   test("GUN-3 sitemap-gundem lists slug", async ({ request }) => {
