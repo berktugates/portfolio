@@ -65,11 +65,11 @@ function HaberGridCard({
       data-gundem-card="grid"
       className="group block h-full overflow-hidden rounded-2xl bg-zinc-300/30 p-px transition-[background] duration-200 dark:bg-zinc-600/30"
     >
-      <span className="flex h-full min-h-[11.5rem] overflow-hidden rounded-[15px] bg-white dark:bg-zinc-950 sm:min-h-[10.5rem]">
-        <span className="relative aspect-[4/3] w-[38%] max-w-[11rem] shrink-0 overflow-hidden bg-zinc-100 sm:w-40 sm:max-w-none dark:bg-zinc-900">
+      <span className="flex h-full flex-col overflow-hidden rounded-[15px] bg-white dark:bg-zinc-950 sm:min-h-[10.5rem] sm:flex-row sm:items-stretch">
+        <span className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-zinc-100 sm:aspect-auto sm:w-40 sm:min-h-[10.5rem] md:w-44 dark:bg-zinc-900">
           <GundemCover post={post} priority={priority} fill />
         </span>
-        <span className="flex min-w-0 flex-1 flex-col p-4">
+        <span className="flex min-w-0 flex-1 flex-col p-4 sm:py-3.5">
           <span className="flex flex-wrap items-center gap-2 text-xs font-medium text-zinc-500">
             <span>{formatGundemCategory(post.category)}</span>
             {post.trendQuery ? (
