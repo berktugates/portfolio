@@ -38,6 +38,8 @@ const SOURCE_HOST_ALLOWLIST = new Set([
   "www.btk.gov.tr",
   "tbmm.gov.tr",
   "www.tbmm.gov.tr",
+  "tff.org",
+  "www.tff.org",
   "saglik.gov.tr",
   "www.saglik.gov.tr",
   "developer.mozilla.org",
