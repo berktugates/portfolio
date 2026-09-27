@@ -45,23 +45,6 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
     };
   }, [menuOpen]);
 
-  const brand = (
-    <Link
-      href={home}
-      onClick={() => setMenuOpen(false)}
-      className="flex shrink-0 items-center gap-2.5"
-      aria-label={`${HABERLER_BRAND} ana sayfa`}
-    >
-      <span className="flex h-9 w-9 items-center justify-center rounded-md bg-zinc-950 text-[11px] font-bold tracking-tight text-white dark:bg-zinc-100 dark:text-zinc-950">
-        BBA
-      </span>
-      <span className="leading-tight">
-        <span className="block text-sm font-semibold text-zinc-950 dark:text-zinc-50">{HABERLER_BRAND}</span>
-        <span className="block text-[11px] text-zinc-500">Türkiye gündemi</span>
-      </span>
-    </Link>
-  );
-
   const categoryLinks = (
     <>
       <li>
@@ -98,26 +81,38 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
       className="sticky top-0 z-50 border-b border-zinc-200/90 bg-white/95 backdrop-blur-md dark:border-zinc-800/90 dark:bg-zinc-950/95"
     >
       <div className={`${HABERLER_CONTAINER_CLASS} py-3`}>
-        <div className="hidden md:flex md:flex-wrap md:items-center md:justify-center md:gap-x-5 md:gap-y-2">
-          {brand}
-          <nav aria-label="Haber kategorileri">
-            <ul className="flex flex-wrap items-center justify-center gap-1">{categoryLinks}</ul>
-          </nav>
-        </div>
-
-        <div className="flex items-center justify-between gap-3 md:hidden">
+        <div className="flex items-center gap-3 md:justify-center md:gap-5">
           <button
             type="button"
             aria-expanded={menuOpen}
             aria-controls="haberler-mobile-menu"
             aria-label={menuOpen ? "Menüyü kapat" : "Menüyü aç"}
             onClick={() => setMenuOpen((o) => !o)}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 shadow-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-800 shadow-sm md:hidden dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           >
             {menuOpen ? <X className="size-5" aria-hidden /> : <Menu className="size-5" aria-hidden />}
           </button>
-          <div className="flex min-w-0 flex-1 justify-center">{brand}</div>
-          <span className="h-10 w-10 shrink-0" aria-hidden />
+
+          <Link
+            href={home}
+            onClick={() => setMenuOpen(false)}
+            className="flex min-w-0 flex-1 items-center justify-center gap-2.5 md:flex-none md:justify-start"
+            aria-label={`${HABERLER_BRAND} ana sayfa`}
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-[11px] font-bold tracking-tight text-white dark:bg-zinc-100 dark:text-zinc-950">
+              BBA
+            </span>
+            <span className="hidden leading-tight sm:block">
+              <span className="block text-sm font-semibold text-zinc-950 dark:text-zinc-50">{HABERLER_BRAND}</span>
+              <span className="block text-[11px] text-zinc-500">Türkiye gündemi</span>
+            </span>
+          </Link>
+
+          <nav aria-label="Haber kategorileri" className="hidden min-w-0 md:block">
+            <ul className="flex flex-wrap items-center justify-center gap-1">{categoryLinks}</ul>
+          </nav>
+
+          <span className="h-10 w-10 shrink-0 md:hidden" aria-hidden />
         </div>
       </div>
 
