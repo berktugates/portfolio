@@ -131,20 +131,20 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
             {menuOpen ? <X className="size-5" aria-hidden /> : <Menu className="size-5" aria-hidden />}
           </button>
 
-          <Link
-            href={home}
-            onClick={closeMenu}
-            className="flex min-w-0 flex-1 items-center justify-center gap-2.5 md:flex-none md:justify-start"
-            aria-label={`${HABERLER_BRAND} ana sayfa`}
-          >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-[11px] font-bold tracking-tight text-white dark:bg-zinc-100 dark:text-zinc-950">
+          <div className="flex min-w-0 flex-1 items-center justify-center gap-2.5 md:flex-none md:justify-start">
+            <Link
+              href={home}
+              onClick={closeMenu}
+              aria-label="BBA ana sayfa"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-[11px] font-bold tracking-tight text-white transition-opacity hover:opacity-90 dark:bg-zinc-100 dark:text-zinc-950"
+            >
               BBA
-            </span>
+            </Link>
             <span className="hidden leading-tight sm:block">
               <span className="block text-sm font-semibold text-zinc-950 dark:text-zinc-50">{HABERLER_BRAND}</span>
               <span className="block text-[11px] text-zinc-500">Türkiye gündemi</span>
             </span>
-          </Link>
+          </div>
 
           <nav aria-label="Haber kategorileri" className="hidden min-w-0 md:block">
             <ul className="flex flex-wrap items-center justify-center gap-1">{desktopCategoryLinks}</ul>

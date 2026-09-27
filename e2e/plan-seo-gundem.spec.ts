@@ -46,7 +46,7 @@ test.describe("Gündem surface", () => {
     expect(res?.status()).toBe(200);
     await expect(page.getByRole("heading", { name: "Türkiye Gündemi", level: 1 })).toBeVisible();
     await expect(page.locator("[data-haberler-nav]")).toBeVisible();
-    await expect(page.getByRole("link", { name: "BBA Gündem ana sayfa" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "BBA ana sayfa" })).toBeVisible();
   });
 
   test("GUN-2 detail has a cover, sources, and one portfolio link", async ({ page }) => {
