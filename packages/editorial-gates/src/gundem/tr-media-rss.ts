@@ -77,7 +77,7 @@ export function loadFeedConfigDefaults(): TrMediaFeedConfig {
       },
       {
         id: "trt-gundem",
-        url: "https://www.trthaber.com/rss/gundem.rss",
+      url: "https://www.trthaber.com/gundem_articles.rss",
         label: "TRT Haber",
         tier: "rss-headline-only",
         publisherGroupId: "trt",

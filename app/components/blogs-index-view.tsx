@@ -43,6 +43,7 @@ export async function createBlogsIndexMetadata(
   return {
     title,
     description: content.ui.blogsMetaDescription,
+    robots: { index: page === 1, follow: true },
     ...visibleAuthorMeta(dict.headerName),
     alternates: { canonical: absoluteUrl(path), languages },
     openGraph: {

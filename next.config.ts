@@ -11,6 +11,18 @@ const nextConfig: NextConfig = {
     ],
   },
   poweredByHeader: false,
+  async headers() {
+    return [
+      {
+        source: "/manifest.webmanifest",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
+        source: "/:path*/rss.xml",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

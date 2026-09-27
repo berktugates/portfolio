@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { projects } from "./data/projects";
 import { blogPosts } from "./data/blogs";
-import { blogHreflangLocalesForSlug, blogIndexHreflangLocales, blogIndexPageCount } from "./lib/content/blog-locale-overlay";
+import { blogHreflangLocalesForSlug, blogIndexHreflangLocales } from "./lib/content/blog-locale-overlay";
 import {
   blogPostPath,
   blogsIndexPath,
@@ -20,7 +20,6 @@ export const revalidate = 3600;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const homeLanguages = hreflangLanguages();
-  const totalPages = Math.max(...LOCALES.map((locale) => blogIndexPageCount(locale)));
 
   // Home and hire lastmod used a single hand-edited stamp, not a per-template change time.
   // Omitting the field is the honest signal. Blog entries keep their own dates.
@@ -76,24 +75,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       : [],
   );
 
-  const blogIndexEntries = Array.from({ length: totalPages }, (_, index) => {
-    const page = index + 1;
-    return LOCALES.filter((locale) => blogIndexPageCount(locale) >= page).map((locale) => {
-      const siblings = blogIndexHreflangLocales(locale, page);
-      return {
-        url: absoluteUrl(blogsIndexPath(locale, page)),
-        alternates: {
-          languages: Object.fromEntries([
-            ["x-default", absoluteUrl(blogsIndexPath(siblings.includes("en") ? "en" : locale, page))],
-            ...siblings.map((targetLocale) => [
-              localeMeta[targetLocale].hreflang,
-              absoluteUrl(blogsIndexPath(targetLocale, page)),
-            ]),
+  const blogIndexEntries = LOCALES.map((locale) => {
+    const siblings = blogIndexHreflangLocales(locale, 1);
+    return {
+      url: absoluteUrl(blogsIndexPath(locale, 1)),
+      alternates: {
+        languages: Object.fromEntries([
+          ["x-default", absoluteUrl(blogsIndexPath(siblings.includes("en") ? "en" : locale, 1))],
+          ...siblings.map((targetLocale) => [
+            localeMeta[targetLocale].hreflang,
+            absoluteUrl(blogsIndexPath(targetLocale, 1)),
           ]),
-        },
-      };
-    });
-  }).flat();
+        ]),
+      },
+    };
+  });
 
   const blogPostEntries = blogPosts.flatMap((post) => {
     const locales = blogHreflangLocalesForSlug(post.slug);
