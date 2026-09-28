@@ -24,6 +24,10 @@ export function bodyHasCurrentEventSignals(body: string): boolean {
   const numberHits = NUMBER_RE.test(body);
   if (eventHits >= 2) return true;
   if (eventHits >= 1 && numberHits) return true;
+  // Feed-backed drafts already have a 36-hour evidence window and two-source
+  // requirement; one explicit reporting verb is sufficient for events with no
+  // material number (statements, schedules and denials).
+  if (eventHits >= 1) return true;
   return false;
 }
 
