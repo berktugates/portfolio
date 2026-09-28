@@ -44,3 +44,12 @@ test("conflicting material numbers do not become publishable evidence", () => {
   ]);
   assert.ok(clusters.every((cluster) => !clusterMeetsSyndicationRules(cluster, 2)));
 });
+
+test("a shared number cannot merge unrelated events", () => {
+  const clusters = clusterFeedItems([
+    item("site-a", "Gaziantep'te kazada 7 kişi hayatını kaybetti"),
+    item("site-b", "7 Ekim saldırılarının yıl dönümünde açıklama yapıldı"),
+  ]);
+  assert.equal(clusters.length, 2);
+  assert.ok(clusters.every((cluster) => cluster.items.length === 1));
+});

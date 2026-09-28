@@ -14,9 +14,13 @@ export const ESTIMATED_NEURONS_PER_DRAFT = 800;
 type AiDraft = { title: string; excerpt: string; paragraphs: string[] };
 
 function extractJson(value: unknown): unknown {
-  const text = typeof value === "string"
-    ? value
-    : ((value as { response?: string })?.response ?? JSON.stringify(value));
+  if (value && typeof value === "object") {
+    const candidate = value as Record<string, unknown>;
+    if (typeof candidate.title === "string" && Array.isArray(candidate.paragraphs)) return candidate;
+    if ("response" in candidate) return extractJson(candidate.response);
+  }
+  const text = typeof value === "string" ? value : JSON.stringify(value);
+  if (typeof text !== "string") return null;
   const start = text.indexOf("{");
   const end = text.lastIndexOf("}");
   if (start < 0 || end <= start) return null;

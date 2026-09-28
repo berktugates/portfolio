@@ -72,10 +72,14 @@ function jaccard(a: string[], b: string[]): number {
 }
 
 function similarityScore(titleA: string, titleB: string, tokensA: string[], tokensB: string[]): number {
+  const sharedTokens = [...new Set(tokensA)].filter((token) => new Set(tokensB).has(token));
   let score = jaccard(tokensA, tokensB);
   const numsA = numbersIn(titleA);
   const numsB = numbersIn(titleB);
-  if (numsA.length > 0 && numsB.length > 0 && numsA.some((n) => numsB.includes(n))) {
+  const matchingNumber = numsA.length > 0 && numsB.length > 0 && numsA.some((n) => numsB.includes(n));
+  const eventAnchor = sharedTokens.some((token) => ["dolar", "euro", "transfer", "deprem", "seçim", "maç"].includes(token));
+  // A shared number is supporting evidence, never an event identity on its own.
+  if (matchingNumber && (sharedTokens.length >= 2 || eventAnchor)) {
     score += 0.35;
   }
   const na = normalizeToken(titleA);
