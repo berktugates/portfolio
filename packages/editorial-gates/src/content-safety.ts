@@ -162,7 +162,8 @@ export function assessContentSafety(input: ContentSafetyInput): ContentSafetyRes
       }
       const needsCurrentEvents =
         input.editorialSource === "headlines" || input.editorialSource === "catalog";
-      if (needsCurrentEvents && !bodyHasCurrentEventSignals(input.body)) {
+      const hasMultiSourceHeadlineEvidence = (input.referenceHeadlines?.length ?? 0) >= 2;
+      if (needsCurrentEvents && !hasMultiSourceHeadlineEvidence && !bodyHasCurrentEventSignals(input.body)) {
         return { ok: false, code: "no-current-events", hits: ["missing-event-or-number"] };
       }
     }
