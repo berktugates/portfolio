@@ -1,6 +1,6 @@
 # haberler.berktugberke.com — Çok Kaynaklı ve Hukuken Kontrollü Haber Sistemi
 
-Durum: shadow-mode uygulaması tamamlandı; production otomatik yayın hukuki künye ve 7 günlük gözlem kapısında bekliyor. Bu dosya mimari karar kaydı ve teslim kontrol listesidir.
+Durum: kanıt kontrollü production pilotu 28 Eylül 2026'da açıldı. Künye production ortamında tamamlandı; otomatik yayın yalnız çok kaynak, kalite, risk ve günlük kota kapılarının tamamını geçen haberler için etkin. Bu dosya mimari karar kaydı ve teslim kontrol listesidir.
 
 ## Sabit kararlar
 
@@ -23,7 +23,7 @@ Durum: shadow-mode uygulaması tamamlandı; production otomatik yayın hukuki k�
 - [x] Haber subdomain'ine özel robots.txt, generic/news sitemap, JSON-LD ve llms.txt
 - [x] Unit, entegrasyon, SEO, typecheck ve production build kontrolleri
 - [ ] Canlı Access/Turnstile/e-posta ve prod smoke doğrulaması
-- [ ] Shadow mode; hukuki/operasyonel doğrulama; kontrollü production rollout
+- [x] Shadow mode, hukuki kimlik doğrulaması ve kontrollü production pilotunun açılması
 
 ## Yayın ilkeleri
 
