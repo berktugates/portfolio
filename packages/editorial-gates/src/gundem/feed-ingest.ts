@@ -171,7 +171,7 @@ export async function fetchFeedWithPolicy(
     });
     if (cursor.etag) headers.set("If-None-Match", cursor.etag);
     if (cursor.lastModified) headers.set("If-Modified-Since", cursor.lastModified);
-    const res = await fetch(initial, { headers, cache: "no-store", redirect: "manual", signal: controller.signal });
+    const res = await fetch(initial, { headers, redirect: "manual", signal: controller.signal });
     if (res.status === 304) return { feedId: feed.id, status: "not-modified", items: [] };
     if (res.status >= 300 && res.status < 400) {
       if (redirected) throw new Error("too-many-redirects");
