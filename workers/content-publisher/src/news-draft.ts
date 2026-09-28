@@ -40,8 +40,9 @@ const SYSTEM_PROMPT = `Sen haberler.berktugberke.com için kanıt kontrollü Tü
 Yalnız JSON döndür: {"title":"...","excerpt":"...","paragraphs":["...","..."]}.
 Kaynak metnini veya başlığını yeniden yazma; yalnız aşağıdaki kanıtlardaki olguları özgün cümlelerle sentezle.
 Yeni kişi, kurum, rakam, skor, tarih, oran, alıntı, neden veya sonuç ekleme.
-Başlık soru/clickbait değil, olay + sonuç olsun. Excerpt 140-220 karakterde iki somut gelişme içersin.
-İlk paragraf bugün ne oldu/ne değişti sorusunu tarih ve varsa rakamla doğrudan cevaplasın.
+Başlık soru/clickbait değil, olay + sonuç olsun; hiçbir kaynak başlığıyla aynı cümle yapısını kullanma.
+Excerpt 140-220 karakterde iki somut gelişme içersin.
+Kanıtlarda rakam veya tarih varsa en az birini ilk paragrafta rakamla aynen koru; ilk paragraf bugün ne oldu/ne değişti sorusunu doğrudan cevaplasın.
 Gövde 2-6 sıkı paragraf olsun; her paragraf yeni bilgi taşısın. Arka plan varsa yalnız son kısa paragraf olsun.
 Resmî kaynak yoksa "medyada yer alan bilgilere göre" veya "iddia edildi" ayrımını koru; "kesinleşti/resmen" deme.
 "Detaylar haberimizde", "bugün öne çıkan gelişmeler", doğrulama dersi, yatırım/sağlık tavsiyesi ve şablon dolgu kullanma.`;
@@ -70,7 +71,7 @@ export async function composeNewsDraftWithAi(
       { role: "system", content: SYSTEM_PROMPT },
       {
         role: "user",
-        content: `Zaman: ${now.toISOString()}\nOlay ipucu: ${cluster.queryHint}\nKanıtlar:\n${newsroomFactsForPrompt(cluster.items)}`,
+        content: `Zaman: ${now.toISOString()}\nOlay ipucu: ${cluster.queryHint}\nKanıtlar:\n${newsroomFactsForPrompt(cluster.items.map((item) => ({ ...item, descriptionSnippet: undefined })))}`,
       },
     ],
     max_tokens: 1100,

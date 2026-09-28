@@ -92,7 +92,10 @@ function similarityScore(titleA: string, titleB: string, tokensA: string[], toke
 function materialNumberConflict(titleA: string, titleB: string): boolean {
   const a = numbersIn(titleA);
   const b = numbersIn(titleB);
-  if (a.length === 0 || b.length === 0) return false;
+  // If only one headline carries a number, we cannot prove it describes the
+  // same event rather than a different development in the same broad story.
+  if ((a.length === 0) !== (b.length === 0)) return true;
+  if (a.length === 0) return false;
   return !a.some((number) => b.includes(number));
 }
 

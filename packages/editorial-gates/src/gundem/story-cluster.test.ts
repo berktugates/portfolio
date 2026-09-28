@@ -53,3 +53,11 @@ test("a shared number cannot merge unrelated events", () => {
   assert.equal(clusters.length, 2);
   assert.ok(clusters.every((cluster) => cluster.items.length === 1));
 });
+
+test("a numbered development does not merge into a vague umbrella headline", () => {
+  const clusters = clusterFeedItems([
+    item("site-a", "Fon soruşturmasında 7 şüpheli gözaltında"),
+    item("site-b", "Fon soruşturmasında yeni karar"),
+  ]);
+  assert.equal(clusters.length, 2);
+});
