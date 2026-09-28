@@ -4,6 +4,12 @@ import { HABERLER_ORIGIN, isHaberlerHost } from "./app/lib/gundem/hosts";
 
 const PROD_REDIRECT_GUNDEM = process.env.VERCEL_ENV === "production";
 const APEX_HOST = "berktugberke.com";
+const RETIRED_LEGACY_NEWS_SLUGS = new Set([
+  // The former Trends-based generator produced a generic template for this URL,
+  // not a verifiable news report. Keep an explicit tombstone so crawlers do not
+  // mistake an intentionally retired page for a transient routing failure.
+  "turkiye-mauro-icardi-brifing",
+]);
 
 function hostnameOf(host: string) {
   return host.split(":")[0]?.toLowerCase() ?? "";
@@ -50,6 +56,16 @@ export function proxy(request: NextRequest) {
     }
     if (!pathname.includes(".") && pathname.length > 1) {
       const slug = pathname.replace(/^\//, "");
+      if (RETIRED_LEGACY_NEWS_SLUGS.has(slug)) {
+        return new NextResponse("Bu eski içerik kalıcı olarak yayından kaldırılmıştır.", {
+          status: 410,
+          headers: {
+            "Cache-Control": "public, max-age=300, s-maxage=3600",
+            "Content-Type": "text/plain; charset=utf-8",
+            "X-Robots-Tag": "noindex, noarchive",
+          },
+        });
+      }
       return NextResponse.rewrite(new URL(`/gundem/${slug}`, request.url));
     }
     return NextResponse.next();

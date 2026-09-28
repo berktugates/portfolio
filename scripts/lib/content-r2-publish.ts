@@ -43,10 +43,24 @@ export async function putGundemBriefingR2(draft: GundemBriefing): Promise<void> 
   await putR2Json(client, bucket, `gundem/${draft.slug}.json`, draft);
 }
 
+export function mergeGundemIndexPosts(
+  existing: readonly GundemBriefing[],
+  incoming: readonly GundemBriefing[],
+): GundemBriefing[] {
+  const bySlug = new Map(existing.map((post) => [post.slug, post]));
+  for (const post of incoming) bySlug.set(post.slug, post);
+  return [...bySlug.values()].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+}
+
 export async function replaceGundemIndexR2(posts: readonly GundemBriefing[]): Promise<void> {
+  const existing = (await fetchJsonIndex<{ posts: GundemBriefing[] }>("gundem/index.json")) ?? {
+    posts: [],
+  };
   const client = createR2Client();
   const bucket = bucketName();
-  const merged = [...posts].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  // A seed operation may add or update curated stories, but it must never erase
+  // articles already published by the autonomous newsroom worker.
+  const merged = mergeGundemIndexPosts(existing.posts, posts);
   await putR2Json(client, bucket, "gundem/index.json", { posts: merged });
 }
 
