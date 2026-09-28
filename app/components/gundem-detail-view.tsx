@@ -117,12 +117,10 @@ export async function GundemDetailView({ params }: Props) {
                 {formatGundemCategory(briefing.category)}
               </Link>
               <span>Yayımlandı: <time dateTime={briefing.publishedAt}>{formatGundemDate(briefing.publishedAt)}</time></span>
-              {briefing.dateModified !== briefing.publishedAt ? (
-                <span>Güncellendi: <time dateTime={briefing.dateModified}>{formatGundemDate(briefing.dateModified)}</time></span>
-              ) : null}
             </div>
             <h1 className="mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">{briefing.title}</h1>
             <p className="!my-0 mt-5 text-lg leading-8 text-zinc-600 dark:text-zinc-300">{briefing.excerpt}</p>
+            <BlogShare title={briefing.title} url={canonical} label="Paylaş" />
           </header>
 
           <figure className="mb-10 overflow-hidden rounded-xl">
@@ -154,21 +152,6 @@ export async function GundemDetailView({ params }: Props) {
                 </li>
               ))}
             </ul>
-            <BlogShare title={briefing.title} url={canonical} label="Paylaş" />
-            {briefing.revisions?.length ? (
-              <section aria-labelledby="revision-history">
-                <h2 id="revision-history" className="text-base font-medium">Güncelleme ve düzeltme geçmişi</h2>
-                <ol className="text-sm text-zinc-600 dark:text-zinc-400">
-                  {briefing.revisions.map((revision) => (
-                    <li key={revision.revisionId}>
-                      <time dateTime={revision.createdAt}>{formatGundemDate(revision.createdAt)}</time>
-                      {` · ${revision.kind === "publish" ? "İlk yayın" : revision.kind === "update" ? "Güncelleme" : revision.kind === "correction" ? "Düzeltme" : "Geri çekme"}`}
-                      {revision.note ? ` — ${revision.note}` : null}
-                    </li>
-                  ))}
-                </ol>
-              </section>
-            ) : null}
             <aside className="mt-10 border-t border-zinc-200 pt-6 dark:border-zinc-800">
               <p className="font-medium text-zinc-950 dark:text-zinc-50">{dict.headerName}</p>
               <p className="text-sm text-zinc-500">Editör</p>
