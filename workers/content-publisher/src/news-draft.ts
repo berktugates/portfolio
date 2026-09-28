@@ -7,7 +7,7 @@ import { claimsFromFeedItems, newsroomFactsForPrompt } from "@berktug/editorial-
 import type { FeedStoryCluster } from "@berktug/editorial-gates/gundem/story-cluster";
 import type { GundemBriefing } from "@berktug/editorial-gates/gundem/types";
 
-const NEWS_MODEL = "@cf/meta/llama-3.1-8b-instruct";
+const NEWS_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
 export const NEWS_PROMPT_VERSION = "news-v2";
 export const ESTIMATED_NEURONS_PER_DRAFT = 800;
 
