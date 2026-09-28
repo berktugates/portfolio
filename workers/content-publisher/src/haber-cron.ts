@@ -37,6 +37,10 @@ import {
 const MAX_NEW_PER_DAY = 6;
 const NEWS_AI_BUDGET = 8_000;
 
+export function shouldRecordFeedResult(status: "ok" | "not-modified" | "skipped" | "failed"): boolean {
+  return status !== "skipped";
+}
+
 async function loadFeedConfig(bucket: R2Bucket): Promise<TrMediaFeedConfig> {
   const obj = await bucket.get("meta/tr-media-rss-feeds.json");
   if (!obj) return loadFeedConfigDefaults();
@@ -61,11 +65,14 @@ async function ingestFeeds(env: Env, config: TrMediaFeedConfig): Promise<void> {
   const results = await Promise.all(feeds.map(async (feed) => {
     const cursor = await getFeedCursor(env, feed.id);
     const result = await fetchFeedWithPolicy(feed, cursor);
-    await recordFeedResult(env, feed.id, {
-      ok: result.status === "ok" || result.status === "not-modified",
-      etag: result.etag,
-      lastModified: result.lastModified,
-    });
+    if (shouldRecordFeedResult(result.status)) {
+      await recordFeedResult(env, feed.id, {
+        ok: result.status === "ok" || result.status === "not-modified",
+        etag: result.etag,
+        lastModified: result.lastModified,
+      });
+    }
+    if (result.status === "failed") console.warn(`haber-cron: feed-failed source=${feed.id} reason=${result.error ?? "unknown"}`);
     return result;
   }));
   const items = results.flatMap((result) => result.items);
