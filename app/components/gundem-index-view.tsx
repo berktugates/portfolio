@@ -117,7 +117,7 @@ export async function GundemIndexView({ activeCategory = null }: GundemIndexView
   const categoryTitle = activeCategory ? formatGundemCategory(activeCategory) : null;
 
   return (
-    <HaberlerShell activeCategory={activeCategory}>
+    <HaberlerShell activeCategory={activeCategory} enableAds={activeCategory !== null}>
       <div className="mb-8 border-b border-zinc-200 pb-8 dark:border-zinc-800">
         <p className="text-xs font-medium uppercase tracking-widest text-zinc-500">{todayLabel}</p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-4xl">

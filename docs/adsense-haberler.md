@@ -1,29 +1,22 @@
 # Haberler — Google AdSense
 
-## Güvenlik
+## Kapsam
 
-- AdSense hesabı **tarayıcı otomasyonu veya sohbette paylaşılan şifre ile açılmaz**.
-- `ca-pub-*` yalnızca Vercel **Environment Variables** (Production) içinde tutulur.
+- AdSense site kaydı Google'ın site yönetimi gereği `berktugberke.com` alan adıyla yapılır.
+- Reklam betiği yalnız `haberler.berktugberke.com/kategori/*` ve haber detaylarında yüklenir.
+- Haberler ana sayfası, künye, editöryal politika, düzeltme ve yazar sayfalarında reklam betiği yoktur.
+- Portföy ana alan adında reklam betiği yoktur.
 
-## Kurulum (manuel)
+## Yapılandırma
 
-1. Kayıtta **üst düzey alan** gerekebilir: `https://berktugberke.com` (ads.txt burada).
-2. **Reklam kodu** yalnızca **`https://haberler.berktugberke.com`** sayfalarında yüklenir (`app/gundem/layout.tsx` + host kontrolü). Portföy ana sitede script yok.
-3. AdSense → **Siteler** → **Site ekle** → `https://haberler.berktugberke.com` (kod doğrulaması bu host’ta yapılır).
-4. Onay için haberler’de içerik, `kunye`, `editorial-policy`, `robots.txt`, sitemap erişilebilir olmalı.
-3. Onay sonrası **Reklam birimleri** oluştur:
-   - Dikey / display — sol şerit (slot → `NEXT_PUBLIC_ADSENSE_SLOT_LEFT`)
-   - Dikey / display — sağ şerit (`NEXT_PUBLIC_ADSENSE_SLOT_RIGHT`)
-   - Yatay responsive — mobil (`NEXT_PUBLIC_ADSENSE_SLOT_MOBILE`)
-   - Makale altı — mobil (`NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE`)
-4. Vercel → Project → Settings → Environment Variables:
-   - `NEXT_PUBLIC_ADSENSE_CLIENT_ID=ca-pub-2056987543720599` (hesap pub kimliği)
-   - Slot değişkenleri (opsiyonel; boşsa auto format denenir)
-5. Redeploy.
+1. Public yayıncı kimliği kodda ve `ads.txt` içinde sabittir; `NEXT_PUBLIC_ADSENSE_CLIENT_ID` yalnız gerektiğinde override eder.
+2. `public/ads.txt`, yayıncı kimliğini `DIRECT` olarak bildirir.
+3. Auto Ads biçimleri: banner, Multiplex, sabit, sol/sağ yan reklam sütunu ve vinyet.
+4. Yerleşimler AdSense tarafından ekran boyutu, içerik uzunluğu ve kullanılabilir boşluğa göre seçilir.
 
-## UI
+## Performans ve kullanıcı deneyimi
 
-- **Desktop (lg+):** İçerik ortada; sol/sağ sticky dikey birimler (`haberler-shell.tsx`).
-- **Mobil:** Nav altı banner + makale sonu birim.
-
-Reklam env yoksa bileşenler render edilmez (geliştirme ortamı temiz kalır).
+- Betik `afterInteractive` ile yüklenir; haber içeriğinin ilk boyamasını engellemez.
+- Masaüstünde yan reklam sütunları uygun genişlikte sol ve sağ boşluğu kullanır.
+- Mobilde sabit ve responsive sayfa içi biçimler kullanılır.
+- Elle boş reklam alanı ayrılmaz; bu sayede reklam sunulmadığında içerikte boşluk ve gereksiz CLS oluşmaz.

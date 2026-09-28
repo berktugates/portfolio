@@ -12,8 +12,6 @@ import { getDictionary } from "../lib/i18n";
 import { AUTHOR_ID, SITE_URL, visibleAuthorMeta, jsonLd } from "../lib/seo";
 import { GundemDetailChatDock } from "./gundem-detail-chat-dock";
 import { GundemViewBeacon } from "./gundem-view-beacon";
-import { HaberlerAdUnit } from "./haberler-ad-unit";
-import { haberlerAdsenseEnabled } from "../lib/gundem/adsense";
 import { SiteFooter } from "./site-footer";
 import { newsPublisherJsonLd } from "../lib/gundem/publication";
 import { BlogShare } from "./blog-share";
@@ -106,7 +104,7 @@ export async function GundemDetailView({ params }: Props) {
   };
 
   return (
-    <HaberlerShell activeCategory={briefing.category ?? null}>
+    <HaberlerShell activeCategory={briefing.category ?? null} enableAds>
       <GundemViewBeacon slug={briefing.slug} />
       <main className="blog-prose mx-auto max-w-3xl pb-12">
         <article>
@@ -143,11 +141,6 @@ export async function GundemDetailView({ params }: Props) {
             {paragraphs.map((paragraph) => (
               <p key={paragraph.slice(0, 40)}>{paragraph}</p>
             ))}
-            {haberlerAdsenseEnabled() ? (
-              <div className="my-8 not-prose lg:hidden">
-                <HaberlerAdUnit placement="article-footer" />
-              </div>
-            ) : null}
             <h2 className="text-base font-medium">Kaynaklar</h2>
             <ul className="text-sm text-zinc-600 dark:text-zinc-400">
               {briefing.sources.map((source) => (
