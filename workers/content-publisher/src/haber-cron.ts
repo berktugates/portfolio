@@ -138,15 +138,20 @@ export async function runHaberCron(env: Env): Promise<{ published: boolean; reas
   const activeItems = await loadActiveNewsSourceItems(env);
   const clusters = clusterFeedItems(activeItems, config.evidenceWindowHours ?? 36);
   const index = await loadGundemIndex(env.CONTENT_BUCKET);
+  let estimatedAiUsage = usage.aiNeuronsEstimated;
   for (const cluster of clusters) {
     if (!clusterMeetsSyndicationRules(cluster, config.minIndependentPublisherGroups ?? 2)) continue;
     if (index.some((post) => post.syndication?.clusterId === cluster.clusterId)) continue;
     if (await storyByClusterKey(env, cluster.clusterId)) continue;
+    if (estimatedAiUsage + ESTIMATED_NEURONS_PER_DRAFT > NEWS_AI_BUDGET) {
+      return { published: false, reason: "daily-ai-budget" };
+    }
 
     let draft: GundemBriefing | null = null;
     try {
       draft = await composeNewsDraftWithAi(env, cluster, now);
       await addDailyNewsUsage(env, today, { aiNeuronsEstimated: ESTIMATED_NEURONS_PER_DRAFT });
+      estimatedAiUsage += ESTIMATED_NEURONS_PER_DRAFT;
     } catch (error) {
       console.log("haber-cron: ai-failed", error instanceof Error ? error.message : error);
       return { published: false, reason: "ai-failed" };

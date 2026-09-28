@@ -7,7 +7,7 @@ import { claimsFromFeedItems, newsroomFactsForPrompt } from "@berktug/editorial-
 import type { FeedStoryCluster } from "@berktug/editorial-gates/gundem/story-cluster";
 import type { GundemBriefing } from "@berktug/editorial-gates/gundem/types";
 
-const NEWS_MODEL = "@cf/meta/llama-3.2-3b-instruct";
+const NEWS_MODEL = "@cf/meta/llama-3.1-8b-instruct";
 export const NEWS_PROMPT_VERSION = "news-v2";
 export const ESTIMATED_NEURONS_PER_DRAFT = 800;
 
@@ -75,6 +75,24 @@ export async function composeNewsDraftWithAi(
     ],
     max_tokens: 1100,
     temperature: 0.2,
+    response_format: {
+      type: "json_schema",
+      json_schema: {
+        type: "object",
+        properties: {
+          title: { type: "string", minLength: 20, maxLength: 110 },
+          excerpt: { type: "string", minLength: 140, maxLength: 220 },
+          paragraphs: {
+            type: "array",
+            minItems: 2,
+            maxItems: 6,
+            items: { type: "string", minLength: 60 },
+          },
+        },
+        required: ["title", "excerpt", "paragraphs"],
+        additionalProperties: false,
+      },
+    },
   });
   const parsed = extractJson(response);
   if (!isAiDraft(parsed)) return null;
