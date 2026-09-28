@@ -13,7 +13,7 @@ export default function KunyePage() {
       <dt>Sorumlu müdür</dt><dd>{identity.responsibleManager ?? "Yayın öncesi doğrulama bekliyor"}</dd>
       <dt>Yayın türü</dt><dd>{identity.publicationType}</dd>
       <dt>Yönetim / işyeri adresi</dt><dd>{identity.workplaceAddress ?? "Yayın öncesi doğrulama bekliyor"}</dd>
-      <dt>Telefon</dt><dd>{identity.phone ?? "Yayın öncesi doğrulama bekliyor"}</dd>
+      <dt>Telefon</dt><dd>{identity.phone ?? "Güncellenecek"}</dd>
       <dt>E-posta</dt><dd><a href={`mailto:${identity.email}`}>{identity.email}</a></dd>
       <dt>Elektronik tebligat adresi</dt><dd>{identity.electronicNotificationAddress ?? "Yayın öncesi doğrulama bekliyor"}</dd>
       <dt>Yer sağlayıcı</dt><dd>{identity.hostingProvider}</dd>

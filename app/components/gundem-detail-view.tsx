@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { GundemCover, gundemShowsPhoto } from "./gundem-cover";
+import { GundemCover } from "./gundem-cover";
 import { HaberlerShell } from "./haberler-shell";
 import { getGundemBySlug, getGundemSlugs } from "../lib/gundem/catalog";
 import { briefingHighlights } from "../lib/gundem/briefing-highlights";
@@ -14,6 +14,7 @@ import { GundemDetailChatDock } from "./gundem-detail-chat-dock";
 import { GundemViewBeacon } from "./gundem-view-beacon";
 import { SiteFooter } from "./site-footer";
 import { newsPublisherJsonLd } from "../lib/gundem/publication";
+import { BlogShare } from "./blog-share";
 
 export const revalidate = 1800;
 
@@ -46,7 +47,7 @@ export async function createGundemDetailMetadata({ params }: Props): Promise<Met
       url: canonical,
       publishedTime: briefing.publishedAt,
       modifiedTime: briefing.dateModified,
-      ...(gundemShowsPhoto(briefing)
+      ...(validateLicensedImage(briefing.image).ok
         ? { images: [{ url: briefing.image.src, alt: briefing.image.alt }] }
         : {}),
     },
@@ -88,7 +89,7 @@ export async function GundemDetailView({ params }: Props) {
         articleSection: formatGundemCategory(briefing.category),
         isAccessibleForFree: true,
         citation: briefing.sources.map((s) => s.url),
-        ...(gundemShowsPhoto(briefing)
+        ...(imageCheck.ok
           ? {
               image: {
                 "@type": "ImageObject",
@@ -115,11 +116,6 @@ export async function GundemDetailView({ params }: Props) {
               >
                 {formatGundemCategory(briefing.category)}
               </Link>
-              {briefing.trendQuery ? (
-                <span className="rounded-full border border-zinc-200 px-2.5 py-1 dark:border-zinc-700">
-                  Gündem: {briefing.trendQuery}
-                </span>
-              ) : null}
               <span>Yayımlandı: <time dateTime={briefing.publishedAt}>{formatGundemDate(briefing.publishedAt)}</time></span>
               {briefing.dateModified !== briefing.publishedAt ? (
                 <span>Güncellendi: <time dateTime={briefing.dateModified}>{formatGundemDate(briefing.dateModified)}</time></span>
@@ -130,7 +126,7 @@ export async function GundemDetailView({ params }: Props) {
           </header>
 
           <figure className="mb-10 overflow-hidden rounded-xl">
-            <GundemCover post={briefing} priority />
+            <GundemCover post={briefing} priority forcePhoto />
           </figure>
 
           <div className="max-w-none">
@@ -158,9 +154,7 @@ export async function GundemDetailView({ params }: Props) {
                 </li>
               ))}
             </ul>
-            {briefing.illustrativeImage ? (
-              <p className="text-xs text-zinc-500">Görsel temsilidir; olay fotoğrafı olarak sunulmamıştır.</p>
-            ) : null}
+            <BlogShare title={briefing.title} url={canonical} label="Paylaş" />
             {briefing.revisions?.length ? (
               <section aria-labelledby="revision-history">
                 <h2 id="revision-history" className="text-base font-medium">Güncelleme ve düzeltme geçmişi</h2>

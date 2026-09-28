@@ -2,7 +2,16 @@ type BlogShareProps = {
   title: string;
   /** Absolute or site-relative path used for share links. */
   url: string;
+  label?: string;
 };
+
+function FacebookIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+      <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06C2 17.08 5.66 21.24 10.44 22v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.5-3.91 3.77-3.91 1.09 0 2.23.2 2.23.2v2.46h-1.25c-1.24 0-1.63.77-1.63 1.56v1.9h2.77l-.44 2.91h-2.33V22C18.34 21.24 22 17.08 22 12.06Z" />
+    </svg>
+  );
+}
 
 function XIcon({ className }: { className?: string }) {
   return (
@@ -31,7 +40,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 const shareLinkClassName =
   "inline-flex size-9 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50";
 
-export function BlogShare({ title, url }: BlogShareProps) {
+export function BlogShare({ title, url, label = "Share" }: BlogShareProps) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://berktugberke.com";
   const absolute = url.startsWith("http") ? url : `${siteUrl}${url}`;
   const encodedUrl = encodeURIComponent(absolute);
@@ -39,7 +48,16 @@ export function BlogShare({ title, url }: BlogShareProps) {
 
   return (
     <nav aria-label="Share this article" className="mt-8 flex items-center gap-1">
-      <span className="mr-2 text-sm text-zinc-500 dark:text-zinc-400">Share</span>
+      <span className="mr-2 text-sm text-zinc-500 dark:text-zinc-400">{label}</span>
+      <a
+        href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
+        target="_blank"
+        rel="noreferrer"
+        className={shareLinkClassName}
+        aria-label="Share on Facebook"
+      >
+        <FacebookIcon className="size-4" />
+      </a>
       <a
         href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
         target="_blank"

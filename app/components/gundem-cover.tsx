@@ -13,19 +13,22 @@ export function GundemCover({
   post,
   priority = false,
   fill = false,
+  forcePhoto = false,
   className = "",
 }: {
   post: GundemBriefing;
   priority?: boolean;
   /** Parent relative + aspect or fixed height gerekir. */
   fill?: boolean;
+  /** Detail pages may show a verified licensed image even when list cards use a type cover. */
+  forcePhoto?: boolean;
   className?: string;
 }) {
   const category = formatGundemCategory(post.category);
   const frameClass = fill
     ? `absolute inset-0 h-full w-full ${className}`
     : `aspect-video w-full ${className}`;
-  if (!gundemShowsPhoto(post)) {
+  if (!forcePhoto && !gundemShowsPhoto(post)) {
     return (
       <div
         data-gundem-cover="type"
