@@ -15,7 +15,7 @@
    - Yatay responsive — mobil (`NEXT_PUBLIC_ADSENSE_SLOT_MOBILE`)
    - Makale altı — mobil (`NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE`)
 4. Vercel → Project → Settings → Environment Variables:
-   - `NEXT_PUBLIC_ADSENSE_CLIENT_ID=ca-pub-XXXXXXXX`
+   - `NEXT_PUBLIC_ADSENSE_CLIENT_ID=ca-pub-2056987543720599` (hesap pub kimliği)
    - Slot değişkenleri (opsiyonel; boşsa auto format denenir)
 5. Redeploy.
 

@@ -25,6 +25,7 @@ export function proxy(request: NextRequest) {
     if (pathname.startsWith("/_next") || pathname.startsWith("/api")) {
       return NextResponse.next();
     }
+    if (pathname === "/ads.txt") return NextResponse.next();
     if (pathname === "/robots.txt") return NextResponse.rewrite(new URL("/gundem/robots.txt", request.url));
     if (pathname === "/llms.txt") return NextResponse.rewrite(new URL("/gundem/llms.txt", request.url));
     if (pathname === "/sitemap.xml") return NextResponse.rewrite(new URL("/sitemap-haberler.xml", request.url));
