@@ -7,7 +7,7 @@ export async function GET() {
   const links = posts.map((post) => `- [${post.title}](https://haberler.berktugberke.com/${post.slug}): ${post.excerpt}`).join("\n");
   const body = `# Berktuğ Berke Ateş — Gündem
 
-> Türkiye gündemini kanıt kontrollü, çok kaynaklı ve özgün kısa haberlerle aktaran kişisel, reklamsız yayın.
+> Türkiye gündemini kanıt kontrollü, çok kaynaklı ve özgün kısa haberlerle aktaran kişisel haber yayını (AdSense reklamları site politikasına tabidir).
 
 Canonical publication: https://haberler.berktugberke.com/
 
