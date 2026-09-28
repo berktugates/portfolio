@@ -3,7 +3,6 @@ import type { GundemCategory } from "../lib/gundem/editorial";
 import { haberlerAdsenseEnabled } from "../lib/gundem/adsense";
 import { HABERLER_CONTAINER_CLASS } from "../lib/gundem/haberler-container";
 import { HaberlerAdUnit } from "./haberler-ad-unit";
-import { HaberlerAdsenseScript } from "./haberler-adsense-script";
 import { HaberlerNav } from "./haberler-nav";
 
 type HaberlerShellProps = {
@@ -30,7 +29,6 @@ export function HaberlerShell({ activeCategory = null, children }: HaberlerShell
 
   return (
     <div lang="tr" className="flex min-h-screen w-full flex-col bg-zinc-50 dark:bg-zinc-950">
-      {ads ? <HaberlerAdsenseScript /> : null}
       <HaberlerNav activeCategory={activeCategory} />
       <div className={`${HABERLER_CONTAINER_CLASS} flex-1 pb-16 pt-8`}>
         {ads ? (

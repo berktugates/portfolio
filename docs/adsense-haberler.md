@@ -7,8 +7,10 @@
 
 ## Kurulum (manuel)
 
-1. [Google AdSense](https://www.google.com/adsense/) → site ekle: `https://haberler.berktugberke.com`
-2. Onay için yeterli içerik, `kunye`, `editorial-policy`, `robots.txt`, sitemap hazır olmalı.
+1. Kayıtta **üst düzey alan** gerekebilir: `https://berktugberke.com` (ads.txt burada).
+2. **Reklam kodu** yalnızca **`https://haberler.berktugberke.com`** sayfalarında yüklenir (`app/gundem/layout.tsx` + host kontrolü). Portföy ana sitede script yok.
+3. AdSense → **Siteler** → **Site ekle** → `https://haberler.berktugberke.com` (kod doğrulaması bu host’ta yapılır).
+4. Onay için haberler’de içerik, `kunye`, `editorial-policy`, `robots.txt`, sitemap erişilebilir olmalı.
 3. Onay sonrası **Reklam birimleri** oluştur:
    - Dikey / display — sol şerit (slot → `NEXT_PUBLIC_ADSENSE_SLOT_LEFT`)
    - Dikey / display — sağ şerit (`NEXT_PUBLIC_ADSENSE_SLOT_RIGHT`)
