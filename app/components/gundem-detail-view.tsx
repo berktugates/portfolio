@@ -5,7 +5,7 @@ import { GundemCover } from "./gundem-cover";
 import { HaberlerShell } from "./haberler-shell";
 import { getGundemBySlug, getGundemSlugs } from "../lib/gundem/catalog";
 import { briefingHighlights } from "../lib/gundem/briefing-highlights";
-import { validateLicensedImage } from "../lib/image-license";
+import { licensedImageJsonLd, validateLicensedImage } from "../lib/image-license";
 import { HABERLER_PAGE_TITLE, formatGundemCategory, formatGundemDate } from "../lib/gundem/editorial";
 import { haberlerArticlePath, haberlerUrl } from "../lib/gundem/hosts";
 import { getDictionary } from "../lib/i18n";
@@ -92,9 +92,10 @@ export async function GundemDetailView({ params }: Props) {
         ...(imageCheck.ok
           ? {
               image: {
-                "@type": "ImageObject",
-                url: briefing.image.src.startsWith("http") ? briefing.image.src : `${SITE_URL}${briefing.image.src}`,
-                caption: briefing.image.alt,
+                ...licensedImageJsonLd({
+                  ...briefing.image,
+                  src: briefing.image.src.startsWith("http") ? briefing.image.src : `${SITE_URL}${briefing.image.src}`,
+                }),
               },
             }
           : {}),
@@ -125,6 +126,12 @@ export async function GundemDetailView({ params }: Props) {
 
           <figure className="mb-10 overflow-hidden rounded-xl">
             <GundemCover post={briefing} priority forcePhoto />
+            <figcaption className="bg-zinc-100 px-3 py-2 text-xs text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400">
+              Fotoğraf: {" "}
+              <a href={briefing.image.creditUrl} rel="noreferrer noopener" target="_blank" className="underline">
+                {briefing.image.creditName}
+              </a>
+            </figcaption>
           </figure>
 
           <div className="max-w-none">
