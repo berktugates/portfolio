@@ -21,8 +21,8 @@ crons = ["7,22,37,52 * * * *", "0 6 * * 1"]
 [vars]
 REVALIDATE_URL = "https://berktugberke.com/api/revalidate"
 HABERLER_HOST = "haberler.berktugberke.com"
-NEWS_AUTO_PUBLISH = "false"
-PUBLICATION_LEGAL_READY = "false"
+NEWS_AUTO_PUBLISH = "true"
+PUBLICATION_LEGAL_READY = "true"
 
 # wrangler secret put REVALIDATE_SECRET
 # wrangler secret put INDEXNOW_KEY
