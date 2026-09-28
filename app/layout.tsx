@@ -22,6 +22,8 @@ import {
 import { documentLang } from "./lib/document-lang";
 import { LOCALE_REDIRECT_SCRIPT, getDictionary, hreflangLanguages, localeMeta, type Locale } from "./lib/i18n";
 import { shareImageMeta } from "./lib/share-image";
+import { THEME_INLINE_BOOTSTRAP_SCRIPT } from "./lib/theme";
+import { ThemeSync } from "./components/theme-sync";
 const geistMono = Geist_Mono({ subsets: ["latin"], display: "swap" });
 const structuredData = {
   "@context": "https://schema.org",
@@ -112,15 +114,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang={lang} suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{document.documentElement.classList.toggle('dark',localStorage.theme==='dark'||(!('theme'in localStorage)&&matchMedia('(prefers-color-scheme:dark)').matches))}catch(e){}`,
-          }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: THEME_INLINE_BOOTSTRAP_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: LOCALE_REDIRECT_SCRIPT }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
       </head>
       <body className={`${geistMono.className} tracking-tight`}>
+        <ThemeSync />
         <GoogleTagManager />
         <ContentGroupBeacon />
         <a href="#main-content" className="sr-only focus:not-sr-only">
