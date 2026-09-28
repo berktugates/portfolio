@@ -3,7 +3,7 @@ import type { TrendNewsHeadline } from "./trends";
 
 /** Başlıkta olay / rakam sinyali — güncel haber cümlesi üretimi. */
 const EVENT_VERB_RE =
-  /\b(oldu|oluyor|olduğu|olacak|transfer|imzalandı|açıklandı|açıkladı|duyurdu|duyuruldu|bildirdi|güncellendi|yükseldi|düştü|arttı|azaldı|onaylandı|karar|rekor|zirve|çıktı|geldi|bitti|başladı|başlayacak|toplandı|toplanacak|yapıldı|yapılacak|tamamlandı|bekliyor|yalanladı|reddetti|yasaklandı|kaldırıldı|tutuklandı|gözaltı|seçildi|atandı|istifa|zam|indirim|tavan|minimum|maksimum|final|galibiyet|mağlubiyet|beraberlik)\b/iu;
+  /\b(oldu|oluyor|olduğu|olacak|transfer|imzalandı|açıklandı|açıkladı|duyurdu|duyuruldu|bildirdi|güncellendi|yükseldi|düştü|arttı|azaldı|onaylandı|karar|rekor|zirve|çıktı|geldi|gündeme geldi|bitti|başladı|başlayacak|gerçekleşti|gerçekleşecek|girecek|sürecek|devam ediyor|hazırlanıyor|planlandı|bekleniyor|öngörülüyor|kutladı|toplandı|toplanacak|yapıldı|yapılacak|tamamlandı|bekliyor|yalanladı|reddetti|yasaklandı|kaldırıldı|tutuklandı|gözaltı|seçildi|atandı|istifa|zam|indirim|tavan|minimum|maksimum|final|galibiyet|mağlubiyet|beraberlik)\b/iu;
 
 const NUMBER_RE = /\d+[,.]?\d*|\%\s*\d|₺|\$|€|euro|dolar|tl\b/i;
 
