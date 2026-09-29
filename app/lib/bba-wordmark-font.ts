@@ -1,8 +1,8 @@
-import { Caveat } from "next/font/google";
+import { Sacramento } from "next/font/google";
 
-/** Haberler navbar wordmark — el yazısı BBA. */
-export const bbaWordmarkFont = Caveat({
+/** Haberler navbar — bağlı el yazısı küçük harf bba. */
+export const bbaWordmarkFont = Sacramento({
   subsets: ["latin"],
-  weight: ["700"],
+  weight: ["400"],
   display: "swap",
 });

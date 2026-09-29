@@ -215,9 +215,9 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
               href={home}
               onClick={closeMenu}
               aria-label="BBA ana sayfa"
-              className={`${bbaWordmarkFont.className} shrink-0 text-[2rem] leading-none tracking-tight text-zinc-950 transition-opacity hover:opacity-80 dark:text-zinc-50`}
+              className={`${bbaWordmarkFont.className} shrink-0 text-[2.35rem] leading-none tracking-[-0.06em] text-zinc-950 transition-opacity hover:opacity-80 [font-feature-settings:"liga"_1,"calt"_1] dark:text-zinc-50`}
             >
-              BBA
+              bba
             </Link>
           </div>
 
