@@ -4,11 +4,8 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import {
-  HABERLER_BRAND,
-  formatGundemCategory,
-  type GundemCategory,
-} from "../lib/gundem/editorial";
+import { bbaWordmarkFont } from "../lib/bba-wordmark-font";
+import { formatGundemCategory, type GundemCategory } from "../lib/gundem/editorial";
 import { HABERLER_NAV_CATEGORIES, haberlerCategoryPath } from "../lib/gundem/nav-categories";
 import { haberlerUrl } from "../lib/gundem/hosts";
 import { HABERLER_CONTAINER_CLASS } from "../lib/gundem/haberler-container";
@@ -213,19 +210,15 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
             {menuOpen ? <X className="size-5" aria-hidden /> : <Menu className="size-5" aria-hidden />}
           </button>
 
-          <div className="flex min-w-0 flex-1 items-center justify-center gap-2.5 md:flex-none md:justify-start">
+          <div className="flex min-w-0 flex-1 items-center justify-center md:flex-none md:justify-start">
             <Link
               href={home}
               onClick={closeMenu}
               aria-label="BBA ana sayfa"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-zinc-950 text-[11px] font-bold tracking-tight text-white transition-opacity hover:opacity-90 dark:bg-zinc-100 dark:text-zinc-950"
+              className={`${bbaWordmarkFont.className} shrink-0 text-[2rem] leading-none tracking-tight text-zinc-950 transition-opacity hover:opacity-80 dark:text-zinc-50`}
             >
               BBA
             </Link>
-            <span className="hidden leading-tight sm:block">
-              <span className="block text-sm font-semibold text-zinc-950 dark:text-zinc-50">{HABERLER_BRAND}</span>
-              <span className="block text-[11px] text-zinc-500">Türkiye gündemi</span>
-            </span>
           </div>
 
           <nav aria-label="Haber kategorileri" className="hidden min-w-0 md:block">
