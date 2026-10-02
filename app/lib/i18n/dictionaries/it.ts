@@ -24,7 +24,7 @@ const dictionary: HomeDictionary = {
   emailMe: "Scrivimi",
   emailAria: "Invia un’email a Berktug Berke Ates",
   socialNav: "Profili social",
-  latestBlog: "Ultimo articolo",
+  latestBlog: "Articoli",
   viewAll: "Vedi tutti",
   engineer: "Software Engineer full-stack",
   engineerAria: "Software Engineer full-stack presso bradi.tech",

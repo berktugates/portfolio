@@ -24,7 +24,7 @@ const dictionary: HomeDictionary = {
   emailMe: "E-posta gönder",
   emailAria: "Berktuğ Berke Ateş'e e-posta gönder",
   socialNav: "Sosyal profiller",
-  latestBlog: "Son Yazı",
+  latestBlog: "Yazılar",
   viewAll: "Tümünü gör",
   engineer: "Full-stack Yazılım Mühendisi",
   engineerAria: "bradi.tech Full-stack Yazılım Mühendisi",

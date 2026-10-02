@@ -22,7 +22,7 @@ const dictionary: HomeDictionary = {
   emailMe: "发送邮件",
   emailAria: "给 Berktug Berke Ates 发邮件",
   socialNav: "社交档案",
-  latestBlog: "最新文章",
+  latestBlog: "文章",
   viewAll: "查看全部",
   engineer: "全栈软件工程师",
   engineerAria: "bradi.tech 全栈软件工程师",

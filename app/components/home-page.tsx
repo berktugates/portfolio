@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { BlogTransitionLink } from "./blog-transition-link";
+import { HomeBlogList } from "./home-blog-list";
 import { LanguageSwitcher } from "./language-switcher";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
-import { getLocalizedBlogPosts } from "../lib/content/get-content";
+import { getLocaleContent, getLocalizedBlogPosts } from "../lib/content/get-content";
 import { blogPostPath, blogsIndexPath } from "../lib/content/paths";
 import {
   type Locale,
@@ -51,12 +50,12 @@ export async function createHomeMetadata(locale: Locale): Promise<Metadata> {
 }
 
 export async function HomePage({ locale }: { locale: Locale }) {
-  const [dict, localizedPosts] = await Promise.all([
+  const [dict, content, localizedPosts] = await Promise.all([
     getDictionary(locale),
+    getLocaleContent(locale),
     getLocalizedBlogPosts(locale),
   ]);
   const meta = localeMeta[locale];
-  const latestPost = localizedPosts[0];
   const homeHref = localePath(locale);
   const cjk = locale === "zh" || locale === "ja";
   const structuredData = {
@@ -107,17 +106,19 @@ export async function HomePage({ locale }: { locale: Locale }) {
                 {dict.viewAll}
               </Link>
             </div>
-            <BlogTransitionLink href={blogPostPath(locale, latestPost.slug)} className="blog-card group">
-              <span className="z-10">
-                <span className="flex items-center gap-2">
-                  <span style={{ viewTransitionName: `blog-title-${latestPost.slug}` }}>
-                    {latestPost.title}
-                  </span>
-                  <ArrowUpRight className="size-4 text-zinc-400 opacity-0 transition-opacity group-hover:opacity-100" />
-                </span>
-                <span className="mt-1 block text-zinc-500 dark:text-zinc-400">{latestPost.excerpt}</span>
-              </span>
-            </BlogTransitionLink>
+            <HomeBlogList
+              posts={localizedPosts.map((post) => ({
+                slug: post.slug,
+                title: post.title,
+                excerpt: post.excerpt,
+                href: blogPostPath(locale, post.slug),
+              }))}
+              labels={{
+                previous: content.ui.previous,
+                next: content.ui.next,
+                ariaLabel: content.ui.paginationAria,
+              }}
+            />
           </section>
         </main>
         <SiteFooter name={dict.headerName}>
