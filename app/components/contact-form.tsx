@@ -1,48 +1,20 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 declare global {
   interface Window {
-    turnstile?: {
-      render: (
-        element: HTMLElement,
-        options: { sitekey: string; action: string; theme: "auto"; size: "flexible" },
-      ) => string;
-      remove: (widgetId: string) => void;
-      reset: (widgetId?: string) => void;
-    };
+    turnstile?: { reset: () => void };
   }
 }
 
 export function ContactForm() {
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   const formRef = useRef<HTMLFormElement>(null);
-  const turnstileRef = useRef<HTMLDivElement>(null);
-  const turnstileWidgetId = useRef<string | null>(null);
-  const [turnstileScriptReady, setTurnstileScriptReady] = useState(false);
   const [state, setState] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const [startedAt, setStartedAt] = useState(() => Date.now());
-
-  useEffect(() => {
-    if (!turnstileScriptReady || !siteKey || !turnstileRef.current || !window.turnstile) return;
-
-    turnstileWidgetId.current = window.turnstile.render(turnstileRef.current, {
-      sitekey: siteKey,
-      action: "contact",
-      theme: "auto",
-      size: "flexible",
-    });
-
-    return () => {
-      if (turnstileWidgetId.current && window.turnstile) {
-        window.turnstile.remove(turnstileWidgetId.current);
-        turnstileWidgetId.current = null;
-      }
-    };
-  }, [siteKey, turnstileScriptReady]);
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -65,7 +37,7 @@ export function ContactForm() {
     } catch (error) {
       setState("error");
       setMessage(error instanceof Error ? error.message : "Mesaj gönderilemedi.");
-      window.turnstile?.reset(turnstileWidgetId.current ?? undefined);
+      window.turnstile?.reset();
     }
   }
 
@@ -78,11 +50,7 @@ export function ContactForm() {
 
   return (
     <>
-      <Script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-        strategy="afterInteractive"
-        onReady={() => setTurnstileScriptReady(true)}
-      />
+      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
       <form ref={formRef} onSubmit={submit} className="space-y-5" noValidate>
         <input type="hidden" name="startedAt" value={startedAt} />
         <div className="absolute -left-[9999px]" aria-hidden="true">
@@ -119,7 +87,13 @@ export function ContactForm() {
           <textarea required name="details" minLength={20} maxLength={5000} rows={8} className={`${fieldClass} resize-y`} />
         </label>
 
-        <div ref={turnstileRef} className="min-h-[65px]" />
+        <div
+          className="cf-turnstile"
+          data-sitekey={siteKey}
+          data-action="contact"
+          data-theme="auto"
+          data-size="flexible"
+        />
 
         <button
           type="submit"
