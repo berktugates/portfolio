@@ -65,7 +65,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
     "@id": `${localeUrl(locale)}#profile-page`,
     url: localeUrl(locale),
     name: dict.metaTitle,
-    description: dict.intro,
+    description: dict.metaDescription,
     inLanguage: meta.htmlLang,
     isPartOf: { "@id": WEBSITE_ID },
     mainEntity: { "@id": AUTHOR_ID },
@@ -93,12 +93,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
           ariaLabel={dict.headerAriaLabel}
         />
         <main className="space-y-24">
-          <section aria-labelledby="intro-title">
-            <h1 id="intro-title" className="sr-only">
-              {dict.h1}
-            </h1>
-            <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">{dict.intro}</p>
-          </section>
+          <h1 className="sr-only">{dict.h1}</h1>
 
           <section id="blog" aria-labelledby="blog-heading">
             <div className="mb-3 flex items-center justify-between">

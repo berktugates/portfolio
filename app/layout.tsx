@@ -50,7 +50,6 @@ const structuredData = {
       alternateName: ["Berktuğ Berke Ateş", "Berktuğ Berke", "Berktug Berke Ates", "Berktug Berke", "Berktug Ates", "berktugates"],
       url: SITE_URL,
       email: CONTACT_EMAIL,
-      image: { "@type": "ImageObject", url: `${SITE_URL}/me.webp` },
       jobTitle: ["Software Engineer", "Product Builder"],
       alumniOf: { "@id": FIRAT_UNIVERSITY_ID },
       knowsLanguage: [
