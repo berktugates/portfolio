@@ -163,7 +163,6 @@ export async function BlogDetailPage({
         name={dict.headerName}
         role={dict.headerRole}
         ariaLabel={dict.headerAriaLabel}
-        imageAlt={dict.headerImageAlt}
       />
       <div className="absolute right-4 top-24">
         <CopyUrl />

@@ -107,7 +107,6 @@ export async function ProjectLegalPage({
           name={dict.headerName}
           role={dict.headerRole}
           ariaLabel={dict.headerAriaLabel}
-          imageAlt={dict.headerImageAlt}
         />
         <main className="flex-1 pb-16 pt-4">
           <Link

@@ -106,7 +106,6 @@ export async function BlogsIndexView({
         name={dict.headerName}
         role={dict.headerRole}
         ariaLabel={dict.headerAriaLabel}
-        imageAlt={dict.headerImageAlt}
       />
       <main className="flex flex-1 flex-col">
         <h1 className="mb-3 text-xl font-medium">{content.ui.blogs}</h1>

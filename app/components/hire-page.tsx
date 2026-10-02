@@ -142,7 +142,6 @@ export async function HirePage({ locale }: { locale: Locale }) {
           name={dict.headerName}
           role={dict.headerRole}
           ariaLabel={dict.headerAriaLabel}
-          imageAlt={dict.headerImageAlt}
         />
         <main className="space-y-16 pb-8">
           <Link

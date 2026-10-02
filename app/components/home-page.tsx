@@ -91,7 +91,6 @@ export async function HomePage({ locale }: { locale: Locale }) {
           name={dict.headerName}
           role={dict.headerRole}
           ariaLabel={dict.headerAriaLabel}
-          imageAlt={dict.headerImageAlt}
         />
         <main className="space-y-24">
           <section aria-labelledby="intro-title">
