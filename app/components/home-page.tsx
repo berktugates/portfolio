@@ -90,6 +90,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
           name={dict.headerName}
           role={dict.headerRole}
           ariaLabel={dict.headerAriaLabel}
+          contactLabel={dict.contact}
         />
         <main className="space-y-24">
           <h1 className="sr-only">{dict.h1}</h1>

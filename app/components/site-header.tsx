@@ -5,6 +5,7 @@ type SiteHeaderProps = {
   name?: string;
   role?: string;
   ariaLabel?: string;
+  contactLabel?: string;
 };
 
 export function SiteHeader({
@@ -12,6 +13,7 @@ export function SiteHeader({
   name = "Berktug Berke Ates",
   role = "Software Engineer",
   ariaLabel = "Berktug Berke Ates home",
+  contactLabel = "Contact",
 }: SiteHeaderProps = {}) {
   return (
     <header className="mb-8 flex items-center justify-between">
@@ -21,6 +23,12 @@ export function SiteHeader({
         </Link>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">{role}</p>
       </div>
+      <Link
+        href="/contact"
+        className="text-sm text-zinc-500 transition-colors hover:text-zinc-950 dark:hover:text-zinc-50"
+      >
+        {contactLabel}
+      </Link>
     </header>
   );
 }

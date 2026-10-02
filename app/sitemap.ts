@@ -109,6 +109,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   });
 
   return [
+    { url: absoluteUrl("/contact") },
     ...localeHomes,
     ...localeHires,
     ...hireServiceEntries,
