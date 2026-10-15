@@ -10,13 +10,15 @@ declare global {
 }
 
 const PROJECT_TYPES = [
-  { value: "", label: "Belirtmek istemiyorum" },
   { value: "ai-automation", label: "AI / Otomasyon" },
   { value: "saas-mvp", label: "SaaS / MVP" },
   { value: "mobile", label: "Mobil uygulama" },
   { value: "custom", label: "Özel yazılım" },
   { value: "other", label: "Diğer" },
 ] as const;
+
+const projectTypeChipClassName =
+  "rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 peer-checked:border-zinc-950 peer-checked:bg-zinc-950 peer-checked:text-white peer-checked:hover:border-zinc-800 peer-checked:hover:bg-zinc-800 peer-checked:hover:text-white dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 dark:hover:text-zinc-100 dark:peer-checked:border-zinc-100 dark:peer-checked:bg-zinc-100 dark:peer-checked:text-zinc-950 dark:peer-checked:hover:border-zinc-200 dark:peer-checked:hover:bg-zinc-200 dark:peer-checked:hover:text-zinc-950 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-zinc-400 dark:peer-focus-visible:outline-zinc-500";
 
 export function ContactForm() {
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
@@ -76,17 +78,9 @@ export function ContactForm() {
           </legend>
           <div className="mt-2.5 flex flex-wrap gap-2" role="radiogroup" aria-label="Proje türü">
             {PROJECT_TYPES.map((option) => (
-              <label key={option.value || "none"} className="inline-flex cursor-pointer">
-                <input
-                  type="radio"
-                  name="projectType"
-                  value={option.value}
-                  defaultChecked={option.value === ""}
-                  className="peer sr-only"
-                />
-                <span className="rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-zinc-50 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-zinc-400 peer-checked:border-zinc-950 peer-checked:bg-zinc-950 peer-checked:text-white dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 dark:peer-checked:border-zinc-100 dark:peer-checked:bg-zinc-100 dark:peer-checked:text-zinc-950">
-                  {option.label}
-                </span>
+              <label key={option.value} className="inline-flex cursor-pointer">
+                <input type="radio" name="projectType" value={option.value} className="peer sr-only" />
+                <span className={projectTypeChipClassName}>{option.label}</span>
               </label>
             ))}
           </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight, Mail } from "lucide-react";
 import { GlowCard } from "./glow-card";
+import { TextWithContactLinks } from "./text-with-contact-links";
 import { LanguageSwitcher } from "./language-switcher";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
@@ -226,7 +227,9 @@ export async function HirePage({ locale }: { locale: Locale }) {
                   >
                     {dict.hire.howHeading}
                   </h2>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">{dict.hire.howBody}</p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                    <TextWithContactLinks text={dict.hire.howBody} />
+                  </p>
                 </div>
                 <GlowCard href={CONTACT_PAGE_PATH}>
                   <span className="flex items-center gap-3">
@@ -274,7 +277,9 @@ export async function HirePage({ locale }: { locale: Locale }) {
               {dict.hire.faqs.map((faq) => (
                 <div key={faq.question}>
                   <dt className="font-medium text-zinc-950 dark:text-zinc-50">{faq.question}</dt>
-                  <dd className="mt-2 leading-relaxed text-zinc-700 dark:text-zinc-300">{faq.answer}</dd>
+                  <dd className="mt-2 leading-relaxed text-zinc-700 dark:text-zinc-300">
+                    <TextWithContactLinks text={faq.answer} />
+                  </dd>
                 </div>
               ))}
             </dl>

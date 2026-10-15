@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Mail } from "lucide-react";
 import { LanguageSwitcher } from "./language-switcher";
+import { TextWithContactLinks } from "./text-with-contact-links";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import { hirePath, hireServicePath, pathHreflangLanguages } from "../lib/content/paths";
@@ -242,7 +243,9 @@ export async function HireServicePage({
             <h2 id="how-heading" className="section-title">
               {copy.howHeading}
             </h2>
-            <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">{copy.howBody}</p>
+            <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
+              <TextWithContactLinks text={copy.howBody} />
+            </p>
             <a
               href={CONTACT_PAGE_PATH}
               className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-zinc-950 dark:text-zinc-50"
@@ -260,7 +263,9 @@ export async function HireServicePage({
               {copy.faqs.map((faq) => (
                 <div key={faq.question}>
                   <dt className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{faq.question}</dt>
-                  <dd className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{faq.answer}</dd>
+                  <dd className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                    <TextWithContactLinks text={faq.answer} />
+                  </dd>
                 </div>
               ))}
             </dl>

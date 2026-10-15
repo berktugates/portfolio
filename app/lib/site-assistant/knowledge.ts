@@ -1,5 +1,6 @@
 import type { Locale } from "../i18n";
 import { hireServicePath } from "../content/paths";
+import { CONTACT_FORM_PATH_LABEL } from "../i18n/hire-engagement";
 import { CONTACT_PAGE_URL, SITE_URL } from "../seo";
 import { SERVICE_SLUGS } from "../services";
 
@@ -11,14 +12,19 @@ import {
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
+function contactFormMarkdownLink(contact: string): string {
+  return `[${CONTACT_FORM_PATH_LABEL}](${contact})`;
+}
+
 function contactFormPhrase(locale: Locale, contact: string): string {
-  if (locale === "tr") return `İletişim formu: **${contact}**`;
-  if (locale === "de") return `Kontaktformular: **${contact}**`;
-  if (locale === "fr") return `Formulaire de contact : **${contact}**`;
-  if (locale === "it") return `Modulo di contatto: **${contact}**`;
-  if (locale === "zh") return `联系表单：**${contact}**`;
-  if (locale === "ja") return `お問い合わせフォーム：**${contact}**`;
-  return `Contact form: **${contact}**`;
+  const link = contactFormMarkdownLink(contact);
+  if (locale === "tr") return `İletişim formu: ${link}`;
+  if (locale === "de") return `Kontaktformular: ${link}`;
+  if (locale === "fr") return `Formulaire de contact : ${link}`;
+  if (locale === "it") return `Modulo di contatto: ${link}`;
+  if (locale === "zh") return `联系表单：${link}`;
+  if (locale === "ja") return `お問い合わせフォーム：${link}`;
+  return `Contact form: ${link}`;
 }
 
 function fewShotExamples(locale: Locale): string {

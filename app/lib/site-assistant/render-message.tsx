@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { CONTACT_IN_TEXT_SOURCE, isContactFormReference } from "../contact-link";
+import { CONTACT_FORM_PATH_LABEL } from "../i18n/hire-engagement";
 
 const SITE_HOSTS = new Set(["berktugberke.com", "www.berktugberke.com"]);
 
@@ -44,7 +46,10 @@ function renderLink(href: string, label: ReactNode, key: string) {
 
 function renderInlineFormatting(text: string, keyPrefix: string): ReactNode[] {
   const nodes: ReactNode[] = [];
-  const re = /(\*\*[^*]+\*\*|\*[^*\n]+\*|`[^`\n]+`|https?:\/\/[^\s<]+[^\s<.,;:!?)"])/g;
+  const re = new RegExp(
+    `(\\*\\*[^*]+\\*\\*|\\*[^*\\n]+\\*|\`[^\`\\n]+\`|https?:\\/\\/[^\\s<]+[^\\s<.,;:!?)"]|${CONTACT_IN_TEXT_SOURCE})`,
+    "g",
+  );
   let last = 0;
   let match: RegExpExecArray | null;
   let i = 0;
@@ -55,7 +60,9 @@ function renderInlineFormatting(text: string, keyPrefix: string): ReactNode[] {
     }
     const token = match[0];
     const key = `${keyPrefix}-f${i++}`;
-    if (token.startsWith("http://") || token.startsWith("https://")) {
+    if (isContactFormReference(token)) {
+      nodes.push(renderLink("/contact", CONTACT_FORM_PATH_LABEL, key));
+    } else if (token.startsWith("http://") || token.startsWith("https://")) {
       nodes.push(renderLink(token, token, key));
     } else if (token.startsWith("**")) {
       nodes.push(
