@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -16,9 +15,9 @@ export function SiteFooter({ name, children, className }: SiteFooterProps) {
       }
     >
       <div className="flex items-center justify-between">
-        <Link href="https://github.com/berktugates" target="_blank" rel="noreferrer">
-          <p className="text-xs text-zinc-500">© {new Date().getFullYear()} {name}</p>
-        </Link>
+        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          © {new Date().getFullYear()} {name}
+        </p>
         <div className="flex items-center gap-3">
           {children}
           <ThemeToggle />

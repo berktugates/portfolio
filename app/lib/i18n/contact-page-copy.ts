@@ -10,13 +10,13 @@ export type ContactPageCopy = {
     projectTypeLegend: string;
     projectTypeOptional: string;
     projectTypeAria: string;
+    projectTypePlaceholder: string;
     projectTypes: Record<ContactProjectType, string> & { unspecified: string };
     nameLabel: string;
     emailLabel: string;
     detailsLabel: string;
     /** Shown beside the label, e.g. min length */
     detailsMinLabel: string;
-    detailsHint: string;
     submit: string;
     submitting: string;
     submitted: string;
@@ -61,6 +61,7 @@ const en: ContactPageCopy = {
     projectTypeLegend: "Project type",
     projectTypeOptional: "optional",
     projectTypeAria: "Project type",
+    projectTypePlaceholder: "Select project type",
     projectTypes: {
       erp: "ERP",
       crm: "CRM",
@@ -82,7 +83,6 @@ const en: ContactPageCopy = {
     emailLabel: "EMAIL",
     detailsLabel: "PROJECT DETAILS",
     detailsMinLabel: "min. 20 characters",
-    detailsHint: "Add one more sentence if you are sending a quick test message.",
     submit: "Send message",
     submitting: "Sending…",
     submitted: "Sent",
@@ -127,6 +127,7 @@ const tr: ContactPageCopy = {
     projectTypeLegend: "Proje türü",
     projectTypeOptional: "opsiyonel",
     projectTypeAria: "Proje türü",
+    projectTypePlaceholder: "Proje türü seçin",
     projectTypes: {
       erp: "ERP",
       crm: "CRM",
@@ -148,7 +149,6 @@ const tr: ContactPageCopy = {
     emailLabel: "E-POSTA",
     detailsLabel: "PROJE DETAYLARI",
     detailsMinLabel: "en az 20 karakter",
-    detailsHint: "Kısa test mesajı gönderiyorsanız bir cümle daha ekleyin.",
     submit: "Mesajı gönder",
     submitting: "Gönderiliyor…",
     submitted: "Gönderildi",
@@ -193,6 +193,7 @@ const de: ContactPageCopy = {
     projectTypeLegend: "Projekttyp",
     projectTypeOptional: "optional",
     projectTypeAria: "Projekttyp",
+    projectTypePlaceholder: "Projekttyp wählen",
     projectTypes: {
       erp: "ERP",
       crm: "CRM",
@@ -214,7 +215,6 @@ const de: ContactPageCopy = {
     emailLabel: "E-MAIL",
     detailsLabel: "PROJEKTDETAILS",
     detailsMinLabel: "mind. 20 Zeichen",
-    detailsHint: "Bei einer kurzen Testnachricht einen Satz ergänzen.",
     submit: "Nachricht senden",
     submitting: "Wird gesendet…",
     submitted: "Gesendet",
@@ -259,6 +259,7 @@ const fr: ContactPageCopy = {
     projectTypeLegend: "Type de projet",
     projectTypeOptional: "facultatif",
     projectTypeAria: "Type de projet",
+    projectTypePlaceholder: "Choisir un type de projet",
     projectTypes: {
       erp: "ERP",
       crm: "CRM",
@@ -280,7 +281,6 @@ const fr: ContactPageCopy = {
     emailLabel: "E-MAIL",
     detailsLabel: "DÉTAILS DU PROJET",
     detailsMinLabel: "min. 20 caractères",
-    detailsHint: "Ajoutez une phrase si vous envoyez un message test court.",
     submit: "Envoyer le message",
     submitting: "Envoi…",
     submitted: "Envoyé",
@@ -325,6 +325,7 @@ const it: ContactPageCopy = {
     projectTypeLegend: "Tipo di progetto",
     projectTypeOptional: "facoltativo",
     projectTypeAria: "Tipo di progetto",
+    projectTypePlaceholder: "Seleziona tipo di progetto",
     projectTypes: {
       erp: "ERP",
       crm: "CRM",
@@ -346,7 +347,6 @@ const it: ContactPageCopy = {
     emailLabel: "E-MAIL",
     detailsLabel: "DETTAGLI PROGETTO",
     detailsMinLabel: "min. 20 caratteri",
-    detailsHint: "Aggiungi una frase se invii un messaggio di prova breve.",
     submit: "Invia messaggio",
     submitting: "Invio…",
     submitted: "Inviato",
@@ -390,6 +390,7 @@ const zh: ContactPageCopy = {
     projectTypeLegend: "项目类型",
     projectTypeOptional: "选填",
     projectTypeAria: "项目类型",
+    projectTypePlaceholder: "选择项目类型",
     projectTypes: {
       erp: "ERP",
       crm: "CRM",
@@ -411,7 +412,6 @@ const zh: ContactPageCopy = {
     emailLabel: "邮箱",
     detailsLabel: "项目详情",
     detailsMinLabel: "至少 20 个字符",
-    detailsHint: "若发送简短测试消息，请再补充一句。",
     submit: "发送消息",
     submitting: "发送中…",
     submitted: "已发送",
@@ -456,6 +456,7 @@ const ja: ContactPageCopy = {
     projectTypeLegend: "プロジェクト種別",
     projectTypeOptional: "任意",
     projectTypeAria: "プロジェクト種別",
+    projectTypePlaceholder: "プロジェクト種別を選択",
     projectTypes: {
       erp: "ERP",
       crm: "CRM",
@@ -477,7 +478,6 @@ const ja: ContactPageCopy = {
     emailLabel: "メール",
     detailsLabel: "プロジェクト詳細",
     detailsMinLabel: "20 文字以上",
-    detailsHint: "短いテストメッセージの場合は一文追加してください。",
     submit: "メッセージを送信",
     submitting: "送信中…",
     submitted: "送信済み",

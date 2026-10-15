@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
 import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -18,9 +19,6 @@ declare global {
     onBerktugContactTurnstileExpired?: () => void;
   }
 }
-
-const projectTypeChipClassName =
-  "rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 sm:px-3.5 sm:py-2 sm:text-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 peer-checked:border-zinc-950 peer-checked:bg-zinc-950 peer-checked:text-white peer-checked:hover:border-zinc-800 peer-checked:hover:bg-zinc-800 peer-checked:hover:text-white dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 dark:hover:text-zinc-100 dark:peer-checked:border-zinc-100 dark:peer-checked:bg-zinc-100 dark:peer-checked:text-zinc-950 dark:peer-checked:hover:border-zinc-200 dark:peer-checked:hover:bg-zinc-200 dark:peer-checked:hover:text-zinc-950 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-zinc-400 dark:peer-focus-visible:outline-zinc-500";
 
 type ContactFormProps = {
   locale: Locale;
@@ -119,8 +117,11 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
     );
   }
 
-  const fieldClass =
-    "mt-2 w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-3 text-sm text-zinc-950 outline-none transition focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-600 dark:focus:ring-zinc-800";
+  const fieldShell =
+    "w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-3 text-sm text-zinc-950 outline-none transition focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-600 dark:focus:ring-zinc-800";
+
+  const fieldClass = `mt-2 ${fieldShell}`;
+  const selectClass = `${fieldShell} appearance-none pr-10`;
 
   const canSubmit = turnstileReady && state !== "sending" && state !== "success";
 
@@ -141,20 +142,30 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
           className="pointer-events-none absolute left-0 top-0 h-px w-px overflow-hidden opacity-0"
         />
 
-        <fieldset>
-          <legend className="text-xs font-medium tracking-wide text-zinc-600 dark:text-zinc-400">
-            {copy.form.projectTypeLegend}{" "}
-            <span className="font-normal text-zinc-400 dark:text-zinc-500">({copy.form.projectTypeOptional})</span>
-          </legend>
-          <div className="mt-2.5 flex flex-wrap gap-2" role="radiogroup" aria-label={copy.form.projectTypeAria}>
-            {CONTACT_PROJECT_TYPES.map((value) => (
-              <label key={value} className="inline-flex cursor-pointer">
-                <input type="radio" name="projectType" value={value} className="peer sr-only" />
-                <span className={projectTypeChipClassName}>{copy.form.projectTypes[value]}</span>
-              </label>
-            ))}
+        <label className="block text-xs font-medium tracking-wide text-zinc-600 dark:text-zinc-400">
+          {copy.form.projectTypeLegend}{" "}
+          <span className="font-normal text-zinc-400 dark:text-zinc-500">({copy.form.projectTypeOptional})</span>
+          <div className="relative mt-2">
+            <select
+              name="projectType"
+              defaultValue=""
+              aria-label={copy.form.projectTypeAria}
+              className={selectClass}
+              onFocus={markFormStarted}
+            >
+              <option value="">{copy.form.projectTypePlaceholder}</option>
+              {CONTACT_PROJECT_TYPES.map((value) => (
+                <option key={value} value={value}>
+                  {copy.form.projectTypes[value]}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              aria-hidden
+              className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400 dark:text-zinc-500"
+            />
           </div>
-        </fieldset>
+        </label>
 
         <label className="block text-xs font-medium tracking-wide text-zinc-600 dark:text-zinc-400">
           {copy.form.nameLabel}
@@ -195,7 +206,6 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
             className={`${fieldClass} resize-y`}
             onFocus={markFormStarted}
           />
-          <span className="mt-1.5 block text-xs font-normal text-zinc-400 dark:text-zinc-500">{copy.form.detailsHint}</span>
         </label>
 
         <div
