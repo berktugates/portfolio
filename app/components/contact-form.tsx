@@ -20,7 +20,7 @@ declare global {
 }
 
 const projectTypeChipClassName =
-  "rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 peer-checked:border-zinc-950 peer-checked:bg-zinc-950 peer-checked:text-white peer-checked:hover:border-zinc-800 peer-checked:hover:bg-zinc-800 peer-checked:hover:text-white dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 dark:hover:text-zinc-100 dark:peer-checked:border-zinc-100 dark:peer-checked:bg-zinc-100 dark:peer-checked:text-zinc-950 dark:peer-checked:hover:border-zinc-200 dark:peer-checked:hover:bg-zinc-200 dark:peer-checked:hover:text-zinc-950 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-zinc-400 dark:peer-focus-visible:outline-zinc-500";
+  "rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 sm:px-3.5 sm:py-2 sm:text-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 peer-checked:border-zinc-950 peer-checked:bg-zinc-950 peer-checked:text-white peer-checked:hover:border-zinc-800 peer-checked:hover:bg-zinc-800 peer-checked:hover:text-white dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 dark:hover:text-zinc-100 dark:peer-checked:border-zinc-100 dark:peer-checked:bg-zinc-100 dark:peer-checked:text-zinc-950 dark:peer-checked:hover:border-zinc-200 dark:peer-checked:hover:bg-zinc-200 dark:peer-checked:hover:text-zinc-950 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-zinc-400 dark:peer-focus-visible:outline-zinc-500";
 
 type ContactFormProps = {
   locale: Locale;
@@ -184,7 +184,8 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
         </label>
 
         <label className="block text-xs font-medium tracking-wide text-zinc-600 dark:text-zinc-400">
-          {copy.form.detailsLabel}
+          {copy.form.detailsLabel}{" "}
+          <span className="font-normal text-zinc-400 dark:text-zinc-500">({copy.form.detailsMinLabel})</span>
           <textarea
             required
             name="details"

@@ -1,7 +1,22 @@
 import { DEFAULT_LOCALE, type Locale, isLocale } from "./i18n/config";
 import { getContactPageCopy } from "./i18n/contact-page-copy";
 
-export const CONTACT_PROJECT_TYPES = ["ai-automation", "saas-mvp", "mobile", "custom", "other"] as const;
+export const CONTACT_PROJECT_TYPES = [
+  "erp",
+  "crm",
+  "b2b",
+  "b2c",
+  "saas-mvp",
+  "ecommerce",
+  "marketplace",
+  "web-platform",
+  "mobile",
+  "ai-automation",
+  "integration",
+  "data-bi",
+  "custom",
+  "other",
+] as const;
 export type ContactProjectType = (typeof CONTACT_PROJECT_TYPES)[number];
 
 export type ContactSubmission = {
