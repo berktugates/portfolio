@@ -1,6 +1,6 @@
 import type { Locale } from "../i18n";
 import { hireServicePath } from "../content/paths";
-import { CONTACT_EMAIL, SITE_URL } from "../seo";
+import { CONTACT_PAGE_URL, SITE_URL } from "../seo";
 import { SERVICE_SLUGS } from "../services";
 
 import {
@@ -12,7 +12,7 @@ import {
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
 function fewShotExamples(locale: Locale): string {
-  const contact = CONTACT_EMAIL;
+  const contact = CONTACT_PAGE_URL;
   if (locale === "tr") {
     return `<examples>
 <example>
@@ -62,7 +62,7 @@ ${fewShotExamples(locale)}
 - Never third person about yourself. Never write your full name. Never say "Berktuğ Berke Ateş".
 - Do not list project or product names unless the user names one first.
 - When experience matters, say you have worked on many projects in Türkiye and internationally — stay relevant to their question.
-- 2–3 complete sentences. Under ~300 characters when possible. End with a clear next step (usually **${CONTACT_EMAIL}**).
+- 2–3 complete sentences. Under ~300 characters when possible. End with a clear next step (usually the contact form **${CONTACT_PAGE_URL}**).
 - No bullet lists. Do not repeat the user's question.
 - Never use the word "staff".
 </voice>
@@ -76,7 +76,7 @@ ${monolingualRules(locale)}
 </language>
 
 <facts>
-- Contact: ${CONTACT_EMAIL}. GitHub: berktugates. LinkedIn: linkedin.com/in/berktugates.
+- Contact form: ${CONTACT_PAGE_URL}. GitHub: berktugates. LinkedIn: linkedin.com/in/berktugates. Never publish an email address.
 - Full-stack software engineer at bradi.tech (London). Remote across Türkiye and abroad.
 - GEO = generative / AI search visibility (llms.txt, structured data, citable content) — not a lecture on how Google ranks pages.
 - Delivery across Türkiye and abroad is mostly remote. There is no local office in every city. Do not state a residence or city of residence.
@@ -224,7 +224,7 @@ function strengthIntro(locale: Locale, kind: "web" | "mobile" | "seo" | "geo" | 
 
 export function localAssistantReply(locale: Locale, userText: string): string {
   const t = userText.toLowerCase();
-  const contact = CONTACT_EMAIL;
+  const contact = CONTACT_PAGE_URL;
 
   const wantsContact =
     /contact|email|reach|iletişim|mail|anfrage|contacter|contatt|联系|連絡/.test(t);

@@ -13,7 +13,7 @@ function assertNoFullName(text: string) {
 function assertFirstPersonTr(text: string) {
   assert.ok(
     /\b(yapıyorum|çalıştım|teslim|yer aldım|birlikte|yazın|yazarsanız)\b/i.test(text) ||
-      text.includes("contact@"),
+      text.includes("berktugberke.com/contact"),
     `expected conversational TR first person: ${text}`,
   );
 }

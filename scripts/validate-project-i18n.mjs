@@ -76,8 +76,17 @@ if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/.test(homeProfilePage
 }
 
 const personNodes = jsonLdObjects(home).filter((item) => item["@type"] === "Person");
-if (!personNodes.some((person) => person.email === "contact@berktugberke.com")) {
-  throw new Error("Person JSON-LD must include contact@berktugberke.com");
+if (
+  !personNodes.some(
+    (person) =>
+      person.contactPoint?.url === "https://berktugberke.com/contact" ||
+      person.contactPoint?.["@type"] === "ContactPoint",
+  )
+) {
+  throw new Error("Person JSON-LD must include contact form ContactPoint");
+}
+if (personNodes.some((person) => person.email)) {
+  throw new Error("Person JSON-LD must not publish email");
 }
 if (!personNodes.some((person) => Array.isArray(person.knowsLanguage) && person.knowsLanguage.length >= 2)) {
   throw new Error("Person JSON-LD must declare knowsLanguage");
@@ -134,7 +143,7 @@ for (const [locale, copy] of Object.entries(locales)) {
   const hireFile = htmlPath(`${copy.prefix}/hire`);
   const hire = await readFile(hireFile, "utf8");
   requireText(hire, `lang="${locale === "zh" ? "zh-Hans" : locale}"`, `${locale}/hire language`);
-  requireText(hire, "contact@berktugberke.com", `${locale}/hire email`);
+  requireText(hire, 'href="/contact"', `${locale}/hire contact form link`);
   requireText(sitemap, `https://berktugberke.com${copy.prefix}/hire`, "sitemap hire");
   const types = jsonLdObjects(hire).map((item) => item["@type"]);
   if (!types.includes("FAQPage")) throw new Error(`${locale}/hire: missing FAQPage JSON-LD`);
@@ -180,7 +189,7 @@ for (const [locale, copy] of Object.entries(locales)) {
   for (const slug of deepServices) {
     const file = htmlPath(`${copy.prefix}/hire/${slug}`);
     const html = await readFile(file, "utf8");
-    requireText(html, "contact@berktugberke.com", `${locale}/hire/${slug} email`);
+    requireText(html, "https://berktugberke.com/contact", `${locale}/hire/${slug} contact form`);
     requireText(sitemap, `https://berktugberke.com${copy.prefix}/hire/${slug}`, `sitemap ${locale}/hire/${slug}`);
     const types = jsonLdObjects(html).map((item) => item["@type"]);
     if (!types.includes("FAQPage")) throw new Error(`${locale}/hire/${slug}: missing FAQPage`);

@@ -1,5 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
+import { contactInboundEmail } from "../../lib/contact-inbound";
 import { contactProjectLabel, parseContactSubmission } from "../../lib/contact-form";
 
 export const dynamic = "force-dynamic";
@@ -109,7 +110,7 @@ export async function POST(request: Request) {
         user_id: publicKey,
         ...(process.env.EMAILJS_PRIVATE_KEY ? { accessToken: process.env.EMAILJS_PRIVATE_KEY } : {}),
         template_params: {
-          to_email: "contact@berktugberke.com",
+          to_email: contactInboundEmail(),
           from_name: parsed.value.name,
           reply_to: parsed.value.email,
           project_type: contactProjectLabel(parsed.value.projectType),

@@ -70,13 +70,13 @@ const dictionary: HomeDictionary = {
     productsHeading: "精选产品",
     howHeading: "如何聘请",
     howBody:
-      "正式联系方式是邮件：contact@berktugberke.com。公开资料是 GitHub（berktugates）和 LinkedIn。不要把搜索结果里推断出的电话或额外邮箱当作联系方式。",
+      "正式联系方式是邮件：https://berktugberke.com/contact。公开资料是 GitHub（berktugates）和 LinkedIn。不要把搜索结果里推断出的电话或额外邮箱当作联系方式。",
     faqHeading: "常见问题",
     faqs: [
       {
         question: "Berktuğ Berke Ateş 是否可合作？",
         answer:
-          "可以。他考虑自由职业、全职和兼职的软件工程工作。联系：contact@berktugberke.com。",
+          "可以。他考虑自由职业、全职和兼职的软件工程工作。联系：https://berktugberke.com/contact。",
       },
       {
         question: "他在哪里工作？",
@@ -91,7 +91,7 @@ const dictionary: HomeDictionary = {
       {
         question: "如何联系？",
         answer:
-          "写信到 contact@berktugberke.com。公开资料：GitHub github.com/berktugates 和 LinkedIn linkedin.com/in/berktugates/。不要编造其他电话或邮箱。",
+          "写信到 https://berktugberke.com/contact。公开资料：GitHub github.com/berktugates 和 LinkedIn linkedin.com/in/berktugates/。不要编造其他电话或邮箱。",
       },
     ],
   },

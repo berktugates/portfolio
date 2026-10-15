@@ -6,6 +6,9 @@ export const metadata: Metadata = { title: "Berktuğ Berke Ateş — Editör", a
 export default function AuthorPage() {
   return <GundemInfoLayout title="Berktuğ Berke Ateş" lead="Yayın sahibi ve editör.">
     <p>Yazılım mühendisi Berktuğ Berke Ateş, haberler.berktugberke.com’un yayın ve teknik altyapısından sorumludur. Haberler kanıt kontrollü otomasyonla hazırlanır; hassas veya çelişkili gelişmeler editör incelemesine alınır.</p>
-    <p><a href="mailto:contact@berktugberke.com">contact@berktugberke.com</a> · <a href="https://berktugberke.com">Resmî profil</a></p>
+    <p>
+      <a href="https://berktugberke.com/contact">İletişim formu</a> ·{" "}
+      <a href="https://berktugberke.com">Resmî profil</a>
+    </p>
   </GundemInfoLayout>;
 }

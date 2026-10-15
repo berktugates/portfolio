@@ -11,7 +11,8 @@ import { type Locale, getDictionary, localeMeta, localePath } from "../lib/i18n"
 import { shareImageMeta } from "../lib/share-image";
 import {
   AUTHOR_ID,
-  CONTACT_EMAIL,
+  CONTACT_PAGE_PATH,
+  CONTACT_PAGE_URL,
   GITHUB_PROFILE,
   LINKEDIN_PROFILE,
   visibleAuthorMeta,
@@ -227,7 +228,7 @@ export async function HirePage({ locale }: { locale: Locale }) {
                   </h2>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">{dict.hire.howBody}</p>
                 </div>
-                <GlowCard href={`mailto:${CONTACT_EMAIL}`}>
+                <GlowCard href={CONTACT_PAGE_PATH}>
                   <span className="flex items-center gap-3">
                     <span className="flex size-10 items-center justify-center rounded-lg bg-zinc-100 transition-colors group-hover:bg-zinc-200 dark:bg-zinc-800 dark:group-hover:bg-zinc-700">
                       <Mail className="size-5 text-zinc-700 dark:text-zinc-300" />
@@ -236,7 +237,9 @@ export async function HirePage({ locale }: { locale: Locale }) {
                       <span className="block text-sm font-medium text-zinc-900 dark:text-zinc-100">
                         {dict.emailMe}
                       </span>
-                      <span className="block text-xs text-zinc-600 dark:text-zinc-400">{CONTACT_EMAIL}</span>
+                      <span className="block text-xs text-zinc-600 dark:text-zinc-400">
+                        {CONTACT_PAGE_URL.replace(/^https:\/\//, "")}
+                      </span>
                     </span>
                     <ArrowIcon />
                   </span>

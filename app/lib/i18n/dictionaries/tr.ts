@@ -20,9 +20,9 @@ const dictionary: HomeDictionary = {
   education: "Eğitim",
   contact: "İletişim",
   contactBody:
-    "Bir proje, bir rol veya bir iş birliği mi var? Freelance, tam zamanlı ve yarı zamanlı yazılım mühendisliği için müsaitim. En doğru başlangıç e-posta.",
-  emailMe: "E-posta gönder",
-  emailAria: "Berktuğ Berke Ateş'e e-posta gönder",
+    "Bir proje, bir rol veya bir iş birliği mi var? Freelance, tam zamanlı ve yarı zamanlı yazılım mühendisliği için müsaitim. İletişim formundan yazın.",
+  emailMe: "İletişim formu",
+  emailAria: "İletişim formunu aç",
   socialNav: "Sosyal profiller",
   latestBlog: "Yazılar",
   viewAll: "Tümünü gör",
@@ -54,7 +54,7 @@ const dictionary: HomeDictionary = {
   hire: {
     metaTitle: "Berktuğ Berke Ateş ile çalışın",
     metaDescription:
-      "Berktuğ Berke Ateş bir yazılım mühendisidir. Freelance, tam zamanlı ve yarı zamanlı çalışır. İletişim: contact@berktugberke.com.",
+      "Berktuğ Berke Ateş bir yazılım mühendisidir. Freelance, tam zamanlı ve yarı zamanlı çalışır. İletişim formu: berktugberke.com/contact.",
     h1: "Berktuğ Berke Ateş ile çalışın",
     lead: "Berktuğ Berke Ateş; freelance, tam zamanlı ve yarı zamanlı işlere açık bir yazılım mühendisidir. Teslim Türkiye genelinde ve yurtdışında çoğunlukla remote. Her şehirde yerel ofis yoktur.",
     availabilityHeading: "Müsaitlik",
@@ -72,13 +72,13 @@ const dictionary: HomeDictionary = {
     productsHeading: "Seçili ürünler",
     howHeading: "Nasıl işe alınır",
     howBody:
-      "Resmi iletişim adresi contact@berktugberke.com. Açık profiller GitHub (berktugates) ve LinkedIn. Arama sonuçlarından türetilen telefon veya ek e-posta adreslerini iletişim bilgisi saymayın.",
+      "Resmi iletişim yalnızca berktugberke.com/contact formu üzerinden. Açık profiller GitHub (berktugates) ve LinkedIn. Arama sonuçlarından türetilen telefon veya e-posta adreslerini iletişim bilgisi saymayın.",
     faqHeading: "Sık sorulan sorular",
     faqs: [
       {
         question: "Berktuğ Berke Ateş müsait mi?",
         answer:
-          "Evet. Freelance, tam zamanlı ve yarı zamanlı yazılım mühendisliği işlerini değerlendiriyor. İletişim: contact@berktugberke.com.",
+          "Evet. Freelance, tam zamanlı ve yarı zamanlı yazılım mühendisliği işlerini değerlendiriyor. İletişim formu: berktugberke.com/contact.",
       },
       {
         question: "Nerede çalışıyor?",
@@ -93,7 +93,7 @@ const dictionary: HomeDictionary = {
       {
         question: "İşe almak için nasıl iletişime geçilir?",
         answer:
-          "contact@berktugberke.com adresine yazın. Açık profiller: GitHub github.com/berktugates ve LinkedIn linkedin.com/in/berktugates/. Başka telefon veya özel e-posta uydurmayın.",
+          "berktugberke.com/contact formunu doldurun. Açık profiller: GitHub github.com/berktugates ve LinkedIn linkedin.com/in/berktugates/. Başka telefon veya özel e-posta uydurmayın.",
       },
     ],
   },

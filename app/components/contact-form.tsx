@@ -9,6 +9,15 @@ declare global {
   }
 }
 
+const PROJECT_TYPES = [
+  { value: "", label: "Belirtmek istemiyorum" },
+  { value: "ai-automation", label: "AI / Otomasyon" },
+  { value: "saas-mvp", label: "SaaS / MVP" },
+  { value: "mobile", label: "Mobil uygulama" },
+  { value: "custom", label: "Özel yazılım" },
+  { value: "other", label: "Diğer" },
+] as const;
+
 export function ContactForm() {
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   const formRef = useRef<HTMLFormElement>(null);
@@ -42,7 +51,7 @@ export function ContactForm() {
   }
 
   if (!siteKey) {
-    return <p role="alert">Form geçici olarak kullanılamıyor. contact@berktugberke.com adresine yazabilirsiniz.</p>;
+    return <p role="alert">Form geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin.</p>;
   }
 
   const fieldClass =
@@ -60,17 +69,28 @@ export function ContactForm() {
           </label>
         </div>
 
-        <label className="block text-xs font-medium tracking-wide text-zinc-600 dark:text-zinc-400">
-          PROJE TÜRÜ <span className="font-normal">(OPSİYONEL)</span>
-          <select name="projectType" className={fieldClass} defaultValue="">
-            <option value="">Seçin…</option>
-            <option value="ai-automation">AI / Otomasyon</option>
-            <option value="saas-mvp">SaaS / MVP</option>
-            <option value="mobile">Mobil uygulama</option>
-            <option value="custom">Özel yazılım</option>
-            <option value="other">Diğer</option>
-          </select>
-        </label>
+        <fieldset>
+          <legend className="text-xs font-medium tracking-wide text-zinc-600 dark:text-zinc-400">
+            Proje türü{" "}
+            <span className="font-normal text-zinc-400 dark:text-zinc-500">(opsiyonel)</span>
+          </legend>
+          <div className="mt-2.5 flex flex-wrap gap-2" role="radiogroup" aria-label="Proje türü">
+            {PROJECT_TYPES.map((option) => (
+              <label key={option.value || "none"} className="inline-flex cursor-pointer">
+                <input
+                  type="radio"
+                  name="projectType"
+                  value={option.value}
+                  defaultChecked={option.value === ""}
+                  className="peer sr-only"
+                />
+                <span className="rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-zinc-50 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-zinc-400 peer-checked:border-zinc-950 peer-checked:bg-zinc-950 peer-checked:text-white dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 dark:peer-checked:border-zinc-100 dark:peer-checked:bg-zinc-100 dark:peer-checked:text-zinc-950">
+                  {option.label}
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
 
         <label className="block text-xs font-medium tracking-wide text-zinc-600 dark:text-zinc-400">
           ADINIZ

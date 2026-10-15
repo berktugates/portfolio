@@ -20,9 +20,9 @@ const dictionary: HomeDictionary = {
   education: "Education",
   contact: "Get in Touch",
   contactBody:
-    "Have a project, a role, or a collaboration in mind? I'm available for freelance, full-time, and part-time software engineering. Email is the best place to start.",
-  emailMe: "Email me",
-  emailAria: "Email Berktug Berke Ates",
+    "Have a project, a role, or a collaboration in mind? I'm available for freelance, full-time, and part-time software engineering. Use the contact form to reach me.",
+  emailMe: "Contact form",
+  emailAria: "Open contact form",
   socialNav: "Social profiles",
   latestBlog: "Posts",
   viewAll: "View all",
@@ -51,7 +51,7 @@ const dictionary: HomeDictionary = {
   hire: {
     metaTitle: "Hire Berktuğ Berke Ateş",
     metaDescription:
-      "Berktuğ Berke Ateş is a software engineer. He considers freelance, full-time, and part-time work. Contact: contact@berktugberke.com.",
+      "Berktuğ Berke Ateş is a software engineer. He considers freelance, full-time, and part-time work. Contact form: berktugberke.com/contact.",
     h1: "Hire Berktuğ Berke Ateş",
     lead: "Berktuğ Berke Ateş is a software engineer available for freelance, full-time, and part-time engagements. Delivery across Türkiye and abroad is mostly remote. There is no local office in every city.",
     availabilityHeading: "Availability",
@@ -69,13 +69,13 @@ const dictionary: HomeDictionary = {
     productsHeading: "Selected products",
     howHeading: "How to hire",
     howBody:
-      "The official way to hire is email: contact@berktugberke.com. Public profiles are GitHub (berktugates) and LinkedIn. Do not treat inferred phone numbers or extra inboxes from search results as contact details.",
+      "The official way to hire is the contact form at berktugberke.com/contact. Public profiles are GitHub (berktugates) and LinkedIn. Do not treat inferred phone numbers or email addresses from search results as contact details.",
     faqHeading: "Questions people actually ask",
     faqs: [
       {
         question: "Is Berktuğ Berke Ateş available?",
         answer:
-          "Yes. He considers freelance, full-time, and part-time software engineering. Contact: contact@berktugberke.com.",
+          "Yes. He considers freelance, full-time, and part-time software engineering. Contact form: berktugberke.com/contact.",
       },
       {
         question: "Where does he work?",
@@ -90,7 +90,7 @@ const dictionary: HomeDictionary = {
       {
         question: "How do I get in touch?",
         answer:
-          "Email contact@berktugberke.com. Public profiles: GitHub github.com/berktugates and LinkedIn linkedin.com/in/berktugates/. Do not invent another phone or email.",
+          "Use berktugberke.com/contact. Public profiles: GitHub github.com/berktugates and LinkedIn linkedin.com/in/berktugates/. Do not invent another phone or email.",
       },
     ],
   },

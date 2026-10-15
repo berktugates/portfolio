@@ -14,7 +14,17 @@ export function CorrectionRequestForm() {
     setMessage(response.ok ? `Talebiniz alındı. Kayıt: ${data.requestId}` : `Talep gönderilemedi: ${data.error ?? "bilinmeyen hata"}`);
     if (response.ok) event.currentTarget.reset();
   }
-  if (!siteKey) return <p role="alert">Çevrim içi form henüz etkin değil. Talebinizi contact@berktugberke.com adresine iletebilirsiniz.</p>;
+  if (!siteKey) {
+    return (
+      <p role="alert">
+        Çevrim içi form henüz etkin değil. Düzeltme talebi için{" "}
+        <a href="https://berktugberke.com/contact" className="underline">
+          berktugberke.com/contact
+        </a>{" "}
+        formunu kullanın.
+      </p>
+    );
+  }
   return <>
     <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
     <form onSubmit={submit} className="space-y-5">

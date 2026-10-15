@@ -54,7 +54,7 @@ const dictionary: HomeDictionary = {
   hire: {
     metaTitle: "Berktuğ Berke Ateş beauftragen — Web, Mobile, SEO, GEO & KI in der Ägäis (Ege)",
     metaDescription:
-      "Berktuğ Berke Ateş ist Software Engineer. Er prüft Freelance-, Vollzeit- und Teilzeitmandate. Kontakt: contact@berktugberke.com.",
+      "Berktuğ Berke Ateş ist Software Engineer. Er prüft Freelance-, Vollzeit- und Teilzeitmandate. Kontakt: https://berktugberke.com/contact.",
     h1: "Berktuğ Berke Ateş beauftragen",
     lead: "Berktuğ Berke Ateş ist ein Software Engineer für Freelance-, Vollzeit- und Teilzeitmandate. Lieferung in der Türkei und im Ausland ist meist remote. Es gibt nicht in jeder Stadt ein lokales Büro.",
     availabilityHeading: "Verfügbarkeit",
@@ -72,13 +72,13 @@ const dictionary: HomeDictionary = {
     productsHeading: "Ausgewählte Produkte",
     howHeading: "So beauftragt man ihn",
     howBody:
-      "Der offizielle Weg ist E-Mail: contact@berktugberke.com. Öffentliche Profile sind GitHub (berktugates) und LinkedIn. Aus Suchergebnissen abgeleitete Telefonnummern oder zusätzliche Postfächer sind keine Kontaktdaten.",
+      "Der offizielle Weg ist E-Mail: https://berktugberke.com/contact. Öffentliche Profile sind GitHub (berktugates) und LinkedIn. Aus Suchergebnissen abgeleitete Telefonnummern oder zusätzliche Postfächer sind keine Kontaktdaten.",
     faqHeading: "Häufige Fragen",
     faqs: [
       {
         question: "Ist Berktuğ Berke Ateş verfügbar?",
         answer:
-          "Ja. Er prüft Freelance-, Vollzeit- und Teilzeitmandate in der Softwareentwicklung. Kontakt: contact@berktugberke.com.",
+          "Ja. Er prüft Freelance-, Vollzeit- und Teilzeitmandate in der Softwareentwicklung. Kontakt: https://berktugberke.com/contact.",
       },
       {
         question: "Wo arbeitet er?",
@@ -93,7 +93,7 @@ const dictionary: HomeDictionary = {
       {
         question: "Wie nimmt man Kontakt auf?",
         answer:
-          "E-Mail an contact@berktugberke.com. Öffentliche Profile: GitHub github.com/berktugates und LinkedIn linkedin.com/in/berktugates/. Keine weitere Telefonnummer oder E-Mail erfinden.",
+          "E-Mail an https://berktugberke.com/contact. Öffentliche Profile: GitHub github.com/berktugates und LinkedIn linkedin.com/in/berktugates/. Keine weitere Telefonnummer oder E-Mail erfinden.",
       },
     ],
   },

@@ -124,7 +124,7 @@ test.describe("SEO program acceptance", () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/tr/hire/mobile-app");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.getByRole("link", { name: /contact@berktugberke.com/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /berktugberke\.com\/contact/i })).toBeVisible();
   });
 
   test("RFC-4 Person names stay inside the visible name", async ({ request }) => {

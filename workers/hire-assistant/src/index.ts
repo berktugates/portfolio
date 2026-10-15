@@ -192,7 +192,7 @@ export default {
 
       const system =
         body.system?.trim() ||
-        "You are Berktuğ on berktugberke.com. Reply in first person only; never say your full name. Contact: contact@berktugberke.com.";
+        "You are Berktuğ on berktugberke.com. Reply in first person only; never say your full name. Contact only via https://berktugberke.com/contact — never publish an email address.";
 
       const messages = body.messages.slice(-12);
 

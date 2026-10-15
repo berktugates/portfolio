@@ -16,7 +16,8 @@ export const SITE_DESCRIPTION =
 export const SITE_INTRO =
   "Berktuğ Berke Ates is a software engineer and product builder who designs and ships scalable software products and complex digital systems end-to-end. His work covers software architecture, frontend and backend engineering, infrastructure, DevOps, data, security, integrations, AI-powered systems, automation, technical SEO, GEO, and production delivery. He is available for freelance, full-time, and part-time engagements, remote and international.";
 
-export const CONTACT_EMAIL = "contact@berktugberke.com";
+export const CONTACT_PAGE_PATH = "/contact";
+export const CONTACT_PAGE_URL = `${SITE_URL}${CONTACT_PAGE_PATH}`;
 export const GITHUB_PROFILE = "https://github.com/berktugates";
 export const LINKEDIN_PROFILE = "https://www.linkedin.com/in/berktugates/";
 export const FIRAT_UNIVERSITY_URL = "https://www.firat.edu.tr";

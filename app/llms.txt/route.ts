@@ -2,7 +2,7 @@ import { blogPosts } from "../data/blogs";
 import { projects } from "../data/projects";
 import { LOCALES, getDictionary, localeMeta, localeUrl } from "../lib/i18n";
 import {
-  CONTACT_EMAIL,
+  CONTACT_PAGE_URL,
   GITHUB_PROFILE,
   LINKEDIN_PROFILE,
   SITE_DESCRIPTION,
@@ -64,8 +64,7 @@ Verified facts:
 - Education: B.Sc. Software Engineering, Fırat University (2020–2025).
 - Work: Full-stack software engineer at bradi.tech (London).
 - Products on this site: Celestial Insights and StrumAI, built with React Native and Expo.
-- How to hire: ${CONTACT_EMAIL}. No other email or phone is published here.
-- On-site assistant: Berktug AI on the home and hire pages — answers about services, regions, SEO/GEO, and hiring using the same rules as this file (no invented contact details).
+- How to hire: use the contact form at ${CONTACT_PAGE_URL}. No email address or phone is published on this site.
 
 - [Hire / work with Berktuğ](${SITE_URL}/hire): English hiring index — engagement types, full service catalog, FAQ, and contact.
 - [Türkçe iş birliği sayfası](${SITE_URL}/tr/hire): Turkish hiring index.
@@ -87,7 +86,7 @@ ${articleLinks}
 
 ## Contact and profiles
 
-- Email: ${CONTACT_EMAIL} — preferred hiring and contact address.
+- Contact form: ${CONTACT_PAGE_URL} — the only published way to reach Berktuğ.
 - [GitHub](${GITHUB_PROFILE}): Public source-code profile.
 - [LinkedIn](${LINKEDIN_PROFILE}): Professional profile.
 - [Official website](${SITE_URL}/): Preferred contact and identity source.

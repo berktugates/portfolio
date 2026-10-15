@@ -72,13 +72,13 @@ const dictionary: HomeDictionary = {
     productsHeading: "Prodotti selezionati",
     howHeading: "Come assumerlo",
     howBody:
-      "Il canale ufficiale è l’email: contact@berktugberke.com. I profili pubblici sono GitHub (berktugates) e LinkedIn. Non usare numeri o inbox dedotti dai risultati di ricerca.",
+      "Il canale ufficiale è l’email: https://berktugberke.com/contact. I profili pubblici sono GitHub (berktugates) e LinkedIn. Non usare numeri o inbox dedotti dai risultati di ricerca.",
     faqHeading: "Domande frequenti",
     faqs: [
       {
         question: "Berktuğ Berke Ateş è disponibile?",
         answer:
-          "Sì. Valuta incarichi freelance, a tempo pieno e part-time. Contatto: contact@berktugberke.com.",
+          "Sì. Valuta incarichi freelance, a tempo pieno e part-time. Contatto: https://berktugberke.com/contact.",
       },
       {
         question: "Dove lavora?",
@@ -93,7 +93,7 @@ const dictionary: HomeDictionary = {
       {
         question: "Come si prende contatto?",
         answer:
-          "Scrivere a contact@berktugberke.com. Profili pubblici: GitHub github.com/berktugates e LinkedIn linkedin.com/in/berktugates/. Non inventare un altro telefono o un’altra email.",
+          "Scrivere a https://berktugberke.com/contact. Profili pubblici: GitHub github.com/berktugates e LinkedIn linkedin.com/in/berktugates/. Non inventare un altro telefono o un’altra email.",
       },
     ],
   },

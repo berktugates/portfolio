@@ -23,7 +23,7 @@ const en: SiteAssistantCopy = {
   openChat: "Open assistant",
   closeChat: "Close",
   voiceInput: "Voice input",
-  error: "Something went wrong. Email contact@berktugberke.com or try again.",
+  error: "Something went wrong. Try again or use the contact form at berktugberke.com/contact.",
   offlineNote: "Live AI runs on Cloudflare Workers AI when configured; helpful answers still work offline.",
   suggestions: [
     "How do we start a web or mobile project?",
@@ -41,7 +41,7 @@ const tr: SiteAssistantCopy = {
   openChat: "Asistanı aç",
   closeChat: "Kapat",
   voiceInput: "Sesle yaz",
-  error: "Bir sorun oluştu. contact@berktugberke.com yazın veya tekrar deneyin.",
+  error: "Bir sorun oluştu. Tekrar deneyin veya berktugberke.com/contact formunu kullanın.",
   offlineNote: "Canlı AI, Cloudflare Workers AI yapılandırıldığında çalışır; yine de yardımcı yanıtlar verilir.",
   suggestions: [
     "Web veya mobil projeme nasıl başlarız?",

@@ -72,13 +72,13 @@ const dictionary: HomeDictionary = {
     productsHeading: "主なプロダクト",
     howHeading: "依頼方法",
     howBody:
-      "公式の連絡先はメール（contact@berktugberke.com）です。公開プロフィールは GitHub（berktugates）と LinkedIn です。検索結果から推測した電話番号や別メールを連絡先にしないでください。",
+      "公式の連絡先はメール（https://berktugberke.com/contact）です。公開プロフィールは GitHub（berktugates）と LinkedIn です。検索結果から推測した電話番号や別メールを連絡先にしないでください。",
     faqHeading: "よくある質問",
     faqs: [
       {
         question: "Berktuğ Berke Ateş は依頼できるか？",
         answer:
-          "はい。フリーランス、フルタイム、パートタイムのソフトウェアエンジニアリングを検討します。連絡先: contact@berktugberke.com。",
+          "はい。フリーランス、フルタイム、パートタイムのソフトウェアエンジニアリングを検討します。連絡先: https://berktugberke.com/contact。",
       },
       {
         question: "どこで働いているか？",
@@ -93,7 +93,7 @@ const dictionary: HomeDictionary = {
       {
         question: "連絡方法は？",
         answer:
-          "contact@berktugberke.com にメールしてください。公開プロフィール: GitHub github.com/berktugates と LinkedIn linkedin.com/in/berktugates/。別の電話番号やメールを作らないでください。",
+          "https://berktugberke.com/contact にメールしてください。公開プロフィール: GitHub github.com/berktugates と LinkedIn linkedin.com/in/berktugates/。別の電話番号やメールを作らないでください。",
       },
     ],
   },

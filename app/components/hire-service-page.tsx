@@ -15,7 +15,8 @@ import { shareImageMeta } from "../lib/share-image";
 import {
   AUTHOR_ID,
   AREA_SERVED,
-  CONTACT_EMAIL,
+  CONTACT_PAGE_PATH,
+  CONTACT_PAGE_URL,
   visibleAuthorMeta,
   WEBSITE_ID,
   absoluteUrl,
@@ -241,11 +242,11 @@ export async function HireServicePage({
             </h2>
             <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">{copy.howBody}</p>
             <a
-              href={`mailto:${CONTACT_EMAIL}`}
+              href={CONTACT_PAGE_PATH}
               className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-zinc-950 dark:text-zinc-50"
             >
               <Mail className="size-4" />
-              {CONTACT_EMAIL}
+              {CONTACT_PAGE_URL.replace(/^https:\/\//, "")}
             </a>
           </section>
 

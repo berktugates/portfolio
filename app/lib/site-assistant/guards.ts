@@ -92,5 +92,5 @@ export function guardMessageForLocale(locale: Locale, code: Exclude<AssistantGua
   }
   return tr
     ? "Kısa bir süre için istek sınırına ulaşıldı. Biraz bekleyip tekrar deneyin veya doğrudan iletişime geçin."
-    : "Request limit reached for now. Wait a moment, try again, or email contact@berktugberke.com.";
+    : "Request limit reached for now. Wait a moment, try again, or use berktugberke.com/contact.";
 }

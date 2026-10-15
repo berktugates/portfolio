@@ -1,4 +1,4 @@
-import { CONTACT_EMAIL } from "../seo";
+import { CONTACT_PAGE_URL } from "../seo";
 
 export const NEWS_PUBLICATION_NAME = "Berktuğ Berke Ateş — Gündem";
 
@@ -8,7 +8,7 @@ export type PublicationIdentity = {
   publicationType: string;
   workplaceAddress: string | null;
   phone: string | null;
-  email: string;
+  contactFormUrl: string;
   electronicNotificationAddress: string | null;
   hostingProvider: string;
   complete: boolean;
@@ -25,7 +25,7 @@ export function publicationIdentity(): PublicationIdentity {
     publicationType: process.env.NEWS_PUBLICATION_TYPE?.trim() || "İnternet haber sitesi",
     workplaceAddress,
     phone,
-    email: process.env.NEWS_CONTACT_EMAIL?.trim() || CONTACT_EMAIL,
+    contactFormUrl: CONTACT_PAGE_URL,
     electronicNotificationAddress,
     hostingProvider: "Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA",
     complete: Boolean(responsibleManager && workplaceAddress && phone && electronicNotificationAddress),
@@ -33,13 +33,16 @@ export function publicationIdentity(): PublicationIdentity {
 }
 
 export function newsPublisherJsonLd() {
-  const identity = publicationIdentity();
   return {
     "@type": "NewsMediaOrganization",
     "@id": "https://haberler.berktugberke.com/#publisher",
     name: NEWS_PUBLICATION_NAME,
     url: "https://haberler.berktugberke.com/",
-    email: identity.email,
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      url: CONTACT_PAGE_URL,
+    },
     logo: {
       "@type": "ImageObject",
       url: "https://haberler.berktugberke.com/apple-icon.png",

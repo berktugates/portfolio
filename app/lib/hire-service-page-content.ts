@@ -10,7 +10,7 @@ import {
 } from "./i18n/hire-services-copy";
 import type { HireServiceCopy } from "./i18n/types";
 
-import { CONTACT_EMAIL, SITE_URL } from "./seo";
+import { CONTACT_PAGE_URL, SITE_URL } from "./seo";
 import { SERVICE_OFFERS, type ServiceSlug, isServiceSlug } from "./services";
 
 export type HireServicePageSection = {
@@ -273,7 +273,7 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
       title: service.title,
       description: service.description,
       metaTitle: `${service.title} — Berktuğ Berke Ateş | Türkiye`,
-      metaDescription: `${service.title}. ${service.description} İletişim: ${CONTACT_EMAIL}.`,
+      metaDescription: `${service.title}. ${service.description} İletişim formu: ${CONTACT_PAGE_URL}.`,
       h1: `${service.title} — Türkiye`,
       lead,
       sections: [
@@ -302,7 +302,7 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
       faqs: [
         {
           question: `${service.title} için iletişim nerede?`,
-          answer: `Berktuğ Berke Ateş bu işi remote teslim eder. İletişim: ${CONTACT_EMAIL}. Sayfa adresi: ${pageUrl("tr", slug)}.`,
+          answer: `Berktuğ Berke Ateş bu işi remote teslim eder. İletişim formu: ${CONTACT_PAGE_URL}. Sayfa adresi: ${pageUrl("tr", slug)}.`,
         },
         {
           question: "Nerede çalışıyor?",
@@ -327,7 +327,7 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
       regionsBody:
         "Hizmet Türkiye genelinde ve yurtdışında çoğunlukla remote verilir. Her şehirde yerel ofis yoktur.",
       howHeading: "Nasıl başlanır",
-      howBody: `Resmi iletişim: ${CONTACT_EMAIL}.`,
+      howBody: `Resmi iletişim yalnızca ${CONTACT_PAGE_URL} formu üzerinden.`,
       backToHire: "Tüm hizmetlere dön",
       relatedHeading: "Diğer yazılım hizmetleri",
     };
@@ -410,7 +410,7 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
     title,
     description,
     metaTitle: ui.metaTitle,
-    metaDescription: `${title}. ${description} Contact: ${CONTACT_EMAIL}.`,
+    metaDescription: `${title}. ${description} Contact form: ${CONTACT_PAGE_URL}.`,
     h1: ui.h1,
     lead:
       slug === "mobile-app"
@@ -440,7 +440,7 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
     faqs: [
       {
         question: `How do I contact Berktuğ Berke Ateş about ${title}?`,
-        answer: `He delivers this work remotely. Contact: ${CONTACT_EMAIL}. This page: ${url}.`,
+        answer: `He delivers this work remotely. Contact form: ${CONTACT_PAGE_URL}. This page: ${url}.`,
       },
       {
         question: "Where does he work?",
@@ -464,7 +464,7 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
     regionsBody:
       "The service is delivered across Türkiye and abroad, mostly remote. There is no local office in every city.",
     howHeading: ui.howHeading,
-    howBody: `Official contact: ${CONTACT_EMAIL}.`,
+    howBody: `Official contact is only via the form at ${CONTACT_PAGE_URL}.`,
     backToHire: ui.backToHire,
     relatedHeading: ui.relatedHeading,
   };

@@ -7,7 +7,7 @@ import { ContentGroupBeacon } from "./components/content-group-beacon";
 import { GoogleAnalytics, GoogleTagManager } from "./components/google-tags";
 import {
   AUTHOR_ID,
-  CONTACT_EMAIL,
+  CONTACT_PAGE_URL,
   FIRAT_UNIVERSITY_ID,
   FIRAT_UNIVERSITY_URL,
   GITHUB_PROFILE,
@@ -48,7 +48,11 @@ const structuredData = {
       name: SITE_NAME,
       alternateName: ["Berktuğ Berke Ateş", "Berktuğ Berke", "Berktug Berke Ates", "Berktug Berke", "Berktug Ates", "berktugates"],
       url: SITE_URL,
-      email: CONTACT_EMAIL,
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "customer support",
+        url: CONTACT_PAGE_URL,
+      },
       jobTitle: ["Software Engineer", "Product Builder"],
       alumniOf: { "@id": FIRAT_UNIVERSITY_ID },
       knowsLanguage: [
