@@ -2,7 +2,6 @@ import { expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
-    sessionStorage.removeItem("site-assistant-messages");
     sessionStorage.setItem("blog-subscribe-prompted", "1");
   });
 });
@@ -19,16 +18,6 @@ test.describe("NAV gundem leak", () => {
     });
   }
 
-  test("NAV-2 assistant suggestions exclude gundem URL", async ({ page }) => {
-    await page.goto("/");
-    const input = page.getByRole("textbox", { name: /How can I help|Nasıl yardımcı/i });
-    await input.click();
-    const suggestions = page.locator(".hw-dock-suggestion");
-    await expect(suggestions.first()).toBeVisible({ timeout: 10_000 });
-    const text = await suggestions.allTextContents();
-    expect(text.join(" ")).not.toContain("/gundem");
-    expect(text.join(" ")).not.toContain("haberler.berktugberke.com");
-  });
 });
 
 test.describe("Gündem surface", () => {
@@ -158,19 +147,3 @@ test.describe("GTM content_group", () => {
   });
 });
 
-test.describe("Assistant markdown", () => {
-  test.use({ viewport: { width: 390, height: 844 } });
-
-  test("SAFE-2 strong from markdown", async ({ page }) => {
-    await page.goto("/tr");
-    const input = page.getByRole("textbox", { name: /Nasıl yardımcı/i });
-    await input.click();
-    await page.locator(".hw-dock-suggestion").filter({ hasText: /SEO ve GEO/i }).click();
-    const panel = page.locator(".site-assistant-chat-panel");
-    await expect(panel).toBeVisible({ timeout: 10_000 });
-    await expect(page.locator(".hw-dock-send-spinner")).toHaveCount(0, { timeout: 20_000 });
-    await expect(
-      panel.locator("strong").filter({ hasText: "contact@berktugberke.com" }),
-    ).toBeVisible({ timeout: 10_000 });
-  });
-});
