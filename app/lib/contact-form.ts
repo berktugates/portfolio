@@ -1,3 +1,6 @@
+import { DEFAULT_LOCALE, type Locale, isLocale } from "./i18n/config";
+import { getContactPageCopy } from "./i18n/contact-page-copy";
+
 export const CONTACT_PROJECT_TYPES = ["ai-automation", "saas-mvp", "mobile", "custom", "other"] as const;
 export type ContactProjectType = (typeof CONTACT_PROJECT_TYPES)[number];
 
@@ -53,15 +56,18 @@ export function parseContactSubmission(
   };
 }
 
-export function contactProjectLabel(type: ContactSubmission["projectType"]): string {
-  return {
-    "ai-automation": "AI / Otomasyon",
-    "saas-mvp": "SaaS / MVP",
-    mobile: "Mobil uygulama",
-    custom: "Özel yazılım",
-    other: "Diğer",
-    "": "Belirtilmedi",
-  }[type];
+export function parseFormLocale(form: FormData): Locale {
+  const raw = clean(form.get("locale"));
+  return raw && isLocale(raw) ? raw : DEFAULT_LOCALE;
+}
+
+export function contactProjectLabel(
+  type: ContactSubmission["projectType"],
+  locale: Locale = DEFAULT_LOCALE,
+): string {
+  const labels = getContactPageCopy(locale).form.projectTypes;
+  if (!type) return labels.unspecified;
+  return labels[type];
 }
 
 const MIN_DETAILS_LENGTH = 20;
@@ -74,25 +80,12 @@ export const contactFormLimits = {
   maxFormAgeMs: MAX_FORM_AGE_MS,
 } as const;
 
-export function contactSubmissionUserMessage(error: string): string {
-  switch (error) {
-    case "spam":
-      return "Gönderim reddedildi. Sayfayı yenileyip tekrar deneyin.";
-    case "project-type":
-      return "Geçersiz proje türü seçimi.";
-    case "name":
-      return "Ad en az 2 karakter olmalı.";
-    case "email":
-      return "Geçerli bir e-posta adresi girin.";
-    case "details":
-      return `Proje detayları en az ${MIN_DETAILS_LENGTH} karakter olmalı.`;
-    case "turnstile":
-      return "Güvenlik doğrulamasını tamamlayın (Turnstile kutusu).";
-    case "timing":
-      return "Formu göndermeden önce alanları doldurun. Çok uzun süre açık kaldıysa sayfayı yenileyin.";
-    default:
-      return "Alanları kontrol edip tekrar deneyin.";
+export function contactSubmissionUserMessage(error: string, locale: Locale = DEFAULT_LOCALE): string {
+  const errors = getContactPageCopy(locale).errors;
+  if (error in errors) {
+    return errors[error as keyof typeof errors];
   }
+  return errors.default;
 }
 
 export function validateContactFieldsClient(input: {

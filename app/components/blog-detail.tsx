@@ -5,7 +5,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { getCatalogBlogSlugs } from "../lib/content/blog-catalog";
 import { blogHreflangLocalesForSlug, hasBlogLocaleOverlay } from "../lib/content/blog-locale-overlay";
 import { getLocaleContent, getLocalizedBlogPost } from "../lib/content/get-content";
-import { blogPostPath, blogsIndexPath } from "../lib/content/paths";
+import { blogPostPath, blogsIndexPath, contactPath } from "../lib/content/paths";
 import type { Locale } from "../lib/i18n";
 import { getDictionary, localeMeta, localePath } from "../lib/i18n";
 import { formatMessage } from "../lib/i18n/format";
@@ -163,6 +163,8 @@ export async function BlogDetailPage({
         name={dict.headerName}
         role={dict.headerRole}
         ariaLabel={dict.headerAriaLabel}
+        contactLabel={dict.contact}
+        contactHref={contactPath(locale)}
       />
       <div className="absolute right-4 top-24">
         <CopyUrl />

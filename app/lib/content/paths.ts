@@ -54,6 +54,10 @@ export function hirePath(locale: Locale): string {
   return withLocalePath(locale, "/hire");
 }
 
+export function contactPath(locale: Locale): string {
+  return withLocalePath(locale, "/contact");
+}
+
 export function hireServicePath(locale: Locale, serviceSlug: string): string {
   return withLocalePath(locale, `/hire/${serviceSlug}`);
 }

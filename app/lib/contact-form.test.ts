@@ -39,7 +39,8 @@ test("instant submissions are rejected", () => {
 });
 
 test("short details map to a clear user message", () => {
-  assert.match(contactSubmissionUserMessage("details"), /20 karakter/);
+  assert.match(contactSubmissionUserMessage("details", "tr"), /20 karakter/);
+  assert.match(contactSubmissionUserMessage("details", "en"), /20 characters/);
 });
 
 test("client validation requires turnstile token", () => {

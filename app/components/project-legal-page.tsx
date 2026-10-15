@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { projects } from "../data/projects";
 import { getLocaleContent, getLocalizedProject } from "../lib/content/get-content";
 import {
+  contactPath,
   projectLegalPath,
   projectPath,
   type ProjectLegalDocument,
@@ -107,6 +108,8 @@ export async function ProjectLegalPage({
           name={dict.headerName}
           role={dict.headerRole}
           ariaLabel={dict.headerAriaLabel}
+          contactLabel={dict.contact}
+          contactHref={contactPath(locale)}
         />
         <main className="flex-1 pb-16 pt-4">
           <Link

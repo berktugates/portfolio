@@ -5,7 +5,7 @@ import { LanguageSwitcher } from "./language-switcher";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import { getLocaleContent, getLocalizedBlogPosts } from "../lib/content/get-content";
-import { blogPostPath, blogsIndexPath } from "../lib/content/paths";
+import { blogPostPath, blogsIndexPath, contactPath } from "../lib/content/paths";
 import {
   type Locale,
   getDictionary,
@@ -91,6 +91,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
           role={dict.headerRole}
           ariaLabel={dict.headerAriaLabel}
           contactLabel={dict.contact}
+          contactHref={contactPath(locale)}
         />
         <main className="space-y-24">
           <h1 className="sr-only">{dict.h1}</h1>

@@ -7,12 +7,11 @@ import { LanguageSwitcher } from "./language-switcher";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import { getLocaleContent, getLocalizedProjects } from "../lib/content/get-content";
-import { hirePath, hireServicePath, pathHreflangLanguages, projectPath } from "../lib/content/paths";
+import { contactPath, hirePath, hireServicePath, pathHreflangLanguages, projectPath } from "../lib/content/paths";
 import { type Locale, getDictionary, localeMeta, localePath } from "../lib/i18n";
 import { shareImageMeta } from "../lib/share-image";
 import {
   AUTHOR_ID,
-  CONTACT_PAGE_PATH,
   CONTACT_PAGE_URL,
   GITHUB_PROFILE,
   LINKEDIN_PROFILE,
@@ -144,6 +143,8 @@ export async function HirePage({ locale }: { locale: Locale }) {
           name={dict.headerName}
           role={dict.headerRole}
           ariaLabel={dict.headerAriaLabel}
+          contactLabel={dict.contact}
+          contactHref={contactPath(locale)}
         />
         <main className="space-y-16 pb-8">
           <Link
@@ -228,10 +229,10 @@ export async function HirePage({ locale }: { locale: Locale }) {
                     {dict.hire.howHeading}
                   </h2>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    <TextWithContactLinks text={dict.hire.howBody} />
+                    <TextWithContactLinks text={dict.hire.howBody} contactHref={contactPath(locale)} />
                   </p>
                 </div>
-                <GlowCard href={CONTACT_PAGE_PATH}>
+                <GlowCard href={contactPath(locale)}>
                   <span className="flex items-center gap-3">
                     <span className="flex size-10 items-center justify-center rounded-lg bg-zinc-100 transition-colors group-hover:bg-zinc-200 dark:bg-zinc-800 dark:group-hover:bg-zinc-700">
                       <Mail className="size-5 text-zinc-700 dark:text-zinc-300" />
@@ -278,7 +279,7 @@ export async function HirePage({ locale }: { locale: Locale }) {
                 <div key={faq.question}>
                   <dt className="font-medium text-zinc-950 dark:text-zinc-50">{faq.question}</dt>
                   <dd className="mt-2 leading-relaxed text-zinc-700 dark:text-zinc-300">
-                    <TextWithContactLinks text={faq.answer} />
+                    <TextWithContactLinks text={faq.answer} contactHref={contactPath(locale)} />
                   </dd>
                 </div>
               ))}

@@ -3,10 +3,13 @@
 import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 import {
+  CONTACT_PROJECT_TYPES,
   contactFormLimits,
   contactSubmissionUserMessage,
   validateContactFieldsClient,
 } from "../lib/contact-form";
+import type { Locale } from "../lib/i18n";
+import type { ContactPageCopy } from "../lib/i18n/contact-page-copy";
 
 declare global {
   interface Window {
@@ -16,18 +19,15 @@ declare global {
   }
 }
 
-const PROJECT_TYPES = [
-  { value: "ai-automation", label: "AI / Otomasyon" },
-  { value: "saas-mvp", label: "SaaS / MVP" },
-  { value: "mobile", label: "Mobil uygulama" },
-  { value: "custom", label: "Özel yazılım" },
-  { value: "other", label: "Diğer" },
-] as const;
-
 const projectTypeChipClassName =
   "rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 peer-checked:border-zinc-950 peer-checked:bg-zinc-950 peer-checked:text-white peer-checked:hover:border-zinc-800 peer-checked:hover:bg-zinc-800 peer-checked:hover:text-white dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-900 dark:hover:text-zinc-100 dark:peer-checked:border-zinc-100 dark:peer-checked:bg-zinc-100 dark:peer-checked:text-zinc-950 dark:peer-checked:hover:border-zinc-200 dark:peer-checked:hover:bg-zinc-200 dark:peer-checked:hover:text-zinc-950 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-zinc-400 dark:peer-focus-visible:outline-zinc-500";
 
-export function ContactForm() {
+type ContactFormProps = {
+  locale: Locale;
+  copy: ContactPageCopy;
+};
+
+export function ContactForm({ locale, copy }: ContactFormProps) {
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   const formRef = useRef<HTMLFormElement>(null);
   const startedRef = useRef(false);
@@ -79,15 +79,16 @@ export function ContactForm() {
     });
     if (clientError) {
       setState("error");
-      setMessage(contactSubmissionUserMessage(clientError));
+      setMessage(contactSubmissionUserMessage(clientError, locale));
       return;
     }
 
     formData.set("cf-turnstile-response", turnstileToken);
     formData.set("startedAt", String(startedAt));
+    formData.set("locale", locale);
 
     setState("sending");
-    setMessage("Gönderiliyor…");
+    setMessage(copy.form.sendingStatus);
 
     try {
       const response = await fetch("/api/contact", {
@@ -96,21 +97,26 @@ export function ContactForm() {
         headers: { Accept: "application/json" },
       });
       const data = (await response.json().catch(() => ({}))) as { message?: string; error?: string };
-      if (!response.ok) throw new Error(data.error ?? "Mesaj gönderilemedi.");
+      if (!response.ok) throw new Error(data.error ?? copy.form.sendFailed);
       formRef.current?.reset();
       setStartedAt(Date.now());
+      startedRef.current = false;
       resetTurnstile();
       setState("success");
-      setMessage(data.message ?? "Mesajınız başarıyla gönderildi.");
+      setMessage(data.message ?? copy.form.successDefault);
     } catch (error) {
       setState("error");
-      setMessage(error instanceof Error ? error.message : "Mesaj gönderilemedi.");
+      setMessage(error instanceof Error ? error.message : copy.form.sendFailed);
       resetTurnstile();
     }
   }
 
   if (!siteKey) {
-    return <p role="alert">Form geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin.</p>;
+    return (
+      <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+        {copy.form.unavailable}
+      </p>
+    );
   }
 
   const fieldClass =
@@ -124,6 +130,7 @@ export function ContactForm() {
       <form ref={formRef} onSubmit={submit} className="relative space-y-5" noValidate>
         <input type="hidden" name="startedAt" value={startedAt} readOnly />
         <input type="hidden" name="cf-turnstile-response" value={turnstileToken} readOnly />
+        <input type="hidden" name="locale" value={locale} readOnly />
         <input
           type="text"
           name="website"
@@ -136,21 +143,21 @@ export function ContactForm() {
 
         <fieldset>
           <legend className="text-xs font-medium tracking-wide text-zinc-600 dark:text-zinc-400">
-            Proje türü{" "}
-            <span className="font-normal text-zinc-400 dark:text-zinc-500">(opsiyonel)</span>
+            {copy.form.projectTypeLegend}{" "}
+            <span className="font-normal text-zinc-400 dark:text-zinc-500">({copy.form.projectTypeOptional})</span>
           </legend>
-          <div className="mt-2.5 flex flex-wrap gap-2" role="radiogroup" aria-label="Proje türü">
-            {PROJECT_TYPES.map((option) => (
-              <label key={option.value} className="inline-flex cursor-pointer">
-                <input type="radio" name="projectType" value={option.value} className="peer sr-only" />
-                <span className={projectTypeChipClassName}>{option.label}</span>
+          <div className="mt-2.5 flex flex-wrap gap-2" role="radiogroup" aria-label={copy.form.projectTypeAria}>
+            {CONTACT_PROJECT_TYPES.map((value) => (
+              <label key={value} className="inline-flex cursor-pointer">
+                <input type="radio" name="projectType" value={value} className="peer sr-only" />
+                <span className={projectTypeChipClassName}>{copy.form.projectTypes[value]}</span>
               </label>
             ))}
           </div>
         </fieldset>
 
         <label className="block text-xs font-medium tracking-wide text-zinc-600 dark:text-zinc-400">
-          ADINIZ
+          {copy.form.nameLabel}
           <input
             required
             name="name"
@@ -163,7 +170,7 @@ export function ContactForm() {
         </label>
 
         <label className="block text-xs font-medium tracking-wide text-zinc-600 dark:text-zinc-400">
-          E-POSTA
+          {copy.form.emailLabel}
           <input
             required
             name="email"
@@ -177,7 +184,7 @@ export function ContactForm() {
         </label>
 
         <label className="block text-xs font-medium tracking-wide text-zinc-600 dark:text-zinc-400">
-          PROJE DETAYLARI
+          {copy.form.detailsLabel}
           <textarea
             required
             name="details"
@@ -187,9 +194,7 @@ export function ContactForm() {
             className={`${fieldClass} resize-y`}
             onFocus={markFormStarted}
           />
-          <span className="mt-1.5 block text-xs font-normal text-zinc-400 dark:text-zinc-500">
-            En az {contactFormLimits.minDetailsLength} karakter (kısa test mesajları için bir cümle daha ekleyin).
-          </span>
+          <span className="mt-1.5 block text-xs font-normal text-zinc-400 dark:text-zinc-500">{copy.form.detailsHint}</span>
         </label>
 
         <div
@@ -208,10 +213,14 @@ export function ContactForm() {
           disabled={!canSubmit}
           className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-zinc-950 px-5 py-3 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
         >
-          {state === "sending" ? "Gönderiliyor…" : state === "success" ? "Gönderildi" : "Mesajı gönder"}
+          {state === "sending"
+            ? copy.form.submitting
+            : state === "success"
+              ? copy.form.submitted
+              : copy.form.submit}
         </button>
         {!turnstileReady && state !== "success" ? (
-          <p className="text-xs text-zinc-400 dark:text-zinc-500">Göndermek için güvenlik doğrulamasının bitmesini bekleyin.</p>
+          <p className="text-xs text-zinc-400 dark:text-zinc-500">{copy.form.turnstileWait}</p>
         ) : null}
         <p
           role={state === "error" ? "alert" : "status"}

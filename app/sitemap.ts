@@ -5,6 +5,7 @@ import { blogHreflangLocalesForSlug, blogIndexHreflangLocales } from "./lib/cont
 import {
   blogPostPath,
   blogsIndexPath,
+  contactPath,
   hirePath,
   hireServicePath,
   pathHreflangLanguages,
@@ -26,6 +27,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const localeHomes = LOCALES.map((locale) => ({
     url: localeUrl(locale),
     alternates: { languages: homeLanguages },
+  }));
+
+  const contactLanguages = pathHreflangLanguages("/contact");
+  const localeContacts = LOCALES.map((locale) => ({
+    url: absoluteUrl(contactPath(locale)),
+    alternates: { languages: contactLanguages },
   }));
 
   const hireLanguages = pathHreflangLanguages("/hire");
@@ -109,7 +116,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   });
 
   return [
-    { url: absoluteUrl("/contact") },
+    ...localeContacts,
     ...localeHomes,
     ...localeHires,
     ...hireServiceEntries,

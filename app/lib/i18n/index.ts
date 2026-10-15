@@ -16,3 +16,4 @@ export {
 } from "./config";
 export { formatMessage } from "./format";
 export { getDictionary } from "./get-dictionary";
+export { getContactPageCopy, type ContactPageCopy } from "./contact-page-copy";

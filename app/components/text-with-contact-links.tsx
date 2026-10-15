@@ -1,9 +1,15 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { CONTACT_FORM_HREF, CONTACT_IN_TEXT, contactFormLinkClassName } from "../lib/contact-link";
+import { CONTACT_IN_TEXT, contactFormLinkClassName } from "../lib/contact-link";
 import { CONTACT_FORM_PATH_LABEL } from "../lib/i18n/hire-engagement";
 
-export function TextWithContactLinks({ text }: { text: string }) {
+export function TextWithContactLinks({
+  text,
+  contactHref = "/contact",
+}: {
+  text: string;
+  contactHref?: string;
+}) {
   const nodes: ReactNode[] = [];
   let last = 0;
   let key = 0;
@@ -14,7 +20,7 @@ export function TextWithContactLinks({ text }: { text: string }) {
       nodes.push(text.slice(last, index));
     }
     nodes.push(
-      <Link key={key++} href={CONTACT_FORM_HREF} className={contactFormLinkClassName}>
+      <Link key={key++} href={contactHref} className={contactFormLinkClassName}>
         {CONTACT_FORM_PATH_LABEL}
       </Link>,
     );

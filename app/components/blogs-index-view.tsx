@@ -7,7 +7,7 @@ import {
   getLocalizedBlogPage,
   getLocalizedBlogPosts,
 } from "../lib/content/get-content";
-import { blogPostPath, blogsIndexPath } from "../lib/content/paths";
+import { blogPostPath, blogsIndexPath, contactPath } from "../lib/content/paths";
 import type { Locale } from "../lib/i18n";
 import { getDictionary, localeMeta, localePath } from "../lib/i18n";
 import { formatMessage } from "../lib/i18n/format";
@@ -106,6 +106,8 @@ export async function BlogsIndexView({
         name={dict.headerName}
         role={dict.headerRole}
         ariaLabel={dict.headerAriaLabel}
+        contactLabel={dict.contact}
+        contactHref={contactPath(locale)}
       />
       <main className="flex flex-1 flex-col">
         <h1 className="mb-3 text-xl font-medium">{content.ui.blogs}</h1>

@@ -5,7 +5,9 @@ import {
   contactProjectLabel,
   contactSubmissionUserMessage,
   parseContactSubmission,
+  parseFormLocale,
 } from "../../lib/contact-form";
+import { getContactPageCopy } from "../../lib/i18n/contact-page-copy";
 
 export const dynamic = "force-dynamic";
 
@@ -66,13 +68,25 @@ async function verifyTurnstile(token: string, ip: string, hostname: string): Pro
 
 export async function POST(request: Request) {
   const requestUrl = new URL(request.url);
+  const fallbackApi = getContactPageCopy("en").api;
   const origin = request.headers.get("origin");
-  if (!origin || origin !== requestUrl.origin) return json({ error: "Geçersiz istek." }, 403);
+  if (!origin || origin !== requestUrl.origin) return json({ error: fallbackApi.invalidRequest }, 403);
 
   const contentLength = Number(request.headers.get("content-length") ?? "0");
-  if (contentLength > 16_384) return json({ error: "İstek çok büyük." }, 413);
+  if (contentLength > 16_384) return json({ error: fallbackApi.tooLarge }, 413);
+
+  let form: FormData;
+  try {
+    form = await request.formData();
+  } catch {
+    return json({ error: fallbackApi.formUnreadable }, 400);
+  }
+
+  const locale = parseFormLocale(form);
+  const api = getContactPageCopy(locale).api;
+
   if (request.headers.get("cookie")?.includes("contact_cooldown=1")) {
-    return json({ error: "Yeni bir mesaj göndermeden önce 10 dakika bekleyin." }, 429, COOLDOWN_SECONDS);
+    return json({ error: api.cooldown }, 429, COOLDOWN_SECONDS);
   }
 
   const ip = requestIp(request);
@@ -81,33 +95,27 @@ export async function POST(request: Request) {
   const lastAttempt = recentIps.get(key) ?? 0;
   if (now - lastAttempt < COOLDOWN_SECONDS * 1_000) {
     const retryAfter = Math.ceil((COOLDOWN_SECONDS * 1_000 - (now - lastAttempt)) / 1_000);
-    return json({ error: "Yeni bir mesaj göndermeden önce 10 dakika bekleyin." }, 429, retryAfter);
+    return json({ error: api.cooldown }, 429, retryAfter);
   }
 
-  let form: FormData;
-  try {
-    form = await request.formData();
-  } catch {
-    return json({ error: "Form okunamadı." }, 400);
-  }
   const parsed = parseContactSubmission(form, now);
-  if (!parsed.ok) return json({ error: contactSubmissionUserMessage(parsed.error) }, 400);
+  if (!parsed.ok) return json({ error: contactSubmissionUserMessage(parsed.error, locale) }, 400);
 
   let turnstileValid = false;
   try {
     turnstileValid = await verifyTurnstile(parsed.value.turnstileToken, ip, requestUrl.hostname);
   } catch {
-    return json({ error: "Güvenlik doğrulaması geçici olarak kullanılamıyor." }, 503);
+    return json({ error: api.turnstileUnavailable }, 503);
   }
   if (!turnstileValid) {
-    return json({ error: "Güvenlik doğrulaması başarısız. Lütfen tekrar deneyin." }, 400);
+    return json({ error: api.turnstileFailed }, 400);
   }
 
   const serviceId = process.env.EMAILJS_SERVICE_ID;
   const templateId = process.env.EMAILJS_TEMPLATE_ID;
   const publicKey = process.env.EMAILJS_PUBLIC_KEY;
   if (!serviceId || !templateId || !publicKey) {
-    return json({ error: "İletişim servisi geçici olarak kullanılamıyor." }, 503);
+    return json({ error: api.serviceUnavailable }, 503);
   }
 
   recentIps.set(key, now);
@@ -125,16 +133,15 @@ export async function POST(request: Request) {
           to_email: contactInboundEmail(),
           from_name: parsed.value.name,
           reply_to: parsed.value.email,
-          project_type: contactProjectLabel(parsed.value.projectType),
+          project_type: contactProjectLabel(parsed.value.projectType, locale),
           message: parsed.value.details,
-          // Keep the stock EmailJS contact-template variables populated too.
           name: parsed.value.name,
           email: parsed.value.email,
-          title: contactProjectLabel(parsed.value.projectType),
-          time: new Intl.DateTimeFormat("tr-TR", {
+          title: contactProjectLabel(parsed.value.projectType, locale),
+          time: new Intl.DateTimeFormat(locale === "tr" ? "tr-TR" : "en-GB", {
             dateStyle: "medium",
             timeStyle: "short",
-            timeZone: "Europe/Istanbul",
+            timeZone: "UTC",
           }).format(new Date(now)),
         },
       }),
@@ -142,15 +149,15 @@ export async function POST(request: Request) {
     });
   } catch {
     recentIps.delete(key);
-    return json({ error: "E-posta servisine ulaşılamadı. Lütfen daha sonra tekrar deneyin." }, 502);
+    return json({ error: api.emailUnreachable }, 502);
   }
 
   if (!emailResponse.ok) {
     recentIps.delete(key);
-    return json({ error: "Mesaj gönderilemedi. Lütfen daha sonra tekrar deneyin." }, 502);
+    return json({ error: api.emailFailed }, 502);
   }
 
-  const response = json({ message: "Mesajınız başarıyla gönderildi." }, 200);
+  const response = json({ message: api.success }, 200);
   response.cookies.set("contact_cooldown", "1", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

@@ -5,7 +5,7 @@ import { LanguageSwitcher } from "./language-switcher";
 import { TextWithContactLinks } from "./text-with-contact-links";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
-import { hirePath, hireServicePath, pathHreflangLanguages } from "../lib/content/paths";
+import { contactPath, hirePath, hireServicePath, pathHreflangLanguages } from "../lib/content/paths";
 import {
   assertServiceParam,
   getHireServicePageCopy,
@@ -16,7 +16,6 @@ import { shareImageMeta } from "../lib/share-image";
 import {
   AUTHOR_ID,
   AREA_SERVED,
-  CONTACT_PAGE_PATH,
   CONTACT_PAGE_URL,
   visibleAuthorMeta,
   WEBSITE_ID,
@@ -193,6 +192,8 @@ export async function HireServicePage({
           name={dict.headerName}
           role={dict.headerRole}
           ariaLabel={dict.headerAriaLabel}
+          contactLabel={dict.contact}
+          contactHref={contactPath(locale)}
         />
         <main className="space-y-16 pb-8">
           <Link
@@ -244,10 +245,10 @@ export async function HireServicePage({
               {copy.howHeading}
             </h2>
             <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
-              <TextWithContactLinks text={copy.howBody} />
+              <TextWithContactLinks text={copy.howBody} contactHref={contactPath(locale)} />
             </p>
             <a
-              href={CONTACT_PAGE_PATH}
+              href={contactPath(locale)}
               className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-zinc-950 dark:text-zinc-50"
             >
               <Mail className="size-4" />
@@ -264,7 +265,7 @@ export async function HireServicePage({
                 <div key={faq.question}>
                   <dt className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{faq.question}</dt>
                   <dd className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                    <TextWithContactLinks text={faq.answer} />
+                    <TextWithContactLinks text={faq.answer} contactHref={contactPath(locale)} />
                   </dd>
                 </div>
               ))}

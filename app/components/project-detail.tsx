@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 import { projects } from "../data/projects";
 import { localizeAppStoreUrl } from "../lib/content/app-store";
 import { getLocalizedProject, getLocaleContent } from "../lib/content/get-content";
-import { projectLegalPath, projectPath } from "../lib/content/paths";
+import { contactPath, projectLegalPath, projectPath } from "../lib/content/paths";
 import type { Locale } from "../lib/i18n";
 import { formatMessage, getDictionary, hreflangLanguages, localeMeta, localePath } from "../lib/i18n";
 import {
@@ -121,6 +121,8 @@ export async function ProjectDetailPage({
           name={dict.headerName}
           role={dict.headerRole}
           ariaLabel={dict.headerAriaLabel}
+          contactLabel={dict.contact}
+          contactHref={contactPath(locale)}
         />
         <main className="flex-1 pb-16 pt-4">
           <Link

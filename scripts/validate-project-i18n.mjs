@@ -133,7 +133,8 @@ for (const [locale, copy] of Object.entries(locales)) {
   const hireFile = htmlPath(`${copy.prefix}/hire`);
   const hire = await readFile(hireFile, "utf8");
   requireText(hire, `lang="${locale === "zh" ? "zh-Hans" : locale}"`, `${locale}/hire language`);
-  requireText(hire, 'href="/contact"', `${locale}/hire contact form link`);
+  const contactHref = copy.prefix === "" ? 'href="/contact"' : `href="${copy.prefix}/contact"`;
+  requireText(hire, contactHref, `${locale}/hire contact form link`);
   requireText(sitemap, `https://berktugberke.com${copy.prefix}/hire`, "sitemap hire");
   const types = jsonLdObjects(hire).map((item) => item["@type"]);
   if (!types.includes("FAQPage")) throw new Error(`${locale}/hire: missing FAQPage JSON-LD`);
@@ -153,6 +154,18 @@ for (const [locale, copy] of Object.entries(locales)) {
   hirePageCount += 1;
 }
 if (hirePageCount !== 7) throw new Error(`Expected 7 hire pages, validated ${hirePageCount}`);
+
+let contactPageCount = 0;
+for (const [locale, copy] of Object.entries(locales)) {
+  const contactFile = htmlPath(`${copy.prefix}/contact`);
+  const contactHtml = await readFile(contactFile, "utf8");
+  requireText(contactHtml, `lang="${locale === "zh" ? "zh-Hans" : locale}"`, `${locale}/contact language`);
+  requireText(contactHtml, 'name="locale"', `${locale}/contact locale field`);
+  requireText(contactHtml, `value="${locale}"`, `${locale}/contact locale value`);
+  requireText(sitemap, `https://berktugberke.com${copy.prefix}/contact`, "sitemap contact");
+  contactPageCount += 1;
+}
+if (contactPageCount !== 7) throw new Error(`Expected 7 contact pages, validated ${contactPageCount}`);
 
 const deepServices = [
   "web-app",
