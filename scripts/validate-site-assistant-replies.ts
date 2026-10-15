@@ -40,7 +40,7 @@ assertFirstPersonTr(trHire);
 // Curated EN paths
 const enStart = localAssistantReply("en", "How do I start a project?");
 assertNoFullName(enStart);
-assert.ok(/\bI\b|we'll|Email/i.test(enStart));
+assert.ok(/\bI\b|we'll|contact form/i.test(enStart));
 
 const enExp = localAssistantReply("en", "What's your experience with projects?");
 assertNoFullName(enExp);

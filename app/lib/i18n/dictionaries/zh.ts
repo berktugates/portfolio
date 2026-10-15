@@ -1,5 +1,8 @@
 import type { HomeDictionary } from "../types";
+import { HIRE_ENGAGEMENT } from "../hire-engagement";
 import { hireServicesZh } from "../hire-services-copy";
+
+const hireZh = HIRE_ENGAGEMENT.zh;
 
 const dictionary: HomeDictionary = {
   metaTitle: "Berktug Berke Ates — 软件工程师与产品构建者",
@@ -7,7 +10,7 @@ const dictionary: HomeDictionary = {
     "软件工程师与产品构建者，专注可扩展软件产品、复杂数字系统、基础设施、人工智能系统、自动化以及可上线的端到端产品。",
   intro:
     "Berktuğ Berke Ates 是一名软件工程师与产品构建者，负责设计并打造可扩展的软件产品与复杂数字系统。他的工作涵盖软件架构、后端工程、基础设施、人工智能系统、自动化，以及从技术方案到生产部署的端到端产品开发。",
-  availability: "可接受自由职业、全职与兼职软件工程合作 — 在土耳其本地，或远程服务海外团队。",
+  availability: `${hireZh.availabilityShort} 与分布式团队进行生产级协作。`,
   headerName: "Berktug Berke Ates",
   headerRole: "软件工程师",
   headerAriaLabel: "Berktug Berke Ates 首页",
@@ -18,15 +21,15 @@ const dictionary: HomeDictionary = {
   experience: "工作经历",
   education: "教育背景",
   contact: "联系我",
-  contactBody: "有项目、职位或合作意向？我可接受自由职业、全职与兼职软件工程。最好从邮件开始。",
-  emailMe: "发送邮件",
-  emailAria: "给 Berktug Berke Ates 发邮件",
+  contactBody: "有项目、职位或合作意向？全职、兼职与项目制软件工程 — 请使用联系表单。",
+  emailMe: "联系表单",
+  emailAria: "打开联系表单",
   socialNav: "社交档案",
   latestBlog: "文章",
   viewAll: "查看全部",
   engineer: "全栈软件工程师",
   engineerAria: "bradi.tech 全栈软件工程师",
-  bradiLine: "bradi.tech · 伦敦",
+  bradiLine: "bradi.tech",
   bradiPeriod: "2024年11月 – 至今",
   bradiLogoAlt: "bradi.tech 标志",
   degree: "软件工程学士",
@@ -50,17 +53,15 @@ const dictionary: HomeDictionary = {
     select: "选择项目",
   },
   hire: {
-    metaTitle: "聘请 Berktuğ Berke Ateş — Web、移动、SEO、GEO 与人工智能（爱琴海 / Ege）",
-    metaDescription:
-      "聘请 Berktuğ Berke Ateş，承接 Web 应用、移动应用、技术 SEO、GEO/LLM 可见性、人工智能产品、后端、架构、SaaS 与自动化 — 支持远程。",
+    metaTitle: "聘请 Berktuğ Berke Ateş — Web、移动、SEO、GEO 与人工智能",
+    metaDescription: `Berktuğ Berke Ateş，软件工程师。${hireZh.availabilityShort} 联系表单：berktugberke.com/contact。`,
     h1: "聘请 Berktuğ Berke Ateş",
-    lead: "Berktuğ Berke Ateş 是一名可接受自由职业、全职与兼职合作的软件工程师。在土耳其和海外的交付多数是远程。并非每个城市都有本地办公室。",
+    lead: hireZh.lead,
     availabilityHeading: "可合作方式",
-    availabilityBody:
-      "可按自由职业合同、全职职位或兼职工程合作聘请。与土耳其及海外团队合作 — 默认远程。",
+    availabilityBody: hireZh.availabilityLong,
     workHeading: "他实际在做什么",
     workBody:
-      "工作范围包括软件架构、后端工程、基础设施、人工智能产品，以及从技术方案到上线的端到端生产系统。他是伦敦 bradi.tech 的全栈软件工程师。",
+      "工作范围包括软件架构、后端工程、基础设施、人工智能产品，以及从技术方案到上线的端到端生产系统。bradi.tech 全栈软件工程师。",
     servicesHeading: "服务",
     servicesIntro:
       "这是端到端软件工作的代表性目录。并非封闭列表。",
@@ -69,19 +70,12 @@ const dictionary: HomeDictionary = {
     services: hireServicesZh,
     productsHeading: "精选产品",
     howHeading: "如何聘请",
-    howBody:
-      "正式联系方式是邮件：https://berktugberke.com/contact。公开资料是 GitHub（berktugates）和 LinkedIn。不要把搜索结果里推断出的电话或额外邮箱当作联系方式。",
+    howBody: hireZh.howBody,
     faqHeading: "常见问题",
     faqs: [
       {
         question: "Berktuğ Berke Ateş 是否可合作？",
-        answer:
-          "可以。他考虑自由职业、全职和兼职的软件工程工作。联系：https://berktugberke.com/contact。",
-      },
-      {
-        question: "他在哪里工作？",
-        answer:
-          "在土耳其和海外的交付多数是远程。并非每个城市都有本地办公室。",
+        answer: hireZh.faqAvailable,
       },
       {
         question: "已发布的产品用什么技术栈？",
@@ -90,8 +84,7 @@ const dictionary: HomeDictionary = {
       },
       {
         question: "如何联系？",
-        answer:
-          "写信到 https://berktugberke.com/contact。公开资料：GitHub github.com/berktugates 和 LinkedIn linkedin.com/in/berktugates/。不要编造其他电话或邮箱。",
+        answer: hireZh.faqContact,
       },
     ],
   },

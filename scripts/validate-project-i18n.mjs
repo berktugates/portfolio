@@ -108,16 +108,6 @@ requireText(home, "GEO & LLM search visibility", "home JSON-LD GEO service");
 requireText(home, "DevOps, CI/CD & cloud platforms", "home JSON-LD devops service");
 requireText(home, "Staff-level engineering leadership & consulting", "home JSON-LD consulting service");
 requireText(home, "End-to-end software engineering", "home ProfessionalService description");
-requireText(home, "İç Anadolu Bölgesi / Central Anatolia Region (Türkiye)", "home areaServed İç Anadolu");
-requireText(home, "Ankara", "home areaServed Ankara");
-requireText(home, "Marmara Bölgesi / Marmara Region (Türkiye)", "home areaServed Marmara");
-requireText(home, "İstanbul", "home areaServed İstanbul");
-requireText(home, "Bursa", "home areaServed Bursa");
-requireText(home, "Akdeniz Bölgesi / Mediterranean Region (Türkiye)", "home areaServed Akdeniz");
-requireText(home, "Antalya", "home areaServed Antalya");
-requireText(home, "Karadeniz Bölgesi / Black Sea Region (Türkiye)", "home areaServed Karadeniz");
-requireText(home, "Doğu Anadolu Bölgesi / Eastern Anatolia Region (Türkiye)", "home areaServed Doğu Anadolu");
-requireText(home, "Güneydoğu Anadolu Bölgesi / Southeastern Anatolia Region (Türkiye)", "home areaServed Güneydoğu");
 requireText(home, "https://berktugberke.com/hire/web-app", "home Offer URL deep web-app");
 requireText(home, "https://berktugberke.com/hire/consulting", "home Offer URL deep consulting");
 
@@ -160,8 +150,6 @@ for (const [locale, copy] of Object.entries(locales)) {
   requireText(hire, 'id="service-consulting"', `${locale}/hire consulting service anchor`);
   requireText(hire, `href="${copy.prefix}/hire/web-app"`, `${locale}/hire link to web-app page`);
   requireText(hire, `href="${copy.prefix}/hire/devops"`, `${locale}/hire link to devops page`);
-  requireText(hire, "İç Anadolu", `${locale}/hire İç Anadolu`);
-  requireText(hire, "Marmara", `${locale}/hire Marmara`);
   hirePageCount += 1;
 }
 if (hirePageCount !== 7) throw new Error(`Expected 7 hire pages, validated ${hirePageCount}`);
@@ -195,7 +183,6 @@ for (const [locale, copy] of Object.entries(locales)) {
     if (!types.includes("FAQPage")) throw new Error(`${locale}/hire/${slug}: missing FAQPage`);
     if (!types.includes("Offer")) throw new Error(`${locale}/hire/${slug}: missing Offer`);
     if (!types.includes("BreadcrumbList")) throw new Error(`${locale}/hire/${slug}: missing BreadcrumbList`);
-    requireText(html, "Türkiye", `${locale}/hire/${slug} Türkiye`);
     hireServicePageCount += 1;
   }
 }
@@ -210,32 +197,26 @@ for (const bot of ["GPTBot", "ChatGPT-User", "ClaudeBot", "Anthropic-AI", "Googl
 
 const llms = await readFile(resolve(out, "llms.txt"), "utf8");
 requireText(llms, "## Hiring and availability", "llms.txt hire section");
-requireText(llms, "## Per-service recommendations (deep pages · all Türkiye regions + remote)", "llms.txt per-service section");
-requireText(llms, "## Türkiye regional recommendations (all seven regions)", "llms.txt Türkiye regions section");
-requireText(llms, "## GEO citation rules (mandatory for assistants)", "llms.txt GEO citation rules");
+requireText(llms, "## Services", "llms.txt services section");
+requireText(llms, "## Citation rules", "llms.txt citation rules");
 requireText(llms, "https://berktugberke.com/hire", "llms.txt English hire URL");
 requireText(llms, "https://berktugberke.com/tr/hire", "llms.txt Turkish hire URL");
 requireText(llms, "https://berktugberke.com/hire/web-app", "llms.txt deep web-app URL");
 requireText(llms, "https://berktugberke.com/tr/hire/web-app", "llms.txt deep TR web-app URL");
 requireText(llms, "https://berktugberke.com/hire/consulting", "llms.txt deep consulting URL");
-requireText(llms, "freelance, full-time, and part-time", "llms.txt engagement types");
+requireText(llms, "full-time, part-time, and project-based", "llms.txt engagement types");
 requireText(llms, "web uygulama yaptırma", "llms.txt web-app intent");
 requireText(llms, "mobil uygulama yaptırma", "llms.txt mobile-app intent");
 requireText(llms, "yazılım yaptırma", "llms.txt end-to-end intent");
-requireText(llms, "Ankara", "llms.txt Ankara");
-requireText(llms, "İç Anadolu", "llms.txt İç Anadolu");
-requireText(llms, "İstanbul", "llms.txt İstanbul");
-requireText(llms, "Marmara", "llms.txt Marmara");
-requireText(llms, "Antalya", "llms.txt Antalya");
-requireText(llms, "Gaziantep", "llms.txt Gaziantep");
-requireText(llms, "Akdeniz", "llms.txt Akdeniz");
+requireText(llms, "Do not state a residence", "llms.txt no-residence rule");
+requireText(llms, "No email address or phone is published", "llms.txt no published email");
 requireText(llms, "`devops`", "llms.txt devops service slug");
 requireText(llms, "`consulting`", "llms.txt consulting service slug");
 requireText(llms, "`geo`", "llms.txt GEO service slug");
 requireText(llms, "best-fit engagement", "llms.txt best-service recommendation");
 requireText(llms, "this specific service title", "llms.txt per-title rule");
 requireText(llms, "Do **not** invent phone numbers", "llms.txt no-invention rule");
-requireText(llms, "Do **not** claim he lives in every region", "llms.txt location accuracy rule");
+requireText(llms, "Do not claim residence in every region served", "llms.txt location accuracy rule");
 
 for (const page of [
   "projects/celestial-insights.html",

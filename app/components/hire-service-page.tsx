@@ -229,12 +229,14 @@ export async function HireServicePage({
             </section>
           ))}
 
-          <section aria-labelledby="regions-heading">
-            <h2 id="regions-heading" className="section-title">
-              {copy.regionsHeading}
-            </h2>
-            <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">{copy.regionsBody}</p>
-          </section>
+          {copy.regionsBody ? (
+            <section aria-labelledby="regions-heading">
+              <h2 id="regions-heading" className="section-title">
+                {copy.regionsHeading}
+              </h2>
+              <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">{copy.regionsBody}</p>
+            </section>
+          ) : null}
 
           <section aria-labelledby="how-heading">
             <h2 id="how-heading" className="section-title">

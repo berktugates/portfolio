@@ -1,7 +1,4 @@
-/** Matches the visible sentence: work across Türkiye, mostly remote. No city list and no residence. */
+/** Remote delivery only — no residence or regional geography on the site. */
 export function buildAreaServedFromRegions() {
-  return [
-    { "@type": "Country" as const, name: "Türkiye" },
-    { "@type": "Place" as const, name: "Remote" },
-  ];
+  return [{ "@type": "Place" as const, name: "Remote" }];
 }

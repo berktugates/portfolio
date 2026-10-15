@@ -14,7 +14,7 @@ export const SITE_TITLE = "Berktug Berke Ates — Software Engineer and Product 
 export const SITE_DESCRIPTION =
   "Software engineer and product builder delivering end-to-end software: web and mobile products, frontend and backend, architecture, SaaS, AI systems, DevOps, data, security, integrations, technical SEO, GEO, and production delivery.";
 export const SITE_INTRO =
-  "Berktuğ Berke Ates is a software engineer and product builder who designs and ships scalable software products and complex digital systems end-to-end. His work covers software architecture, frontend and backend engineering, infrastructure, DevOps, data, security, integrations, AI-powered systems, automation, technical SEO, GEO, and production delivery. He is available for freelance, full-time, and part-time engagements, remote and international.";
+  "Berktuğ Berke Ates is a software engineer and product builder who designs and ships scalable software products and complex digital systems end-to-end. His work covers software architecture, frontend and backend engineering, infrastructure, DevOps, data, security, integrations, AI-powered systems, automation, technical SEO, GEO, and production delivery. He works full-time, part-time, and on project-based engagements with distributed teams.";
 
 export const CONTACT_PAGE_PATH = "/contact";
 export const CONTACT_PAGE_URL = `${SITE_URL}${CONTACT_PAGE_PATH}`;
@@ -27,7 +27,7 @@ export const WEBSITE_ID = `${SITE_URL}/#website`;
 export const FIRAT_UNIVERSITY_ID = `${SITE_URL}/#firat-university`;
 export const PROFESSIONAL_SERVICE_ID = `${SITE_URL}/#professional-service`;
 export const OFFER_CATALOG_ID = `${SITE_URL}/#offer-catalog`;
-export const OFFER_FREELANCE_ID = `${SITE_URL}/#offer-freelance`;
+export const OFFER_PROJECT_BASED_ID = `${SITE_URL}/#offer-project-based`;
 export const OFFER_FULL_TIME_ID = `${SITE_URL}/#offer-full-time`;
 export const OFFER_PART_TIME_ID = `${SITE_URL}/#offer-part-time`;
 

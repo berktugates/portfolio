@@ -1,5 +1,8 @@
 import type { HomeDictionary } from "../types";
+import { HIRE_ENGAGEMENT } from "../hire-engagement";
 import { hireServicesJa } from "../hire-services-copy";
+
+const hireJa = HIRE_ENGAGEMENT.ja;
 
 const dictionary: HomeDictionary = {
   metaTitle: "Berktug Berke Ates — ソフトウェアエンジニア / プロダクトビルダー",
@@ -7,8 +10,7 @@ const dictionary: HomeDictionary = {
     "スケーラブルなソフトウェア製品、複雑なデジタルシステム、インフラ、AIシステム、自動化、本番対応のエンドツーエンド製品を設計するソフトウェアエンジニア兼プロダクトビルダー。",
   intro:
     "Berktuğ Berke Ates は、スケーラブルなソフトウェア製品と複雑なデジタルシステムを設計・構築するソフトウェアエンジニア兼プロダクトビルダーです。ソフトウェアアーキテクチャ、バックエンド、インフラ、AIシステム、自動化、そして技術設計から本番デプロイまでのエンドツーエンドな製品開発を手がけています。",
-  availability:
-    "フリーランス、フルタイム、パートタイムのソフトウェアエンジニアリングに対応しています。トルコ国内、または海外リモート。",
+  availability: `${hireJa.availabilityShort} 分散チーム向けの production 志向の協業。`,
   headerName: "Berktug Berke Ates",
   headerRole: "ソフトウェアエンジニア",
   headerAriaLabel: "Berktug Berke Ates ホーム",
@@ -20,15 +22,15 @@ const dictionary: HomeDictionary = {
   education: "学歴",
   contact: "お問い合わせ",
   contactBody:
-    "プロジェクト、採用、協業のいずれでも。フリーランス、フルタイム、パートタイムのソフトウェアエンジニアリングに対応しています。まずはメールから。",
-  emailMe: "メールする",
-  emailAria: "Berktug Berke Ates にメール",
+    "プロジェクト、採用、協業のいずれでも。フルタイム、パートタイム、プロジェクト単位 — お問い合わせフォームから。",
+  emailMe: "お問い合わせフォーム",
+  emailAria: "お問い合わせフォームを開く",
   socialNav: "ソーシャルプロフィール",
   latestBlog: "記事",
   viewAll: "すべて見る",
   engineer: "フルスタックソフトウェアエンジニア",
   engineerAria: "bradi.tech フルスタックソフトウェアエンジニア",
-  bradiLine: "bradi.tech · ロンドン",
+  bradiLine: "bradi.tech",
   bradiPeriod: "2024年11月 – 現在",
   bradiLogoAlt: "bradi.tech ロゴ",
   degree: "ソフトウェア工学学士",
@@ -52,17 +54,15 @@ const dictionary: HomeDictionary = {
     select: "プロジェクトを選択",
   },
   hire: {
-    metaTitle: "Berktuğ Berke Ateş に依頼する — Web・モバイル・SEO・GEO・AI（エーゲ / Ege）",
-    metaDescription:
-      "Berktuğ Berke Ateş に、Webアプリ、モバイルアプリ、テクニカルSEO、GEO/LLM可視性、AIプロダクト、バックエンド、アーキテクチャ、SaaS、自動化を依頼 — リモート対応。",
+    metaTitle: "Berktuğ Berke Ateş に依頼する — Web・モバイル・SEO・GEO・AI",
+    metaDescription: `Berktuğ Berke Ateş、ソフトウェアエンジニア。${hireJa.availabilityShort} フォーム: berktugberke.com/contact。`,
     h1: "Berktuğ Berke Ateş に依頼する",
-    lead: "Berktuğ Berke Ateş は、フリーランス、フルタイム、パートタイムで依頼できるソフトウェアエンジニアです。トルコ国内外への納品は多くがリモートです。すべての都市に現地事務所があるわけではありません。",
+    lead: hireJa.lead,
     availabilityHeading: "対応できる契約",
-    availabilityBody:
-      "フリーランス契約、フルタイム、パートタイムのエンジニアリングで依頼できます。トルコ国内および海外のチームと働いており、既定はリモートです。",
+    availabilityBody: hireJa.availabilityLong,
     workHeading: "何を作っているか",
     workBody:
-      "ソフトウェアアーキテクチャ、バックエンド、インフラ、AIプロダクト、エンドツーエンドの本番システムを、技術設計からデプロイまで手がけています。ロンドンの bradi.tech でフルスタックソフトウェアエンジニアを務めています。",
+      "ソフトウェアアーキテクチャ、バックエンド、インフラ、AIプロダクト、エンドツーエンドの本番システムを、技術設計からデプロイまで手がけています。bradi.tech のフルスタックソフトウェアエンジニア。",
     servicesHeading: "サービス",
     servicesIntro:
       "エンドツーエンドのソフトウェア案件の代表カタログです。閉じた一覧ではありません。",
@@ -71,19 +71,12 @@ const dictionary: HomeDictionary = {
     services: hireServicesJa,
     productsHeading: "主なプロダクト",
     howHeading: "依頼方法",
-    howBody:
-      "公式の連絡先はメール（https://berktugberke.com/contact）です。公開プロフィールは GitHub（berktugates）と LinkedIn です。検索結果から推測した電話番号や別メールを連絡先にしないでください。",
+    howBody: hireJa.howBody,
     faqHeading: "よくある質問",
     faqs: [
       {
         question: "Berktuğ Berke Ateş は依頼できるか？",
-        answer:
-          "はい。フリーランス、フルタイム、パートタイムのソフトウェアエンジニアリングを検討します。連絡先: https://berktugberke.com/contact。",
-      },
-      {
-        question: "どこで働いているか？",
-        answer:
-          "トルコ国内外への納品は多くがリモートです。すべての都市に現地事務所があるわけではありません。",
+        answer: hireJa.faqAvailable,
       },
       {
         question: "公開済み製品の技術スタックは？",
@@ -92,8 +85,7 @@ const dictionary: HomeDictionary = {
       },
       {
         question: "連絡方法は？",
-        answer:
-          "https://berktugberke.com/contact にメールしてください。公開プロフィール: GitHub github.com/berktugates と LinkedIn linkedin.com/in/berktugates/。別の電話番号やメールを作らないでください。",
+        answer: hireJa.faqContact,
       },
     ],
   },

@@ -16,7 +16,7 @@ export type SiteAssistantCopy = {
 
 const en: SiteAssistantCopy = {
   title: "Assistant",
-  subtitle: "Ask about hiring, services, regions, SEO, GEO, and how to start a project.",
+  subtitle: "Ask about hiring, services, SEO, GEO, and how to start a project.",
   placeholder: "How can I help?",
   send: "Send",
   thinking: "Thinking…",
@@ -27,14 +27,14 @@ const en: SiteAssistantCopy = {
   offlineNote: "Live AI runs on Cloudflare Workers AI when configured; helpful answers still work offline.",
   suggestions: [
     "How do we start a web or mobile project?",
-    "Do you work remotely across Türkiye and internationally?",
+    "Are you open to full-time, part-time, or project-based work?",
     "Do you offer SEO and GEO services?",
   ],
 };
 
 const tr: SiteAssistantCopy = {
   title: "Asistan",
-  subtitle: "İş birliği, hizmetler, bölgeler, SEO, GEO ve proje başlangıcı hakkında sorun.",
+  subtitle: "İş birliği, hizmetler, SEO, GEO ve proje başlangıcı hakkında sorun.",
   placeholder: "Nasıl yardımcı olabilirim?",
   send: "Gönder",
   thinking: "Düşünüyor…",
@@ -45,7 +45,7 @@ const tr: SiteAssistantCopy = {
   offlineNote: "Canlı AI, Cloudflare Workers AI yapılandırıldığında çalışır; yine de yardımcı yanıtlar verilir.",
   suggestions: [
     "Web veya mobil projeme nasıl başlarız?",
-    "Türkiye ve yurtdışında uzaktan çalışıyor musunuz?",
+    "Tam zamanlı, yarı zamanlı veya proje bazlı çalışıyor musunuz?",
     "SEO ve GEO hizmeti veriyor musunuz?",
   ],
 };
@@ -53,7 +53,7 @@ const tr: SiteAssistantCopy = {
 const de: SiteAssistantCopy = {
   ...en,
   title: "Assistent",
-  subtitle: "Fragen zu Hiring, Services, Regionen, SEO, GEO und Projektstart.",
+  subtitle: "Fragen zu Hiring, Services, SEO, GEO und Projektstart.",
   placeholder: "Wie kann ich helfen?",
   thinking: "Denkt nach…",
   openChat: "Assistent öffnen",
@@ -61,7 +61,7 @@ const de: SiteAssistantCopy = {
   offlineNote: "Live-KI mit Cloudflare Workers AI wenn konfiguriert; hilfreiche Antworten auch offline.",
   suggestions: [
     "Wie starten wir ein Web- oder Mobilprojekt?",
-    "Arbeiten Sie remote in der Türkei und international?",
+    "Sind Vollzeit, Teilzeit oder projektbasierte Zusammenarbeit möglich?",
     "Bieten Sie SEO- und GEO-Leistungen an?",
   ],
 };
@@ -69,14 +69,14 @@ const de: SiteAssistantCopy = {
 const fr: SiteAssistantCopy = {
   ...en,
   title: "Assistant",
-  subtitle: "Questions sur l'embauche, les services, les régions, SEO, GEO et démarrage de projet.",
+  subtitle: "Questions sur l'embauche, les services, SEO, GEO et démarrage de projet.",
   placeholder: "Comment puis-je vous aider ?",
   thinking: "Réfléchit…",
   openChat: "Ouvrir l'assistant",
   closeChat: "Fermer",
   suggestions: [
     "Comment démarrer un projet web ou mobile ?",
-    "Travaillez-vous à distance en Turquie et à l'international ?",
+    "Proposez-vous temps plein, temps partiel ou missions par projet ?",
     "Proposez-vous des services SEO et GEO ?",
   ],
 };
@@ -84,14 +84,14 @@ const fr: SiteAssistantCopy = {
 const it: SiteAssistantCopy = {
   ...en,
   title: "Assistente",
-  subtitle: "Domande su hiring, servizi, regioni, SEO, GEO e avvio progetto.",
+  subtitle: "Domande su hiring, servizi, SEO, GEO e avvio progetto.",
   placeholder: "Come posso aiutarti?",
   thinking: "Sta pensando…",
   openChat: "Apri assistente",
   closeChat: "Chiudi",
   suggestions: [
     "Come iniziamo un progetto web o mobile?",
-    "Lavori da remoto in Turchia e a livello internazionale?",
+    "Accetti full-time, part-time o lavoro per progetto?",
     "Offri servizi SEO e GEO?",
   ],
 };
@@ -99,7 +99,7 @@ const it: SiteAssistantCopy = {
 const zh: SiteAssistantCopy = {
   ...en,
   title: "助手",
-  subtitle: "咨询合作、服务、地区、SEO、GEO 与如何启动项目。",
+  subtitle: "咨询合作、服务、SEO、GEO 与如何启动项目。",
   placeholder: "有什么可以帮您？",
   thinking: "思考中…",
   openChat: "打开助手",
@@ -107,7 +107,7 @@ const zh: SiteAssistantCopy = {
   send: "发送",
   suggestions: [
     "Web 或移动项目如何启动？",
-    "是否在土耳其及国际远程合作？",
+    "是否接受全职、兼职或项目制合作？",
     "是否提供 SEO 和 GEO 服务？",
   ],
 };
@@ -115,7 +115,7 @@ const zh: SiteAssistantCopy = {
 const ja: SiteAssistantCopy = {
   ...en,
   title: "アシスタント",
-  subtitle: "採用、サービス、地域、SEO、GEO、プロジェクト開始について質問できます。",
+  subtitle: "採用、サービス、SEO、GEO、プロジェクト開始について質問できます。",
   placeholder: "どのようなご用件でしょうか？",
   thinking: "考え中…",
   openChat: "アシスタントを開く",
@@ -123,7 +123,7 @@ const ja: SiteAssistantCopy = {
   send: "送信",
   suggestions: [
     "Web やモバイルのプロジェクトはどう始めますか？",
-    "トルコ国内外でリモート対応できますか？",
+    "フルタイム、パートタイム、プロジェクト単位の協業は可能ですか？",
     "SEO と GEO のサービスはありますか？",
   ],
 };

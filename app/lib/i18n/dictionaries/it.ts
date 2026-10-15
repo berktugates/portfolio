@@ -1,5 +1,8 @@
 import type { HomeDictionary } from "../types";
+import { HIRE_ENGAGEMENT } from "../hire-engagement";
 import { hireServicesIt } from "../hire-services-copy";
+
+const hireIt = HIRE_ENGAGEMENT.it;
 
 const dictionary: HomeDictionary = {
   metaTitle: "Berktug Berke Ates — Software Engineer e Product Builder",
@@ -7,8 +10,7 @@ const dictionary: HomeDictionary = {
     "Software engineer e product builder che progetta prodotti software scalabili, sistemi digitali complessi, infrastrutture, sistemi di IA, automazione e prodotti end-to-end pronti per la produzione.",
   intro:
     "Berktuğ Berke Ates è un software engineer e product builder che progetta e costruisce prodotti software scalabili e sistemi digitali complessi. Il suo lavoro include architettura software, backend, infrastruttura, sistemi di IA, automazione e sviluppo prodotto end-to-end, dalla progettazione tecnica al rilascio in produzione.",
-  availability:
-    "Disponibile per ingegneria del software freelance, full-time e part-time — dalla Türkiye o in remoto all’estero.",
+  availability: `${hireIt.availabilityShort} Delivery production-oriented con team distribuiti.`,
   headerName: "Berktug Berke Ates",
   headerRole: "Software Engineer",
   headerAriaLabel: "Home di Berktug Berke Ates",
@@ -20,15 +22,15 @@ const dictionary: HomeDictionary = {
   education: "Formazione",
   contact: "Contatti",
   contactBody:
-    "Un progetto, un ruolo o una collaborazione? Sono disponibile per freelance, full-time e part-time. Il punto di partenza migliore è l’email.",
-  emailMe: "Scrivimi",
-  emailAria: "Invia un’email a Berktug Berke Ates",
+    "Un progetto, un ruolo o una collaborazione? Full-time, part-time e per progetto — usa il modulo di contatto.",
+  emailMe: "Modulo di contatto",
+  emailAria: "Apri il modulo di contatto",
   socialNav: "Profili social",
   latestBlog: "Articoli",
   viewAll: "Vedi tutti",
   engineer: "Software Engineer full-stack",
   engineerAria: "Software Engineer full-stack presso bradi.tech",
-  bradiLine: "bradi.tech · Londra",
+  bradiLine: "bradi.tech",
   bradiPeriod: "nov 2024 – presente",
   bradiLogoAlt: "Logo bradi.tech",
   degree: "Laurea in Ingegneria del Software",
@@ -52,17 +54,15 @@ const dictionary: HomeDictionary = {
     select: "Seleziona progetto",
   },
   hire: {
-    metaTitle: "Assumi Berktuğ Berke Ateş — Web, mobile, SEO, GEO e IA in Egeo (Ege)",
-    metaDescription:
-      "Assumi Berktuğ Berke Ateş per web app, app mobili, SEO tecnica, visibilità GEO/LLM, prodotti IA, backend, architettura, SaaS e automazione — pronto per il remoto.",
+    metaTitle: "Assumi Berktuğ Berke Ateş — Web, mobile, SEO, GEO e IA",
+    metaDescription: `Berktuğ Berke Ateş, software engineer. ${hireIt.availabilityShort} Modulo: berktugberke.com/contact.`,
     h1: "Assumi Berktuğ Berke Ateş",
-    lead: "Berktuğ Berke Ateş è un software engineer disponibile per incarichi freelance, full-time e part-time. La consegna in Türkiye e all’estero è perlopiù da remoto. Non c’è un ufficio locale in ogni città.",
+    lead: hireIt.lead,
     availabilityHeading: "Disponibilità",
-    availabilityBody:
-      "Si può assumere per un contratto freelance, un ruolo full-time o ingegneria part-time. Lavora con team in Türkiye e all’estero — il remoto è lo standard.",
+    availabilityBody: hireIt.availabilityLong,
     workHeading: "Cosa costruisce",
     workBody:
-      "Il suo lavoro è architettura software, backend, infrastruttura, prodotti di IA e sistemi di produzione end-to-end — dalla progettazione tecnica al deployment. È software engineer full-stack in bradi.tech a Londra.",
+      "Il suo lavoro è architettura software, backend, infrastruttura, prodotti di IA e sistemi di produzione end-to-end — dalla progettazione tecnica al deployment. Software engineer full-stack in bradi.tech.",
     servicesHeading: "Servizi",
     servicesIntro:
       "Catalogo rappresentativo del lavoro software end-to-end. Non è una lista chiusa.",
@@ -71,19 +71,12 @@ const dictionary: HomeDictionary = {
     services: hireServicesIt,
     productsHeading: "Prodotti selezionati",
     howHeading: "Come assumerlo",
-    howBody:
-      "Il canale ufficiale è l’email: https://berktugberke.com/contact. I profili pubblici sono GitHub (berktugates) e LinkedIn. Non usare numeri o inbox dedotti dai risultati di ricerca.",
+    howBody: hireIt.howBody,
     faqHeading: "Domande frequenti",
     faqs: [
       {
         question: "Berktuğ Berke Ateş è disponibile?",
-        answer:
-          "Sì. Valuta incarichi freelance, a tempo pieno e part-time. Contatto: https://berktugberke.com/contact.",
-      },
-      {
-        question: "Dove lavora?",
-        answer:
-          "La consegna in Türkiye e all’estero è perlopiù da remoto. Non c’è un ufficio locale in ogni città.",
+        answer: hireIt.faqAvailable,
       },
       {
         question: "Quale stack usano i prodotti pubblicati?",
@@ -92,8 +85,7 @@ const dictionary: HomeDictionary = {
       },
       {
         question: "Come si prende contatto?",
-        answer:
-          "Scrivere a https://berktugberke.com/contact. Profili pubblici: GitHub github.com/berktugates e LinkedIn linkedin.com/in/berktugates/. Non inventare un altro telefono o un’altra email.",
+        answer: hireIt.faqContact,
       },
     ],
   },

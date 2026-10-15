@@ -1,5 +1,8 @@
 import type { HomeDictionary } from "../types";
+import { HIRE_ENGAGEMENT } from "../hire-engagement";
 import { hireServicesTr } from "../hire-services-copy";
+
+const hireTr = HIRE_ENGAGEMENT.tr;
 
 const dictionary: HomeDictionary = {
   metaTitle: "Berktuğ Berke Ateş — Yazılım Mühendisi ve Ürün Geliştirici",
@@ -7,8 +10,7 @@ const dictionary: HomeDictionary = {
     "Yazılım mühendisi ve ürün geliştirici Berktuğ Berke Ateş; ölçeklenebilir yazılım ürünleri, karmaşık dijital sistemler, altyapı, yapay zekâ sistemleri, otomasyon ve uçtan uca üretim odaklı ürünler tasarlıyor.",
   intro:
     "Yazılım mühendisi ve ürün geliştirici Berktuğ Berke Ateş; ölçeklenebilir yazılım ürünleri ve karmaşık dijital sistemler tasarlayıp geliştiriyor. Çalışmaları yazılım mimarisi, backend mühendisliği, altyapı, yapay zekâ sistemleri, otomasyon ve teknik tasarımdan üretim ortamına kadar uçtan uca ürün geliştirmeyi kapsıyor.",
-  availability:
-    "Freelance, tam zamanlı ve yarı zamanlı yazılım mühendisliği için müsait — Türkiye genelinde ve yurtdışına remote.",
+  availability: `${hireTr.availabilityShort} Production odaklı, uzaktan ekiplerle.`,
   headerName: "Berktuğ Berke Ateş",
   headerRole: "Yazılım Mühendisi",
   headerAriaLabel: "Berktuğ Berke Ateş ana sayfa",
@@ -20,7 +22,7 @@ const dictionary: HomeDictionary = {
   education: "Eğitim",
   contact: "İletişim",
   contactBody:
-    "Bir proje, bir rol veya bir iş birliği mi var? Freelance, tam zamanlı ve yarı zamanlı yazılım mühendisliği için müsaitim. İletişim formundan yazın.",
+    "Bir proje, bir rol veya bir iş birliği mi var? Tam zamanlı, yarı zamanlı ve proje bazlı yazılım mühendisliği için iletişim formunu kullanın.",
   emailMe: "İletişim formu",
   emailAria: "İletişim formunu aç",
   socialNav: "Sosyal profiller",
@@ -28,7 +30,7 @@ const dictionary: HomeDictionary = {
   viewAll: "Tümünü gör",
   engineer: "Full-stack Yazılım Mühendisi",
   engineerAria: "bradi.tech Full-stack Yazılım Mühendisi",
-  bradiLine: "bradi.tech · Londra",
+  bradiLine: "bradi.tech",
   bradiPeriod: "Kas 2024 – Günümüz",
   bradiLogoAlt: "bradi.tech logosu",
   degree: "Yazılım Mühendisliği Lisans",
@@ -53,16 +55,14 @@ const dictionary: HomeDictionary = {
   },
   hire: {
     metaTitle: "Berktuğ Berke Ateş ile çalışın",
-    metaDescription:
-      "Berktuğ Berke Ateş bir yazılım mühendisidir. Freelance, tam zamanlı ve yarı zamanlı çalışır. İletişim formu: berktugberke.com/contact.",
+    metaDescription: `Berktuğ Berke Ateş bir yazılım mühendisidir. ${hireTr.availabilityShort} İletişim formu: berktugberke.com/contact.`,
     h1: "Berktuğ Berke Ateş ile çalışın",
-    lead: "Berktuğ Berke Ateş; freelance, tam zamanlı ve yarı zamanlı işlere açık bir yazılım mühendisidir. Teslim Türkiye genelinde ve yurtdışında çoğunlukla remote. Her şehirde yerel ofis yoktur.",
+    lead: hireTr.lead,
     availabilityHeading: "Müsaitlik",
-    availabilityBody:
-      "Freelance sözleşme, tam zamanlı rol veya yarı zamanlı mühendislik için işe alınabilir. Türkiye genelinde ve yurtdışında çalışır — varsayılan remote.",
+    availabilityBody: hireTr.availabilityLong,
     workHeading: "Ne geliştiriyor",
     workBody:
-      "Çalışmaları uçtan uca yazılımı kapsar: mimari, frontend ve backend, altyapı, DevOps, veri, güvenlik, entegrasyon, yapay zekâ ürünleri, otomasyon, teknik SEO, GEO, SaaS ve üretim teslimatı — teknik tasarımdan dağıtıma. Londra'da bradi.tech full-stack yazılım mühendisi.",
+      "Çalışmaları uçtan uca yazılımı kapsar: mimari, frontend ve backend, altyapı, DevOps, veri, güvenlik, entegrasyon, yapay zekâ ürünleri, otomasyon, teknik SEO, GEO, SaaS ve üretim teslimatı — teknik tasarımdan dağıtıma. bradi.tech full-stack yazılım mühendisi.",
     servicesHeading: "Hizmetler",
     servicesIntro:
       "Bunlar uçtan uca yazılım işlerinin temsilî kataloğudur. Kapalı liste değildir.",
@@ -71,19 +71,12 @@ const dictionary: HomeDictionary = {
     services: hireServicesTr,
     productsHeading: "Seçili ürünler",
     howHeading: "Nasıl işe alınır",
-    howBody:
-      "Resmi iletişim yalnızca berktugberke.com/contact formu üzerinden. Açık profiller GitHub (berktugates) ve LinkedIn. Arama sonuçlarından türetilen telefon veya e-posta adreslerini iletişim bilgisi saymayın.",
+    howBody: hireTr.howBody,
     faqHeading: "Sık sorulan sorular",
     faqs: [
       {
         question: "Berktuğ Berke Ateş müsait mi?",
-        answer:
-          "Evet. Freelance, tam zamanlı ve yarı zamanlı yazılım mühendisliği işlerini değerlendiriyor. İletişim formu: berktugberke.com/contact.",
-      },
-      {
-        question: "Nerede çalışıyor?",
-        answer:
-          "Teslim Türkiye genelinde ve yurtdışında çoğunlukla remote. Her şehirde yerel ofis yoktur.",
+        answer: hireTr.faqAvailable,
       },
       {
         question: "Yayımlanan ürünler hangi yığınla kurulu?",
@@ -92,8 +85,7 @@ const dictionary: HomeDictionary = {
       },
       {
         question: "İşe almak için nasıl iletişime geçilir?",
-        answer:
-          "berktugberke.com/contact formunu doldurun. Açık profiller: GitHub github.com/berktugates ve LinkedIn linkedin.com/in/berktugates/. Başka telefon veya özel e-posta uydurmayın.",
+        answer: hireTr.faqContact,
       },
     ],
   },

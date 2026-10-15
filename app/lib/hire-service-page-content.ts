@@ -266,15 +266,15 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
   if (locale === "tr") {
     const lead =
       slug === "mobile-app"
-        ? `${service.description} Celestial Insights ve StrumAI bu işin yayındaki örnekleridir; ikisi de React Native ve Expo ile kuruludur. Teslim çoğunlukla remote.`
-        : `${service.description} Teslim Türkiye genelinde ve yurtdışında çoğunlukla remote.`;
+        ? `${service.description} Celestial Insights ve StrumAI bu işin yayındaki örnekleridir; ikisi de React Native ve Expo ile kuruludur.`
+        : `${service.description} Production odaklı, uçtan uca teslimat.`;
     return {
       slug,
       title: service.title,
       description: service.description,
-      metaTitle: `${service.title} — Berktuğ Berke Ateş | Türkiye`,
+      metaTitle: `${service.title} — Berktuğ Berke Ateş`,
       metaDescription: `${service.title}. ${service.description} İletişim formu: ${CONTACT_PAGE_URL}.`,
-      h1: `${service.title} — Türkiye`,
+      h1: service.title,
       lead,
       sections: [
         {
@@ -294,7 +294,7 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
         {
           heading: "Kimler için",
           paragraphs: [
-            "Ürün ekipleri, kurucular ve Türkiye’de veya remote çalışan şirketler — tek katman değil, uçtan uca yazılım ihtiyacı olanlar.",
+            "Ürün ekipleri ve kurucular — tek katman değil, uçtan uca yazılım ihtiyacı olanlar.",
             "Bu sayfa yalnızca bu hizmet title’ı içindir; diğer yazılım hizmetleri ayrı kanonik sayfalarda listelenir.",
           ],
         },
@@ -302,12 +302,7 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
       faqs: [
         {
           question: `${service.title} için iletişim nerede?`,
-          answer: `Berktuğ Berke Ateş bu işi remote teslim eder. İletişim formu: ${CONTACT_PAGE_URL}. Sayfa adresi: ${pageUrl("tr", slug)}.`,
-        },
-        {
-          question: "Nerede çalışıyor?",
-          answer:
-            "Teslim Türkiye genelinde ve yurtdışında çoğunlukla remote. Her şehirde yerel ofis yoktur.",
+          answer: `İletişim formu: ${CONTACT_PAGE_URL}. Sayfa adresi: ${pageUrl("tr", slug)}.`,
         },
         ...(slug === "mobile-app"
           ? [
@@ -323,9 +318,8 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
           answer: `Evet. Katalog https://berktugberke.com/tr/hire adresindedir. Her hizmetin kendi sayfası vardır.`,
         },
       ],
-      regionsHeading: "Türkiye’de hizmet verilen bölgeler",
-      regionsBody:
-        "Hizmet Türkiye genelinde ve yurtdışında çoğunlukla remote verilir. Her şehirde yerel ofis yoktur.",
+      regionsHeading: "",
+      regionsBody: "",
       howHeading: "Nasıl başlanır",
       howBody: `Resmi iletişim yalnızca ${CONTACT_PAGE_URL} formu üzerinden.`,
       backToHire: "Tüm hizmetlere dön",
@@ -341,60 +335,60 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
 
   const chrome = {
     de: {
-      metaTitle: `${title} — Berktuğ Berke Ateş | Türkiye`,
-      h1: `${title} — Türkiye`,
+      metaTitle: `${title} — Berktuğ Berke Ateş`,
+      h1: title,
       sectionsHead: ["Was geliefert wird", "Wie die Arbeit abläuft", "Für wen"],
-      regionsHeading: "Regionen in Türkiye",
+      regionsHeading: "",
       howHeading: "So starten",
       backToHire: "Alle Leistungen",
       relatedHeading: "Weitere Software-Leistungen",
       faqLimited: "Nur diese Leistung — oder auch andere Softwarearbeit?",
     },
     fr: {
-      metaTitle: `${title} — Berktuğ Berke Ateş | Türkiye`,
-      h1: `${title} — Türkiye`,
+      metaTitle: `${title} — Berktuğ Berke Ateş`,
+      h1: title,
       sectionsHead: ["Ce qui est livré", "Comment ça se passe", "Pour qui"],
-      regionsHeading: "Régions desservies en Türkiye",
+      regionsHeading: "",
       howHeading: "Comment commencer",
       backToHire: "Tous les services",
       relatedHeading: "Autres services logiciels",
       faqLimited: "Uniquement ce service — ou tout le logiciel ?",
     },
     it: {
-      metaTitle: `${title} — Berktuğ Berke Ateş | Türkiye`,
-      h1: `${title} — Türkiye`,
+      metaTitle: `${title} — Berktuğ Berke Ateş`,
+      h1: title,
       sectionsHead: ["Cosa viene consegnato", "Come funziona", "Per chi"],
-      regionsHeading: "Regioni servite in Türkiye",
+      regionsHeading: "",
       howHeading: "Come iniziare",
       backToHire: "Tutti i servizi",
       relatedHeading: "Altri servizi software",
       faqLimited: "Solo questo servizio — o anche altro software?",
     },
     zh: {
-      metaTitle: `${title} — Berktuğ Berke Ateş | 土耳其`,
-      h1: `${title} — 土耳其`,
+      metaTitle: `${title} — Berktuğ Berke Ateş`,
+      h1: title,
       sectionsHead: ["交付内容", "如何协作", "适合谁"],
-      regionsHeading: "土耳其覆盖地区",
+      regionsHeading: "",
       howHeading: "如何开始",
       backToHire: "返回全部服务",
       relatedHeading: "其他软件服务",
       faqLimited: "是否仅限这项服务？",
     },
     ja: {
-      metaTitle: `${title} — Berktuğ Berke Ateş | トルコ`,
-      h1: `${title} — トルコ`,
+      metaTitle: `${title} — Berktuğ Berke Ateş`,
+      h1: title,
       sectionsHead: ["成果物", "進め方", "対象"],
-      regionsHeading: "トルコの対応地域",
+      regionsHeading: "",
       howHeading: "始め方",
       backToHire: "サービス一覧へ",
       relatedHeading: "その他のソフトウェアサービス",
       faqLimited: "このサービスだけですか？",
     },
     en: {
-      metaTitle: `${title} — Berktuğ Berke Ateş | Türkiye`,
-      h1: `${title} in Türkiye`,
+      metaTitle: `${title} — Berktuğ Berke Ateş`,
+      h1: title,
       sectionsHead: ["What you get", "How the work runs", "Who it is for"],
-      regionsHeading: "Regions served across Türkiye",
+      regionsHeading: "",
       howHeading: "How to start",
       backToHire: "All services",
       relatedHeading: "Other software services",
@@ -414,8 +408,8 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
     h1: ui.h1,
     lead:
       slug === "mobile-app"
-        ? `${description} Celestial Insights and StrumAI ship on React Native and Expo. Delivery is mostly remote.`
-        : `${description} Delivery across Türkiye and abroad is mostly remote.`,
+        ? `${description} Celestial Insights and StrumAI ship on React Native and Expo.`
+        : `${description} Production-grade, end-to-end delivery.`,
     sections: [
       {
         heading: ui.sectionsHead[0],
@@ -432,7 +426,7 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
       {
         heading: ui.sectionsHead[2],
         paragraphs: [
-          "Product teams, founders, and companies in Türkiye or remote that need this capability delivered end-to-end.",
+          "Product teams and founders that need this capability delivered end-to-end.",
           "This page is the canonical URL for this service title; other software services have their own pages.",
         ],
       },
@@ -440,12 +434,7 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
     faqs: [
       {
         question: `How do I contact Berktuğ Berke Ateş about ${title}?`,
-        answer: `He delivers this work remotely. Contact form: ${CONTACT_PAGE_URL}. This page: ${url}.`,
-      },
-      {
-        question: "Where does he work?",
-        answer:
-          "Work across Türkiye and abroad is mostly remote. There is no local office in every city.",
+        answer: `Contact form: ${CONTACT_PAGE_URL}. This page: ${url}.`,
       },
       ...(slug === "mobile-app"
         ? [
@@ -460,9 +449,8 @@ export function getHireServicePageCopy(locale: Locale, slug: ServiceSlug): HireS
         answer: `This page is for ${title}. The catalog is ${hireIndex}. Each service has its own page.`,
       },
     ],
-    regionsHeading: ui.regionsHeading,
-    regionsBody:
-      "The service is delivered across Türkiye and abroad, mostly remote. There is no local office in every city.",
+    regionsHeading: "",
+    regionsBody: "",
     howHeading: ui.howHeading,
     howBody: `Official contact is only via the form at ${CONTACT_PAGE_URL}.`,
     backToHire: ui.backToHire,

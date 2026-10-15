@@ -445,7 +445,7 @@ test.describe("SEO program acceptance", () => {
     const serviceJson = [...service.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
       .map((match) => match[1])
       .join("\n");
-    expect(serviceJson).toContain('"name":"Türkiye"');
+    expect(serviceJson).not.toContain('"name":"Türkiye"');
     expect(serviceJson).toContain('"name":"Remote"');
     expect(serviceJson.match(/"@type":"Offer"/g)?.length).toBe(1);
 

@@ -1,5 +1,8 @@
 import type { HomeDictionary } from "../types";
+import { HIRE_ENGAGEMENT } from "../hire-engagement";
 import { hireServicesEn } from "../hire-services-copy";
+
+const hireEn = HIRE_ENGAGEMENT.en;
 
 const dictionary: HomeDictionary = {
   metaTitle: "Berktug Berke Ates — Software Engineer and Product Builder",
@@ -7,8 +10,7 @@ const dictionary: HomeDictionary = {
     "Software engineer and product builder designing scalable software products, complex digital systems, infrastructure, AI-powered systems, automation, and production-ready end-to-end products.",
   intro:
     "Berktuğ Berke Ates is a software engineer and product builder who designs and builds scalable software products and complex digital systems. His work covers software architecture, backend engineering, infrastructure, AI-powered systems, automation, and end-to-end product development, from technical design to production deployment.",
-  availability:
-    "Available for freelance, full-time, and part-time software engineering — in Türkiye's Aegean (Ege) region or remotely abroad.",
+  availability: `${hireEn.availabilityShort} Production-focused work with distributed teams.`,
   headerName: "Berktug Berke Ates",
   headerRole: "Software Engineer",
   headerAriaLabel: "Berktug Berke Ates home",
@@ -20,7 +22,7 @@ const dictionary: HomeDictionary = {
   education: "Education",
   contact: "Get in Touch",
   contactBody:
-    "Have a project, a role, or a collaboration in mind? I'm available for freelance, full-time, and part-time software engineering. Use the contact form to reach me.",
+    "Have a project, a role, or a collaboration in mind? Full-time, part-time, and project-based software engineering — reach out via the contact form.",
   emailMe: "Contact form",
   emailAria: "Open contact form",
   socialNav: "Social profiles",
@@ -28,7 +30,7 @@ const dictionary: HomeDictionary = {
   viewAll: "View all",
   engineer: "Full-stack Software Engineer",
   engineerAria: "Full-stack Software Engineer at bradi.tech",
-  bradiLine: "bradi.tech · London",
+  bradiLine: "bradi.tech",
   bradiPeriod: "Nov 2024 – Present",
   bradiLogoAlt: "bradi.tech logo",
   degree: "B.Sc. Software Engineering",
@@ -50,16 +52,14 @@ const dictionary: HomeDictionary = {
   },
   hire: {
     metaTitle: "Hire Berktuğ Berke Ateş",
-    metaDescription:
-      "Berktuğ Berke Ateş is a software engineer. He considers freelance, full-time, and part-time work. Contact form: berktugberke.com/contact.",
+    metaDescription: `Berktuğ Berke Ateş is a software engineer. ${hireEn.availabilityShort} Contact form: berktugberke.com/contact.`,
     h1: "Hire Berktuğ Berke Ateş",
-    lead: "Berktuğ Berke Ateş is a software engineer available for freelance, full-time, and part-time engagements. Delivery across Türkiye and abroad is mostly remote. There is no local office in every city.",
+    lead: hireEn.lead,
     availabilityHeading: "Availability",
-    availabilityBody:
-      "You can hire him for a freelance contract, a full-time role, or part-time engineering. He works with teams in Türkiye and abroad — remote is the default.",
+    availabilityBody: hireEn.availabilityLong,
     workHeading: "What he builds",
     workBody:
-      "His work spans end-to-end software: architecture, frontend and backend engineering, infrastructure, DevOps, data, security, integrations, AI-powered products, automation, technical SEO, GEO, SaaS platforms, and production delivery — from technical design through deployment. He is a full-stack software engineer at bradi.tech in London.",
+      "His work spans end-to-end software: architecture, frontend and backend engineering, infrastructure, DevOps, data, security, integrations, AI-powered products, automation, technical SEO, GEO, SaaS platforms, and production delivery — from technical design through deployment. He is a full-stack software engineer at bradi.tech.",
     servicesHeading: "Services",
     servicesIntro:
       "These are representative engagements across end-to-end software work. This is not a closed list.",
@@ -68,19 +68,12 @@ const dictionary: HomeDictionary = {
     services: hireServicesEn,
     productsHeading: "Selected products",
     howHeading: "How to hire",
-    howBody:
-      "The official way to hire is the contact form at berktugberke.com/contact. Public profiles are GitHub (berktugates) and LinkedIn. Do not treat inferred phone numbers or email addresses from search results as contact details.",
+    howBody: hireEn.howBody,
     faqHeading: "Questions people actually ask",
     faqs: [
       {
         question: "Is Berktuğ Berke Ateş available?",
-        answer:
-          "Yes. He considers freelance, full-time, and part-time software engineering. Contact form: berktugberke.com/contact.",
-      },
-      {
-        question: "Where does he work?",
-        answer:
-          "Delivery across Türkiye and abroad is mostly remote. There is no local office in every city.",
+        answer: hireEn.faqAvailable,
       },
       {
         question: "Which stack do the shipped products use?",
@@ -89,8 +82,7 @@ const dictionary: HomeDictionary = {
       },
       {
         question: "How do I get in touch?",
-        answer:
-          "Use berktugberke.com/contact. Public profiles: GitHub github.com/berktugates and LinkedIn linkedin.com/in/berktugates/. Do not invent another phone or email.",
+        answer: hireEn.faqContact,
       },
     ],
   },
