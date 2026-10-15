@@ -1,7 +1,11 @@
 import { createHash, randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { contactInboundEmail } from "../../lib/contact-inbound";
-import { contactProjectLabel, parseContactSubmission } from "../../lib/contact-form";
+import {
+  contactProjectLabel,
+  contactSubmissionUserMessage,
+  parseContactSubmission,
+} from "../../lib/contact-form";
 
 export const dynamic = "force-dynamic";
 
@@ -48,8 +52,16 @@ async function verifyTurnstile(token: string, ip: string, hostname: string): Pro
   });
   if (!response.ok) return false;
   const result = (await response.json()) as { success?: boolean; action?: string; hostname?: string };
-  if (!result.success || result.action !== "contact") return false;
-  return result.hostname === hostname || (process.env.NODE_ENV !== "production" && result.hostname === "localhost");
+  if (!result.success) return false;
+  if (result.action && result.action !== "contact") return false;
+  const host = hostname.toLowerCase();
+  const verified = (result.hostname ?? "").toLowerCase();
+  return (
+    verified === host ||
+    verified === `www.${host}` ||
+    host === `www.${verified}` ||
+    (process.env.NODE_ENV !== "production" && (verified === "localhost" || verified === "127.0.0.1"))
+  );
 }
 
 export async function POST(request: Request) {
@@ -79,7 +91,7 @@ export async function POST(request: Request) {
     return json({ error: "Form okunamadı." }, 400);
   }
   const parsed = parseContactSubmission(form, now);
-  if (!parsed.ok) return json({ error: "Alanları kontrol edip tekrar deneyin." }, 400);
+  if (!parsed.ok) return json({ error: contactSubmissionUserMessage(parsed.error) }, 400);
 
   let turnstileValid = false;
   try {

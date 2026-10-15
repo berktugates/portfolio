@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parseContactSubmission } from "./contact-form";
+import {
+  contactSubmissionUserMessage,
+  parseContactSubmission,
+  validateContactFieldsClient,
+} from "./contact-form";
 
 function validForm(now: number) {
   const form = new FormData();
@@ -32,4 +36,23 @@ test("instant submissions are rejected", () => {
   const form = validForm(now);
   form.set("startedAt", String(now));
   assert.deepEqual(parseContactSubmission(form, now), { ok: false, error: "timing" });
+});
+
+test("short details map to a clear user message", () => {
+  assert.match(contactSubmissionUserMessage("details"), /20 karakter/);
+});
+
+test("client validation requires turnstile token", () => {
+  const now = Date.now();
+  assert.equal(
+    validateContactFieldsClient({
+      name: "Ada Lovelace",
+      email: "ada@example.com",
+      details: "Üretime hazır bir SaaS ürünü için görüşmek istiyorum.",
+      turnstileToken: "",
+      startedAt: now - 5_000,
+      now,
+    }),
+    "turnstile",
+  );
 });
