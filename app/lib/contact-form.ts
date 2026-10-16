@@ -103,6 +103,14 @@ export function contactSubmissionUserMessage(error: string, locale: Locale = DEF
   return errors.default;
 }
 
+/** Name, email, and details only — for enabling submit once Turnstile is ready. */
+export function isContactFormFieldsValid(name: string, email: string, details: string): boolean {
+  if (name.trim().length < 2) return false;
+  if (email.trim().length > 254 || !EMAIL_PATTERN.test(email.trim().toLowerCase())) return false;
+  if (details.trim().length < MIN_DETAILS_LENGTH) return false;
+  return true;
+}
+
 export function validateContactFieldsClient(input: {
   name: string;
   email: string;

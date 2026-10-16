@@ -2,21 +2,26 @@
 
 import { ChevronDown } from "lucide-react";
 import Script from "next/script";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   CONTACT_PROJECT_TYPES,
   contactFormLimits,
   contactSubmissionUserMessage,
+  isContactFormFieldsValid,
   validateContactFieldsClient,
 } from "../lib/contact-form";
 import type { Locale } from "../lib/i18n";
 import type { ContactPageCopy } from "../lib/i18n/contact-page-copy";
 
+type TurnstileApi = {
+  render: (container: HTMLElement, options: Record<string, unknown>) => string;
+  reset: (widgetId?: string) => void;
+  remove: (widgetId: string) => void;
+};
+
 declare global {
   interface Window {
-    turnstile?: { reset: (widgetId?: string) => void };
-    onBerktugContactTurnstile?: (token: string) => void;
-    onBerktugContactTurnstileExpired?: () => void;
+    turnstile?: TurnstileApi;
   }
 }
 
@@ -28,32 +33,73 @@ type ContactFormProps = {
 export function ContactForm({ locale, copy }: ContactFormProps) {
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   const formRef = useRef<HTMLFormElement>(null);
+  const turnstileContainerRef = useRef<HTMLDivElement>(null);
+  const widgetIdRef = useRef<string | null>(null);
   const startedRef = useRef(false);
+
   const [state, setState] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const [startedAt, setStartedAt] = useState(() => Date.now());
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [details, setDetails] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
   const [turnstileReady, setTurnstileReady] = useState(false);
+  const [turnstileScriptReady, setTurnstileScriptReady] = useState(false);
+  const [turnstileError, setTurnstileError] = useState(false);
+
+  const onTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+    setTurnstileReady(Boolean(token));
+    setTurnstileError(false);
+  }, []);
+
+  const onTurnstileClear = useCallback(() => {
+    setTurnstileToken("");
+    setTurnstileReady(false);
+    setTurnstileError(true);
+  }, []);
+
+  const mountTurnstile = useCallback(() => {
+    if (!siteKey || !turnstileContainerRef.current || !window.turnstile) return;
+    if (widgetIdRef.current != null) return;
+
+    widgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
+      sitekey: siteKey,
+      action: "contact",
+      theme: "auto",
+      size: "normal",
+      callback: onTurnstileSuccess,
+      "expired-callback": onTurnstileClear,
+      "error-callback": onTurnstileClear,
+    });
+  }, [onTurnstileClear, onTurnstileSuccess, siteKey]);
 
   useEffect(() => {
-    window.onBerktugContactTurnstile = (token: string) => {
-      setTurnstileToken(token);
-      setTurnstileReady(Boolean(token));
-    };
-    window.onBerktugContactTurnstileExpired = () => {
-      setTurnstileToken("");
-      setTurnstileReady(false);
-    };
+    if (window.turnstile) setTurnstileScriptReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (turnstileScriptReady) mountTurnstile();
+  }, [mountTurnstile, turnstileScriptReady]);
+
+  useEffect(() => {
     return () => {
-      delete window.onBerktugContactTurnstile;
-      delete window.onBerktugContactTurnstileExpired;
+      const id = widgetIdRef.current;
+      if (id && window.turnstile) {
+        window.turnstile.remove(id);
+        widgetIdRef.current = null;
+      }
     };
   }, []);
 
   function resetTurnstile() {
     setTurnstileToken("");
     setTurnstileReady(false);
-    window.turnstile?.reset();
+    setTurnstileError(false);
+    if (widgetIdRef.current && window.turnstile) {
+      window.turnstile.reset(widgetIdRef.current);
+    }
   }
 
   function markFormStarted() {
@@ -66,12 +112,10 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
     event.preventDefault();
     if (state === "sending") return;
 
-    const form = event.currentTarget;
-    const formData = new FormData(form);
     const clientError = validateContactFieldsClient({
-      name: String(formData.get("name") ?? ""),
-      email: String(formData.get("email") ?? ""),
-      details: String(formData.get("details") ?? ""),
+      name,
+      email,
+      details,
       turnstileToken,
       startedAt,
     });
@@ -81,9 +125,13 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
       return;
     }
 
+    const formData = new FormData(event.currentTarget);
     formData.set("cf-turnstile-response", turnstileToken);
     formData.set("startedAt", String(startedAt));
     formData.set("locale", locale);
+    formData.set("name", name.trim());
+    formData.set("email", email.trim().toLowerCase());
+    formData.set("details", details.trim());
 
     setState("sending");
     setMessage(copy.form.sendingStatus);
@@ -97,6 +145,9 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
       const data = (await response.json().catch(() => ({}))) as { message?: string; error?: string };
       if (!response.ok) throw new Error(data.error ?? copy.form.sendFailed);
       formRef.current?.reset();
+      setName("");
+      setEmail("");
+      setDetails("");
       setStartedAt(Date.now());
       startedRef.current = false;
       resetTurnstile();
@@ -123,11 +174,17 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
   const fieldClass = `mt-2 ${fieldShell}`;
   const selectClass = `${fieldShell} appearance-none pr-10`;
 
-  const canSubmit = turnstileReady && state !== "sending" && state !== "success";
+  const fieldsValid = isContactFormFieldsValid(name, email, details);
+  const canSubmit = fieldsValid && turnstileReady && state !== "sending" && state !== "success";
+  const showTurnstileHint = fieldsValid && !turnstileReady && state !== "success";
 
   return (
     <>
-      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+      <Script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+        strategy="afterInteractive"
+        onLoad={() => setTurnstileScriptReady(true)}
+      />
       <form ref={formRef} onSubmit={submit} className="relative space-y-5" noValidate>
         <input type="hidden" name="startedAt" value={startedAt} readOnly />
         <input type="hidden" name="cf-turnstile-response" value={turnstileToken} readOnly />
@@ -175,8 +232,12 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
             minLength={2}
             maxLength={100}
             autoComplete="name"
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value);
+              markFormStarted();
+            }}
             className={fieldClass}
-            onFocus={markFormStarted}
           />
         </label>
 
@@ -189,8 +250,12 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
             maxLength={254}
             autoComplete="email"
             inputMode="email"
+            value={email}
+            onChange={(event) => {
+              setEmail(event.target.value);
+              markFormStarted();
+            }}
             className={fieldClass}
-            onFocus={markFormStarted}
           />
         </label>
 
@@ -203,21 +268,16 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
             minLength={contactFormLimits.minDetailsLength}
             maxLength={5000}
             rows={8}
+            value={details}
+            onChange={(event) => {
+              setDetails(event.target.value);
+              markFormStarted();
+            }}
             className={`${fieldClass} resize-y`}
-            onFocus={markFormStarted}
           />
         </label>
 
-        <div
-          className="cf-turnstile"
-          data-sitekey={siteKey}
-          data-action="contact"
-          data-theme="auto"
-          data-size="flexible"
-          data-callback="onBerktugContactTurnstile"
-          data-expired-callback="onBerktugContactTurnstileExpired"
-          data-error-callback="onBerktugContactTurnstileExpired"
-        />
+        <div ref={turnstileContainerRef} className="min-h-[65px] w-full" aria-live="polite" />
 
         <button
           type="submit"
@@ -230,8 +290,10 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
               ? copy.form.submitted
               : copy.form.submit}
         </button>
-        {!turnstileReady && state !== "success" ? (
-          <p className="text-xs text-zinc-400 dark:text-zinc-500">{copy.form.turnstileWait}</p>
+        {showTurnstileHint ? (
+          <p className="text-xs text-zinc-400 dark:text-zinc-500">
+            {turnstileError ? copy.api.turnstileFailed : copy.form.turnstileWait}
+          </p>
         ) : null}
         <p
           role={state === "error" ? "alert" : "status"}

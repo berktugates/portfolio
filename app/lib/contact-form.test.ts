@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   contactSubmissionUserMessage,
+  isContactFormFieldsValid,
   parseContactSubmission,
   validateContactFieldsClient,
 } from "./contact-form";
@@ -41,6 +42,13 @@ test("instant submissions are rejected", () => {
 test("short details map to a clear user message", () => {
   assert.match(contactSubmissionUserMessage("details", "tr"), /20 karakter/);
   assert.match(contactSubmissionUserMessage("details", "en"), /20 characters/);
+});
+
+test("isContactFormFieldsValid gates submit fields", () => {
+  assert.equal(isContactFormFieldsValid("A", "a@b.com", "x".repeat(20)), false);
+  assert.equal(isContactFormFieldsValid("Ada", "not-an-email", "x".repeat(20)), false);
+  assert.equal(isContactFormFieldsValid("Ada", "ada@example.com", "short"), false);
+  assert.equal(isContactFormFieldsValid("Ada", "ada@example.com", "x".repeat(20)), true);
 });
 
 test("client validation requires turnstile token", () => {
