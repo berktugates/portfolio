@@ -3,6 +3,7 @@ import { runHaberCron } from "./haber-cron";
 import { flushRevalidatePending } from "./revalidate";
 import { handleAdminRequest } from "./admin";
 import { handleCorrectionRequest } from "./corrections";
+import { handleContactIngest } from "./contact-ingest";
 
 const HABER_CRON = "7,22,37,52 * * * *";
 const BLOG_CRON = "0 6 * * 1";
@@ -35,6 +36,10 @@ export default {
 
     if (url.pathname === "/public/corrections" && request.method === "POST") {
       return handleCorrectionRequest(request, env);
+    }
+
+    if (url.pathname === "/public/contact" && request.method === "POST") {
+      return handleContactIngest(request, env);
     }
 
     if (url.pathname === "/cron/haber" && request.method === "POST") {

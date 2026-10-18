@@ -15,4 +15,7 @@ interface Env {
   CF_ACCESS_TEAM_DOMAIN?: string;
   CF_ACCESS_AUD?: string;
   CORRECTION_INGEST_SECRET?: string;
+  CONTACT_INGEST_SECRET?: string;
+  CONTACT_FROM_EMAIL?: string;
+  CONTACT_INBOUND_EMAIL?: string;
 }

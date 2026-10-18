@@ -1,6 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
-import { contactInboundEmail } from "../../lib/contact-inbound";
 import {
   contactProjectLabel,
   contactSubmissionUserMessage,
@@ -8,6 +7,7 @@ import {
   parseFormLocale,
 } from "../../lib/contact-form";
 import { getContactPageCopy } from "../../lib/i18n/contact-page-copy";
+import { sendContactEmail } from "../../lib/send-contact-email";
 
 export const dynamic = "force-dynamic";
 
@@ -111,48 +111,35 @@ export async function POST(request: Request) {
     return json({ error: api.turnstileFailed }, 400);
   }
 
-  const serviceId = process.env.EMAILJS_SERVICE_ID;
-  const templateId = process.env.EMAILJS_TEMPLATE_ID;
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
-  if (!serviceId || !templateId || !publicKey) {
+  const canDeliver =
+    Boolean(process.env.CONTACT_FORMSUBMIT_EMAIL?.trim()) ||
+    Boolean(process.env.CONTENT_PUBLISHER_CONTACT_URL?.trim() && process.env.CONTACT_INGEST_SECRET?.trim()) ||
+    Boolean(
+      process.env.EMAILJS_SERVICE_ID?.trim() &&
+        process.env.EMAILJS_TEMPLATE_ID?.trim() &&
+        process.env.EMAILJS_PUBLIC_KEY?.trim(),
+    );
+  if (!canDeliver) {
     return json({ error: api.serviceUnavailable }, 503);
   }
 
   recentIps.set(key, now);
-  let emailResponse: Response;
+  let delivered = false;
   try {
-    emailResponse = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        service_id: serviceId,
-        template_id: templateId,
-        user_id: publicKey,
-        ...(process.env.EMAILJS_PRIVATE_KEY ? { accessToken: process.env.EMAILJS_PRIVATE_KEY } : {}),
-        template_params: {
-          to_email: contactInboundEmail(),
-          from_name: parsed.value.name,
-          reply_to: parsed.value.email,
-          project_type: contactProjectLabel(parsed.value.projectType, locale),
-          message: parsed.value.details,
-          name: parsed.value.name,
-          email: parsed.value.email,
-          title: contactProjectLabel(parsed.value.projectType, locale),
-          time: new Intl.DateTimeFormat(locale === "tr" ? "tr-TR" : "en-GB", {
-            dateStyle: "medium",
-            timeStyle: "short",
-            timeZone: "UTC",
-          }).format(new Date(now)),
-        },
-      }),
-      signal: AbortSignal.timeout(8_000),
+    delivered = await sendContactEmail({
+      name: parsed.value.name,
+      email: parsed.value.email,
+      projectTypeLabel: contactProjectLabel(parsed.value.projectType, locale),
+      details: parsed.value.details,
+      locale,
+      sentAt: now,
     });
   } catch {
     recentIps.delete(key);
     return json({ error: api.emailUnreachable }, 502);
   }
 
-  if (!emailResponse.ok) {
+  if (!delivered) {
     recentIps.delete(key);
     return json({ error: api.emailFailed }, 502);
   }
