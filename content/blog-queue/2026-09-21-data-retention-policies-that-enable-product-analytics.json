@@ -3,7 +3,7 @@
   "title": "Data Retention Policies That Enable Product Analytics",
   "excerpt": "Keeping everything forever is a compliance and cost trap. Deleting everything is a product blindfold. Good retention design preserves the questions product still needs to ask.",
   "description": "How staff engineers design data retention that satisfies privacy while keeping product analytics useful: tiered events, rollups, lawful basis documentation, and observable deletion jobs.",
-  "readingMinutes": 7,
+  "readingMinutes": 4,
   "keywords": [
     "data retention",
     "product analytics",
@@ -21,14 +21,16 @@
       "heading": "Retention is a product surface",
       "paragraphs": [
         "Legal teams ask how long you keep personal data. Product teams ask whether last quarter's funnel still works. If one policy answers both with 'delete everything at 30 days,' you traded compliance theater for analytics amnesia.",
-        "Staff engineers classify data by purpose and risk, then attach retention to each class with explicit owners—not a single TTL copied from a blog post."
+        "Staff engineers classify data by purpose and risk, then attach retention to each class with explicit owners—not a single TTL copied from a blog post.",
+        "Analytics without retention policy becomes an accidental data lake of sensitive events."
       ]
     },
     {
       "heading": "Tier events by purpose",
       "paragraphs": [
         "Separate product analytics events from audit logs, support attachments, and model-training corpora. They have different lawful bases, deletion SLAs, and downstream consumers.",
-        "Minimize identifiers in analytics tiers. Pseudonymous user keys with rotation beat shipping emails to your warehouse because it was convenient in v1."
+        "Minimize identifiers in analytics tiers. Pseudonymous user keys with rotation beat shipping emails to your warehouse because it was convenient in v1.",
+        "Define lawful basis per event type before instrumenting new AI or payment flows."
       ],
       "points": [
         "Define event tiers: product analytics vs audit vs model training",
@@ -41,14 +43,16 @@
       "heading": "Roll up before you purge",
       "paragraphs": [
         "Delete raw high-cardinality events on schedule while retaining weekly cohort rollups and feature adoption summaries that answer roadmap questions without resurrecting PII.",
-        "Document which dashboards break when raw data ages out, and migrate those questions to aggregates before enforcement day."
+        "Document which dashboards break when raw data ages out, and migrate those questions to aggregates before enforcement day.",
+        "Deletion jobs need metrics: rows removed, failures, and backlog age."
       ]
     },
     {
       "heading": "Operate deletion like migrations",
       "paragraphs": [
         "Retention configuration should be version-controlled and reviewed. Deletion jobs need metrics: rows removed, failures, and lag. Silent gaps show up as mysterious metric cliffs in product reviews.",
-        "Retention done well is a competitive advantage: you can tell users what you keep, why, and for how long—while still learning from behavior at scale."
+        "Retention done well is a competitive advantage: you can tell users what you keep, why, and for how long—while still learning from behavior at scale.",
+        "Product analytics and security logging can share schemas, but not retention classes."
       ],
       "links": [
         {
@@ -75,19 +79,15 @@
         {
           "heading": "Saklama ürün yüzeyidir",
           "paragraphs": [
-            [
-              "Her şeyi sonsuza kadar tutmak ölçek ve hukuk riski; her şeyi silmek trend körleştirir.",
-              "Staff ekipler veri sınıflarına göre politika yazar."
-            ]
+            "Her şeyi sonsuza kadar tutmak ölçek ve hukuk riski; her şeyi silmek trend körleştirir.",
+            "Staff ekipler veri sınıflarına göre politika yazar."
           ]
         },
         {
           "heading": "Katmanlı olay sınıfları",
           "paragraphs": [
-            [
-              "Ürün analitiği, denetim ve model eğitimi aynı TTL'i paylaşmamalı.",
-              "PII ile anonim metrikleri ayırın."
-            ]
+            "Ürün analitiği, denetim ve model eğitimi aynı TTL'i paylaşmamalı.",
+            "PII ile anonim metrikleri ayırın."
           ],
           "points": [
             "Olay katmanlarını tanımlayın: ürün analitiği, denetim, model eğitimi",
@@ -99,19 +99,15 @@
         {
           "heading": "Rollup ile hafıza",
           "paragraphs": [
-            [
-              "Ham olayları silmeden önce haftalık/aylık rollup üretin.",
-              "Funnel ve kohort soruları özetlerde cevaplanabilmeli."
-            ]
+            "Ham olayları silmeden önce haftalık/aylık rollup üretin.",
+            "Funnel ve kohort soruları özetlerde cevaplanabilmeli."
           ]
         },
         {
           "heading": "Operasyonel disiplin",
           "paragraphs": [
-            [
-              "Saklama config'i şema migrasyonu gibi review edilsin.",
-              "Silme işlerini metrikleyin; sessiz boşluklar analitik sürprizidir."
-            ]
+            "Saklama config'i şema migrasyonu gibi review edilsin.",
+            "Silme işlerini metrikleyin; sessiz boşluklar analitik sürprizidir."
           ],
           "links": [
             {
@@ -138,19 +134,15 @@
         {
           "heading": "Retention ist Produktfläche",
           "paragraphs": [
-            [
-              "Alles für immer skaliert und riskiert Recht.",
-              "Alles löschen macht blind."
-            ]
+            "Alles für immer skaliert und riskiert Recht.",
+            "Alles löschen macht blind."
           ]
         },
         {
           "heading": "Gestufte Event-Tiers",
           "paragraphs": [
-            [
-              "Analytics, Audit, Training getrennte TTLs.",
-              "PII von anonymen Metriken trennen."
-            ]
+            "Analytics, Audit, Training getrennte TTLs.",
+            "PII von anonymen Metriken trennen."
           ],
           "points": [
             "Event-Tiers definieren: Produkt-Analytics, Audit, Modell-Training",
@@ -162,19 +154,15 @@
         {
           "heading": "Rollups vor Löschung",
           "paragraphs": [
-            [
-              "Rollups vor Rohdaten-Löschung.",
-              "Funnels auf Aggregaten."
-            ]
+            "Rollups vor Rohdaten-Löschung.",
+            "Funnels auf Aggregaten."
           ]
         },
         {
           "heading": "Operative Disziplin",
           "paragraphs": [
-            [
-              "Retention wie Schema reviewen.",
-              "Deletion jobs metrieren."
-            ]
+            "Retention wie Schema reviewen.",
+            "Deletion jobs metrieren."
           ],
           "links": [
             {
@@ -201,19 +189,15 @@
         {
           "heading": "La rétention est surface produit",
           "paragraphs": [
-            [
-              "Tout garder scale et juridique; tout effacer aveugle.",
-              "Politiques par classe de données."
-            ]
+            "Tout garder scale et juridique; tout effacer aveugle.",
+            "Politiques par classe de données."
           ]
         },
         {
           "heading": "Tiers d'événements",
           "paragraphs": [
-            [
-              "Analytics, audit, entraînement: TTL distincts.",
-              "Séparer PII et métriques anonymes."
-            ]
+            "Analytics, audit, entraînement: TTL distincts.",
+            "Séparer PII et métriques anonymes."
           ],
           "points": [
             "Définir tiers d'événements : analytics produit, audit, entraînement modèle",
@@ -225,19 +209,15 @@
         {
           "heading": "Rollups avant suppression",
           "paragraphs": [
-            [
-              "Rollups avant suppression brute.",
-              "Entonnoirs sur agrégats."
-            ]
+            "Rollups avant suppression brute.",
+            "Entonnoirs sur agrégats."
           ]
         },
         {
           "heading": "Discipline opérationnelle",
           "paragraphs": [
-            [
-              "Config reviewée comme schéma.",
-              "Métriquer les jobs de suppression."
-            ]
+            "Config reviewée comme schéma.",
+            "Métriquer les jobs de suppression."
           ],
           "links": [
             {
@@ -264,19 +244,15 @@
         {
           "heading": "Retention è superficie prodotto",
           "paragraphs": [
-            [
-              "Tenere tutto scala e rischia; cancellare tutto acceca.",
-              "Politiche per classe dati."
-            ]
+            "Tenere tutto scala e rischia; cancellare tutto acceca.",
+            "Politiche per classe dati."
           ]
         },
         {
           "heading": "Tier di eventi",
           "paragraphs": [
-            [
-              "Analytics, audit, training: TTL separati.",
-              "Separare PII e metriche anonime."
-            ]
+            "Analytics, audit, training: TTL separati.",
+            "Separare PII e metriche anonime."
           ],
           "points": [
             "Definire tier eventi: analytics prodotto, audit, training modello",
@@ -288,19 +264,15 @@
         {
           "heading": "Rollup prima della delete",
           "paragraphs": [
-            [
-              "Rollup prima dei raw event.",
-              "Funnel su aggregati."
-            ]
+            "Rollup prima dei raw event.",
+            "Funnel su aggregati."
           ]
         },
         {
           "heading": "Disciplina operativa",
           "paragraphs": [
-            [
-              "Config reviewata come schema.",
-              "Metricare job di cancellazione."
-            ]
+            "Config reviewata come schema.",
+            "Metricare job di cancellazione."
           ],
           "links": [
             {
@@ -327,19 +299,15 @@
         {
           "heading": "保留是产品面",
           "paragraphs": [
-            [
-              "永久保留有规模与法律风险；全删则失明。",
-              "按数据类写政策。"
-            ]
+            "永久保留有规模与法律风险；全删则失明。",
+            "按数据类写政策。"
           ]
         },
         {
           "heading": "事件分层",
           "paragraphs": [
-            [
-              "分析、审计、训练分开 TTL。",
-              "PII 与匿名指标分离。"
-            ]
+            "分析、审计、训练分开 TTL。",
+            "PII 与匿名指标分离。"
           ],
           "points": [
             "定义事件分层：产品分析、审计、模型训练",
@@ -351,19 +319,15 @@
         {
           "heading": "删除前汇总",
           "paragraphs": [
-            [
-              "删原始前先 rollup。",
-              "漏斗在聚合上回答。"
-            ]
+            "删原始前先 rollup。",
+            "漏斗在聚合上回答。"
           ]
         },
         {
           "heading": "运营纪律",
           "paragraphs": [
-            [
-              "保留配置像 schema 一样评审。",
-              "度量删除作业。"
-            ]
+            "保留配置像 schema 一样评审。",
+            "度量删除作业。"
           ],
           "links": [
             {
@@ -390,19 +354,15 @@
         {
           "heading": "保持はプロダクト面",
           "paragraphs": [
-            [
-              "永久保持はスケールと法リスク。",
-              "全削除は盲目。"
-            ]
+            "永久保持はスケールと法リスク。",
+            "全削除は盲目。"
           ]
         },
         {
           "heading": "イベント階層",
           "paragraphs": [
-            [
-              "分析・監査・学習でTTL分離。",
-              "PIIと匿名指標を分離。"
-            ]
+            "分析・監査・学習でTTL分離。",
+            "PIIと匿名指標を分離。"
           ],
           "points": [
             "イベント階層を定義：プロダクト分析、監査、モデル学習",
@@ -414,19 +374,15 @@
         {
           "heading": "削除前ロールアップ",
           "paragraphs": [
-            [
-              "生削除前にロールアップ。",
-              "ファネルは集計で。"
-            ]
+            "生削除前にロールアップ。",
+            "ファネルは集計で。"
           ]
         },
         {
           "heading": "運用規律",
           "paragraphs": [
-            [
-              "保持設定をスキーマ同様レビュー。",
-              "削除ジョブを計測。"
-            ]
+            "保持設定をスキーマ同様レビュー。",
+            "削除ジョブを計測。"
           ],
           "links": [
             {

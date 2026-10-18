@@ -3,7 +3,7 @@
   "title": "SEO for Editorial Briefings, Not Wire Copy",
   "excerpt": "Republishing headlines for traffic trains crawlers to treat you as low-trust duplication. Briefings that add analysis, clear dates, and honest structured data earn a different relationship with search.",
   "description": "Staff SEO for editorial briefing sites: schema discipline, subdomain canonicals, measurement, and quality gates that avoid agency copy pitfalls.",
-  "readingMinutes": 7,
+  "readingMinutes": 4,
   "keywords": [
     "editorial SEO",
     "NewsArticle",
@@ -20,14 +20,16 @@
       "heading": "Briefings are not rewrites",
       "paragraphs": [
         "Search systems reward documents with clear authorship, modification dates, and original synthesis. Thin rewrites of trending queries burn crawl budget without building brand.",
-        "Editorial briefings should declare what they are: analysis with cited primary sources, not breaking news wires."
+        "Editorial briefings should declare what they are: analysis with cited primary sources, not breaking news wires.",
+        "Editorial briefings earn links when they explain tradeoffs readers can act on—not when they recap headlines."
       ]
     },
     {
       "heading": "Structured data must match the page",
       "paragraphs": [
         "NewsArticle markup must reflect visible headlines, images, and dates. Mismatch is worse than omission.",
-        "Stock photos need license metadata in the UI, not fake photojournalism cues."
+        "Stock photos need license metadata in the UI, not fake photojournalism cues.",
+        "Structured data should reflect the page type you actually ship; fake FAQ blocks hurt more than they help."
       ],
       "points": [
         "Separate editorial briefings from wire copy in schema and UI",
@@ -40,14 +42,16 @@
       "heading": "Hosts and hreflang stay honest",
       "paragraphs": [
         "When news lives on a dedicated host, sitemaps and internal linking should respect that boundary instead of leaking into unrelated site graphs.",
-        "Redirects and canonical tags should help users and crawlers land on the intended surface."
+        "Redirects and canonical tags should help users and crawlers land on the intended surface.",
+        "Measure engagement on briefing pages separately from app conversion funnels."
       ]
     },
     {
       "heading": "Analytics by content surface",
       "paragraphs": [
         "Tag analytics by content group so product, blog, and news surfaces are comparable without double-counting journeys.",
-        "SEO for briefings is a long game: consistency, honesty, and measurable quality beat daily copy-paste."
+        "SEO for briefings is a long game: consistency, honesty, and measurable quality beat daily copy-paste.",
+        "Refresh evergreen sections on a schedule; stale authority pages decay quietly in Search Console."
       ],
       "links": [
         {
@@ -70,19 +74,15 @@
         {
           "heading": "Brifingler yeniden yazım değildir",
           "paragraphs": [
-            [
-              "Arama sistemleri net yazım, güncelleme tarihi ve özgün sentezi ödüllendirir. Trend sorgularının ince yeniden yazımları crawl bütçesini yakar, marka inşa etmez.",
-              "Editöryal brifingler ne olduklarını açıkça söylemeli: atıflı birincil kaynaklarla analiz, canlı haber telgrafı değil."
-            ]
+            "Arama sistemleri net yazım, güncelleme tarihi ve özgün sentezi ödüllendirir. Trend sorgularının ince yeniden yazımları crawl bütçesini yakar, marka inşa etmez.",
+            "Editöryal brifingler ne olduklarını açıkça söylemeli: atıflı birincil kaynaklarla analiz, canlı haber telgrafı değil."
           ]
         },
         {
           "heading": "Yapılandırılmış veri sayfayla uyumlu olmalı",
           "paragraphs": [
-            [
-              "NewsArticle işaretlemesi görünen başlık, görsel ve tarihlerle örtüşmeli. Uyumsuzluk, hiç işaretlemeden daha kötüdür.",
-              "Stok görsellerde UI'da lisans metadatası olmalı; sahte foto muhabirliği ipuçları kullanılmamalı."
-            ]
+            "NewsArticle işaretlemesi görünen başlık, görsel ve tarihlerle örtüşmeli. Uyumsuzluk, hiç işaretlemeden daha kötüdür.",
+            "Stok görsellerde UI'da lisans metadatası olmalı; sahte foto muhabirliği ipuçları kullanılmamalı."
           ],
           "points": [
             "Editöryal brifingleri tel kopyasından schema ve UI'da ayır",
@@ -94,19 +94,15 @@
         {
           "heading": "Host ve hreflang dürüst kalır",
           "paragraphs": [
-            [
-              "Haberler ayrı host'ta yaşarken sitemap ve iç linkleme, ilgisiz site graflarına sızmak yerine bu sınırı korumalı.",
-              "Yönlendirme ve canonical etiketleri kullanıcı ve tarayıcıyı doğru yüzeye indirmeli."
-            ]
+            "Haberler ayrı host'ta yaşarken sitemap ve iç linkleme, ilgisiz site graflarına sızmak yerine bu sınırı korumalı.",
+            "Yönlendirme ve canonical etiketleri kullanıcı ve tarayıcıyı doğru yüzeye indirmeli."
           ]
         },
         {
           "heading": "İçerik yüzeyine göre analitik",
           "paragraphs": [
-            [
-              "Analitikte içerik grubu etiketleyin; ürün, blog ve haber yüzeyleri çift sayım olmadan karşılaştırılabilir olsun.",
-              "Brifing SEO'su uzun oyun: tutarlılık, dürüstlük ve ölçülebilir kalite günlük kopyala-yapıştıyı geçer."
-            ]
+            "Analitikte içerik grubu etiketleyin; ürün, blog ve haber yüzeyleri çift sayım olmadan karşılaştırılabilir olsun.",
+            "Brifing SEO'su uzun oyun: tutarlılık, dürüstlük ve ölçülebilir kalite günlük kopyala-yapıştıyı geçer."
           ],
           "links": [
             {
@@ -129,19 +125,15 @@
         {
           "heading": "Briefings sind keine Rewrites",
           "paragraphs": [
-            [
-              "Suche belohnt klare Autorschaft, Änderungsdatum und eigene Synthese. Dünne Rewrites von Trend-Queries verbrennen Crawl-Budget.",
-              "Briefings deklarieren: Analyse mit zitierten Primärquellen, kein Breaking-Wire."
-            ]
+            "Suche belohnt klare Autorschaft, Änderungsdatum und eigene Synthese. Dünne Rewrites von Trend-Queries verbrennen Crawl-Budget.",
+            "Briefings deklarieren: Analyse mit zitierten Primärquellen, kein Breaking-Wire."
           ]
         },
         {
           "heading": "Structured Data muss zur Seite passen",
           "paragraphs": [
-            [
-              "NewsArticle-Markup muss sichtbare Headlines, Bilder und Daten spiegeln. Mismatch ist schlimmer als kein Markup.",
-              "Stock-Fotos brauchen Lizenz-Hinweis in der UI, keine Fake-Reportage."
-            ]
+            "NewsArticle-Markup muss sichtbare Headlines, Bilder und Daten spiegeln. Mismatch ist schlimmer als kein Markup.",
+            "Stock-Fotos brauchen Lizenz-Hinweis in der UI, keine Fake-Reportage."
           ],
           "points": [
             "Redaktionelle Briefings von Agentur-Kopie in Schema und UI trennen",
@@ -153,19 +145,15 @@
         {
           "heading": "Hosts und hreflang bleiben ehrlich",
           "paragraphs": [
-            [
-              "Lebt News auf eigenem Host, respektieren Sitemaps und interne Links diese Grenze.",
-              "Redirects und Canonicals führen Nutzer und Crawler zur richtigen Oberfläche."
-            ]
+            "Lebt News auf eigenem Host, respektieren Sitemaps und interne Links diese Grenze.",
+            "Redirects und Canonicals führen Nutzer und Crawler zur richtigen Oberfläche."
           ]
         },
         {
           "heading": "Analytics nach Content-Oberfläche",
           "paragraphs": [
-            [
-              "Analytics nach content_group taggen, damit Produkt, Blog und News vergleichbar bleiben.",
-              "Briefing-SEO ist Langstrecke: Konsistenz und messbare Qualität schlagen tägliches Copy-Paste."
-            ]
+            "Analytics nach content_group taggen, damit Produkt, Blog und News vergleichbar bleiben.",
+            "Briefing-SEO ist Langstrecke: Konsistenz und messbare Qualität schlagen tägliches Copy-Paste."
           ],
           "links": [
             {
@@ -188,19 +176,15 @@
         {
           "heading": "Les briefings ne sont pas des rewrites",
           "paragraphs": [
-            [
-              "La recherche récompense auteur clair, date de modification et synthèse originale. Les rewrites minces brûlent le budget crawl.",
-              "Les briefings disent ce qu'ils sont : analyse avec sources primaires citées, pas fil de presse."
-            ]
+            "La recherche récompense auteur clair, date de modification et synthèse originale. Les rewrites minces brûlent le budget crawl.",
+            "Les briefings disent ce qu'ils sont : analyse avec sources primaires citées, pas fil de presse."
           ]
         },
         {
           "heading": "Les données structurées doivent coller à la page",
           "paragraphs": [
-            [
-              "Le markup NewsArticle doit refléter titres, images et dates visibles. Le mismatch vaut pire que l'absence.",
-              "Photos stock : crédit licence dans l'UI, pas fausse photojournalisme."
-            ]
+            "Le markup NewsArticle doit refléter titres, images et dates visibles. Le mismatch vaut pire que l'absence.",
+            "Photos stock : crédit licence dans l'UI, pas fausse photojournalisme."
           ],
           "points": [
             "Séparer briefings éditoriaux du fil de l'agence dans schema et UI",
@@ -212,19 +196,15 @@
         {
           "heading": "Hôtes et hreflang restent honnêtes",
           "paragraphs": [
-            [
-              "News sur hôte dédié : sitemaps et liens internes respectent cette frontière.",
-              "Redirections et canoniques mènent au bon surface."
-            ]
+            "News sur hôte dédié : sitemaps et liens internes respectent cette frontière.",
+            "Redirections et canoniques mènent au bon surface."
           ]
         },
         {
           "heading": "Analytics par surface de contenu",
           "paragraphs": [
-            [
-              "Taguer content_group pour comparer produit, blog et news sans double comptage.",
-              "SEO briefing = long terme : cohérence et qualité mesurable battent le copier-coller quotidien."
-            ]
+            "Taguer content_group pour comparer produit, blog et news sans double comptage.",
+            "SEO briefing = long terme : cohérence et qualité mesurable battent le copier-coller quotidien."
           ],
           "links": [
             {
@@ -247,19 +227,15 @@
         {
           "heading": "I briefing non sono riscritture",
           "paragraphs": [
-            [
-              "La ricerca premia autorship chiara, date di modifica e sintesi originale. Rewrite sottili su query trend bruciano crawl budget.",
-              "I briefing dichiarano cosa sono: analisi con fonti primarie citate, non wire breaking."
-            ]
+            "La ricerca premia autorship chiara, date di modifica e sintesi originale. Rewrite sottili su query trend bruciano crawl budget.",
+            "I briefing dichiarano cosa sono: analisi con fonti primarie citate, non wire breaking."
           ]
         },
         {
           "heading": "I structured data devono combaciare con la pagina",
           "paragraphs": [
-            [
-              "Il markup NewsArticle deve riflettere titoli, immagini e date visibili. Il mismatch peggio dell'omissione.",
-              "Stock photo con credito licenza in UI, non finto reportage."
-            ]
+            "Il markup NewsArticle deve riflettere titoli, immagini e date visibili. Il mismatch peggio dell'omissione.",
+            "Stock photo con credito licenza in UI, non finto reportage."
           ],
           "points": [
             "Separare briefing editoriali da copia wire in schema e UI",
@@ -271,19 +247,15 @@
         {
           "heading": "Host e hreflang restano onesti",
           "paragraphs": [
-            [
-              "News su host dedicato: sitemap e link interni rispettano il confine.",
-              "Redirect e canonical portano utenti e crawler alla superficie giusta."
-            ]
+            "News su host dedicato: sitemap e link interni rispettano il confine.",
+            "Redirect e canonical portano utenti e crawler alla superficie giusta."
           ]
         },
         {
           "heading": "Analytics per superficie contenuto",
           "paragraphs": [
-            [
-              "Tag content_group in analytics per confrontare prodotto, blog e news senza doppio conteggio.",
-              "SEO briefing è gioco lungo: coerenza e qualità misurabile battono copy-paste quotidiano."
-            ]
+            "Tag content_group in analytics per confrontare prodotto, blog e news senza doppio conteggio.",
+            "SEO briefing è gioco lungo: coerenza e qualità misurabile battono copy-paste quotidiano."
           ],
           "links": [
             {
@@ -306,19 +278,15 @@
         {
           "heading": "简报不是改写",
           "paragraphs": [
-            [
-              "搜索奖励清晰作者、修改日期与原创综合；薄改写趋势查询烧 crawl 预算。",
-              "简报应声明自身：引用一手来源的分析，非突发电讯。"
-            ]
+            "搜索奖励清晰作者、修改日期与原创综合；薄改写趋势查询烧 crawl 预算。",
+            "简报应声明自身：引用一手来源的分析，非突发电讯。"
           ]
         },
         {
           "heading": "结构化数据须与页面一致",
           "paragraphs": [
-            [
-              "NewsArticle 标记须匹配可见标题、图片与日期；不一致比不标记更糟。",
-              "库存图在 UI 标注许可，勿伪装现场摄影。"
-            ]
+            "NewsArticle 标记须匹配可见标题、图片与日期；不一致比不标记更糟。",
+            "库存图在 UI 标注许可，勿伪装现场摄影。"
           ],
           "points": [
             "在 schema 与 UI 区分编辑简报与通稿复制",
@@ -330,19 +298,15 @@
         {
           "heading": "主机与 hreflang 保持诚实",
           "paragraphs": [
-            [
-              "新闻在独立主机时，站点地图与内链应尊重边界。",
-              "重定向与 canonical 引导用户与爬虫到 intended 面。"
-            ]
+            "新闻在独立主机时，站点地图与内链应尊重边界。",
+            "重定向与 canonical 引导用户与爬虫到 intended 面。"
           ]
         },
         {
           "heading": "按内容面分析",
           "paragraphs": [
-            [
-              "按 content_group 打标，产品、博客与新闻可对比且不重复计数。",
-              "简报 SEO 是长跑：一致、诚实与可测质量胜过日复粘贴。"
-            ]
+            "按 content_group 打标，产品、博客与新闻可对比且不重复计数。",
+            "简报 SEO 是长跑：一致、诚实与可测质量胜过日复粘贴。"
           ],
           "links": [
             {
@@ -365,19 +329,15 @@
         {
           "heading": "ブリーフはリライトではない",
           "paragraphs": [
-            [
-              "検索は明確な著者・更新日・独自総合を評価。トレンドの薄いリライトはクロール予算を燃やす。",
-              "ブリーフは一次ソース引用の分析であると明示し、速報ワイヤーではない。"
-            ]
+            "検索は明確な著者・更新日・独自総合を評価。トレンドの薄いリライトはクロール予算を燃やす。",
+            "ブリーフは一次ソース引用の分析であると明示し、速報ワイヤーではない。"
           ]
         },
         {
           "heading": "構造化データはページと一致",
           "paragraphs": [
-            [
-              "NewsArticleは可視見出し・画像・日付と一致。不一致は未マークより悪い。",
-              "ストック画像はUIでライセンス表示、偽 photojournalism 禁止。"
-            ]
+            "NewsArticleは可視見出し・画像・日付と一致。不一致は未マークより悪い。",
+            "ストック画像はUIでライセンス表示、偽 photojournalism 禁止。"
           ],
           "points": [
             "編集ブリーフィングをワイヤーコピーとschema/UIで分離",
@@ -389,19 +349,15 @@
         {
           "heading": "ホストとhreflangは正直に",
           "paragraphs": [
-            [
-              "専用ホストのニュースはサイトマップと内部リンクで境界を守る。",
-              "リダイレクトとcanonicalで正しい面に誘導。"
-            ]
+            "専用ホストのニュースはサイトマップと内部リンクで境界を守る。",
+            "リダイレクトとcanonicalで正しい面に誘導。"
           ]
         },
         {
           "heading": "コンテンツ面別アナリティクス",
           "paragraphs": [
-            [
-              "content_groupでタグ付けし製品・ブログ・ニュースを二重計上なく比較。",
-              "ブリーフSEOは長期戦：一貫性と測定可能品質が日次コピペに勝つ。"
-            ]
+            "content_groupでタグ付けし製品・ブログ・ニュースを二重計上なく比較。",
+            "ブリーフSEOは長期戦：一貫性と測定可能品質が日次コピペに勝つ。"
           ],
           "links": [
             {

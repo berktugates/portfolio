@@ -3,7 +3,7 @@
   "title": "LLM Eval Gates in CI, Not Slide Decks",
   "excerpt": "Demo-quality prompts do not survive production traffic. If evals live only in notebooks, every model swap becomes a product lottery.",
   "description": "Staff patterns for LLM evaluation in CI: golden datasets, regression thresholds, cost-aware sampling, and release gates that product teams can trust.",
-  "readingMinutes": 7,
+  "readingMinutes": 4,
   "keywords": [
     "LLM evals",
     "CI",
@@ -20,14 +20,16 @@
       "heading": "Evals are release infrastructure",
       "paragraphs": [
         "Teams that only eyeball outputs before launch discover failures in support tickets. Eval harnesses turn subjective 'looks fine' into comparable scores across prompts, tools, and locales.",
-        "Version datasets like code. When someone edits a golden case without review, you lose the ability to detect model regressions versus intentional behavior changes."
+        "Version datasets like code. When someone edits a golden case without review, you lose the ability to detect model regressions versus intentional behavior changes.",
+        "Eval datasets are code: review them in PRs with the same rigor as migration scripts."
       ]
     },
     {
       "heading": "Golden sets need ownership",
       "paragraphs": [
         "Start with a small, high-signal golden set tied to revenue or compliance paths—not hundreds of vague prompts copied from marketing.",
-        "Each case should assert tool shape, citation presence, refusal behavior, or numeric bounds—not poetic similarity alone."
+        "Each case should assert tool shape, citation presence, refusal behavior, or numeric bounds—not poetic similarity alone.",
+        "Gate on regressions against a frozen golden set, not on absolute scores that drift with model upgrades."
       ],
       "points": [
         "Treat eval suites like unit tests with fixtures and versioned datasets",
@@ -40,14 +42,16 @@
       "heading": "Sample online, gate offline",
       "paragraphs": [
         "CI should run fast eval subsets on every PR and fuller suites nightly. Expensive judge models belong in scheduled jobs, not every push.",
-        "Shadow traffic in production complements offline eval; it should not replace gates because incidents are already user-visible."
+        "Shadow traffic in production complements offline eval; it should not replace gates because incidents are already user-visible.",
+        "Human spot checks calibrate automated graders weekly, not only after incidents."
       ]
     },
     {
       "heading": "Make regressions visible",
       "paragraphs": [
         "Publish eval trends beside latency and cost. When a model upgrade wins on quality score but doubles token spend, product should see that trade in one dashboard.",
-        "Eval gates earn the right to change models without heroics on launch night."
+        "Eval gates earn the right to change models without heroics on launch night.",
+        "Failed eval gates should block deploy; waivers need named owners and expiry dates."
       ],
       "links": [
         {
@@ -70,19 +74,15 @@
         {
           "heading": "Eval'ler release altyapısıdır",
           "paragraphs": [
-            [
-              "Yalnızca gözle kontrol eden ekipler hataları destek ticket'larında görür. Eval harness'leri 'iyi görünüyor'u prompt, tool ve locale boyunca karşılaştırılabilir skorlara çevirir.",
-              "Veri setlerini kod gibi versiyonlayın; onaysız golden case düzenlemesi model regresyonunu davranış değişikliğinden ayıramaz."
-            ]
+            "Yalnızca gözle kontrol eden ekipler hataları destek ticket'larında görür. Eval harness'leri 'iyi görünüyor'u prompt, tool ve locale boyunca karşılaştırılabilir skorlara çevirir.",
+            "Veri setlerini kod gibi versiyonlayın; onaysız golden case düzenlemesi model regresyonunu davranış değişikliğinden ayıramaz."
           ]
         },
         {
           "heading": "Golden set'in sahibi olmalı",
           "paragraphs": [
-            [
-              "Gelir veya uyum yollarına bağlı küçük, yüksek sinyalli golden set ile başlayın—pazarlama kopyasından yüzlerce belirsiz prompt değil.",
-              "Her vaka tool şekli, atıf, red davranışı veya sayısal sınır assert etmeli; yalnızca benzerlik skoru yetmez."
-            ]
+            "Gelir veya uyum yollarına bağlı küçük, yüksek sinyalli golden set ile başlayın—pazarlama kopyasından yüzlerce belirsiz prompt değil.",
+            "Her vaka tool şekli, atıf, red davranışı veya sayısal sınır assert etmeli; yalnızca benzerlik skoru yetmez."
           ],
           "points": [
             "Eval suite'leri fixture ve versiyonlu veri setiyle unit test gibi işleyin",
@@ -94,19 +94,15 @@
         {
           "heading": "Online örnekle, offline kilitle",
           "paragraphs": [
-            [
-              "CI her PR'da hızlı eval alt kümesi, gece tam suite çalıştırmalı. Pahalı judge modeller zamanlanmış job'larda olmalı, her push'ta değil.",
-              "Prod shadow trafik offline eval'i tamamlar; kapının yerini tutmaz çünkü olay zaten kullanıcıya görünür."
-            ]
+            "CI her PR'da hızlı eval alt kümesi, gece tam suite çalıştırmalı. Pahalı judge modeller zamanlanmış job'larda olmalı, her push'ta değil.",
+            "Prod shadow trafik offline eval'i tamamlar; kapının yerini tutmaz çünkü olay zaten kullanıcıya görünür."
           ]
         },
         {
           "heading": "Regresyonları görünür kıl",
           "paragraphs": [
-            [
-              "Eval trendlerini gecikme ve maliyetin yanında yayınlayın. Model yükseltmesi kalite skorunu kazanıp token maliyetini ikiye katlarsa ürün tek panoda görmeli.",
-              "Eval kapıları, lansman gecesi kahramanlık olmadan model değiştirme hakkı verir."
-            ]
+            "Eval trendlerini gecikme ve maliyetin yanında yayınlayın. Model yükseltmesi kalite skorunu kazanıp token maliyetini ikiye katlarsa ürün tek panoda görmeli.",
+            "Eval kapıları, lansman gecesi kahramanlık olmadan model değiştirme hakkı verir."
           ],
           "links": [
             {
@@ -129,19 +125,15 @@
         {
           "heading": "Evals sind Release-Infrastruktur",
           "paragraphs": [
-            [
-              "Wer nur visuell prüft, findet Fehler in Support-Tickets. Eval-Harnesses machen aus 'sieht ok' vergleichbare Scores über Prompts, Tools und Locales.",
-              "Datensätze wie Code versionieren; unreviewte Golden-Case-Edits verblenden Modell-Regressionen."
-            ]
+            "Wer nur visuell prüft, findet Fehler in Support-Tickets. Eval-Harnesses machen aus 'sieht ok' vergleichbare Scores über Prompts, Tools und Locales.",
+            "Datensätze wie Code versionieren; unreviewte Golden-Case-Edits verblenden Modell-Regressionen."
           ]
         },
         {
           "heading": "Golden Sets brauchen Owner",
           "paragraphs": [
-            [
-              "Klein starten: hochsignal Golden Set an Revenue- oder Compliance-Pfaden.",
-              "Jeder Fall assertiert Tool-Form, Zitation, Refusal oder numerische Grenzen—not nur Ähnlichkeit."
-            ]
+            "Klein starten: hochsignal Golden Set an Revenue- oder Compliance-Pfaden.",
+            "Jeder Fall assertiert Tool-Form, Zitation, Refusal oder numerische Grenzen—not nur Ähnlichkeit."
           ],
           "points": [
             "Eval-Suites wie Unit-Tests mit Fixtures und versionierten Datensätzen",
@@ -153,19 +145,15 @@
         {
           "heading": "Online sampeln, offline sperren",
           "paragraphs": [
-            [
-              "CI: schnelle Eval-Teilmenge pro PR, volle Suite nachts. Teure Judge-Modelle in Jobs, nicht jeden Push.",
-              "Shadow-Traffic ergänzt offline Eval, ersetzt Gates nicht."
-            ]
+            "CI: schnelle Eval-Teilmenge pro PR, volle Suite nachts. Teure Judge-Modelle in Jobs, nicht jeden Push.",
+            "Shadow-Traffic ergänzt offline Eval, ersetzt Gates nicht."
           ]
         },
         {
           "heading": "Regressionen sichtbar machen",
           "paragraphs": [
-            [
-              "Eval-Trends neben Latenz und Kosten publizieren. Qualitätsgewinn bei doppelten Token-Kosten muss sichtbar sein.",
-              "Eval-Gates erlauben Modellwechsel ohne Launch-Heldentum."
-            ]
+            "Eval-Trends neben Latenz und Kosten publizieren. Qualitätsgewinn bei doppelten Token-Kosten muss sichtbar sein.",
+            "Eval-Gates erlauben Modellwechsel ohne Launch-Heldentum."
           ],
           "links": [
             {
@@ -188,19 +176,15 @@
         {
           "heading": "Les evals sont infra de release",
           "paragraphs": [
-            [
-              "Les équipes qui eyeballent avant launch découvrent les échecs au support. Les harness transforment 'ça a l'air bien' en scores comparables.",
-              "Versionner les datasets comme le code ; éditer un golden sans review aveugle les régressions."
-            ]
+            "Les équipes qui eyeballent avant launch découvrent les échecs au support. Les harness transforment 'ça a l'air bien' en scores comparables.",
+            "Versionner les datasets comme le code ; éditer un golden sans review aveugle les régressions."
           ]
         },
         {
           "heading": "Les golden sets ont un owner",
           "paragraphs": [
-            [
-              "Commencer petit : golden set à fort signal sur chemins revenue ou compliance.",
-              "Chaque cas assert forme d'outil, citation, refus ou bornes—not seulement similarité."
-            ]
+            "Commencer petit : golden set à fort signal sur chemins revenue ou compliance.",
+            "Chaque cas assert forme d'outil, citation, refus ou bornes—not seulement similarité."
           ],
           "points": [
             "Traiter suites eval comme tests unitaires avec fixtures et jeux versionnés",
@@ -212,19 +196,15 @@
         {
           "heading": "Échantillonner online, verrouiller offline",
           "paragraphs": [
-            [
-              "CI : sous-ensemble rapide à chaque PR, suite complète la nuit. Juges coûteux en jobs planifiés.",
-              "Le shadow prod complète l'eval offline ; ne remplace pas les gates."
-            ]
+            "CI : sous-ensemble rapide à chaque PR, suite complète la nuit. Juges coûteux en jobs planifiés.",
+            "Le shadow prod complète l'eval offline ; ne remplace pas les gates."
           ]
         },
         {
           "heading": "Rendre les régressions visibles",
           "paragraphs": [
-            [
-              "Publier tendances eval à côté latence et coût. Un upgrade qualité qui double les tokens doit être visible.",
-              "Les gates eval permettent de changer de modèle sans héroïsme de launch."
-            ]
+            "Publier tendances eval à côté latence et coût. Un upgrade qualité qui double les tokens doit être visible.",
+            "Les gates eval permettent de changer de modèle sans héroïsme de launch."
           ],
           "links": [
             {
@@ -247,19 +227,15 @@
         {
           "heading": "Gli eval sono infrastruttura di release",
           "paragraphs": [
-            [
-              "Chi controlla a occhio scopre i fallimenti nei ticket. Gli harness trasformano 'sembra ok' in punteggi comparabili su prompt, tool e locale.",
-              "Versiona i dataset come codice; edit golden senza review offusca regressioni modello."
-            ]
+            "Chi controlla a occhio scopre i fallimenti nei ticket. Gli harness trasformano 'sembra ok' in punteggi comparabili su prompt, tool e locale.",
+            "Versiona i dataset come codice; edit golden senza review offusca regressioni modello."
           ]
         },
         {
           "heading": "I golden set hanno un owner",
           "paragraphs": [
-            [
-              "Parti piccolo: golden ad alto segnale su percorsi revenue o compliance.",
-              "Ogni caso assert forma tool, citazione, rifiuto o bound numerici—not solo similarità."
-            ]
+            "Parti piccolo: golden ad alto segnale su percorsi revenue o compliance.",
+            "Ogni caso assert forma tool, citazione, rifiuto o bound numerici—not solo similarità."
           ],
           "points": [
             "Suite eval come unit test con fixture e dataset versionati",
@@ -271,19 +247,15 @@
         {
           "heading": "Campiona online, blocca offline",
           "paragraphs": [
-            [
-              "CI: subset veloce ogni PR, suite piena di notte. Judge costosi in job schedulati.",
-              "Shadow in prod completa eval offline, non sostituisce i gate."
-            ]
+            "CI: subset veloce ogni PR, suite piena di notte. Judge costosi in job schedulati.",
+            "Shadow in prod completa eval offline, non sostituisce i gate."
           ]
         },
         {
           "heading": "Rendi visibili le regressioni",
           "paragraphs": [
-            [
-              "Pubblica trend eval accanto a latenza e costo. Upgrade qualità che raddoppia token deve essere visibile.",
-              "I gate eval permettono cambio modello senza eroi alla launch."
-            ]
+            "Pubblica trend eval accanto a latenza e costo. Upgrade qualità che raddoppia token deve essere visibile.",
+            "I gate eval permettono cambio modello senza eroi alla launch."
           ],
           "links": [
             {
@@ -306,19 +278,15 @@
         {
           "heading": "评测是发布基础设施",
           "paragraphs": [
-            [
-              "只肉眼验收的团队在工单里发现失败。评测 harness 把“看起来还行”变成可比分。",
-              "数据集像代码一样版本化；未审 golden 编辑会混淆模型回归与行为变更。"
-            ]
+            "只肉眼验收的团队在工单里发现失败。评测 harness 把“看起来还行”变成可比分。",
+            "数据集像代码一样版本化；未审 golden 编辑会混淆模型回归与行为变更。"
           ]
         },
         {
           "heading": "黄金集需要负责人",
           "paragraphs": [
-            [
-              "从小而高信号 golden 集起步，绑 revenue 或合规路径。",
-              "每例应断言工具形态、引用、拒绝或数值界，而非仅相似度。"
-            ]
+            "从小而高信号 golden 集起步，绑 revenue 或合规路径。",
+            "每例应断言工具形态、引用、拒绝或数值界，而非仅相似度。"
           ],
           "points": [
             "像单元测试一样用 fixture 与版本化数据集运行 eval",
@@ -330,19 +298,15 @@
         {
           "heading": "在线抽样、离线门禁",
           "paragraphs": [
-            [
-              "CI 每 PR 跑快评子集，夜间全量；贵 judge 放定时任务。",
-              "生产 shadow 补充离线评测，不能替代门禁。"
-            ]
+            "CI 每 PR 跑快评子集，夜间全量；贵 judge 放定时任务。",
+            "生产 shadow 补充离线评测，不能替代门禁。"
           ]
         },
         {
           "heading": "让回归可见",
           "paragraphs": [
-            [
-              "评测趋势与延迟、成本同屏。质量升而 token 翻倍须在一张盘里可见。",
-              "评测门让你无需 launch 夜英雄式换模型。"
-            ]
+            "评测趋势与延迟、成本同屏。质量升而 token 翻倍须在一张盘里可见。",
+            "评测门让你无需 launch 夜英雄式换模型。"
           ],
           "links": [
             {
@@ -365,19 +329,15 @@
         {
           "heading": "Evalはリリース基盤",
           "paragraphs": [
-            [
-              "目視だけのチームはサポートチケットで失敗に気づく。Harnessは「良さそう」を比較可能スコアに。",
-              "データセットをコード同様バージョン管理；未レビューgolden編集は回帰検知を壊す。"
-            ]
+            "目視だけのチームはサポートチケットで失敗に気づく。Harnessは「良さそう」を比較可能スコアに。",
+            "データセットをコード同様バージョン管理；未レビューgolden編集は回帰検知を壊す。"
           ]
         },
         {
           "heading": "ゴールデンセットにオーナー",
           "paragraphs": [
-            [
-              "小さく高信号のゴールデンから。収益・コンプライアンス経路に紐づける。",
-              "各ケースはツール形状・引用・拒否・数値境界をassert；類似度だけでは不足。"
-            ]
+            "小さく高信号のゴールデンから。収益・コンプライアンス経路に紐づける。",
+            "各ケースはツール形状・引用・拒否・数値境界をassert；類似度だけでは不足。"
           ],
           "points": [
             "evalスイートをfixtureと版付きデータセットでユニットテスト化",
@@ -389,19 +349,15 @@
         {
           "heading": "オンラインでサンプル、オフラインでゲート",
           "paragraphs": [
-            [
-              "CIはPRごとに高速サブセット、夜間フル。高コストジャッジはスケジュールジョブ。",
-              "本番シャドウはオフラインevalを補完しゲートの代わりにならない。"
-            ]
+            "CIはPRごとに高速サブセット、夜間フル。高コストジャッジはスケジュールジョブ。",
+            "本番シャドウはオフラインevalを補完しゲートの代わりにならない。"
           ]
         },
         {
           "heading": "回帰を可視化",
           "paragraphs": [
-            [
-              "evalトレンドをレイテンシ・コスト横に公開。品質向上でトークン2倍なら一枚の盤で見えるべき。",
-              "Evalゲートはローンチ夜のヒーローなしでモデル変更を可能にする。"
-            ]
+            "evalトレンドをレイテンシ・コスト横に公開。品質向上でトークン2倍なら一枚の盤で見えるべき。",
+            "Evalゲートはローンチ夜のヒーローなしでモデル変更を可能にする。"
           ],
           "links": [
             {

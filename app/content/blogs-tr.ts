@@ -11,6 +11,7 @@ const blogs: BlogLocaleMap = {
         paragraphs: [
           "Mağaza incelemesi, MDM dondurmaları ve güncellemeyi yok sayan kullanıcılar API'nizin birden fazla istemci neslini aynı anda sunmasını gerektirir.",
           "En eski desteklenen uygulama sürümünü birinci sınıf tüketici sayın.",
+          "Hızlı alan yeniden adlandırma isteğinde ilk soru: hangi uygulama sürümleri eski şekli hâlâ parse ediyor ve ikisini ne kadar taşıyacaksınız?",
         ],
       },
       {
@@ -18,6 +19,7 @@ const blogs: BlogLocaleMap = {
         paragraphs: [
           "Açık API epoch'ları (header veya path) kullanın; istemci build kimliğini her istekte göndersin.",
           "Alanları ölçülü deprecation olmadan kaldırmayın; sunset ipuçlarını yapılandırılmış hatalarda döndürün.",
+          "İnsan release notlarının yanında makine okunur uyumluluk notları yayınlayın; istemci ekipleri davranışı trafikten reverse-engineer etmesin.",
         ],
         points: [
           "API epoch başına minimum uygulama sürümü içeren mobil uyumluluk matrisi yayınlayın",
@@ -31,6 +33,7 @@ const blogs: BlogLocaleMap = {
         paragraphs: [
           "API sunset'lerini uygulama içi güncelleme ve destek makrolarıyla eşleyin.",
           "CI'da en eski desteklenen client bundle ile sözleşme testleri çalıştırın.",
+          "Destek ve success ekiplerinin tek bir minimum sürüm ve sunset matrisi olsun; her olay aynı skew tablosunu yeniden icat etmesin.",
         ],
       },
       {
@@ -38,6 +41,7 @@ const blogs: BlogLocaleMap = {
         paragraphs: [
           "Aktif uygulama sürümlerini API epoch kullanımına karşı panoda izleyin.",
           "Disiplinli sürümleme, mobil'i rehin almadan backend geliştirmenizi sağlar.",
+          "Yalnızca deprecated yollarda trafik ihmal edilebilir seviyedeyken ve uygulama içi güncelleme kapsamı sert kesmeyi taşıyabiliyorken cut yapın.",
         ],
         links: [
           {
@@ -66,6 +70,7 @@ const blogs: BlogLocaleMap = {
         paragraphs: [
           "Batch çıkarım gecikmeyi tek tamamlanma olayının arkasına gizler. Streaming kısmi hatayı açığa çıkarır: yavaş ilk token, takılan chunk'lar, kesik JSON veya politika ihlalinden önce gelen kendinden emin giriş.",
           "Akışı birinci sınıf iş yükü sayın. Client render'dan gateway, router, model sağlayıcı ve tool yan etkilerine kadar ölçün.",
+          "Model hatası gibi görünen olaylar çoğu zaman gateway'de backpressure ile başlar; chunk zamanlaması olmadan model değiştirmek kapasiteyi düzeltmez.",
         ],
       },
       {
@@ -73,6 +78,7 @@ const blogs: BlogLocaleMap = {
         paragraphs: [
           "Kullanıcı turu başına bir trace modelleyin; retrieval, routing, ilk token, tool çağrıları ve finalize için child span'ler ekleyin.",
           "Stack izin verdiğinde trace context'i SSE veya WebSocket frame'leri boyunca taşıyın; değilse stabil turn id ile chunk sınırında yapılandırılmış olaylar loglayın.",
+          "Span'lere model id, prompt sürümü ve retrieval corpus revizyonu ekleyin; sessiz config değişiminden sonra regresyon tek filtrede görünsün.",
         ],
         points: [
           "Sağlayıcı TTFT ile gateway ek yükünü ayrı metrikleyin",
@@ -86,6 +92,7 @@ const blogs: BlogLocaleMap = {
         paragraphs: [
           "Akış ilerlerken hafif kontroller ekleyin: atıf kapsamı, red kalıpları, tool-call şekli veya retrieval isabet oranı.",
           "Modelleri A/B yönlendirirken streaming kohortlarını batch baz çizgileriyle karşılaştırın; TTFT regresyonu algılanan hızı bozar.",
+          "Eval örneklerini production trace'leriyle aynı zaman çizgisi metadata'sıyla saklayın; kalite ve gecikme soruşturmaları tek hikâyede birleşsin.",
         ],
       },
       {
@@ -93,6 +100,7 @@ const blogs: BlogLocaleMap = {
         paragraphs: [
           "TTFT p95, takılmadan tamamlanma oranı ve başarılı tool finalize üzerine SLO tanımlayın.",
           "Streaming observability, kullanıcının gerçekten gördüğü deneyimi ölçmeden anında hissettirme hakkını kazanamazsınız.",
+          "Disconnect ve stall metriklerini error budget kadar haftalık product ops'ta inceleyin; algılanan hız copilot'larda retention'dır.",
         ],
         links: [
           {

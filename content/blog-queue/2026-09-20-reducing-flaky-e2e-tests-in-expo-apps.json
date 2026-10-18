@@ -3,7 +3,7 @@
   "title": "Reducing Flaky E2E Tests in Expo Apps",
   "excerpt": "A green CI badge means nothing if engineers rerun the pipeline until luck strikes. Flaky mobile E2E is a product risk signal, not a nuisance ticket.",
   "description": "Practical staff-engineer tactics to reduce flaky end-to-end tests in Expo apps: deterministic fixtures, network stubs, quarantine policy, and a realistic device matrix in CI.",
-  "readingMinutes": 7,
+  "readingMinutes": 5,
   "keywords": [
     "Expo E2E",
     "Detox",
@@ -21,14 +21,16 @@
       "heading": "Flaky E2E is a trust problem",
       "paragraphs": [
         "Animation races, Metro reload timing, and real network dependencies turn mobile E2E into a lottery. Teams that 'just retry' teach themselves to ignore red builds until a release is blocked.",
-        "Staff engineers track flake rate like error budget: visible, owned, and trending down. Reliability of the test system is part of shipping confidence for Expo products."
+        "Staff engineers track flake rate like error budget: visible, owned, and trending down. Reliability of the test system is part of shipping confidence for Expo products.",
+        "Treat the suite as product infrastructure: when flakes exceed a threshold, freeze feature work on new specs until ownership and root-cause tickets exist."
       ]
     },
     {
       "heading": "Wait on contracts, not clocks",
       "paragraphs": [
         "Use fixed test accounts, seeded data, and known API responses. Stub HTTP at the client boundary when the goal is UI flow, not backend integration—reserve a smaller integration suite for cross-service truth.",
-        "Replace arbitrary sleeps with visibility and network idle predicates from your runner. If a test needs a five-second sleep, it is documenting a missing synchronization contract."
+        "Replace arbitrary sleeps with visibility and network idle predicates from your runner. If a test needs a five-second sleep, it is documenting a missing synchronization contract.",
+        "Record video and network HAR on failure once, not on every retry—artifacts should explain the flake, not recreate it probabilistically."
       ],
       "points": [
         "Reset app state and server fixtures deterministically between specs",
@@ -41,14 +43,16 @@
       "heading": "Quarantine with discipline",
       "paragraphs": [
         "Move flaky specs to a quarantine job with an owner and fix-by date. Unlimited retries in the main pipeline hide debt and burn CI minutes.",
-        "When a quarantined test fails consistently, that is progress—it is now deterministic enough to debug."
+        "When a quarantined test fails consistently, that is progress—it is now deterministic enough to debug.",
+        "Review quarantine weekly with release managers; items past SLA should block the train or force deletion of the spec."
       ]
     },
     {
       "heading": "Layer CI realistically",
       "paragraphs": [
         "Run a fast smoke suite on every pull request; run the full device matrix nightly or pre-release. Emulators catch logic; real devices catch keyboard, push permissions, and native module edge cases.",
-        "Reducing flake is how Expo teams keep shipping weekly without pretending mobile is just small web."
+        "Reducing flake is how Expo teams keep shipping weekly without pretending mobile is just small web.",
+        "Publish flake rate beside build time so product feels the cost of ignoring mobile CI health."
       ],
       "links": [
         {
@@ -64,6 +68,13 @@
           "url": "https://maestro.mobile.dev/"
         }
       ]
+    },
+    {
+      "heading": "Make reliability visible",
+      "paragraphs": [
+        "Pick one flake metric, one quarantine SLA, and one real-device tier to improve this sprint—then ask release managers whether confidence actually moved.",
+        "Staff ownership turns E2E from a lottery into an instrument the team trusts when shipping Expo apps weekly."
+      ]
     }
   ],
   "locales": {
@@ -75,19 +86,15 @@
         {
           "heading": "Flaky test bir ürün riskidir",
           "paragraphs": [
-            [
-              "Animasyon ve ağ yarışları Expo E2E'de en sık kök nedenlerdir.",
-              "Staff ekipler flake oranını release metriği sayar."
-            ]
+            "Animasyon ve ağ yarışları Expo E2E'de en sık kök nedenlerdir.",
+            "Staff ekipler flake oranını release metriği sayar."
           ]
         },
         {
           "heading": "Zamanlayıcı değil sözleşme bekle",
           "paragraphs": [
-            [
-              "Sabit test kullanıcıları ve bilinen backend durumu kullanın.",
-              "sleep yerine görünürlük ve API yanıtı bekleyin."
-            ]
+            "Sabit test kullanıcıları ve bilinen backend durumu kullanın.",
+            "sleep yerine görünürlük ve API yanıtı bekleyin."
           ],
           "points": [
             "Spec'ler arasında uygulama durumunu ve sunucu fixture'larını deterministik sıfırlayın",
@@ -99,19 +106,15 @@
         {
           "heading": "Karantina disiplini",
           "paragraphs": [
-            [
-              "Flaky testleri sahipsiz retry ile sonsuza kadar susturmayın.",
-              "Sahip ve düzeltme SLA'sı olan karantina listesi tutun."
-            ]
+            "Flaky testleri sahipsiz retry ile sonsuza kadar susturmayın.",
+            "Sahip ve düzeltme SLA'sı olan karantina listesi tutun."
           ]
         },
         {
           "heading": "CI'ı gerçekçi katmanla",
           "paragraphs": [
-            [
-              "Her PR'da smoke, gece tam matris.",
-              "Gerçek cihazda Metro ve native modül farklarını yakalayın."
-            ]
+            "Her PR'da smoke, gece tam matris.",
+            "Gerçek cihazda Metro ve native modül farklarını yakalayın."
           ],
           "links": [
             {
@@ -138,19 +141,15 @@
         {
           "heading": "Flaky ist Produktrisiko",
           "paragraphs": [
-            [
-              "Animation und Netzwerk-Races sind häufige Ursachen.",
-              "Flake-Rate ist Release-Metrik."
-            ]
+            "Animation und Netzwerk-Races sind häufige Ursachen.",
+            "Flake-Rate ist Release-Metrik."
           ]
         },
         {
           "heading": "Auf Vertrag warten",
           "paragraphs": [
-            [
-              "Feste Testnutzer und bekannte Backend-Zustände.",
-              "Kein sleep—auf Sichtbarkeit warten."
-            ]
+            "Feste Testnutzer und bekannte Backend-Zustände.",
+            "Kein sleep—auf Sichtbarkeit warten."
           ],
           "points": [
             "App-State und Server-Fixtures zwischen Specs deterministisch zurücksetzen",
@@ -162,19 +161,15 @@
         {
           "heading": "Quarantäne-Disziplin",
           "paragraphs": [
-            [
-              "Keine endlosen Retries ohne Owner.",
-              "Quarantäne mit SLA."
-            ]
+            "Keine endlosen Retries ohne Owner.",
+            "Quarantäne mit SLA."
           ]
         },
         {
           "heading": "CI realistisch schichten",
           "paragraphs": [
-            [
-              "Smoke pro PR, volle Matrix nachts.",
-              "Echte Geräte für Native-Unterschiede."
-            ]
+            "Smoke pro PR, volle Matrix nachts.",
+            "Echte Geräte für Native-Unterschiede."
           ],
           "links": [
             {
@@ -201,19 +196,15 @@
         {
           "heading": "Le flaky est un risque produit",
           "paragraphs": [
-            [
-              "Courses animation/réseau sont fréquentes.",
-              "Le taux de flake est métrique release."
-            ]
+            "Courses animation/réseau sont fréquentes.",
+            "Le taux de flake est métrique release."
           ]
         },
         {
           "heading": "Attendre le contrat",
           "paragraphs": [
-            [
-              "Utilisateurs test fixes et état backend connu.",
-              "Pas de sleep—attendre visibilité."
-            ]
+            "Utilisateurs test fixes et état backend connu.",
+            "Pas de sleep—attendre visibilité."
           ],
           "points": [
             "Réinitialiser état app et fixtures serveur de façon déterministe entre specs",
@@ -225,19 +216,15 @@
         {
           "heading": "Discipline de quarantaine",
           "paragraphs": [
-            [
-              "Pas de retry infini sans owner.",
-              "Quarantaine avec SLA."
-            ]
+            "Pas de retry infini sans owner.",
+            "Quarantaine avec SLA."
           ]
         },
         {
           "heading": "CI en couches réalistes",
           "paragraphs": [
-            [
-              "Smoke à chaque PR, matrice complète la nuit.",
-              "Vrais appareils pour écarts natifs."
-            ]
+            "Smoke à chaque PR, matrice complète la nuit.",
+            "Vrais appareils pour écarts natifs."
           ],
           "links": [
             {
@@ -264,19 +251,15 @@
         {
           "heading": "Flaky è rischio prodotto",
           "paragraphs": [
-            [
-              "Race di animazione e rete sono cause comuni.",
-              "Il flake rate è metrica di release."
-            ]
+            "Race di animazione e rete sono cause comuni.",
+            "Il flake rate è metrica di release."
           ]
         },
         {
           "heading": "Aspettare il contratto",
           "paragraphs": [
-            [
-              "Utenti test fissi e stato backend noto.",
-              "Niente sleep—attendere visibilità."
-            ]
+            "Utenti test fissi e stato backend noto.",
+            "Niente sleep—attendere visibilità."
           ],
           "points": [
             "Reset deterministico di app state e fixture server tra le spec",
@@ -288,19 +271,15 @@
         {
           "heading": "Disciplina quarantena",
           "paragraphs": [
-            [
-              "Niente retry infiniti senza owner.",
-              "Quarantena con SLA."
-            ]
+            "Niente retry infiniti senza owner.",
+            "Quarantena con SLA."
           ]
         },
         {
           "heading": "CI a strati realistici",
           "paragraphs": [
-            [
-              "Smoke ogni PR, matrice piena di notte.",
-              "Dispositivi reali per gap nativi."
-            ]
+            "Smoke ogni PR, matrice piena di notte.",
+            "Dispositivi reali per gap nativi."
           ],
           "links": [
             {
@@ -327,19 +306,15 @@
         {
           "heading": "不稳定是产品风险",
           "paragraphs": [
-            [
-              "动画与网络竞态是常见根因。",
-              "flake 率应是发布指标。"
-            ]
+            "动画与网络竞态是常见根因。",
+            "flake 率应是发布指标。"
           ]
         },
         {
           "heading": "等契约而非计时",
           "paragraphs": [
-            [
-              "固定测试用户与已知后端状态。",
-              "用可见性等待而非 sleep。"
-            ]
+            "固定测试用户与已知后端状态。",
+            "用可见性等待而非 sleep。"
           ],
           "points": [
             "各 spec 之间确定性重置应用状态与服务端 fixture",
@@ -351,19 +326,15 @@
         {
           "heading": "隔离纪律",
           "paragraphs": [
-            [
-              "勿无限重试无主测试。",
-              "有 SLA 的隔离列表。"
-            ]
+            "勿无限重试无主测试。",
+            "有 SLA 的隔离列表。"
           ]
         },
         {
           "heading": "分层 CI",
           "paragraphs": [
-            [
-              "每 PR 冒烟，夜间全矩阵。",
-              "真机覆盖原生差异。"
-            ]
+            "每 PR 冒烟，夜间全矩阵。",
+            "真机覆盖原生差异。"
           ],
           "links": [
             {
@@ -390,19 +361,15 @@
         {
           "heading": "フレーキーはプロダクトリスク",
           "paragraphs": [
-            [
-              "アニメーションとネットワーク競合が典型。",
-              "フレーク率はリリース指標。"
-            ]
+            "アニメーションとネットワーク競合が典型。",
+            "フレーク率はリリース指標。"
           ]
         },
         {
           "heading": "契約を待つ",
           "paragraphs": [
-            [
-              "固定テストユーザーと既知のバックエンド状態。",
-              "sleepではなく可視性を待つ。"
-            ]
+            "固定テストユーザーと既知のバックエンド状態。",
+            "sleepではなく可視性を待つ。"
           ],
           "points": [
             "スペック間でアプリ状態とサーバーフィクスチャを決定的にリセット",
@@ -414,19 +381,15 @@
         {
           "heading": "隔離の規律",
           "paragraphs": [
-            [
-              "オーナーなし無限リトライ禁止。",
-              "SLA付き隔離リスト。"
-            ]
+            "オーナーなし無限リトライ禁止。",
+            "SLA付き隔離リスト。"
           ]
         },
         {
           "heading": "現実的なCI層",
           "paragraphs": [
-            [
-              "PRごとにスモーク、夜間フルマトリクス。",
-              "実機でネイティブ差分を捕捉。"
-            ]
+            "PRごとにスモーク、夜間フルマトリクス。",
+            "実機でネイティブ差分を捕捉。"
           ],
           "links": [
             {

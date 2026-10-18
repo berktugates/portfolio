@@ -3,7 +3,7 @@
   "title": "Performance Budgets for Marketing and App Routes",
   "excerpt": "Marketing pages and authenticated app shells fail for different reasons, but they share one rule: without budgets, every launch adds weight until search and conversion quietly suffer.",
   "description": "How staff engineers set per-route performance budgets, wire them to CI, and keep marketing and product surfaces inside measurable LCP and INP guardrails.",
-  "readingMinutes": 7,
+  "readingMinutes": 4,
   "keywords": [
     "Core Web Vitals",
     "performance budgets",
@@ -20,14 +20,16 @@
       "heading": "Templates need their own budgets",
       "paragraphs": [
         "Landing pages compete on first paint; dashboards compete on interaction readiness. A single global bundle budget hides which team regressed which surface.",
-        "Split budgets by route class and third-party tag ownership so marketing experiments do not inherit engineering defaults."
+        "Split budgets by route class and third-party tag ownership so marketing experiments do not inherit engineering defaults.",
+        "Marketing hero assets and authenticated dashboards rarely share the same bottleneck—split budgets so one team cannot spend another's latency."
       ]
     },
     {
       "heading": "Ship perf with the release train",
       "paragraphs": [
         "Attach budget checks to preview deployments for high-traffic templates. Block merges that blow LCP without an explicit waiver tied to an owner.",
-        "Roll back feature flags when INP crosses thresholds in canary, not after a week of complaints."
+        "Roll back feature flags when INP crosses thresholds in canary, not after a week of complaints.",
+        "Attach budget regressions to the same rollback conversation as error-rate spikes."
       ],
       "points": [
         "Budget LCP and INP per template, not only globally",
@@ -40,14 +42,16 @@
       "heading": "Test slow networks deliberately",
       "paragraphs": [
         "Lab tests on fast laptops lie. Run smoke perf on representative mobile profiles and cache states.",
-        "Track hero image bytes, font loading strategy, and hydration cost as first-class metrics."
+        "Track hero image bytes, font loading strategy, and hydration cost as first-class metrics.",
+        "Synthetic checks from three regions catch CDN and DNS issues that lab Wi-Fi hides."
       ]
     },
     {
       "heading": "Make perf visible to product",
       "paragraphs": [
         "Product managers should see perf trends next to conversion, not in a quarterly infra review.",
-        "Budgets are how you keep SEO and UX from becoming a postmortem theme."
+        "Budgets are how you keep SEO and UX from becoming a postmortem theme.",
+        "Perf is a feature: publish weekly trends to product leads, not only to frontend guild channels."
       ],
       "links": [
         {
@@ -70,19 +74,15 @@
         {
           "heading": "Şablonların kendi bütçesi olmalı",
           "paragraphs": [
-            [
-              "Landing sayfaları ilk boyamada yarışır; dashboard'lar etkileşim hazırlığında. Tek global bundle bütçesi hangi ekibin hangi yüzeyi bozduğunu gizler.",
-              "Rota sınıfı ve üçüncü taraf etiket sahipliğine göre bütçe ayırın; pazarlama deneyleri mühendislik varsayılanını miras almasın."
-            ]
+            "Landing sayfaları ilk boyamada yarışır; dashboard'lar etkileşim hazırlığında. Tek global bundle bütçesi hangi ekibin hangi yüzeyi bozduğunu gizler.",
+            "Rota sınıfı ve üçüncü taraf etiket sahipliğine göre bütçe ayırın; pazarlama deneyleri mühendislik varsayılanını miras almasın."
           ]
         },
         {
           "heading": "Performansı release train ile birlikte gönder",
           "paragraphs": [
-            [
-              "Yoğun trafikli şablonlar için preview deploy'lara bütçe kontrolü ekleyin. LCP'yi patlatan merge'leri sahibi olan açık waiver olmadan bloklayın.",
-              "INP eşiği canary'de aşıldığında bir haftalık şikayetten önce feature flag geri alın."
-            ]
+            "Yoğun trafikli şablonlar için preview deploy'lara bütçe kontrolü ekleyin. LCP'yi patlatan merge'leri sahibi olan açık waiver olmadan bloklayın.",
+            "INP eşiği canary'de aşıldığında bir haftalık şikayetten önce feature flag geri alın."
           ],
           "points": [
             "LCP ve INP'yi yalnızca global değil şablon bazında bütçele",
@@ -94,19 +94,15 @@
         {
           "heading": "Yavaş ağları kasıtlı test et",
           "paragraphs": [
-            [
-              "Hızlı laptop lab testleri yalan söyler. Temsili mobil profil ve önbellek durumlarında smoke perf çalıştırın.",
-              "Hero görsel baytları, font yükleme stratejisi ve hydration maliyetini birinci sınıf metrik sayın."
-            ]
+            "Hızlı laptop lab testleri yalan söyler. Temsili mobil profil ve önbellek durumlarında smoke perf çalıştırın.",
+            "Hero görsel baytları, font yükleme stratejisi ve hydration maliyetini birinci sınıf metrik sayın."
           ]
         },
         {
           "heading": "Performansı ürüne görünür kıl",
           "paragraphs": [
-            [
-              "Ürün yöneticileri dönüşümün yanında perf trendini görmeli, yıllık infra review'da değil.",
-              "Bütçeler, SEO ve UX'in postmortem teması olmasını engeller."
-            ]
+            "Ürün yöneticileri dönüşümün yanında perf trendini görmeli, yıllık infra review'da değil.",
+            "Bütçeler, SEO ve UX'in postmortem teması olmasını engeller."
           ],
           "links": [
             {
@@ -129,19 +125,15 @@
         {
           "heading": "Templates brauchen eigene Budgets",
           "paragraphs": [
-            [
-              "Landings konkurrieren auf First Paint, Dashboards auf Interaktionsbereitschaft. Ein globales Bundle-Budget versteckt Regressionen.",
-              "Budgets nach Routenklasse und Tag-Ownership splitten."
-            ]
+            "Landings konkurrieren auf First Paint, Dashboards auf Interaktionsbereitschaft. Ein globales Bundle-Budget versteckt Regressionen.",
+            "Budgets nach Routenklasse und Tag-Ownership splitten."
           ]
         },
         {
           "heading": "Performance mit dem Release-Zug shippen",
           "paragraphs": [
-            [
-              "Budget-Checks an Preview-Deploys für High-Traffic-Templates. LCP-Regressionen ohne Waiver blocken.",
-              "Feature-Flags zurückrollen, wenn INP im Canary die Schwelle überschreitet."
-            ]
+            "Budget-Checks an Preview-Deploys für High-Traffic-Templates. LCP-Regressionen ohne Waiver blocken.",
+            "Feature-Flags zurückrollen, wenn INP im Canary die Schwelle überschreitet."
           ],
           "points": [
             "LCP/INP pro Template budgetieren, nicht nur global",
@@ -153,19 +145,15 @@
         {
           "heading": "Langsame Netze gezielt testen",
           "paragraphs": [
-            [
-              "Lab-Tests auf schnellen Laptops lügen. Smoke-Perf auf mobilen Profilen und Cache-Zuständen.",
-              "Hero-Bytes, Font-Strategie und Hydration als First-Class-Metriken."
-            ]
+            "Lab-Tests auf schnellen Laptops lügen. Smoke-Perf auf mobilen Profilen und Cache-Zuständen.",
+            "Hero-Bytes, Font-Strategie und Hydration als First-Class-Metriken."
           ]
         },
         {
           "heading": "Performance für Produkt sichtbar machen",
           "paragraphs": [
-            [
-              "Product sieht Perf-Trends neben Conversion, nicht nur im Infra-Review.",
-              "Budgets verhindern, dass SEO und UX zum Postmortem-Thema werden."
-            ]
+            "Product sieht Perf-Trends neben Conversion, nicht nur im Infra-Review.",
+            "Budgets verhindern, dass SEO und UX zum Postmortem-Thema werden."
           ],
           "links": [
             {
@@ -188,19 +176,15 @@
         {
           "heading": "Chaque template a son budget",
           "paragraphs": [
-            [
-              "Les landings visent le first paint ; les dashboards la réactivité. Un budget bundle global cache qui a régressé.",
-              "Séparer budgets par classe de route et ownership des tags tiers."
-            ]
+            "Les landings visent le first paint ; les dashboards la réactivité. Un budget bundle global cache qui a régressé.",
+            "Séparer budgets par classe de route et ownership des tags tiers."
           ]
         },
         {
           "heading": "Shipper la perf avec le train de release",
           "paragraphs": [
-            [
-              "Contrôles budget sur previews des templates à fort trafic. Bloquer merges qui explosent LCP sans waiver nommé.",
-              "Rollback des feature flags quand l'INP dépasse le seuil en canary."
-            ]
+            "Contrôles budget sur previews des templates à fort trafic. Bloquer merges qui explosent LCP sans waiver nommé.",
+            "Rollback des feature flags quand l'INP dépasse le seuil en canary."
           ],
           "points": [
             "Budgéter LCP/INP par template, pas seulement global",
@@ -212,19 +196,15 @@
         {
           "heading": "Tester délibérément les réseaux lents",
           "paragraphs": [
-            [
-              "Les tests lab sur laptops rapides mentent. Smoke perf sur profils mobile et états de cache.",
-              "Bytes hero, chargement de fonts et coût d'hydratation en métriques de premier plan."
-            ]
+            "Les tests lab sur laptops rapides mentent. Smoke perf sur profils mobile et états de cache.",
+            "Bytes hero, chargement de fonts et coût d'hydratation en métriques de premier plan."
           ]
         },
         {
           "heading": "Rendre la perf visible au produit",
           "paragraphs": [
-            [
-              "Le produit voit les tendances perf à côté de la conversion.",
-              "Les budgets évitent que SEO et UX deviennent le thème du postmortem."
-            ]
+            "Le produit voit les tendances perf à côté de la conversion.",
+            "Les budgets évitent que SEO et UX deviennent le thème du postmortem."
           ],
           "links": [
             {
@@ -247,19 +227,15 @@
         {
           "heading": "I template hanno budget propri",
           "paragraphs": [
-            [
-              "Le landing competono sul first paint; le dashboard sulla readiness all'interazione. Un budget bundle globale nasconde le regressioni.",
-              "Separare budget per classe di rotta e ownership dei tag terzi."
-            ]
+            "Le landing competono sul first paint; le dashboard sulla readiness all'interazione. Un budget bundle globale nasconde le regressioni.",
+            "Separare budget per classe di rotta e ownership dei tag terzi."
           ]
         },
         {
           "heading": "Shippare la perf con il release train",
           "paragraphs": [
-            [
-              "Check budget su preview deploy per template ad alto traffico. Bloccare merge che rompono LCP senza waiver con owner.",
-              "Rollback feature flag quando INP supera soglia in canary."
-            ]
+            "Check budget su preview deploy per template ad alto traffico. Bloccare merge che rompono LCP senza waiver con owner.",
+            "Rollback feature flag quando INP supera soglia in canary."
           ],
           "points": [
             "Budget LCP/INP per template, non solo globali",
@@ -271,19 +247,15 @@
         {
           "heading": "Testare deliberatamente reti lente",
           "paragraphs": [
-            [
-              "I test lab su laptop veloci mentono. Smoke perf su profili mobile e stati cache.",
-              "Byte hero, font e costo hydration come metriche first-class."
-            ]
+            "I test lab su laptop veloci mentono. Smoke perf su profili mobile e stati cache.",
+            "Byte hero, font e costo hydration come metriche first-class."
           ]
         },
         {
           "heading": "Rendere la perf visibile al prodotto",
           "paragraphs": [
-            [
-              "Il prodotto vede trend perf accanto alla conversione.",
-              "I budget evitano che SEO e UX diventino tema del postmortem."
-            ]
+            "Il prodotto vede trend perf accanto alla conversione.",
+            "I budget evitano che SEO e UX diventino tema del postmortem."
           ],
           "links": [
             {
@@ -306,19 +278,15 @@
         {
           "heading": "模板需要独立预算",
           "paragraphs": [
-            [
-              "落地页争首屏，仪表盘争交互就绪；单一全局 bundle 预算掩盖谁回归。",
-              "按路由类型与第三方标签归属拆分预算。"
-            ]
+            "落地页争首屏，仪表盘争交互就绪；单一全局 bundle 预算掩盖谁回归。",
+            "按路由类型与第三方标签归属拆分预算。"
           ]
         },
         {
           "heading": "与发布列车一起交付性能",
           "paragraphs": [
-            [
-              "高流量模板预览部署挂预算检查；LCP 爆表 merge 无明确豁免则阻断。",
-              "金丝雀 INP 越阈即回滚 feature flag。"
-            ]
+            "高流量模板预览部署挂预算检查；LCP 爆表 merge 无明确豁免则阻断。",
+            "金丝雀 INP 越阈即回滚 feature flag。"
           ],
           "points": [
             "按模板而非仅全局预算 LCP/INP",
@@ -330,19 +298,15 @@
         {
           "heading": "刻意测试慢网络",
           "paragraphs": [
-            [
-              "快笔记本实验室测试会撒谎；在代表移动配置与缓存态跑冒烟性能。",
-              "Hero 字节、字体策略与水合成本为一等指标。"
-            ]
+            "快笔记本实验室测试会撒谎；在代表移动配置与缓存态跑冒烟性能。",
+            "Hero 字节、字体策略与水合成本为一等指标。"
           ]
         },
         {
           "heading": "让产品看见性能",
           "paragraphs": [
-            [
-              "产品经理应在转化旁看到性能趋势。",
-              "预算避免 SEO 与 UX 成为复盘主题。"
-            ]
+            "产品经理应在转化旁看到性能趋势。",
+            "预算避免 SEO 与 UX 成为复盘主题。"
           ],
           "links": [
             {
@@ -365,19 +329,15 @@
         {
           "heading": "テンプレートごとに予算",
           "paragraphs": [
-            [
-              "LPはファーストペイント、ダッシュボードは操作の準備。単一グローバルbundle予算は誰が悪化したか隠す。",
-              "ルートクラスとタグ所有者で予算を分割。"
-            ]
+            "LPはファーストペイント、ダッシュボードは操作の準備。単一グローバルbundle予算は誰が悪化したか隠す。",
+            "ルートクラスとタグ所有者で予算を分割。"
           ]
         },
         {
           "heading": "リリース列車と一緒にperfを出荷",
           "paragraphs": [
-            [
-              "高トラフィックテンプレのプレビューに予算チェック。LCP破壊mergeはオーナー付き免除なしでブロック。",
-              "カナリアでINP閾値超えならフラグをロールバック。"
-            ]
+            "高トラフィックテンプレのプレビューに予算チェック。LCP破壊mergeはオーナー付き免除なしでブロック。",
+            "カナリアでINP閾値超えならフラグをロールバック。"
           ],
           "points": [
             "LCP/INPをグローバルだけでなくテンプレート単位で予算化",
@@ -389,19 +349,15 @@
         {
           "heading": "遅いネットを意図的に試す",
           "paragraphs": [
-            [
-              "速いノートPCのラボは嘘をつく。代表モバイルプロファイルとキャッシュでスモークperf。",
-              "ヒーロー画像、フォント、ハイドレーションコストを第一級指標に。"
-            ]
+            "速いノートPCのラボは嘘をつく。代表モバイルプロファイルとキャッシュでスモークperf。",
+            "ヒーロー画像、フォント、ハイドレーションコストを第一級指標に。"
           ]
         },
         {
           "heading": "プロダクトにperfを見える化",
           "paragraphs": [
-            [
-              "PMはコンバージョン横にperfトレンドを見るべき。",
-              "予算はSEO/UXがポストモーテム題材になるのを防ぐ。"
-            ]
+            "PMはコンバージョン横にperfトレンドを見るべき。",
+            "予算はSEO/UXがポストモーテム題材になるのを防ぐ。"
           ],
           "links": [
             {

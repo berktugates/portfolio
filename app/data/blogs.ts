@@ -47,6 +47,7 @@ export const blogPosts: readonly BlogPost[] = [
         paragraphs: [
           "App store review, enterprise MDM freezes, and users who ignore updates mean your API must serve multiple client generations simultaneously. Web can hide behind a deploy; mobile cannot.",
           "Staff ownership treats oldest supported app version as a first-class consumer. Breaking changes are product decisions with sunset windows, not surprise 400s on Monday morning.",
+          "When product asks for a quick field rename, the right first question is which app versions still parse the old shape—and how long you will carry both on the wire.",
         ],
       },
       {
@@ -54,6 +55,7 @@ export const blogPosts: readonly BlogPost[] = [
         paragraphs: [
           "Prefer explicit API epochs via headers or path prefixes over implicit 'we deployed Friday.' Document what is additive, what is deprecated, and what requires a new epoch. Clients should send their build identity on every request so you can route, shadow, or block safely.",
           "Never remove fields without a measured deprecation period. Return sunset hints in structured error payloads and analytics events so product can message upgrades before hard cutoffs.",
+          "Publish machine-readable compatibility notes alongside human release notes so client engineers do not reverse-engineer behavior from production traffic.",
         ],
         points: [
           "Publish a mobile compatibility matrix with minimum app versions per API epoch",
@@ -67,6 +69,7 @@ export const blogPosts: readonly BlogPost[] = [
         paragraphs: [
           "Pair API sunsets with in-app upgrade prompts and support macros. Forced upgrade is a product lever—use it sparingly for security or irreversible data migrations, not for routine refactors.",
           "Contract tests should run against the oldest supported client bundle in CI, not only the latest main branch. Mobile API versioning is release engineering for users who cannot git pull.",
+          "Support and success teams need a single matrix of minimum versions and sunset dates—otherwise every incident rediscovers the same skew spreadsheet.",
         ],
       },
       {
@@ -74,6 +77,7 @@ export const blogPosts: readonly BlogPost[] = [
         paragraphs: [
           "Dashboard active app versions against API epoch usage. Spikes in deprecated endpoints after a release often mean a client bug, not stubborn users.",
           "A disciplined versioning story lets you ship backend improvements without holding mobile hostage. The goal is predictable evolution, not infinite backward compatibility for dead builds.",
+          "Cut only when metrics show negligible traffic on deprecated paths and when in-app upgrade coverage makes the hard stop survivable for revenue and support load.",
         ],
         links: [
           {
@@ -117,6 +121,7 @@ export const blogPosts: readonly BlogPost[] = [
         paragraphs: [
           "Batch inference hides latency behind a single completion event. Streaming exposes partial failure: slow first token, stalled chunks, truncated JSON, or a confident preamble before a policy violation. Product teams feel these as 'the assistant froze' long before your error rate spikes.",
           "Treat the stream as a first-class workload. Instrument from client render through gateway, router, model provider, and tool side effects. A trace that ends when headers return misses the user-visible story.",
+          "Incidents that look like model bugs often start as backpressure or queueing in your gateway—without chunk-level timing you will swap models instead of fixing capacity.",
         ],
       },
       {
@@ -124,6 +129,7 @@ export const blogPosts: readonly BlogPost[] = [
         paragraphs: [
           "Model one trace per user turn with child spans for retrieval, routing, first token, tool calls, and finalization. Record time-to-first-token (TTFT), inter-chunk gaps, total tokens, and whether the client aborted mid-flight.",
           "Propagate trace context through SSE or WebSocket frames where your stack allows. When it cannot, correlate with a stable turn id and log structured events at chunk boundaries so you can reconstruct stall points without storing full prompts in logs.",
+          "Tag spans with model id, prompt version, and retrieval corpus revision so regressions after a silent config change are obvious in one dashboard filter.",
         ],
         points: [
           "Separate metrics for provider TTFT versus your gateway overhead",
@@ -137,6 +143,7 @@ export const blogPosts: readonly BlogPost[] = [
         paragraphs: [
           "Attach lightweight checks as the stream progresses: citation coverage, refusal patterns, tool-call shape, or retrieval hit rate. You do not need to block every chunk—aggregate signals at end-of-stream for dashboards and at thresholds for automatic degrade.",
           "Compare streaming cohorts to batch baselines when you A/B route models. A model that wins on final BLEU can lose on perceived speed if TTFT regresses. Observability should make that trade visible to product, not only to infra.",
+          "Store eval samples with the same timeline metadata as production traces so quality and latency investigations share one narrative.",
         ],
       },
       {
@@ -144,6 +151,7 @@ export const blogPosts: readonly BlogPost[] = [
         paragraphs: [
           "Define SLOs on TTFT p95, stall-free completion rate, and successful tool finalization—not only 5xx rate. Runbooks should distinguish provider brownouts, prompt bloat, retrieval timeouts, and client network loss.",
           "Streaming observability is how AI products earn the right to feel instant. Measure the experience users actually see, or you will optimize the wrong graph while churn quietly rises.",
+          "Review disconnect and stall metrics in weekly product ops the same way you review error budgets—perceived speed is retention for copilots.",
         ],
         links: [
           {

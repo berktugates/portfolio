@@ -6,9 +6,27 @@ type Section = {
   points?: string[];
 };
 
+function flattenParagraphs(paragraphs: unknown[]): string[] {
+  const out: string[] = [];
+  for (const item of paragraphs ?? []) {
+    if (typeof item === "string") {
+      if (item.trim()) out.push(item);
+    } else if (Array.isArray(item)) {
+      for (const nested of item) {
+        if (typeof nested === "string" && nested.trim()) out.push(nested);
+      }
+    }
+  }
+  return out;
+}
+
 function sectionsToText(sections: Section[]): string {
   return sections
-    .map((sec) => [sec.heading ?? "", ...(sec.paragraphs ?? []), ...(sec.points ?? [])].join("\n"))
+    .map((sec) =>
+      [sec.heading ?? "", ...flattenParagraphs(sec.paragraphs as unknown[]), ...(sec.points ?? [])].join(
+        "\n",
+      ),
+    )
     .join("\n\n");
 }
 

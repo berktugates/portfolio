@@ -7,6 +7,10 @@ import type { Project } from "../../data/projects";
 import { getProject, projects } from "../../data/projects";
 import { getLocaleContent } from "./load-locale";
 import type { LocaleContentModule, LocalizedBlogPost, LocalizedProject } from "./types";
+import {
+  estimateReadingMinutesFromSections,
+  normalizeBlogSections,
+} from "./reading-minutes";
 
 export { getLocaleContent };
 
@@ -30,7 +34,7 @@ export async function getLocalizedBlogPosts(locale: Locale): Promise<readonly Lo
   const posts = await getCatalogBlogPosts();
   return posts
     .filter((post) => locale === "en" || hasBlogLocaleOverlay(locale, post.slug))
-    .map((post) => mergeBlog(post, content.blogs[post.slug]));
+    .map((post) => mergeBlog(post, content.blogs[post.slug], locale));
 }
 
 export async function getLocalizedBlogPost(
@@ -40,7 +44,7 @@ export async function getLocalizedBlogPost(
   const post = await getCatalogBlogPost(slug);
   if (!post) return undefined;
   const content = await getLocaleContent(locale);
-  return mergeBlog(post, content.blogs[slug]);
+  return mergeBlog(post, content.blogs[slug], locale);
 }
 
 export async function getLocalizedBlogPage(locale: Locale, page: number) {
@@ -72,18 +76,23 @@ function mergeProject(
 function mergeBlog(
   post: BlogPost,
   copy: LocaleContentModule["blogs"][string] | undefined,
+  locale: Locale,
 ): LocalizedBlogPost {
-  if (!copy) return post;
+  const baseSections = normalizeBlogSections(post.sections);
+  if (!copy) {
+    return {
+      ...post,
+      sections: baseSections,
+      readingMinutes: estimateReadingMinutesFromSections(baseSections, locale),
+    };
+  }
+  const sections = normalizeBlogSections(copy.sections);
   return {
     ...post,
     title: copy.title,
     excerpt: copy.excerpt,
     description: copy.description,
-    sections: copy.sections.map((section) => ({
-      heading: section.heading,
-      paragraphs: [...section.paragraphs],
-      ...(section.points ? { points: [...section.points] } : {}),
-      ...(section.links ? { links: section.links.map((link) => ({ ...link })) } : {}),
-    })),
+    sections,
+    readingMinutes: estimateReadingMinutesFromSections(sections, locale),
   };
 }

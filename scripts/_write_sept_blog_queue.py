@@ -7,6 +7,7 @@ _script_dir = Path(__file__).resolve().parent
 if str(_script_dir) not in sys.path:
     sys.path.insert(0, str(_script_dir))
 from blog_queue_points import POINTS_BY_POST  # noqa: E402
+from blog_queue_en_depth import EN_CLOSING, EN_EXTRA_PARAS  # noqa: E402
 from blog_queue_seo_blocks import (  # noqa: E402
     blocks5,
     blocks6,
@@ -20,10 +21,31 @@ from blog_queue_seo_blocks import (  # noqa: E402
 QUEUE = Path(__file__).resolve().parent.parent / "content" / "blog-queue"
 
 
+def paragraphs_for(section_paras):
+    """Accept flat string lists or legacy one-element nested lists from para()."""
+    if not section_paras:
+        return []
+    if all(isinstance(x, str) for x in section_paras):
+        return list(section_paras)
+    if len(section_paras) == 1 and isinstance(section_paras[0], list):
+        inner = section_paras[0]
+        if all(isinstance(x, str) for x in inner):
+            return list(inner)
+    out = []
+    for item in section_paras:
+        if isinstance(item, str):
+            out.append(item)
+        elif isinstance(item, list):
+            for sub in item:
+                if isinstance(sub, str):
+                    out.append(sub)
+    return out
+
+
 def loc(title, excerpt, description, headings, paras, points, links):
     sections = []
     for i, h in enumerate(headings):
-        s = {"heading": h, "paragraphs": paras[i]}
+        s = {"heading": h, "paragraphs": paragraphs_for(paras[i])}
         if i == 1:
             s["points"] = points
         if i == 3:
@@ -34,11 +56,30 @@ def loc(title, excerpt, description, headings, paras, points, links):
 
 def en_sections(h1, p1, h2, p2, points, h3, p3, h4, p4, links):
     return [
-        {"heading": h1, "paragraphs": p1},
-        {"heading": h2, "paragraphs": p2, "points": points},
-        {"heading": h3, "paragraphs": p3},
-        {"heading": h4, "paragraphs": p4, "links": links},
+        {"heading": h1, "paragraphs": paragraphs_for(p1)},
+        {"heading": h2, "paragraphs": paragraphs_for(p2), "points": points},
+        {"heading": h3, "paragraphs": paragraphs_for(p3)},
+        {"heading": h4, "paragraphs": paragraphs_for(p4), "links": links},
     ]
+
+
+def finalize_en_body(body):
+    slug = body.get("slug")
+    sections = list(body.get("sections") or [])
+    extra = EN_EXTRA_PARAS.get(slug, {})
+    if extra:
+        sections = extend_section_paragraphs(sections, extra)
+    closing = EN_CLOSING.get(slug)
+    if closing:
+        sections = append_en_section(
+            sections,
+            closing[0],
+            closing[1],
+            closing[2] if len(closing) > 2 else None,
+        )
+    body = {**body, "sections": sections}
+    body["readingMinutes"] = reading_minutes_from_sections(sections)
+    return body
 
 
 def write_post(filename, body):
@@ -52,6 +93,7 @@ def write_post(filename, body):
                 stale.unlink()
             print(f"skip {filename} (already live)")
             return
+    body = finalize_en_body(body)
     path = QUEUE / filename
     path.write_text(json.dumps(body, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(path.name)
@@ -399,8 +441,37 @@ def i18n(blocks, points, links, points_by_locale=None):
     }
 
 
-def para(*pairs):
-    return [list(p) for p in pairs]
+def para(*section_lists):
+    return [list(section) for section in section_lists]
+
+
+def append_en_section(sections, heading, paragraphs, links=None):
+    """Append a closing section so queue posts match legacy article depth."""
+    section = {"heading": heading, "paragraphs": paragraphs}
+    if links:
+        section["links"] = links
+    return [*sections, section]
+
+
+def extend_section_paragraphs(sections, extra_by_index):
+    """Add third (or later) paragraphs per section index."""
+    out = []
+    for i, section in enumerate(sections):
+        paras = list(section["paragraphs"])
+        paras.extend(extra_by_index.get(i, []))
+        out.append({**section, "paragraphs": paras})
+    return out
+
+
+def reading_minutes_from_sections(sections):
+    parts = []
+    for section in sections:
+        parts.append(section.get("heading", ""))
+        parts.extend(paragraphs_for(section.get("paragraphs") or []))
+        parts.extend(section.get("points") or [])
+    text = " ".join(p for p in parts if isinstance(p, str) and p.strip())
+    words = len(text.split())
+    return max(4, min(15, round(words / 80)))
 
 
 # POST 3
@@ -614,6 +685,8 @@ def seo_post(
     points_tr=None,
     blocks=None,
     points_by_locale=None,
+    en_extra_paras=None,
+    en_closing=None,
 ):
     if blocks is not None:
         locales = i18n(blocks, points, links, points_by_locale)
@@ -621,6 +694,11 @@ def seo_post(
         locales = locales_tr_plus_en_mirror(tr, points_tr, title, excerpt, description, h, paras, points, links)
     else:
         locales = en_only_locales(title, excerpt, description, h, paras, points, links)
+    en = en_sections(h[0], paras[0], h[1], paras[1], points, h[2], paras[2], h[3], paras[3], links)
+    if en_extra_paras:
+        en = extend_section_paragraphs(en, en_extra_paras)
+    if en_closing:
+        en = append_en_section(en, en_closing[0], en_closing[1], en_closing[2] if len(en_closing) > 2 else None)
     write_post(
         filename,
         {
@@ -628,10 +706,10 @@ def seo_post(
             "title": title,
             "excerpt": excerpt,
             "description": description,
-            "readingMinutes": 7,
+            "readingMinutes": reading_minutes_from_sections(en),
             "keywords": keywords,
             "socialThreadTr": social_tr,
-            "sections": en_sections(h[0], paras[0], h[1], paras[1], points, h[2], paras[2], h[3], paras[3], links),
+            "sections": en,
             "locales": locales,
         },
     )

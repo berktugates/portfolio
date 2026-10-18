@@ -3,7 +3,7 @@
   "title": "Idempotency Keys for Agent Tool Side Effects",
   "excerpt": "Agents retry when models stall, gateways timeout, or users double-tap send. Without idempotency, a harmless retry charges twice, emails twice, or writes duplicate rows.",
   "description": "Staff patterns for idempotent agent tool calls: key design, dedupe stores, acknowledgment ordering, and observability that separates user retries from runaway loops.",
-  "readingMinutes": 7,
+  "readingMinutes": 4,
   "keywords": [
     "idempotency",
     "AI agents",
@@ -20,14 +20,16 @@
       "heading": "Retries are the default, not the edge case",
       "paragraphs": [
         "Streaming and tool-calling stacks retry aggressively: client reconnects, worker at-least-once delivery, and planner steps that re-invoke tools after partial failures.",
-        "Treat every external side effect—payments, tickets, CRM updates—as unsafe until your idempotency story is explicit in code review."
+        "Treat every external side effect—payments, tickets, CRM updates—as unsafe until your idempotency story is explicit in code review.",
+        "Agents retry aggressively; without idempotency, a successful payment or ticket creation can duplicate silently."
       ]
     },
     {
       "heading": "Keys belong to product actions",
       "paragraphs": [
         "Derive keys from stable user intent: conversation id plus turn sequence, or a client-generated UUID submitted with the send action.",
-        "Do not rotate keys when the model rephrases the same user message; hash normalized intent instead of raw tokens."
+        "Do not rotate keys when the model rephrases the same user message; hash normalized intent instead of raw tokens.",
+        "Keys should survive process restarts—persist them with the tool invocation record, not only in memory."
       ],
       "points": [
         "Issue idempotency keys at the user turn boundary, not per model token",
@@ -40,14 +42,16 @@
       "heading": "Ack only after durable side effects",
       "paragraphs": [
         "Store idempotency records in the same transaction as the side effect when possible. Return the prior result on replay with a clear duplicate flag for logs.",
-        "Partial failures are the hard case: if billing succeeded but the model failed, retries must not double charge—reconcile with provider ids."
+        "Partial failures are the hard case: if billing succeeded but the model failed, retries must not double charge—reconcile with provider ids.",
+        "Document which tools are safe to retry and which require human confirmation in the runbook."
       ]
     },
     {
       "heading": "Measure duplicate replays",
       "paragraphs": [
         "Dashboard replay rate by tool and tenant. Spikes often mean a bug in retry policy, not enthusiastic users.",
-        "Idempotency is how agents earn the right to fail and recover without finance paging you at midnight."
+        "Idempotency is how agents earn the right to fail and recover without finance paging you at midnight.",
+        "Integration tests should simulate duplicate deliveries, not only happy paths."
       ],
       "links": [
         {
@@ -70,19 +74,15 @@
         {
           "heading": "Retry varsayılan, edge case değil",
           "paragraphs": [
-            [
-              "Streaming ve tool-calling yığınları agresif retry yapar: istemci yeniden bağlanır, worker at-least-once teslim eder, planner kısmi hatadan sonra tool'u yeniden çağırır.",
-              "Ödeme, ticket, CRM güncellemesi gibi her dış yan etkiyi, idempotency hikâyesi code review'da açık olana kadar güvensiz sayın."
-            ]
+            "Streaming ve tool-calling yığınları agresif retry yapar: istemci yeniden bağlanır, worker at-least-once teslim eder, planner kısmi hatadan sonra tool'u yeniden çağırır.",
+            "Ödeme, ticket, CRM güncellemesi gibi her dış yan etkiyi, idempotency hikâyesi code review'da açık olana kadar güvensiz sayın."
           ]
         },
         {
           "heading": "Anahtarlar ürün eylemine ait",
           "paragraphs": [
-            [
-              "Anahtarları kararlı kullanıcı niyetinden türetin: konuşma id + turn sırası veya gönder ile gelen istemci UUID'si.",
-              "Model aynı mesajı yeniden ifade edince anahtarı döndürmeyin; ham token yerine normalize niyeti hash'leyin."
-            ]
+            "Anahtarları kararlı kullanıcı niyetinden türetin: konuşma id + turn sırası veya gönder ile gelen istemci UUID'si.",
+            "Model aynı mesajı yeniden ifade edince anahtarı döndürmeyin; ham token yerine normalize niyeti hash'leyin."
           ],
           "points": [
             "Idempotency anahtarını kullanıcı turn sınırında verin, model token'ı başına değil",
@@ -94,19 +94,15 @@
         {
           "heading": "Kalıcı yan etkiden sonra ack",
           "paragraphs": [
-            [
-              "Mümkünse idempotency kaydını yan etkiyle aynı transaction'da tutun. Replay'de önceki sonucu duplicate bayrağıyla döndürün.",
-              "Kısmi hata zor durum: faturalama başarılı model başarısızsa retry çift ücret olmamalı—sağlayıcı id ile reconcile edin."
-            ]
+            "Mümkünse idempotency kaydını yan etkiyle aynı transaction'da tutun. Replay'de önceki sonucu duplicate bayrağıyla döndürün.",
+            "Kısmi hata zor durum: faturalama başarılı model başarısızsa retry çift ücret olmamalı—sağlayıcı id ile reconcile edin."
           ]
         },
         {
           "heading": "Çift replay'i ölç",
           "paragraphs": [
-            [
-              "Tool ve tenant bazında replay oranını pano yapın. Sıçramalar çoğu zaman retry policy bug'ıdır.",
-              "Idempotency, ajanların finansı gece uyandırmadan fail-recover etme hakkını kazanma yoludur."
-            ]
+            "Tool ve tenant bazında replay oranını pano yapın. Sıçramalar çoğu zaman retry policy bug'ıdır.",
+            "Idempotency, ajanların finansı gece uyandırmadan fail-recover etme hakkını kazanma yoludur."
           ],
           "links": [
             {
@@ -129,19 +125,15 @@
         {
           "heading": "Retries sind der Default",
           "paragraphs": [
-            [
-              "Streaming- und Tool-Stacks retrien aggressiv: Reconnects, at-least-once, Planner ruft Tools nach Partial Failure erneut.",
-              "Jede externe Side Effect ist unsicher, bis Idempotenz im Code-Review explizit ist."
-            ]
+            "Streaming- und Tool-Stacks retrien aggressiv: Reconnects, at-least-once, Planner ruft Tools nach Partial Failure erneut.",
+            "Jede externe Side Effect ist unsicher, bis Idempotenz im Code-Review explizit ist."
           ]
         },
         {
           "heading": "Keys gehören zu Produktaktionen",
           "paragraphs": [
-            [
-              "Keys aus stabiler Nutzerintention: Conversation-ID plus Turn oder Client-UUID beim Send.",
-              "Keys nicht rotieren, wenn das Modell umformuliert—normalisierte Intent-Hashes statt Rohtokens."
-            ]
+            "Keys aus stabiler Nutzerintention: Conversation-ID plus Turn oder Client-UUID beim Send.",
+            "Keys nicht rotieren, wenn das Modell umformuliert—normalisierte Intent-Hashes statt Rohtokens."
           ],
           "points": [
             "Idempotency-Keys pro User-Turn, nicht pro Modell-Token",
@@ -153,19 +145,15 @@
         {
           "heading": "Ack erst nach durable Side Effects",
           "paragraphs": [
-            [
-              "Idempotency-Record wenn möglich in derselben Transaktion wie Side Effect. Bei Replay vorheriges Ergebnis mit Duplicate-Flag.",
-              "Partial Failure: Billing ok, Modell fail—Retry darf nicht doppelt belasten."
-            ]
+            "Idempotency-Record wenn möglich in derselben Transaktion wie Side Effect. Bei Replay vorheriges Ergebnis mit Duplicate-Flag.",
+            "Partial Failure: Billing ok, Modell fail—Retry darf nicht doppelt belasten."
           ]
         },
         {
           "heading": "Duplicate Replays messen",
           "paragraphs": [
-            [
-              "Replay-Rate pro Tool und Tenant dashboarden. Spikes deuten oft auf Retry-Policy-Bugs.",
-              "Idempotenz erlaubt Fail-Recover ohne Finance-Paging um Mitternacht."
-            ]
+            "Replay-Rate pro Tool und Tenant dashboarden. Spikes deuten oft auf Retry-Policy-Bugs.",
+            "Idempotenz erlaubt Fail-Recover ohne Finance-Paging um Mitternacht."
           ],
           "links": [
             {
@@ -188,19 +176,15 @@
         {
           "heading": "Les retries sont la norme",
           "paragraphs": [
-            [
-              "Stacks streaming et tools retentent fort : reconnect client, at-least-once, planner ré-invoque après échec partiel.",
-              "Tout effet externe est unsafe tant que l'idempotence n'est pas explicite en review."
-            ]
+            "Stacks streaming et tools retentent fort : reconnect client, at-least-once, planner ré-invoque après échec partiel.",
+            "Tout effet externe est unsafe tant que l'idempotence n'est pas explicite en review."
           ]
         },
         {
           "heading": "Les clés appartiennent à l'action produit",
           "paragraphs": [
-            [
-              "Clés depuis intention stable : id conversation + tour ou UUID client à l'envoi.",
-              "Ne pas faire tourner les clés si le modèle reformule—hasher l'intent normalisé."
-            ]
+            "Clés depuis intention stable : id conversation + tour ou UUID client à l'envoi.",
+            "Ne pas faire tourner les clés si le modèle reformule—hasher l'intent normalisé."
           ],
           "points": [
             "Clés idempotence au tour utilisateur, pas par token modèle",
@@ -212,19 +196,15 @@
         {
           "heading": "Ack après effets durables",
           "paragraphs": [
-            [
-              "Enregistrement idempotence dans la même transaction que l'effet si possible. Replay renvoie résultat prior avec flag duplicate.",
-              "Échec partiel : billing ok, modèle fail—retry ne doit pas double facturer."
-            ]
+            "Enregistrement idempotence dans la même transaction que l'effet si possible. Replay renvoie résultat prior avec flag duplicate.",
+            "Échec partiel : billing ok, modèle fail—retry ne doit pas double facturer."
           ]
         },
         {
           "heading": "Mesurer les replays dupliqués",
           "paragraphs": [
-            [
-              "Dashboard taux replay par outil et tenant. Pics = souvent bug de politique retry.",
-              "L'idempotence permet fail-recover sans réveiller la finance."
-            ]
+            "Dashboard taux replay par outil et tenant. Pics = souvent bug de politique retry.",
+            "L'idempotence permet fail-recover sans réveiller la finance."
           ],
           "links": [
             {
@@ -247,19 +227,15 @@
         {
           "heading": "I retry sono il default",
           "paragraphs": [
-            [
-              "Stack streaming e tool ritentano aggressivamente: reconnect, at-least-once, planner richiama tool dopo fallimento parziale.",
-              "Ogni side effect esterno è unsafe finché l'idempotenza non è esplicita in review."
-            ]
+            "Stack streaming e tool ritentano aggressivamente: reconnect, at-least-once, planner richiama tool dopo fallimento parziale.",
+            "Ogni side effect esterno è unsafe finché l'idempotenza non è esplicita in review."
           ]
         },
         {
           "heading": "Le chiavi appartengono all'azione prodotto",
           "paragraphs": [
-            [
-              "Chiavi da intent stabile: id conversazione + turno o UUID client all'invio.",
-              "Non ruotare chiavi se il modello riformula—hash intent normalizzato."
-            ]
+            "Chiavi da intent stabile: id conversazione + turno o UUID client all'invio.",
+            "Non ruotare chiavi se il modello riformula—hash intent normalizzato."
           ],
           "points": [
             "Chiavi idempotency al turn utente, non per token modello",
@@ -271,19 +247,15 @@
         {
           "heading": "Ack solo dopo effetti duraturi",
           "paragraphs": [
-            [
-              "Record idempotenza nella stessa transazione dell'effetto se possibile. Replay restituisce risultato precedente con flag duplicate.",
-              "Fallimento parziale: billing ok, modello fail—retry non deve addebitare due volte."
-            ]
+            "Record idempotenza nella stessa transazione dell'effetto se possibile. Replay restituisce risultato precedente con flag duplicate.",
+            "Fallimento parziale: billing ok, modello fail—retry non deve addebitare due volte."
           ]
         },
         {
           "heading": "Misurare replay duplicati",
           "paragraphs": [
-            [
-              "Dashboard replay rate per tool e tenant. Picchi spesso = bug policy retry.",
-              "Idempotenza permette fail-recover senza svegliare finance a mezzanotte."
-            ]
+            "Dashboard replay rate per tool e tenant. Picchi spesso = bug policy retry.",
+            "Idempotenza permette fail-recover senza svegliare finance a mezzanotte."
           ],
           "links": [
             {
@@ -306,19 +278,15 @@
         {
           "heading": "重试是默认而非边缘",
           "paragraphs": [
-            [
-              "流式与 tool 栈积极重试：客户端重连、至少一次投递、规划器部分失败后再次调用工具。",
-              "支付、工单、CRM 等外部副作用在 code review 明确幂等前视为不安全。"
-            ]
+            "流式与 tool 栈积极重试：客户端重连、至少一次投递、规划器部分失败后再次调用工具。",
+            "支付、工单、CRM 等外部副作用在 code review 明确幂等前视为不安全。"
           ]
         },
         {
           "heading": "键属于产品动作",
           "paragraphs": [
-            [
-              "从稳定用户意图派生键：会话 id + 轮次或发送时客户端 UUID。",
-              "模型改写同一消息时不要轮换键；对归一化意图哈希而非原始 token。"
-            ]
+            "从稳定用户意图派生键：会话 id + 轮次或发送时客户端 UUID。",
+            "模型改写同一消息时不要轮换键；对归一化意图哈希而非原始 token。"
           ],
           "points": [
             "在用户 turn 边界发 idempotency key，而非每 token",
@@ -330,19 +298,15 @@
         {
           "heading": "持久副作用后再 ack",
           "paragraphs": [
-            [
-              "可能时将幂等记录与副作用同事务。replay 返回先前结果并标 duplicate。",
-              "部分失败：计费成功模型失败—重试不得双扣，用供应商 id 对账。"
-            ]
+            "可能时将幂等记录与副作用同事务。replay 返回先前结果并标 duplicate。",
+            "部分失败：计费成功模型失败—重试不得双扣，用供应商 id 对账。"
           ]
         },
         {
           "heading": "度量重复 replay",
           "paragraphs": [
-            [
-              "按工具与租户 dashboard replay 率。尖峰常是重试策略 bug。",
-              "幂等让 agent 可在半夜不吵醒财务的情况下失败恢复。"
-            ]
+            "按工具与租户 dashboard replay 率。尖峰常是重试策略 bug。",
+            "幂等让 agent 可在半夜不吵醒财务的情况下失败恢复。"
           ],
           "links": [
             {
@@ -365,19 +329,15 @@
         {
           "heading": "リトライがデフォルト",
           "paragraphs": [
-            [
-              "ストリーミングとtoolスタックは積極リトライ：再接続、at-least-once、部分失敗後の再呼び出し。",
-              "課金・チケット・CRMなど外部副作用はreviewで冪等が明示されるまでunsafe。"
-            ]
+            "ストリーミングとtoolスタックは積極リトライ：再接続、at-least-once、部分失敗後の再呼び出し。",
+            "課金・チケット・CRMなど外部副作用はreviewで冪等が明示されるまでunsafe。"
           ]
         },
         {
           "heading": "キーはプロダクトアクションに属する",
           "paragraphs": [
-            [
-              "安定したユーザー意図からキー：会話id+ターンまたは送信時クライアントUUID。",
-              "モデルが言い換えてもキーを回転させない—生トークンではなく正規化意図をハッシュ。"
-            ]
+            "安定したユーザー意図からキー：会話id+ターンまたは送信時クライアントUUID。",
+            "モデルが言い換えてもキーを回転させない—生トークンではなく正規化意図をハッシュ。"
           ],
           "points": [
             "モデルトークンではなくユーザーターン境界でidempotency key",
@@ -389,19 +349,15 @@
         {
           "heading": "永続副作用の後にack",
           "paragraphs": [
-            [
-              "可能なら冪等レコードを副作用と同一トランザクション。replayはduplicateフラグ付きで前結果。",
-              "部分失敗：課金成功・モデル失敗—リトライで二重課金不可、プロバイダidで照合。"
-            ]
+            "可能なら冪等レコードを副作用と同一トランザクション。replayはduplicateフラグ付きで前結果。",
+            "部分失敗：課金成功・モデル失敗—リトライで二重課金不可、プロバイダidで照合。"
           ]
         },
         {
           "heading": "重複replayを計測",
           "paragraphs": [
-            [
-              "ツール・テナント別replay率をダッシュボード。スパイクは多くリトライポリシーバグ。",
-              "冪等性は深夜financeを起こさずfail-recoverする資格。"
-            ]
+            "ツール・テナント別replay率をダッシュボード。スパイクは多くリトライポリシーバグ。",
+            "冪等性は深夜financeを起こさずfail-recoverする資格。"
           ],
           "links": [
             {

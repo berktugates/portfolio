@@ -3,7 +3,7 @@
   "title": "On-Call Runbooks for AI Product Incidents",
   "excerpt": "When the model misbehaves, dashboards full of HTTP 200s lie. AI incidents need runbooks for policy, cost, and tool side effects—not only server restarts.",
   "description": "How staff engineers write on-call runbooks for LLM products: SLOs beyond 5xx, provider failures, retrieval drift, safety escalations, and postmortems that capture prompt changes.",
-  "readingMinutes": 7,
+  "readingMinutes": 4,
   "keywords": [
     "on-call",
     "incident response",
@@ -20,14 +20,16 @@
       "heading": "200 OK can still be an incident",
       "paragraphs": [
         "A toxic output or leaking retrieval chunk may return HTTP 200 with a polished apology. On-call playbooks must list user-visible harm, data exposure, and spend spikes as first-class pages—not appendix notes.",
-        "Tie paging to SLOs on refusal accuracy, tool success, and retrieval hit rate where those metrics exist."
+        "Tie paging to SLOs on refusal accuracy, tool success, and retrieval hit rate where those metrics exist.",
+        "Runbooks must distinguish model outages, retrieval failures, policy refusals, and client bugs—each has different customer messaging."
       ]
     },
     {
       "heading": "Provider brownouts are common",
       "paragraphs": [
         "Model vendors brown out: elevated latency, truncated context, or silent tool schema changes. Runbooks should distinguish your gateway bug from provider degradation with clear dashboards.",
-        "Keep a kill switch for model routes and feature flags documented with who can pull it at 3am."
+        "Keep a kill switch for model routes and feature flags documented with who can pull it at 3am.",
+        "Keep kill switches for model routes tested monthly; discovering they fail during an outage is expensive."
       ],
       "points": [
         "Define SLOs on tool failure rate and policy violations, not only 5xx",
@@ -40,14 +42,16 @@
       "heading": "Safety escalations need owners",
       "paragraphs": [
         "Legal and trust-and-safety partners need defined escalation when policy violations spike or jailbreak patterns spread on social media.",
-        "Do not route every content complaint to infra on-call; triage tables save sleep."
+        "Do not route every content complaint to infra on-call; triage tables save sleep.",
+        "Post-incident reviews should update eval cases, not only Confluence pages."
       ]
     },
     {
       "heading": "Postmortems include prompts",
       "paragraphs": [
         "Post-incident reviews should diff prompts, retrieval indexes, and config—not only deploy SHAs.",
-        "AI incidents recur when organizations treat them as one-off model quirks instead of system changes."
+        "AI incidents recur when organizations treat them as one-off model quirks instead of system changes.",
+        "On-call load for AI features includes cost spikes—wire billing alerts into the same rotation."
       ],
       "links": [
         {
@@ -70,19 +74,15 @@
         {
           "heading": "200 OK hâlâ olay olabilir",
           "paragraphs": [
-            [
-              "Toksik çıktı veya sızan retrieval chunk HTTP 200 ile özür dönebilir. Playbook kullanıcıya görünen zarar, veri sızıntısı ve harcama sıçramasını birinci sınıf sayfa olarak listelemeli.",
-              "Sayfalamayı red doğruluğu, tool başarısı ve retrieval isabet SLO'larına bağlayın."
-            ]
+            "Toksik çıktı veya sızan retrieval chunk HTTP 200 ile özür dönebilir. Playbook kullanıcıya görünen zarar, veri sızıntısı ve harcama sıçramasını birinci sınıf sayfa olarak listelemeli.",
+            "Sayfalamayı red doğruluğu, tool başarısı ve retrieval isabet SLO'larına bağlayın."
           ]
         },
         {
           "heading": "Sağlayıcı brownout'ları yaygın",
           "paragraphs": [
-            [
-              "Model sağlayıcıları brownout yapar: gecikme, kesik context veya sessiz tool schema değişimi. Runbook gateway hatasını sağlayıcı bozulmasından ayırmalı.",
-              "Model route kill switch ve feature flag'leri 03:00'te kim çekebilir belgelenmiş olsun."
-            ]
+            "Model sağlayıcıları brownout yapar: gecikme, kesik context veya sessiz tool schema değişimi. Runbook gateway hatasını sağlayıcı bozulmasından ayırmalı.",
+            "Model route kill switch ve feature flag'leri 03:00'te kim çekebilir belgelenmiş olsun."
           ],
           "points": [
             "Yalnızca 5xx değil tool hata oranı ve politika ihlali SLO'ları tanımlayın",
@@ -94,19 +94,15 @@
         {
           "heading": "Güvenlik eskalasyonunun sahibi olsun",
           "paragraphs": [
-            [
-              "Politika ihlali sıçramasında hukuk ve trust-and-safety ortakları tanımlı eskalasyon yoluna ihtiyaç duyar.",
-              "Her içerik şikayetini infra on-call'a yönlendirmeyin; triage tablosu uyku kurtarır."
-            ]
+            "Politika ihlali sıçramasında hukuk ve trust-and-safety ortakları tanımlı eskalasyon yoluna ihtiyaç duyar.",
+            "Her içerik şikayetini infra on-call'a yönlendirmeyin; triage tablosu uyku kurtarır."
           ]
         },
         {
           "heading": "Postmortem prompt içerir",
           "paragraphs": [
-            [
-              "Post-incident incelemeler prompt, retrieval index ve config diff'ini içermeli—yalnızca deploy SHA değil.",
-              "AI olayları tek seferlik model tuhaflığı sayılırsa tekrarlar."
-            ]
+            "Post-incident incelemeler prompt, retrieval index ve config diff'ini içermeli—yalnızca deploy SHA değil.",
+            "AI olayları tek seferlik model tuhaflığı sayılırsa tekrarlar."
           ],
           "links": [
             {
@@ -129,19 +125,15 @@
         {
           "heading": "200 OK kann trotzdem Incident sein",
           "paragraphs": [
-            [
-              "Toxische Outputs oder geleakte Retrieval-Chunks können mit HTTP 200 und höflicher Entschuldigung kommen.",
-              "Paging an SLOs für Refusal-Genauigkeit, Tool-Erfolg und Retrieval-Treffer koppeln."
-            ]
+            "Toxische Outputs oder geleakte Retrieval-Chunks können mit HTTP 200 und höflicher Entschuldigung kommen.",
+            "Paging an SLOs für Refusal-Genauigkeit, Tool-Erfolg und Retrieval-Treffer koppeln."
           ]
         },
         {
           "heading": "Provider-Brownouts sind häufig",
           "paragraphs": [
-            [
-              "Anbieter brownouten: Latenz, gekürzter Context, stille Tool-Schema-Änderungen. Runbooks trennen Gateway-Bug und Provider-Degradation.",
-              "Kill-Switch für Modell-Routen dokumentieren—wer darf um 3 Uhr ziehen."
-            ]
+            "Anbieter brownouten: Latenz, gekürzter Context, stille Tool-Schema-Änderungen. Runbooks trennen Gateway-Bug und Provider-Degradation.",
+            "Kill-Switch für Modell-Routen dokumentieren—wer darf um 3 Uhr ziehen."
           ],
           "points": [
             "SLOs auf Tool-Fehler und Policy-Verstöße, nicht nur 5xx",
@@ -153,19 +145,15 @@
         {
           "heading": "Safety-Eskalation braucht Owner",
           "paragraphs": [
-            [
-              "Legal und Trust-and-Safety brauchen definierte Eskalation bei Policy-Spikes oder Jailbreak-Wellen.",
-              "Nicht jede Content-Beschwerde an Infra-On-Call; Triage-Tabellen retten Schlaf."
-            ]
+            "Legal und Trust-and-Safety brauchen definierte Eskalation bei Policy-Spikes oder Jailbreak-Wellen.",
+            "Nicht jede Content-Beschwerde an Infra-On-Call; Triage-Tabellen retten Schlaf."
           ]
         },
         {
           "heading": "Postmortems enthalten Prompts",
           "paragraphs": [
-            [
-              "Postmortems diffen Prompts, Retrieval-Index und Config—not nur Deploy-SHAs.",
-              "KI-Incidents wiederholen sich, wenn man sie als Modell-Marotte abtut."
-            ]
+            "Postmortems diffen Prompts, Retrieval-Index und Config—not nur Deploy-SHAs.",
+            "KI-Incidents wiederholen sich, wenn man sie als Modell-Marotte abtut."
           ],
           "links": [
             {
@@ -188,19 +176,15 @@
         {
           "heading": "200 OK peut être un incident",
           "paragraphs": [
-            [
-              "Sortie toxique ou chunk retrieval fuité peut arriver en HTTP 200 avec excuses polies.",
-              "Pager sur SLO de refus, succès outil et hit retrieval quand ces métriques existent."
-            ]
+            "Sortie toxique ou chunk retrieval fuité peut arriver en HTTP 200 avec excuses polies.",
+            "Pager sur SLO de refus, succès outil et hit retrieval quand ces métriques existent."
           ]
         },
         {
           "heading": "Les brownouts fournisseur sont fréquents",
           "paragraphs": [
-            [
-              "Les vendors brownoutent : latence, contexte tronqué, changements schema outil silencieux.",
-              "Documenter kill switch routes modèle et qui peut agir à 3h."
-            ]
+            "Les vendors brownoutent : latence, contexte tronqué, changements schema outil silencieux.",
+            "Documenter kill switch routes modèle et qui peut agir à 3h."
           ],
           "points": [
             "SLO sur échecs outils et violations policy, pas seulement 5xx",
@@ -212,19 +196,15 @@
         {
           "heading": "Les escalades safety ont un owner",
           "paragraphs": [
-            [
-              "Legal et trust-and-safety ont besoin d'escalade définie si violations policy explosent.",
-              "Ne pas envoyer chaque plainte contenu à l'infra on-call."
-            ]
+            "Legal et trust-and-safety ont besoin d'escalade définie si violations policy explosent.",
+            "Ne pas envoyer chaque plainte contenu à l'infra on-call."
           ]
         },
         {
           "heading": "Les postmortems incluent les prompts",
           "paragraphs": [
-            [
-              "Post-incident : diff prompts, index retrieval, config—not seulement SHA deploy.",
-              "Traiter comme bizarrerie modèle unique fait récidiver."
-            ]
+            "Post-incident : diff prompts, index retrieval, config—not seulement SHA deploy.",
+            "Traiter comme bizarrerie modèle unique fait récidiver."
           ],
           "links": [
             {
@@ -247,19 +227,15 @@
         {
           "heading": "200 OK può essere incidente",
           "paragraphs": [
-            [
-              "Output tossico o chunk retrieval trapelato può tornare HTTP 200 con scuse educate.",
-              "Paging su SLO di rifiuto, successo tool e hit retrieval dove esistono."
-            ]
+            "Output tossico o chunk retrieval trapelato può tornare HTTP 200 con scuse educate.",
+            "Paging su SLO di rifiuto, successo tool e hit retrieval dove esistono."
           ]
         },
         {
           "heading": "I brownout provider sono comuni",
           "paragraphs": [
-            [
-              "I vendor brownoutano: latenza, context troncato, cambi schema tool silenziosi.",
-              "Documentare kill switch route modello e chi può agire alle 3."
-            ]
+            "I vendor brownoutano: latenza, context troncato, cambi schema tool silenziosi.",
+            "Documentare kill switch route modello e chi può agire alle 3."
           ],
           "points": [
             "SLO su errori tool e violazioni policy, non solo 5xx",
@@ -271,19 +247,15 @@
         {
           "heading": "Le escalation safety hanno owner",
           "paragraphs": [
-            [
-              "Legal e trust-and-safety servono escalation definita su picchi policy o jailbreak.",
-              "Non instradare ogni reclamo contenuto all'infra on-call."
-            ]
+            "Legal e trust-and-safety servono escalation definita su picchi policy o jailbreak.",
+            "Non instradare ogni reclamo contenuto all'infra on-call."
           ]
         },
         {
           "heading": "I postmortem includono i prompt",
           "paragraphs": [
-            [
-              "Post-incident: diff prompt, indice retrieval, config—not solo SHA deploy.",
-              "Trattarli come stranezza modello una tantum fa ripetere."
-            ]
+            "Post-incident: diff prompt, indice retrieval, config—not solo SHA deploy.",
+            "Trattarli come stranezza modello una tantum fa ripetere."
           ],
           "links": [
             {
@@ -306,19 +278,15 @@
         {
           "heading": "200 OK 仍可能是事故",
           "paragraphs": [
-            [
-              "有毒输出或泄露检索块可能 HTTP 200 加礼貌道歉返回。",
-              "在拒绝准确率、工具成功、检索命中等 SLO 上分页。"
-            ]
+            "有毒输出或泄露检索块可能 HTTP 200 加礼貌道歉返回。",
+            "在拒绝准确率、工具成功、检索命中等 SLO 上分页。"
           ]
         },
         {
           "heading": "供应商降载很常见",
           "paragraphs": [
-            [
-              "厂商 brownout：延迟、截断上下文、静默工具 schema 变更。",
-              "文档化模型路由 kill switch 与凌晨谁可拉。"
-            ]
+            "厂商 brownout：延迟、截断上下文、静默工具 schema 变更。",
+            "文档化模型路由 kill switch 与凌晨谁可拉。"
           ],
           "points": [
             "定义 tool 失败与策略违规 SLO，不仅 5xx",
@@ -330,19 +298,15 @@
         {
           "heading": "安全升级需负责人",
           "paragraphs": [
-            [
-              "政策违规激增或越狱传播时，法务与 trust-and-safety 需明确升级路径。",
-              "勿把每条内容投诉都转 infra 值班。"
-            ]
+            "政策违规激增或越狱传播时，法务与 trust-and-safety 需明确升级路径。",
+            "勿把每条内容投诉都转 infra 值班。"
           ]
         },
         {
           "heading": "复盘包含 prompt",
           "paragraphs": [
-            [
-              "复盘应 diff prompt、检索索引与配置，而非仅部署 SHA。",
-              "若当一次性模型怪癖，AI 事故会复发。"
-            ]
+            "复盘应 diff prompt、检索索引与配置，而非仅部署 SHA。",
+            "若当一次性模型怪癖，AI 事故会复发。"
           ],
           "links": [
             {
@@ -365,19 +329,15 @@
         {
           "heading": "200 OKでもインシデント",
           "paragraphs": [
-            [
-              "有害出力や取得チャンク漏洩はHTTP 200と丁寧な謝罪で返ることがある。",
-              "拒否精度・ツール成功・取得ヒットのSLOでページング。"
-            ]
+            "有害出力や取得チャンク漏洩はHTTP 200と丁寧な謝罪で返ることがある。",
+            "拒否精度・ツール成功・取得ヒットのSLOでページング。"
           ]
         },
         {
           "heading": "プロバイダブラウンアウトは日常",
           "paragraphs": [
-            [
-              "ベンダーはレイテンシ上昇、コンテキスト切り詰め、静かなツールスキーマ変更を起こす。",
-              "モデルルートkill switchと深夜誰が引けるか文書化。"
-            ]
+            "ベンダーはレイテンシ上昇、コンテキスト切り詰め、静かなツールスキーマ変更を起こす。",
+            "モデルルートkill switchと深夜誰が引けるか文書化。"
           ],
           "points": [
             "5xxだけでなくtool失敗とポリシー違反のSLO",
@@ -389,19 +349,15 @@
         {
           "heading": "安全エスカレーションにオーナー",
           "paragraphs": [
-            [
-              "ポリシー違反急増やジェイルブレイク拡散時、法務とtrust-and-safetyに定義済みエスカレーション。",
-              "全コンテンツ苦情をinfraオンコールへ送らない。"
-            ]
+            "ポリシー違反急増やジェイルブレイク拡散時、法務とtrust-and-safetyに定義済みエスカレーション。",
+            "全コンテンツ苦情をinfraオンコールへ送らない。"
           ]
         },
         {
           "heading": "ポストモーテムにプロンプト",
           "paragraphs": [
-            [
-              "事後レビューはプロンプト・取得インデックス・設定をdiff—デプロイSHAだけでない。",
-              "一度きりのモデル奇癖扱いは再発を招く。"
-            ]
+            "事後レビューはプロンプト・取得インデックス・設定をdiff—デプロイSHAだけでない。",
+            "一度きりのモデル奇癖扱いは再発を招く。"
           ],
           "links": [
             {

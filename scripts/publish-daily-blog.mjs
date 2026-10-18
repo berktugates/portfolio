@@ -7,6 +7,7 @@
  */
 import { readdir, readFile, writeFile, unlink } from "node:fs/promises";
 import { resolve } from "node:path";
+import { normalizeSections, readingMinutesFromSections } from "./lib/reading-minutes.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const queueDir = resolve(root, "content/blog-queue");
@@ -60,7 +61,7 @@ for (const name of candidates) {
     continue;
   }
   selectedName = name;
-  post = candidate;
+  post = normalizeQueuePost(candidate);
   break;
 }
 
@@ -129,12 +130,37 @@ function istanbulDate() {
   }).format(new Date());
 }
 
+function normalizeQueuePost(raw) {
+  const sections = normalizeSections(raw.sections);
+  const locales = {};
+  for (const [code, copy] of Object.entries(raw.locales ?? {})) {
+    locales[code] = {
+      ...copy,
+      sections: normalizeSections(copy.sections ?? []),
+    };
+  }
+  return {
+    ...raw,
+    sections,
+    locales,
+    readingMinutes: readingMinutesFromSections(sections),
+  };
+}
+
 function assertPost(value) {
   for (const key of ["slug", "title", "excerpt", "description", "readingMinutes", "keywords", "sections", "locales", "socialThreadTr"]) {
     if (value[key] == null) throw new Error(`Queue post missing ${key}`);
   }
   for (const locale of Object.keys(localeFiles)) {
     if (!value.locales[locale]) throw new Error(`Queue post missing locales.${locale}`);
+  }
+  const normalized = normalizeSections(value.sections);
+  const text = normalized
+    .flatMap((section) => [section.heading ?? "", ...section.paragraphs, ...(section.points ?? [])])
+    .join(" ");
+  const words = text.split(/\s+/).filter(Boolean).length;
+  if (words < 320) {
+    throw new Error(`Queue post ${value.slug} EN body too short (${words} words); extend sections.`);
   }
 }
 

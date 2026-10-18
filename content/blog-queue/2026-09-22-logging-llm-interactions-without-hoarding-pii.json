@@ -3,7 +3,7 @@
   "title": "Logging LLM Interactions Without Hoarding PII",
   "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
   "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
-  "readingMinutes": 7,
+  "readingMinutes": 4,
   "keywords": [
     "LLM logging",
     "PII",
@@ -20,14 +20,16 @@
       "heading": "Logs are not a free archive",
       "paragraphs": [
         "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
-        "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule."
+        "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule.",
+        "Document which fields are never logged—government IDs, payment instruments, raw audio—and enforce via schema tests on your logging pipeline."
       ]
     },
     {
       "heading": "Tier transcripts by sensitivity",
       "paragraphs": [
         "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
-        "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job."
+        "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job.",
+        "Pair retention with deletion jobs that are tested in staging; expiry without verification is a compliance placebo."
       ],
       "points": [
         "Log prompts and outputs with redaction tiers, not raw dumps by default",
@@ -40,14 +42,16 @@
       "heading": "Sample for quality, aggregate for trends",
       "paragraphs": [
         "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
-        "Aggregate token usage and error codes without storing user text when possible."
+        "Aggregate token usage and error codes without storing user text when possible.",
+        "Give security and legal dashboards on export volume, not only on authentication failures."
       ]
     },
     {
       "heading": "Operate exports as security events",
       "paragraphs": [
         "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
-        "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March."
+        "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March.",
+        "When in doubt, log identifiers and outcomes, not verbatim user content."
       ],
       "links": [
         {
@@ -70,19 +74,15 @@
         {
           "heading": "Loglar ücretsiz arşiv değildir",
           "paragraphs": [
-            [
-              "Varsayılan olarak tam prompt loglayan ekipler, bunları analitik araçları, destek export'ları ve geniş erişim rolleriyle zamanla sızdırır.",
-              "LLM transkriptlerini kimlik bilgisine yakın veri gibi ele alın: minimize edin, redakte edin, erişimi döndürün ve programlı süre sonunda silin."
-            ]
+            "Varsayılan olarak tam prompt loglayan ekipler, bunları analitik araçları, destek export'ları ve geniş erişim rolleriyle zamanla sızdırır.",
+            "LLM transkriptlerini kimlik bilgisine yakın veri gibi ele alın: minimize edin, redakte edin, erişimi döndürün ve programlı süre sonunda silin."
           ]
         },
         {
           "heading": "Transkriptleri hassasiyete göre katmanla",
           "paragraphs": [
-            [
-              "Olay debug için sıcak, örneklem eval için ılık, ürün trendleri için soğuk aggregate saklama tanımlayın.",
-              "Pazarlama ambarlarının ham sohbet çekmesine, belgelenmiş hukuki dayanak ve silme job'u olmadan izin vermeyin."
-            ]
+            "Olay debug için sıcak, örneklem eval için ılık, ürün trendleri için soğuk aggregate saklama tanımlayın.",
+            "Pazarlama ambarlarının ham sohbet çekmesine, belgelenmiş hukuki dayanak ve silme job'u olmadan izin vermeyin."
           ],
           "points": [
             "Varsayılan ham dump yerine redaksiyon katmanlı prompt/çıktı loglayın",
@@ -94,19 +94,15 @@
         {
           "heading": "Kalite için örnekle, trend için aggregate et",
           "paragraphs": [
-            [
-              "Kalite ekiplerinin tam geçmişe değil, temsili örneklere ihtiyacı var. Sonuç, gecikme ve red türüne göre tabakalı örnekleme kullanın.",
-              "Mümkün olduğunda kullanıcı metni saklamadan token kullanımı ve hata kodlarını aggregate edin."
-            ]
+            "Kalite ekiplerinin tam geçmişe değil, temsili örneklere ihtiyacı var. Sonuç, gecikme ve red türüne göre tabakalı örnekleme kullanın.",
+            "Mümkün olduğunda kullanıcı metni saklamadan token kullanımı ve hata kodlarını aggregate edin."
           ]
         },
         {
           "heading": "Export'ları güvenlik olayı gibi işlet",
           "paragraphs": [
-            [
-              "Toplu export uçları ve notebook indirmeleri, veritabanı dump'larıyla aynı alarmları tetiklemeli.",
-              "İyi loglama, Mart'ta KVKK/GDPR talebi açıklamak zorunda kalmadan Salı günü debug etmenizi sağlar."
-            ]
+            "Toplu export uçları ve notebook indirmeleri, veritabanı dump'larıyla aynı alarmları tetiklemeli.",
+            "İyi loglama, Mart'ta KVKK/GDPR talebi açıklamak zorunda kalmadan Salı günü debug etmenizi sağlar."
           ],
           "links": [
             {
@@ -129,19 +125,15 @@
         {
           "heading": "Logs sind kein Gratisarchiv",
           "paragraphs": [
-            [
-              "Teams mit Voll-Prompt-Logging leaken früher oder später über Analytics, Support-Exporte und zu breite Rollen.",
-              "Behandeln Sie Transkripte wie credentials-nahe Daten: minimieren, redigieren, Zugriff rotieren, planmäßig löschen."
-            ]
+            "Teams mit Voll-Prompt-Logging leaken früher oder später über Analytics, Support-Exporte und zu breite Rollen.",
+            "Behandeln Sie Transkripte wie credentials-nahe Daten: minimieren, redigieren, Zugriff rotieren, planmäßig löschen."
           ]
         },
         {
           "heading": "Transkripte nach Sensibilität stufen",
           "paragraphs": [
-            [
-              "Heiße Speicher für Incidents, warme für Eval-Samples, kalte Aggregate für Produkt-Trends.",
-              "Rohe Chats ohne Rechtsgrundlage und Löschjobs nicht ins Marketing-Warehouse."
-            ]
+            "Heiße Speicher für Incidents, warme für Eval-Samples, kalte Aggregate für Produkt-Trends.",
+            "Rohe Chats ohne Rechtsgrundlage und Löschjobs nicht ins Marketing-Warehouse."
           ],
           "points": [
             "Prompts/Ausgaben mit Redaktionsstufen loggen, nicht rohe Dumps default",
@@ -153,19 +145,15 @@
         {
           "heading": "Für Qualität sampeln, für Trends aggregieren",
           "paragraphs": [
-            [
-              "Qualität braucht repräsentative Stichproben, nicht die komplette Historie. Stratifiziert nach Outcome, Latenz und Refusal.",
-              "Token-Nutzung und Fehlercodes aggregieren, ohne Nutzertext wenn möglich."
-            ]
+            "Qualität braucht repräsentative Stichproben, nicht die komplette Historie. Stratifiziert nach Outcome, Latenz und Refusal.",
+            "Token-Nutzung und Fehlercodes aggregieren, ohne Nutzertext wenn möglich."
           ]
         },
         {
           "heading": "Exporte wie Sicherheitsereignisse behandeln",
           "paragraphs": [
-            [
-              "Bulk-Exporte und Notebook-Downloads wie DB-Dumps alarmieren.",
-              "Gutes Logging debuggt Dienstag, ohne GDPR-Erklärung im März."
-            ]
+            "Bulk-Exporte und Notebook-Downloads wie DB-Dumps alarmieren.",
+            "Gutes Logging debuggt Dienstag, ohne GDPR-Erklärung im März."
           ],
           "links": [
             {
@@ -188,19 +176,15 @@
         {
           "heading": "Les logs ne sont pas une archive gratuite",
           "paragraphs": [
-            [
-              "Logger les prompts complets par défaut finit par fuiter via analytics, exports support et rôles trop larges.",
-              "Traitez les transcriptions comme des données proches des identifiants : minimiser, rédiger, faire expirer."
-            ]
+            "Logger les prompts complets par défaut finit par fuiter via analytics, exports support et rôles trop larges.",
+            "Traitez les transcriptions comme des données proches des identifiants : minimiser, rédiger, faire expirer."
           ]
         },
         {
           "heading": "Stratifier les transcriptions par sensibilité",
           "paragraphs": [
-            [
-              "Stockage chaud pour incidents, tiède pour eval échantillonnée, froid pour tendances produit.",
-              "Pas de chats bruts en warehouse marketing sans base légale et job de suppression."
-            ]
+            "Stockage chaud pour incidents, tiède pour eval échantillonnée, froid pour tendances produit.",
+            "Pas de chats bruts en warehouse marketing sans base légale et job de suppression."
           ],
           "points": [
             "Logger prompts/sorties par niveaux de rédaction, pas dumps bruts par défaut",
@@ -212,19 +196,15 @@
         {
           "heading": "Échantillonner pour la qualité, agréger pour les tendances",
           "paragraphs": [
-            [
-              "La qualité a besoin d'échantillons représentatifs, pas de l'historique complet. Échantillonnage stratifié par résultat et refus.",
-              "Agréger tokens et codes d'erreur sans texte utilisateur quand c'est possible."
-            ]
+            "La qualité a besoin d'échantillons représentatifs, pas de l'historique complet. Échantillonnage stratifié par résultat et refus.",
+            "Agréger tokens et codes d'erreur sans texte utilisateur quand c'est possible."
           ]
         },
         {
           "heading": "Traiter les exports comme des événements sécurité",
           "paragraphs": [
-            [
-              "Exports massifs et notebooks : mêmes alertes que les dumps base de données.",
-              "Un bon logging permet de déboguer mardi sans expliquer une demande RGPD en mars."
-            ]
+            "Exports massifs et notebooks : mêmes alertes que les dumps base de données.",
+            "Un bon logging permet de déboguer mardi sans expliquer une demande RGPD en mars."
           ],
           "links": [
             {
@@ -247,19 +227,15 @@
         {
           "heading": "I log non sono archivio gratuito",
           "paragraphs": [
-            [
-              "Chi logga prompt completi per default finisce per perdere dati via analytics, export support e ruoli troppo ampi.",
-              "Tratta le trascrizioni come dati vicini alle credenziali: minimizza, redigi, ruota accessi, scadenza programmata."
-            ]
+            "Chi logga prompt completi per default finisce per perdere dati via analytics, export support e ruoli troppo ampi.",
+            "Tratta le trascrizioni come dati vicini alle credenziali: minimizza, redigi, ruota accessi, scadenza programmata."
           ]
         },
         {
           "heading": "Stratifica le trascrizioni per sensibilità",
           "paragraphs": [
-            [
-              "Storage caldo per incident, tiepido per eval campionata, freddo per trend prodotto.",
-              "Niente chat raw nel warehouse marketing senza base legale e job di cancellazione."
-            ]
+            "Storage caldo per incident, tiepido per eval campionata, freddo per trend prodotto.",
+            "Niente chat raw nel warehouse marketing senza base legale e job di cancellazione."
           ],
           "points": [
             "Loggare prompt/output con tier di redazione, non dump grezzi di default",
@@ -271,19 +247,15 @@
         {
           "heading": "Campiona per qualità, aggrega per trend",
           "paragraphs": [
-            [
-              "La qualità vuole campioni rappresentativi, non tutta la storia. Campionamento stratificato per esito e rifiuto.",
-              "Aggrega token e codici errore senza testo utente quando possibile."
-            ]
+            "La qualità vuole campioni rappresentativi, non tutta la storia. Campionamento stratificato per esito e rifiuto.",
+            "Aggrega token e codici errore senza testo utente quando possibile."
           ]
         },
         {
           "heading": "Gestisci gli export come eventi di sicurezza",
           "paragraphs": [
-            [
-              "Export bulk e download notebook: stesse alert dei dump database.",
-              "Un buon logging debugga martedì senza spiegare GDPR a marzo."
-            ]
+            "Export bulk e download notebook: stesse alert dei dump database.",
+            "Un buon logging debugga martedì senza spiegare GDPR a marzo."
           ],
           "links": [
             {
@@ -306,19 +278,15 @@
         {
           "heading": "日志不是免费档案",
           "paragraphs": [
-            [
-              "默认记录完整 prompt 的团队终会通过分析、支持导出和过宽角色泄露。",
-              "把转录当近凭证数据处理：最小化、脱敏、轮换访问、按期删除。"
-            ]
+            "默认记录完整 prompt 的团队终会通过分析、支持导出和过宽角色泄露。",
+            "把转录当近凭证数据处理：最小化、脱敏、轮换访问、按期删除。"
           ]
         },
         {
           "heading": "按敏感度分层转录",
           "paragraphs": [
-            [
-              "热存事件调试、温存评测样本、冷存产品趋势聚合。",
-              "营销仓不得无合法依据与删除任务 ingest 原始聊天。"
-            ]
+            "热存事件调试、温存评测样本、冷存产品趋势聚合。",
+            "营销仓不得无合法依据与删除任务 ingest 原始聊天。"
           ],
           "points": [
             "默认按脱敏分层记录 prompt/输出，而非原始 dump",
@@ -330,19 +298,15 @@
         {
           "heading": "质量抽样、趋势聚合",
           "paragraphs": [
-            [
-              "质量团队要代表性样本而非全历史；按结果、延迟与拒绝类型分层抽样。",
-              "尽可能聚合 token 与错误码而不存用户文本。"
-            ]
+            "质量团队要代表性样本而非全历史；按结果、延迟与拒绝类型分层抽样。",
+            "尽可能聚合 token 与错误码而不存用户文本。"
           ]
         },
         {
           "heading": "把导出当安全事件运营",
           "paragraphs": [
-            [
-              "批量导出与 notebook 下载应像数据库 dump 一样告警。",
-              "好的日志让你周二能排障，三月不必解释 GDPR 请求。"
-            ]
+            "批量导出与 notebook 下载应像数据库 dump 一样告警。",
+            "好的日志让你周二能排障，三月不必解释 GDPR 请求。"
           ],
           "links": [
             {
@@ -365,19 +329,15 @@
         {
           "heading": "ログは無料アーカイブではない",
           "paragraphs": [
-            [
-              "デフォルトで全文プロンプトをログするチームは分析、サポートエクスポート、広いロールから漏らす。",
-              "トランスクリプトをクレデンシャル近傍データとして最小化・編集・期限削除。"
-            ]
+            "デフォルトで全文プロンプトをログするチームは分析、サポートエクスポート、広いロールから漏らす。",
+            "トランスクリプトをクレデンシャル近傍データとして最小化・編集・期限削除。"
           ]
         },
         {
           "heading": "機密度でトランスクリプトを階層化",
           "paragraphs": [
-            [
-              "インシデントはホット、評価サンプルはウォーム、プロダクトトレンドはコールド集計。",
-              "法的根拠と削除ジョブなしにマーケ倉庫へ生チャットを入れない。"
-            ]
+            "インシデントはホット、評価サンプルはウォーム、プロダクトトレンドはコールド集計。",
+            "法的根拠と削除ジョブなしにマーケ倉庫へ生チャットを入れない。"
           ],
           "points": [
             "デフォルトは生dumpではなく redaction tier で prompt/出力をログ",
@@ -389,19 +349,15 @@
         {
           "heading": "品質はサンプル、トレンドは集計",
           "paragraphs": [
-            [
-              "品質は全履歴ではなく代表サンプル。結果・レイテンシ・拒否で層化サンプル。",
-              "可能ならユーザーテキストなしでトークンとエラーコードを集計。"
-            ]
+            "品質は全履歴ではなく代表サンプル。結果・レイテンシ・拒否で層化サンプル。",
+            "可能ならユーザーテキストなしでトークンとエラーコードを集計。"
           ]
         },
         {
           "heading": "エクスポートをセキュリティイベントとして運用",
           "paragraphs": [
-            [
-              "一括エクスポートとノートブックDLはDBダンプと同様にアラート。",
-              "良いログは火曜にデバッグし、3月にGDPR説明を不要にする。"
-            ]
+            "一括エクスポートとノートブックDLはDBダンプと同様にアラート。",
+            "良いログは火曜にデバッグし、3月にGDPR説明を不要にする。"
           ],
           "links": [
             {

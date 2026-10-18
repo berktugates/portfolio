@@ -2,8 +2,8 @@
 """Locale block tuples for SEO blog posts 5–11 (used with i18n() in blog queue writers)."""
 
 
-def para(*pairs):
-    return [list(p) for p in pairs]
+def para(*section_lists):
+    return [list(section) for section in section_lists]
 
 
 blocks5 = {
