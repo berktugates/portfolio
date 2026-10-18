@@ -4,7 +4,7 @@ import Script from "next/script";
 import { useState } from "react";
 
 export function CorrectionRequestForm() {
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
   const [message, setMessage] = useState("");
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

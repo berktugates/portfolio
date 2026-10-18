@@ -31,7 +31,7 @@ type ContactFormProps = {
 };
 
 export function ContactForm({ locale, copy }: ContactFormProps) {
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
   const formRef = useRef<HTMLFormElement>(null);
   const turnstileContainerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);

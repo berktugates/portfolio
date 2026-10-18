@@ -56,4 +56,4 @@ Follow Google Search Central quality expectations and keep GEO citation-safe:
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Vercel build + Production | Cloudflare Turnstile site key (public) |
 | `TURNSTILE_SECRET` | Vercel Production | Turnstile secret for `/api/contact` siteverify |
 
-In **Cloudflare → Turnstile**, the widget hostnames must include `berktugberke.com` and `www.berktugberke.com` (and preview domains if needed). Widget mode **Managed** is fine; the contact form uses explicit render with action `contact`.
+In **Cloudflare → Turnstile**, use the **berktugberke.com Contact** widget (not HoneyTrade). Hostnames must include `berktugberke.com` and `www.berktugberke.com`. Paste site key and secret in Vercel **without trailing spaces or newlines** (the app trims, but clean env avoids bad builds). Widget mode **Managed** is fine; the contact form uses explicit render with action `contact`.

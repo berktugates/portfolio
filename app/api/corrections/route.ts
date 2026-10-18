@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 async function verifyTurnstile(token: string, ip: string | null): Promise<boolean> {
-  const secret = process.env.TURNSTILE_SECRET;
+  const secret = process.env.TURNSTILE_SECRET?.trim();
   if (!secret || !token) return false;
   const body = new FormData();
   body.set("secret", secret);
