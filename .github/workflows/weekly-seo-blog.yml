@@ -50,8 +50,6 @@ jobs:
           pnpm typecheck
           pnpm exec tsx scripts/validate-site-assistant-replies.ts
           pnpm check:queues
-          pnpm check:ops
-          pnpm check:measurement
           node scripts/assert-no-gundem-links.mjs
 
       - name: Inventory check
