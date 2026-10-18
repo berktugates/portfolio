@@ -35,6 +35,7 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const turnstileContainerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
+  const ignoreTurnstileCallbacksRef = useRef(false);
   const startedRef = useRef(false);
 
   const [state, setState] = useState<"idle" | "sending" | "success" | "error">("idle");
@@ -55,15 +56,45 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
     setTurnstileError(false);
   }, []);
 
-  const onTurnstileClear = useCallback(() => {
+  const onTurnstileExpired = useCallback(() => {
+    if (ignoreTurnstileCallbacksRef.current) return;
+    setTurnstileToken("");
+    setTurnstileReady(false);
+    setTurnstileError(false);
+    if (widgetIdRef.current && window.turnstile) {
+      window.turnstile.reset(widgetIdRef.current);
+    }
+  }, []);
+
+  const onTurnstileError = useCallback(() => {
+    if (ignoreTurnstileCallbacksRef.current) return;
     setTurnstileToken("");
     setTurnstileReady(false);
     setTurnstileError(true);
   }, []);
 
+  const destroyTurnstileWidget = useCallback(() => {
+    ignoreTurnstileCallbacksRef.current = true;
+    const id = widgetIdRef.current;
+    widgetIdRef.current = null;
+    if (id && window.turnstile) {
+      try {
+        window.turnstile.remove(id);
+      } catch {
+        // ignore teardown errors
+      }
+    }
+    if (turnstileContainerRef.current) {
+      turnstileContainerRef.current.replaceChildren();
+    }
+  }, []);
+
   const mountTurnstile = useCallback(() => {
     if (!siteKey || !turnstileContainerRef.current || !window.turnstile) return;
     if (widgetIdRef.current != null) return;
+
+    ignoreTurnstileCallbacksRef.current = false;
+    setTurnstileError(false);
 
     try {
       widgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
@@ -72,14 +103,14 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
         theme: "auto",
         size: "normal",
         callback: onTurnstileSuccess,
-        "expired-callback": onTurnstileClear,
-        "error-callback": onTurnstileClear,
+        "expired-callback": onTurnstileExpired,
+        "error-callback": onTurnstileError,
       });
     } catch {
       widgetIdRef.current = null;
       setTurnstileError(true);
     }
-  }, [onTurnstileClear, onTurnstileSuccess, siteKey]);
+  }, [onTurnstileError, onTurnstileExpired, onTurnstileSuccess, siteKey]);
 
   useEffect(() => {
     setStartedAt((current) => (current > 0 ? current : Date.now()));
@@ -89,23 +120,25 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
     if (window.turnstile) setTurnstileScriptReady(true);
   }, []);
 
-  useEffect(() => {
-    if (turnstileScriptReady) mountTurnstile();
-  }, [mountTurnstile, turnstileScriptReady]);
+  const fieldsValid = isContactFormFieldsValid(name, email, details);
+  const shouldRunTurnstile = fieldsValid && state !== "success";
 
   useEffect(() => {
-    return () => {
-      const id = widgetIdRef.current;
-      if (id && window.turnstile) {
-        try {
-          window.turnstile.remove(id);
-        } catch {
-          // ignore Turnstile teardown errors (e.g. React Strict Mode remount)
-        }
-        widgetIdRef.current = null;
+    if (!shouldRunTurnstile || !turnstileScriptReady) {
+      destroyTurnstileWidget();
+      if (!shouldRunTurnstile) {
+        setTurnstileToken("");
+        setTurnstileReady(false);
+        setTurnstileError(false);
       }
+      return;
+    }
+
+    mountTurnstile();
+    return () => {
+      destroyTurnstileWidget();
     };
-  }, []);
+  }, [destroyTurnstileWidget, mountTurnstile, shouldRunTurnstile, turnstileScriptReady]);
 
   function resetTurnstile() {
     setTurnstileToken("");
@@ -188,9 +221,9 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
   const fieldClass = `mt-2 ${fieldShell}`;
   const selectClass = `${fieldShell} appearance-none pr-10`;
 
-  const fieldsValid = isContactFormFieldsValid(name, email, details);
   const canSubmit = fieldsValid && turnstileReady && state !== "sending" && state !== "success";
-  const showTurnstileHint = fieldsValid && !turnstileReady && state !== "success";
+  const showTurnstileHint = shouldRunTurnstile && !turnstileReady;
+  const showTurnstileFailure = showTurnstileHint && turnstileError;
 
   return (
     <>
@@ -306,7 +339,7 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
         </button>
         {showTurnstileHint ? (
           <p className="text-xs text-zinc-400 dark:text-zinc-500">
-            {turnstileError ? copy.api.turnstileFailed : copy.form.turnstileWait}
+            {showTurnstileFailure ? copy.api.turnstileFailed : copy.form.turnstileWait}
           </p>
         ) : null}
         <p
