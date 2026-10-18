@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"versioning-public-apis-used-by-mobile-clients": {
+    title: "面向移动客户端的公共 API 版本化",
+    excerpt: "移动客户端无法每周发布；忽视这一点会打爆生产。",
+    description: "API 纪元、加法演进、强制升级护栏与废弃遥测。",
+    sections: [
+      {
+        heading: "移动滞后是长期约束",
+        paragraphs: [
+          "应用商店与 MDM 意味着多代客户端并存。",
+          "最旧支持版本是一等消费者。",
+        ],
+      },
+      {
+        heading: "用契约承载版本",
+        paragraphs: [
+          "显式 API 纪元与每次请求的构建身份。",
+          "无度量废弃期不删字段。",
+        ],
+        points: [
+          "Publish a mobile compatibility matrix with minimum app versions per API epoch",
+          "Treat breaking changes as contract events with sunset dates in responses",
+          "Run shadow traffic from oldest supported app builds in CI",
+          "Instrument version skew: which app builds hit deprecated fields",
+        ],
+      },
+      {
+        heading: "与发布和支持协同",
+        paragraphs: [
+          "下线与应用内升级配对。",
+          "CI 跑最旧 bundle 契约测试。",
+        ],
+      },
+      {
+        heading: "切断前测量偏斜",
+        paragraphs: [
+          "看板对比版本与纪元。",
+          "可预测的演进。",
+        ],
+        links: [
+          {
+            label: "Stripe — API versioning",
+            url: "https://stripe.com/docs/api/versioning",
+          },
+          {
+            label: "Microsoft — REST API guidelines",
+            url: "https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md",
+          },
+          {
+            label: "Apple — App Store review guidelines",
+            url: "https://developer.apple.com/app-store/review/guidelines/",
+          },
+        ],
+      },
+    ],
+  },
 "observability-for-streaming-llm-responses": {
     title: "流式 LLM 响应的可观测性",
     excerpt: "首 token 时间与部分输出改变质量判断。追踪在 HTTP 边界结束意味着在最长一段请求中盲目飞行。",

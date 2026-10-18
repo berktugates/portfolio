@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"versioning-public-apis-used-by-mobile-clients": {
+    title: "モバイルクライアント向け公開APIのバージョニング",
+    excerpt: "モバイルは毎週デプロイできない。無視すると本番が壊れる。",
+    description: "APIエポック、加法進化、アップグレードガードレール、非推奨テレメトリ。",
+    sections: [
+      {
+        heading: "モバイル遅延は恒常的制約",
+        paragraphs: [
+          "ストア審査とMDMは複数世代の併存を意味する。",
+          "最古サポート版を第一級消費者に。",
+        ],
+      },
+      {
+        heading: "契約でバージョン管理",
+        paragraphs: [
+          "明示的エポックとリクエスト毎のビルドID。",
+          "測定された非推奨なしにフィールド削除しない。",
+        ],
+        points: [
+          "Publish a mobile compatibility matrix with minimum app versions per API epoch",
+          "Treat breaking changes as contract events with sunset dates in responses",
+          "Run shadow traffic from oldest supported app builds in CI",
+          "Instrument version skew: which app builds hit deprecated fields",
+        ],
+      },
+      {
+        heading: "リリースとサポートと調整",
+        paragraphs: [
+          "サンセットとアプリ内アップグレードを連動。",
+          "最古バンドルで契約テスト。",
+        ],
+      },
+      {
+        heading: "切断前にスキュー計測",
+        paragraphs: [
+          "バージョンとエポックのダッシュボード。",
+          "予測可能な進化。",
+        ],
+        links: [
+          {
+            label: "Stripe — API versioning",
+            url: "https://stripe.com/docs/api/versioning",
+          },
+          {
+            label: "Microsoft — REST API guidelines",
+            url: "https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md",
+          },
+          {
+            label: "Apple — App Store review guidelines",
+            url: "https://developer.apple.com/app-store/review/guidelines/",
+          },
+        ],
+      },
+    ],
+  },
 "observability-for-streaming-llm-responses": {
     title: "ストリーミングLLM応答の可観測性",
     excerpt: "初回トークンと部分出力は品質の見え方を変えます。HTTP境界でトレースが終わると最長区間を盲目で飛ばします。",

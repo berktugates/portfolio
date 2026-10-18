@@ -23,6 +23,76 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "versioning-public-apis-used-by-mobile-clients",
+    title: "Versioning Public APIs Used by Mobile Clients",
+    excerpt: "Mobile clients ship on human timelines. If your API versioning story assumes everyone refreshes weekly, you will break production users who cannot update until the store approves.",
+    description: "Staff-engineer guidance for versioning public APIs consumed by mobile clients: epoch headers, additive evolution, forced-upgrade guardrails, contract tests on oldest supported builds, and deprecation telemetry.",
+    publishedAt: "2026-10-19",
+    readingMinutes: 7,
+    keywords: [
+      "API versioning",
+      "mobile clients",
+      "backward compatibility",
+      "REST API",
+      "Expo",
+      "release engineering",
+    ],
+    socialThreadTr: [
+      "Mobil istemci haftalık deploy etmez; mağaza onayı insan zaman çizelgesindedir. API sürümleme hikâyeniz bunu yok sayıyorsa üretim kullanıcısını kırarsınız. 🧵",
+      "Epoch, additive evrim, zorunlu güncelleme guardrail'leri ve skew telemetrisi. Detay: https://berktugberke.com/tr/blogs/versioning-public-apis-used-by-mobile-clients",
+    ],
+    sections: [
+      {
+        heading: "Mobile lag is a permanent constraint",
+        paragraphs: [
+          "App store review, enterprise MDM freezes, and users who ignore updates mean your API must serve multiple client generations simultaneously. Web can hide behind a deploy; mobile cannot.",
+          "Staff ownership treats oldest supported app version as a first-class consumer. Breaking changes are product decisions with sunset windows, not surprise 400s on Monday morning.",
+        ],
+      },
+      {
+        heading: "Version in contracts, not in vibes",
+        paragraphs: [
+          "Prefer explicit API epochs via headers or path prefixes over implicit 'we deployed Friday.' Document what is additive, what is deprecated, and what requires a new epoch. Clients should send their build identity on every request so you can route, shadow, or block safely.",
+          "Never remove fields without a measured deprecation period. Return sunset hints in structured error payloads and analytics events so product can message upgrades before hard cutoffs.",
+        ],
+        points: [
+          "Publish a mobile compatibility matrix with minimum app versions per API epoch",
+          "Treat breaking changes as contract events with sunset dates in responses",
+          "Run shadow traffic from oldest supported app builds in CI",
+          "Instrument version skew: which app builds hit deprecated fields",
+        ],
+      },
+      {
+        heading: "Coordinate with release and support",
+        paragraphs: [
+          "Pair API sunsets with in-app upgrade prompts and support macros. Forced upgrade is a product lever—use it sparingly for security or irreversible data migrations, not for routine refactors.",
+          "Contract tests should run against the oldest supported client bundle in CI, not only the latest main branch. Mobile API versioning is release engineering for users who cannot git pull.",
+        ],
+      },
+      {
+        heading: "Measure skew before you cut",
+        paragraphs: [
+          "Dashboard active app versions against API epoch usage. Spikes in deprecated endpoints after a release often mean a client bug, not stubborn users.",
+          "A disciplined versioning story lets you ship backend improvements without holding mobile hostage. The goal is predictable evolution, not infinite backward compatibility for dead builds.",
+        ],
+        links: [
+          {
+            label: "Stripe — API versioning",
+            url: "https://stripe.com/docs/api/versioning",
+          },
+          {
+            label: "Microsoft — REST API guidelines",
+            url: "https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md",
+          },
+          {
+            label: "Apple — App Store review guidelines",
+            url: "https://developer.apple.com/app-store/review/guidelines/",
+          },
+        ],
+      },
+    ],
+  },
+    {
     slug: "observability-for-streaming-llm-responses",
     title: "Observability for Streaming LLM Responses",
     excerpt: "Time-to-first-token and partial output change how users judge quality. If your traces stop at the HTTP boundary, you are flying blind through the longest part of the request.",

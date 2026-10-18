@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"versioning-public-apis-used-by-mobile-clients": {
+    title: "Mobil İstemcilerin Kullandığı Genel API'leri Sürümlemek",
+    excerpt: "Mobil haftalık deploy etmez; API sürümleme bunu yok sayarsa üretim kırılır.",
+    description: "Mobil tüketen genel API'ler için epoch, additive evrim, zorunlu güncelleme guardrail'leri ve skew telemetrisi.",
+    sections: [
+      {
+        heading: "Mobil gecikme kalıcı bir kısıttır",
+        paragraphs: [
+          "Mağaza incelemesi, MDM dondurmaları ve güncellemeyi yok sayan kullanıcılar API'nizin birden fazla istemci neslini aynı anda sunmasını gerektirir.",
+          "En eski desteklenen uygulama sürümünü birinci sınıf tüketici sayın.",
+        ],
+      },
+      {
+        heading: "Sürümü sözleşmede tutun",
+        paragraphs: [
+          "Açık API epoch'ları (header veya path) kullanın; istemci build kimliğini her istekte göndersin.",
+          "Alanları ölçülü deprecation olmadan kaldırmayın; sunset ipuçlarını yapılandırılmış hatalarda döndürün.",
+        ],
+        points: [
+          "Publish a mobile compatibility matrix with minimum app versions per API epoch",
+          "Treat breaking changes as contract events with sunset dates in responses",
+          "Run shadow traffic from oldest supported app builds in CI",
+          "Instrument version skew: which app builds hit deprecated fields",
+        ],
+      },
+      {
+        heading: "Release ve destekle koordine edin",
+        paragraphs: [
+          "API sunset'lerini uygulama içi güncelleme ve destek makrolarıyla eşleyin.",
+          "CI'da en eski desteklenen client bundle ile sözleşme testleri çalıştırın.",
+        ],
+      },
+      {
+        heading: "Kesmeden önce skew ölçün",
+        paragraphs: [
+          "Aktif uygulama sürümlerini API epoch kullanımına karşı panoda izleyin.",
+          "Disiplinli sürümleme, mobil'i rehin almadan backend geliştirmenizi sağlar.",
+        ],
+        links: [
+          {
+            label: "Stripe — API versioning",
+            url: "https://stripe.com/docs/api/versioning",
+          },
+          {
+            label: "Microsoft — REST API guidelines",
+            url: "https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md",
+          },
+          {
+            label: "Apple — App Store review guidelines",
+            url: "https://developer.apple.com/app-store/review/guidelines/",
+          },
+        ],
+      },
+    ],
+  },
 "observability-for-streaming-llm-responses": {
     title: "Streaming LLM Yanıtları için Observability",
     excerpt: "İlk token süresi ve kısmi çıktı kalite algısını değiştirir. Trace'leriniz HTTP sınırında bitiyorsa, isteğin en uzun kısmında körsünüz.",

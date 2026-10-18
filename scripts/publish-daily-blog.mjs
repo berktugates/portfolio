@@ -116,7 +116,7 @@ await writeFile(blogsPath, nextBlogs);
 for (const locale of Object.values(nextLocales)) {
   await writeFile(locale.filePath, locale.source);
 }
-await unlink(selectedPath);
+await unlink(resolve(queueDir, selectedName));
 
 console.log(`Published ${post.slug} for ${targetDate} (from ${selectedName})`);
 

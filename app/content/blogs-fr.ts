@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"versioning-public-apis-used-by-mobile-clients": {
+    title: "Versionner les API publiques pour clients mobiles",
+    excerpt: "Les clients mobiles ne déploient pas chaque semaine; ignorer cela casse la prod.",
+    description: "Époques d'API, évolution additive, garde-fous de mise à jour et télémétrie de dépréciation.",
+    sections: [
+      {
+        heading: "Le décalage mobile est permanent",
+        paragraphs: [
+          "Review store et MDM imposent plusieurs générations clients.",
+          "La plus vieille version supportée est un consommateur de premier plan.",
+        ],
+      },
+      {
+        heading: "Versionner par contrat",
+        paragraphs: [
+          "Époques explicites et identité de build par requête.",
+          "Pas de retrait de champs sans dépréciation mesurée.",
+        ],
+        points: [
+          "Publish a mobile compatibility matrix with minimum app versions per API epoch",
+          "Treat breaking changes as contract events with sunset dates in responses",
+          "Run shadow traffic from oldest supported app builds in CI",
+          "Instrument version skew: which app builds hit deprecated fields",
+        ],
+      },
+      {
+        heading: "Coordonner release et support",
+        paragraphs: [
+          "Sunsets avec upgrade in-app.",
+          "Tests de contrat sur le plus vieux bundle.",
+        ],
+      },
+      {
+        heading: "Mesurer le skew avant coupure",
+        paragraphs: [
+          "Tableaux de bord versions vs époques.",
+          "Évolution prévisible.",
+        ],
+        links: [
+          {
+            label: "Stripe — API versioning",
+            url: "https://stripe.com/docs/api/versioning",
+          },
+          {
+            label: "Microsoft — REST API guidelines",
+            url: "https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md",
+          },
+          {
+            label: "Apple — App Store review guidelines",
+            url: "https://developer.apple.com/app-store/review/guidelines/",
+          },
+        ],
+      },
+    ],
+  },
 "observability-for-streaming-llm-responses": {
     title: "Observabilité des réponses LLM en streaming",
     excerpt: "Le time-to-first-token change la perception qualité. Si vos traces s'arrêtent à HTTP, vous volez à l'aveugle pendant la plus longue partie de la requête.",

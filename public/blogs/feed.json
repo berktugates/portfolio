@@ -1,8 +1,30 @@
 {
   "version": 1,
   "site": "https://berktugberke.com",
-  "generatedAt": "2026-10-18T20:04:17.431Z",
+  "generatedAt": "2026-10-18T20:51:33.021Z",
   "posts": [
+    {
+      "id": "versioning-public-apis-used-by-mobile-clients",
+      "slug": "versioning-public-apis-used-by-mobile-clients",
+      "title": "Versioning Public APIs Used by Mobile Clients",
+      "url": "https://berktugberke.com/blogs/versioning-public-apis-used-by-mobile-clients",
+      "publishedAt": "2026-10-19",
+      "tags": [
+        "API versioning",
+        "mobile clients",
+        "backward compatibility",
+        "REST API",
+        "Expo",
+        "release engineering"
+      ],
+      "excerpt": "Mobile clients ship on human timelines. If your API versioning story assumes everyone refreshes weekly, you will break production users who cannot update until the store approves.",
+      "bodyPlain": "App store review, enterprise MDM freezes, and users who ignore updates mean your API must serve multiple client generations simultaneously. Web can hide behind a deploy; mobile cannot.\n\nStaff ownership treats oldest supported app version as a first-class consumer. Breaking changes are product decisions with sunset windows, not surprise 400s on Monday morning.\n\nPrefer explicit API epochs via headers or path prefixes over implicit 'we deployed Friday.' Document what is additive, what is deprecated, and what requires a new epoch. Clients should send their build identity on every request so you can route, shadow, or block safely.\n\nNever remove fields without a measured deprecation period. Return sunset hints in structured error payloads and analytics events so product can message upgrades before hard cutoffs.\n\nPublish a mobile compatibility matrix with minimum app versions per API epoch\n\nTreat breaking changes as contract events with sunset dates in responses\n\nRun shadow traffic from oldest supported app builds in CI\n\nInstrument version skew: which app builds hit deprecated fields\n\nPair API sunsets with in-app upgrade prompts and support macros. Forced upgrade is a product lever—use it sparingly for security or irreversible data migrations, not for routine refactors.\n\nContract tests should run against the oldest supported client bundle in CI, not only the latest main branch. Mobile API versioning is release engineering for users who cannot git pull.\n\nDashboard active app versions against API epoch usage. Spikes in deprecated endpoints after a release often mean a client bug, not stubborn users.\n\nA disciplined versioning story lets you ship backend improvements without holding mobile hostage. The goal is predictable evolution, not infinite backward compatibility for dead builds.",
+      "contentHash": "feed807e120c8d70",
+      "socialThreadTr": [
+        "Mobil istemci haftalık deploy etmez; mağaza onayı insan zaman çizelgesindedir. API sürümleme hikâyeniz bunu yok sayıyorsa üretim kullanıcısını kırarsınız. 🧵",
+        "Epoch, additive evrim, zorunlu güncelleme guardrail'leri ve skew telemetrisi. Detay: https://berktugberke.com/tr/blogs/versioning-public-apis-used-by-mobile-clients"
+      ]
+    },
     {
       "id": "observability-for-streaming-llm-responses",
       "slug": "observability-for-streaming-llm-responses",
