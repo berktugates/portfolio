@@ -1,4 +1,5 @@
 import { contactInboundEmail } from "./contact-inbound";
+import { sendViaZohoSmtp } from "./send-via-zoho-smtp";
 
 type ContactEmailPayload = {
   name: string;
@@ -9,11 +10,18 @@ type ContactEmailPayload = {
   sentAt: number;
 };
 
-async function sendViaFormSubmit(payload: ContactEmailPayload): Promise<boolean> {
+function formSubmitEndpoint(): string | null {
+  const id = process.env.CONTACT_FORMSUBMIT_ID?.trim();
+  if (id) return id;
   const inbox = process.env.CONTACT_FORMSUBMIT_EMAIL?.trim();
-  if (!inbox) return false;
+  return inbox || null;
+}
 
-  const response = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(inbox)}`, {
+async function sendViaFormSubmit(payload: ContactEmailPayload): Promise<boolean> {
+  const endpoint = formSubmitEndpoint();
+  if (!endpoint) return false;
+
+  const response = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(endpoint)}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -102,6 +110,11 @@ async function sendViaEmailJs(payload: ContactEmailPayload): Promise<boolean> {
 }
 
 export async function sendContactEmail(payload: ContactEmailPayload): Promise<boolean> {
+  try {
+    if (await sendViaZohoSmtp(payload)) return true;
+  } catch {
+    // fall through to legacy providers
+  }
   if (await sendViaFormSubmit(payload)) return true;
   if (await sendViaContentPublisher(payload)) return true;
   return sendViaEmailJs(payload);

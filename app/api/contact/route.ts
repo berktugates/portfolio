@@ -8,6 +8,7 @@ import {
 } from "../../lib/contact-form";
 import { getContactPageCopy } from "../../lib/i18n/contact-page-copy";
 import { sendContactEmail } from "../../lib/send-contact-email";
+import { isZohoSmtpConfigured } from "../../lib/send-via-zoho-smtp";
 
 export const dynamic = "force-dynamic";
 
@@ -112,7 +113,8 @@ export async function POST(request: Request) {
   }
 
   const canDeliver =
-    Boolean(process.env.CONTACT_FORMSUBMIT_EMAIL?.trim()) ||
+    isZohoSmtpConfigured() ||
+    Boolean(process.env.CONTACT_FORMSUBMIT_ID?.trim() || process.env.CONTACT_FORMSUBMIT_EMAIL?.trim()) ||
     Boolean(process.env.CONTENT_PUBLISHER_CONTACT_URL?.trim() && process.env.CONTACT_INGEST_SECRET?.trim()) ||
     Boolean(
       process.env.EMAILJS_SERVICE_ID?.trim() &&

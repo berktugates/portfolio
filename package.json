@@ -44,6 +44,7 @@
     "test:e2e:webkit": "playwright test --project=webkit"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.888.0",
     "@berktug/editorial-gates": "workspace:*",
     "@radix-ui/react-slot": "^1.3.3",
     "@radix-ui/react-tooltip": "^1.2.16",
@@ -53,16 +54,17 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.542.0",
     "next": "16.3.1",
+    "nodemailer": "^10.1.7",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-github-calendar": "5.0.8",
-    "tailwind-merge": "^3.6.0",
-    "@aws-sdk/client-s3": "^3.888.0"
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22",
+    "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
