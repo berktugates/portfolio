@@ -41,6 +41,16 @@ def en_sections(h1, p1, h2, p2, points, h3, p3, h4, p4, links):
 
 
 def write_post(filename, body):
+    slug = body.get("slug")
+    blogs_ts = Path(__file__).resolve().parent.parent / "app" / "data" / "blogs.ts"
+    if slug and blogs_ts.is_file():
+        live = blogs_ts.read_text(encoding="utf-8")
+        if f'slug: "{slug}"' in live:
+            stale = QUEUE / filename
+            if stale.is_file():
+                stale.unlink()
+            print(f"skip {filename} (already live)")
+            return
     path = QUEUE / filename
     path.write_text(json.dumps(body, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(path.name)

@@ -42,14 +42,31 @@ if (queueFiles.length === 0) {
 }
 
 const preferred = queueFiles.find((name) => name.startsWith(`${targetDate}-`));
-const selectedName = preferred ?? queueFiles[0];
-const selectedPath = resolve(queueDir, selectedName);
-const post = JSON.parse(await readFile(selectedPath, "utf8"));
+const candidates = preferred
+  ? [preferred, ...queueFiles.filter((name) => name !== preferred)]
+  : queueFiles;
 
-assertPost(post);
-if (blogsSource.includes(`slug: "${post.slug}"`)) {
-  console.error(`Slug already exists: ${post.slug}`);
-  process.exit(1);
+let selectedName = null;
+let post = null;
+for (const name of candidates) {
+  const candidatePath = resolve(queueDir, name);
+  const candidate = JSON.parse(await readFile(candidatePath, "utf8"));
+  assertPost(candidate);
+  if (blogsSource.includes(`slug: "${candidate.slug}"`)) {
+    console.log(`Queue cleanup: drop already-live slug ${candidate.slug} (${name})`);
+    if (!dryRun) {
+      await unlink(candidatePath);
+    }
+    continue;
+  }
+  selectedName = name;
+  post = candidate;
+  break;
+}
+
+if (!post || !selectedName) {
+  console.log("::warning::No publishable queue item; skipping publish.");
+  process.exit(0);
 }
 
 const enObject = {
