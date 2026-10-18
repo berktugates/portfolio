@@ -158,7 +158,7 @@ export async function BlogDetailPage({
   };
 
   return (
-    <div lang={meta.htmlLang} dir={meta.dir} className="relative mx-auto min-h-screen w-full max-w-screen-sm px-4 pt-20">
+    <div lang={meta.htmlLang} dir={meta.dir} className="mx-auto min-h-screen w-full max-w-screen-sm px-4 pt-20">
       <SiteHeader
         homeHref={homeHref}
         name={dict.headerName}
@@ -167,9 +167,6 @@ export async function BlogDetailPage({
         contactLabel={dict.contact}
         contactHref={contactPath(locale)}
       />
-      <div className="absolute right-4 top-24">
-        <CopyUrl />
-      </div>
       <main className="blog-prose mt-12 pb-20">
         <Link
           href={blogsIndexPath(locale)}
@@ -180,7 +177,17 @@ export async function BlogDetailPage({
         </Link>
         <article>
           <header className="mb-10">
-            <h1 style={{ viewTransitionName: `blog-title-${post.slug}` }}>{post.title}</h1>
+            <div className="not-prose mb-4 flex items-start justify-between gap-3 sm:gap-4">
+              <h1
+                className="min-w-0 flex-1 text-balance text-xl font-medium text-zinc-950 dark:text-zinc-50"
+                style={{ viewTransitionName: `blog-title-${post.slug}` }}
+              >
+                {post.title}
+              </h1>
+              <div className="shrink-0 pt-0.5 sm:pt-1">
+                <CopyUrl />
+              </div>
+            </div>
             <p className="!my-0 text-sm text-zinc-500 dark:text-zinc-400">
               <time dateTime={post.publishedAt}>{formattedDate}</time>
               {" · "}
