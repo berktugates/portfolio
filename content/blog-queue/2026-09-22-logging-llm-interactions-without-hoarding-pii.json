@@ -70,35 +70,43 @@
         {
           "heading": "Loglar ücretsiz arşiv değildir",
           "paragraphs": [
-            "Varsayılan olarak tam prompt loglayan ekipler, bunları analitik araçları, destek export'ları ve geniş erişim rolleriyle zamanla sızdırır.",
-            "LLM transkriptlerini kimlik bilgisine yakın veri gibi ele alın: minimize edin, redakte edin, erişimi döndürün ve programlı süre sonunda silin."
+            [
+              "Varsayılan olarak tam prompt loglayan ekipler, bunları analitik araçları, destek export'ları ve geniş erişim rolleriyle zamanla sızdırır.",
+              "LLM transkriptlerini kimlik bilgisine yakın veri gibi ele alın: minimize edin, redakte edin, erişimi döndürün ve programlı süre sonunda silin."
+            ]
           ]
         },
         {
           "heading": "Transkriptleri hassasiyete göre katmanla",
           "paragraphs": [
-            "Olay debug için sıcak, örneklem eval için ılık, ürün trendleri için soğuk aggregate saklama tanımlayın.",
-            "Pazarlama ambarlarının ham sohbet çekmesine, belgelenmiş hukuki dayanak ve silme job'u olmadan izin vermeyin."
+            [
+              "Olay debug için sıcak, örneklem eval için ılık, ürün trendleri için soğuk aggregate saklama tanımlayın.",
+              "Pazarlama ambarlarının ham sohbet çekmesine, belgelenmiş hukuki dayanak ve silme job'u olmadan izin vermeyin."
+            ]
           ],
           "points": [
-            "Varsayılan ham dump yerine redaksiyon katmanlı prompt/çıktı loglayın",
-            "PII taşıyan transkriptleri aggregate kalite metriklerinden ayırın",
-            "Katman bazlı saklamayı hukuk ve ürün onayıyla tanımlayın",
-            "Export hacmi sıçramalarını veri sızıntısı yolu gibi alarm layın"
+            "Log prompts and outputs with redaction tiers, not raw dumps by default",
+            "Separate PII-bearing transcripts from aggregate quality metrics",
+            "Define retention per tier with legal and product sign-off",
+            "Alert on export volume spikes like any other data exfil path"
           ]
         },
         {
           "heading": "Kalite için örnekle, trend için aggregate et",
           "paragraphs": [
-            "Kalite ekiplerinin tam geçmişe değil, temsili örneklere ihtiyacı var. Sonuç, gecikme ve red türüne göre tabakalı örnekleme kullanın.",
-            "Mümkün olduğunda kullanıcı metni saklamadan token kullanımı ve hata kodlarını aggregate edin."
+            [
+              "Kalite ekiplerinin tam geçmişe değil, temsili örneklere ihtiyacı var. Sonuç, gecikme ve red türüne göre tabakalı örnekleme kullanın.",
+              "Mümkün olduğunda kullanıcı metni saklamadan token kullanımı ve hata kodlarını aggregate edin."
+            ]
           ]
         },
         {
           "heading": "Export'ları güvenlik olayı gibi işlet",
           "paragraphs": [
-            "Toplu export uçları ve notebook indirmeleri, veritabanı dump'larıyla aynı alarmları tetiklemeli.",
-            "İyi loglama, Mart'ta KVKK/GDPR talebi açıklamak zorunda kalmadan Salı günü debug etmenizi sağlar."
+            [
+              "Toplu export uçları ve notebook indirmeleri, veritabanı dump'larıyla aynı alarmları tetiklemeli.",
+              "İyi loglama, Mart'ta KVKK/GDPR talebi açıklamak zorunda kalmadan Salı günü debug etmenizi sağlar."
+            ]
           ],
           "links": [
             {
@@ -114,22 +122,26 @@
       ]
     },
     "de": {
-      "title": "Logging LLM Interactions Without Hoarding PII",
-      "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
-      "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+      "title": "LLM-Interaktionen loggen ohne PII-Hortung",
+      "excerpt": "Copilots lassen sich ohne Traces nicht debuggen; jeder Chat darf kein dauerhafter Warehouse-Tank sein.",
+      "description": "Staff-Muster für LLM-Logging: Redaktionsstufen, Sampling, Retention-Klassen und Observability für Compliance.",
       "sections": [
         {
-          "heading": "Logs are not a free archive",
+          "heading": "Logs sind kein Gratisarchiv",
           "paragraphs": [
-            "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
-            "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule."
+            [
+              "Teams mit Voll-Prompt-Logging leaken früher oder später über Analytics, Support-Exporte und zu breite Rollen.",
+              "Behandeln Sie Transkripte wie credentials-nahe Daten: minimieren, redigieren, Zugriff rotieren, planmäßig löschen."
+            ]
           ]
         },
         {
-          "heading": "Tier transcripts by sensitivity",
+          "heading": "Transkripte nach Sensibilität stufen",
           "paragraphs": [
-            "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
-            "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job."
+            [
+              "Heiße Speicher für Incidents, warme für Eval-Samples, kalte Aggregate für Produkt-Trends.",
+              "Rohe Chats ohne Rechtsgrundlage und Löschjobs nicht ins Marketing-Warehouse."
+            ]
           ],
           "points": [
             "Log prompts and outputs with redaction tiers, not raw dumps by default",
@@ -139,17 +151,21 @@
           ]
         },
         {
-          "heading": "Sample for quality, aggregate for trends",
+          "heading": "Für Qualität sampeln, für Trends aggregieren",
           "paragraphs": [
-            "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
-            "Aggregate token usage and error codes without storing user text when possible."
+            [
+              "Qualität braucht repräsentative Stichproben, nicht die komplette Historie. Stratifiziert nach Outcome, Latenz und Refusal.",
+              "Token-Nutzung und Fehlercodes aggregieren, ohne Nutzertext wenn möglich."
+            ]
           ]
         },
         {
-          "heading": "Operate exports as security events",
+          "heading": "Exporte wie Sicherheitsereignisse behandeln",
           "paragraphs": [
-            "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
-            "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March."
+            [
+              "Bulk-Exporte und Notebook-Downloads wie DB-Dumps alarmieren.",
+              "Gutes Logging debuggt Dienstag, ohne GDPR-Erklärung im März."
+            ]
           ],
           "links": [
             {
@@ -165,22 +181,26 @@
       ]
     },
     "fr": {
-      "title": "Logging LLM Interactions Without Hoarding PII",
-      "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
-      "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+      "title": "Journaliser les interactions LLM sans accumuler de PII",
+      "excerpt": "Impossible de déboguer un copilote sans traces; chaque chat ne doit pas alimenter un entrepôt permanent.",
+      "description": "Patterns staff : niveaux de rédaction, échantillonnage, classes de rétention et observabilité validée compliance.",
       "sections": [
         {
-          "heading": "Logs are not a free archive",
+          "heading": "Les logs ne sont pas une archive gratuite",
           "paragraphs": [
-            "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
-            "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule."
+            [
+              "Logger les prompts complets par défaut finit par fuiter via analytics, exports support et rôles trop larges.",
+              "Traitez les transcriptions comme des données proches des identifiants : minimiser, rédiger, faire expirer."
+            ]
           ]
         },
         {
-          "heading": "Tier transcripts by sensitivity",
+          "heading": "Stratifier les transcriptions par sensibilité",
           "paragraphs": [
-            "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
-            "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job."
+            [
+              "Stockage chaud pour incidents, tiède pour eval échantillonnée, froid pour tendances produit.",
+              "Pas de chats bruts en warehouse marketing sans base légale et job de suppression."
+            ]
           ],
           "points": [
             "Log prompts and outputs with redaction tiers, not raw dumps by default",
@@ -190,17 +210,21 @@
           ]
         },
         {
-          "heading": "Sample for quality, aggregate for trends",
+          "heading": "Échantillonner pour la qualité, agréger pour les tendances",
           "paragraphs": [
-            "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
-            "Aggregate token usage and error codes without storing user text when possible."
+            [
+              "La qualité a besoin d'échantillons représentatifs, pas de l'historique complet. Échantillonnage stratifié par résultat et refus.",
+              "Agréger tokens et codes d'erreur sans texte utilisateur quand c'est possible."
+            ]
           ]
         },
         {
-          "heading": "Operate exports as security events",
+          "heading": "Traiter les exports comme des événements sécurité",
           "paragraphs": [
-            "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
-            "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March."
+            [
+              "Exports massifs et notebooks : mêmes alertes que les dumps base de données.",
+              "Un bon logging permet de déboguer mardi sans expliquer une demande RGPD en mars."
+            ]
           ],
           "links": [
             {
@@ -216,22 +240,26 @@
       ]
     },
     "it": {
-      "title": "Logging LLM Interactions Without Hoarding PII",
-      "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
-      "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+      "title": "Loggare interazioni LLM senza accumulare PII",
+      "excerpt": "Senza trace non debugghi i copilot in produzione; ogni chat non può essere carburante permanente del warehouse.",
+      "description": "Pattern staff per logging LLM: livelli di redazione, campionamento, classi di retention e observability compliance-ready.",
       "sections": [
         {
-          "heading": "Logs are not a free archive",
+          "heading": "I log non sono archivio gratuito",
           "paragraphs": [
-            "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
-            "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule."
+            [
+              "Chi logga prompt completi per default finisce per perdere dati via analytics, export support e ruoli troppo ampi.",
+              "Tratta le trascrizioni come dati vicini alle credenziali: minimizza, redigi, ruota accessi, scadenza programmata."
+            ]
           ]
         },
         {
-          "heading": "Tier transcripts by sensitivity",
+          "heading": "Stratifica le trascrizioni per sensibilità",
           "paragraphs": [
-            "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
-            "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job."
+            [
+              "Storage caldo per incident, tiepido per eval campionata, freddo per trend prodotto.",
+              "Niente chat raw nel warehouse marketing senza base legale e job di cancellazione."
+            ]
           ],
           "points": [
             "Log prompts and outputs with redaction tiers, not raw dumps by default",
@@ -241,17 +269,21 @@
           ]
         },
         {
-          "heading": "Sample for quality, aggregate for trends",
+          "heading": "Campiona per qualità, aggrega per trend",
           "paragraphs": [
-            "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
-            "Aggregate token usage and error codes without storing user text when possible."
+            [
+              "La qualità vuole campioni rappresentativi, non tutta la storia. Campionamento stratificato per esito e rifiuto.",
+              "Aggrega token e codici errore senza testo utente quando possibile."
+            ]
           ]
         },
         {
-          "heading": "Operate exports as security events",
+          "heading": "Gestisci gli export come eventi di sicurezza",
           "paragraphs": [
-            "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
-            "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March."
+            [
+              "Export bulk e download notebook: stesse alert dei dump database.",
+              "Un buon logging debugga martedì senza spiegare GDPR a marzo."
+            ]
           ],
           "links": [
             {
@@ -267,22 +299,26 @@
       ]
     },
     "zh": {
-      "title": "Logging LLM Interactions Without Hoarding PII",
-      "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
-      "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+      "title": "记录 LLM 交互而不囤积 PII",
+      "excerpt": "没有追踪无法调试生产 copilot；也不能把每次聊天当永久仓库存料。",
+      "description": "LLM 交互日志的 staff 模式：脱敏层级、抽样、保留类别与合规可过的可观测性。",
       "sections": [
         {
-          "heading": "Logs are not a free archive",
+          "heading": "日志不是免费档案",
           "paragraphs": [
-            "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
-            "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule."
+            [
+              "默认记录完整 prompt 的团队终会通过分析、支持导出和过宽角色泄露。",
+              "把转录当近凭证数据处理：最小化、脱敏、轮换访问、按期删除。"
+            ]
           ]
         },
         {
-          "heading": "Tier transcripts by sensitivity",
+          "heading": "按敏感度分层转录",
           "paragraphs": [
-            "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
-            "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job."
+            [
+              "热存事件调试、温存评测样本、冷存产品趋势聚合。",
+              "营销仓不得无合法依据与删除任务 ingest 原始聊天。"
+            ]
           ],
           "points": [
             "Log prompts and outputs with redaction tiers, not raw dumps by default",
@@ -292,17 +328,21 @@
           ]
         },
         {
-          "heading": "Sample for quality, aggregate for trends",
+          "heading": "质量抽样、趋势聚合",
           "paragraphs": [
-            "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
-            "Aggregate token usage and error codes without storing user text when possible."
+            [
+              "质量团队要代表性样本而非全历史；按结果、延迟与拒绝类型分层抽样。",
+              "尽可能聚合 token 与错误码而不存用户文本。"
+            ]
           ]
         },
         {
-          "heading": "Operate exports as security events",
+          "heading": "把导出当安全事件运营",
           "paragraphs": [
-            "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
-            "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March."
+            [
+              "批量导出与 notebook 下载应像数据库 dump 一样告警。",
+              "好的日志让你周二能排障，三月不必解释 GDPR 请求。"
+            ]
           ],
           "links": [
             {
@@ -318,22 +358,26 @@
       ]
     },
     "ja": {
-      "title": "Logging LLM Interactions Without Hoarding PII",
-      "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
-      "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+      "title": "PIIを溜め込まずLLM対話をログする",
+      "excerpt": "トレースなしでは本番コパイロットをデバッグできない。全チャットを永久ウェアハウス燃料にしてはいけない。",
+      "description": "LLM対話ログのスタッフパターン：編集階層、サンプリング、保持クラス、コンプライアンスを通る可観測性。",
       "sections": [
         {
-          "heading": "Logs are not a free archive",
+          "heading": "ログは無料アーカイブではない",
           "paragraphs": [
-            "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
-            "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule."
+            [
+              "デフォルトで全文プロンプトをログするチームは分析、サポートエクスポート、広いロールから漏らす。",
+              "トランスクリプトをクレデンシャル近傍データとして最小化・編集・期限削除。"
+            ]
           ]
         },
         {
-          "heading": "Tier transcripts by sensitivity",
+          "heading": "機密度でトランスクリプトを階層化",
           "paragraphs": [
-            "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
-            "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job."
+            [
+              "インシデントはホット、評価サンプルはウォーム、プロダクトトレンドはコールド集計。",
+              "法的根拠と削除ジョブなしにマーケ倉庫へ生チャットを入れない。"
+            ]
           ],
           "points": [
             "Log prompts and outputs with redaction tiers, not raw dumps by default",
@@ -343,17 +387,21 @@
           ]
         },
         {
-          "heading": "Sample for quality, aggregate for trends",
+          "heading": "品質はサンプル、トレンドは集計",
           "paragraphs": [
-            "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
-            "Aggregate token usage and error codes without storing user text when possible."
+            [
+              "品質は全履歴ではなく代表サンプル。結果・レイテンシ・拒否で層化サンプル。",
+              "可能ならユーザーテキストなしでトークンとエラーコードを集計。"
+            ]
           ]
         },
         {
-          "heading": "Operate exports as security events",
+          "heading": "エクスポートをセキュリティイベントとして運用",
           "paragraphs": [
-            "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
-            "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March."
+            [
+              "一括エクスポートとノートブックDLはDBダンプと同様にアラート。",
+              "良いログは火曜にデバッグし、3月にGDPR説明を不要にする。"
+            ]
           ],
           "links": [
             {

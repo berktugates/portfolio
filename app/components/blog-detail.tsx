@@ -186,7 +186,16 @@ export async function BlogDetailPage({
               {formatMessage(content.ui.minRead, { minutes: post.readingMinutes })}
             </p>
             <p className="mt-5 text-lg leading-8 text-zinc-600 dark:text-zinc-300">{post.excerpt}</p>
-            <BlogShare title={post.title} url={path} />
+            <BlogShare
+              title={post.title}
+              url={path}
+              label={content.ui.shareArticle}
+              navAriaLabel={content.ui.shareNavAria}
+              facebookAriaLabel={content.ui.shareOnFacebook}
+              xAriaLabel={content.ui.shareOnX}
+              redditAriaLabel={content.ui.shareOnReddit}
+              whatsAppAriaLabel={content.ui.shareOnWhatsApp}
+            />
           </header>
           {post.sections.map((section) => (
             <section key={section.heading}>

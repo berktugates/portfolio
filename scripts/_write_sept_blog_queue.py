@@ -1,6 +1,20 @@
 #!/usr/bin/env python3
 import json
+import sys
 from pathlib import Path
+
+_script_dir = Path(__file__).resolve().parent
+if str(_script_dir) not in sys.path:
+    sys.path.insert(0, str(_script_dir))
+from blog_queue_seo_blocks import (  # noqa: E402
+    blocks5,
+    blocks6,
+    blocks7,
+    blocks8,
+    blocks9,
+    blocks10,
+    blocks11,
+)
 
 QUEUE = Path(__file__).resolve().parent.parent / "content" / "blog-queue"
 
@@ -533,12 +547,28 @@ def locales_tr_plus_en_mirror(tr, points_tr, title, excerpt, description, headin
     return {"tr": tr_block, "de": en_block, "fr": en_block, "it": en_block, "zh": en_block, "ja": en_block}
 
 
-def seo_post(filename, slug, title, excerpt, description, keywords, social_tr, h, paras, points, links, tr=None, points_tr=None):
-    locales = (
-        locales_tr_plus_en_mirror(tr, points_tr, title, excerpt, description, h, paras, points, links)
-        if tr is not None and points_tr is not None
-        else en_only_locales(title, excerpt, description, h, paras, points, links)
-    )
+def seo_post(
+    filename,
+    slug,
+    title,
+    excerpt,
+    description,
+    keywords,
+    social_tr,
+    h,
+    paras,
+    points,
+    links,
+    tr=None,
+    points_tr=None,
+    blocks=None,
+):
+    if blocks is not None:
+        locales = i18n(blocks, points, links)
+    elif tr is not None and points_tr is not None:
+        locales = locales_tr_plus_en_mirror(tr, points_tr, title, excerpt, description, h, paras, points, links)
+    else:
+        locales = en_only_locales(title, excerpt, description, h, paras, points, links)
     write_post(
         filename,
         {
@@ -602,41 +632,7 @@ seo_post(
     ],
     pts5,
     links5,
-    tr=(
-        "PII Biriktirmeden LLM Etkileşimlerini Loglama",
-        "Üretim copilot'larını traces olmadan debug edemezsiniz; ama her sohbeti kalıcı veri ambarı yakıtı sayamazsınız. Log tasarımı gizlilik ve maliyet kararıdır.",
-        "LLM etkileşim logları için staff kalıpları: redaksiyon katmanları, örnekleme, saklama sınıfları ve uyum incelemesinden geçen observability.",
-        [
-            "Loglar ücretsiz arşiv değildir",
-            "Transkriptleri hassasiyete göre katmanla",
-            "Kalite için örnekle, trend için aggregate et",
-            "Export'ları güvenlik olayı gibi işlet",
-        ],
-        [
-            [
-                "Varsayılan olarak tam prompt loglayan ekipler, bunları analitik araçları, destek export'ları ve geniş erişim rolleriyle zamanla sızdırır.",
-                "LLM transkriptlerini kimlik bilgisine yakın veri gibi ele alın: minimize edin, redakte edin, erişimi döndürün ve programlı süre sonunda silin.",
-            ],
-            [
-                "Olay debug için sıcak, örneklem eval için ılık, ürün trendleri için soğuk aggregate saklama tanımlayın.",
-                "Pazarlama ambarlarının ham sohbet çekmesine, belgelenmiş hukuki dayanak ve silme job'u olmadan izin vermeyin.",
-            ],
-            [
-                "Kalite ekiplerinin tam geçmişe değil, temsili örneklere ihtiyacı var. Sonuç, gecikme ve red türüne göre tabakalı örnekleme kullanın.",
-                "Mümkün olduğunda kullanıcı metni saklamadan token kullanımı ve hata kodlarını aggregate edin.",
-            ],
-            [
-                "Toplu export uçları ve notebook indirmeleri, veritabanı dump'larıyla aynı alarmları tetiklemeli.",
-                "İyi loglama, Mart'ta KVKK/GDPR talebi açıklamak zorunda kalmadan Salı günü debug etmenizi sağlar.",
-            ],
-        ],
-    ),
-    points_tr=[
-        "Varsayılan ham dump yerine redaksiyon katmanlı prompt/çıktı loglayın",
-        "PII taşıyan transkriptleri aggregate kalite metriklerinden ayırın",
-        "Katman bazlı saklamayı hukuk ve ürün onayıyla tanımlayın",
-        "Export hacmi sıçramalarını veri sızıntısı yolu gibi alarm layın",
-    ],
+    blocks=blocks5,
 )
 
 links6 = [
@@ -686,41 +682,7 @@ seo_post(
     ],
     pts6,
     links6,
-    tr=(
-        "Pazarlama ve Uygulama Rotaları için Performans Bütçeleri",
-        "Pazarlama sayfaları ve kimlik doğrulamalı app shell'ler farklı nedenlerle çöker; ortak kural: bütçe yoksa her lansman ağırlık ekler, arama ve dönüşüm sessizce zarar görür.",
-        "Staff mühendislerin rota bazlı performans bütçesi, CI bağlantısı ve pazarlama ile ürün yüzeylerini ölçülebilir LCP/INP sınırlarında tutma yöntemi.",
-        [
-            "Şablonların kendi bütçesi olmalı",
-            "Performansı release train ile birlikte gönder",
-            "Yavaş ağları kasıtlı test et",
-            "Performansı ürüne görünür kıl",
-        ],
-        [
-            [
-                "Landing sayfaları ilk boyamada yarışır; dashboard'lar etkileşim hazırlığında. Tek global bundle bütçesi hangi ekibin hangi yüzeyi bozduğunu gizler.",
-                "Rota sınıfı ve üçüncü taraf etiket sahipliğine göre bütçe ayırın; pazarlama deneyleri mühendislik varsayılanını miras almasın.",
-            ],
-            [
-                "Yoğun trafikli şablonlar için preview deploy'lara bütçe kontrolü ekleyin. LCP'yi patlatan merge'leri sahibi olan açık waiver olmadan bloklayın.",
-                "INP eşiği canary'de aşıldığında bir haftalık şikayetten önce feature flag geri alın.",
-            ],
-            [
-                "Hızlı laptop lab testleri yalan söyler. Temsili mobil profil ve önbellek durumlarında smoke perf çalıştırın.",
-                "Hero görsel baytları, font yükleme stratejisi ve hydration maliyetini birinci sınıf metrik sayın.",
-            ],
-            [
-                "Ürün yöneticileri dönüşümün yanında perf trendini görmeli, yıllık infra review'da değil.",
-                "Bütçeler, SEO ve UX'in postmortem teması olmasını engeller.",
-            ],
-        ],
-    ),
-    points_tr=[
-        "LCP ve INP'yi yalnızca global değil şablon bazında bütçele",
-        "Perf regresyonlarını release train ve rollback kurallarına bağla",
-        "CI smoke'ta gerçek cihaz ve yavaş ağ ölç",
-        "Hata oranının yanında perf panolarını ürüne aç",
-    ],
+    blocks=blocks6,
 )
 
 links7 = [
@@ -770,41 +732,7 @@ seo_post(
     ],
     pts7,
     links7,
-    tr=(
-        "Ajans Kopyası Değil, Editöryal Brifing için SEO",
-        "Trafik için manşet yeniden yayınlamak, tarayıcıları düşük güvenilir kopya olarak görmeye alıştırır. Analiz, net tarih ve dürüst yapılandırılmış veri ekleyen brifingler aramayla farklı ilişki kurar.",
-        "Editöryal brifing siteleri için staff SEO: schema disiplini, alt alan canonical'ları, ölçüm ve ajans kopyası tuzaklarından kaçınan kalite kapıları.",
-        [
-            "Brifingler yeniden yazım değildir",
-            "Yapılandırılmış veri sayfayla uyumlu olmalı",
-            "Host ve hreflang dürüst kalır",
-            "İçerik yüzeyine göre analitik",
-        ],
-        [
-            [
-                "Arama sistemleri net yazım, güncelleme tarihi ve özgün sentezi ödüllendirir. Trend sorgularının ince yeniden yazımları crawl bütçesini yakar, marka inşa etmez.",
-                "Editöryal brifingler ne olduklarını açıkça söylemeli: atıflı birincil kaynaklarla analiz, canlı haber telgrafı değil.",
-            ],
-            [
-                "NewsArticle işaretlemesi görünen başlık, görsel ve tarihlerle örtüşmeli. Uyumsuzluk, hiç işaretlemeden daha kötüdür.",
-                "Stok görsellerde UI'da lisans metadatası olmalı; sahte foto muhabirliği ipuçları kullanılmamalı.",
-            ],
-            [
-                "Haberler ayrı host'ta yaşarken sitemap ve iç linkleme, ilgisiz site graflarına sızmak yerine bu sınırı korumalı.",
-                "Yönlendirme ve canonical etiketleri kullanıcı ve tarayıcıyı doğru yüzeye indirmeli.",
-            ],
-            [
-                "Analitikte içerik grubu etiketleyin; ürün, blog ve haber yüzeyleri çift sayım olmadan karşılaştırılabilir olsun.",
-                "Brifing SEO'su uzun oyun: tutarlılık, dürüstlük ve ölçülebilir kalite günlük kopyala-yapıştıyı geçer.",
-            ],
-        ],
-    ),
-    points_tr=[
-        "Editöryal brifingleri tel kopyasından schema ve UI'da ayır",
-        "Stok görseli dürüst atıfla kullan, olay fotoğrafı gibi gösterme",
-        "Host bazında hreflang ve canonical hizalı tut",
-        "Yüzey bazında content_group ile ölç",
-    ],
+    blocks=blocks7,
 )
 
 links8 = [
@@ -854,41 +782,7 @@ seo_post(
     ],
     pts8,
     links8,
-    tr=(
-        "LLM Eval Kapıları CI'da, Slayt Değil",
-        "Demo kalitesinde prompt'lar prod trafiğinde çöker. Eval yalnızca notebook'ta yaşarsa her model değişimi ürün piyangosu olur.",
-        "CI'da LLM değerlendirme için staff kalıpları: golden veri setleri, regresyon eşikleri, maliyet duyarlı örnekleme ve ürünün güvenebileceği release kapıları.",
-        [
-            "Eval'ler release altyapısıdır",
-            "Golden set'in sahibi olmalı",
-            "Online örnekle, offline kilitle",
-            "Regresyonları görünür kıl",
-        ],
-        [
-            [
-                "Yalnızca gözle kontrol eden ekipler hataları destek ticket'larında görür. Eval harness'leri 'iyi görünüyor'u prompt, tool ve locale boyunca karşılaştırılabilir skorlara çevirir.",
-                "Veri setlerini kod gibi versiyonlayın; onaysız golden case düzenlemesi model regresyonunu davranış değişikliğinden ayıramaz.",
-            ],
-            [
-                "Gelir veya uyum yollarına bağlı küçük, yüksek sinyalli golden set ile başlayın—pazarlama kopyasından yüzlerce belirsiz prompt değil.",
-                "Her vaka tool şekli, atıf, red davranışı veya sayısal sınır assert etmeli; yalnızca benzerlik skoru yetmez.",
-            ],
-            [
-                "CI her PR'da hızlı eval alt kümesi, gece tam suite çalıştırmalı. Pahalı judge modeller zamanlanmış job'larda olmalı, her push'ta değil.",
-                "Prod shadow trafik offline eval'i tamamlar; kapının yerini tutmaz çünkü olay zaten kullanıcıya görünür.",
-            ],
-            [
-                "Eval trendlerini gecikme ve maliyetin yanında yayınlayın. Model yükseltmesi kalite skorunu kazanıp token maliyetini ikiye katlarsa ürün tek panoda görmeli.",
-                "Eval kapıları, lansman gecesi kahramanlık olmadan model değiştirme hakkı verir.",
-            ],
-        ],
-    ),
-    points_tr=[
-        "Eval suite'leri fixture ve versiyonlu veri setiyle unit test gibi işleyin",
-        "Tek şanslı koşuma değil regresyon eşiğine göre release bloklayın",
-        "Offline eval ile online shadow trafiğini ayırın",
-        "Eval panolarını hata bütçesinin yanında yayınlayın",
-    ],
+    blocks=blocks8,
 )
 
 links9 = [
@@ -938,41 +832,7 @@ seo_post(
     ],
     pts9,
     links9,
-    tr=(
-        "AI Ürün Olayları için On-Call Runbook'ları",
-        "Model yanlış davrandığında HTTP 200 dolu panolar yalan söyler. AI olayları yalnızca restart değil; politika, maliyet ve tool yan etkileri için runbook ister.",
-        "LLM ürünleri için staff on-call runbook'ları: 5xx ötesi SLO'lar, sağlayıcı arızaları, retrieval drift, güvenlik eskalasyonu ve prompt değişikliklerini kaydeden postmortem.",
-        [
-            "200 OK hâlâ olay olabilir",
-            "Sağlayıcı brownout'ları yaygın",
-            "Güvenlik eskalasyonunun sahibi olsun",
-            "Postmortem prompt içerir",
-        ],
-        [
-            [
-                "Toksik çıktı veya sızan retrieval chunk HTTP 200 ile özür dönebilir. Playbook kullanıcıya görünen zarar, veri sızıntısı ve harcama sıçramasını birinci sınıf sayfa olarak listelemeli.",
-                "Sayfalamayı red doğruluğu, tool başarısı ve retrieval isabet SLO'larına bağlayın.",
-            ],
-            [
-                "Model sağlayıcıları brownout yapar: gecikme, kesik context veya sessiz tool schema değişimi. Runbook gateway hatasını sağlayıcı bozulmasından ayırmalı.",
-                "Model route kill switch ve feature flag'leri 03:00'te kim çekebilir belgelenmiş olsun.",
-            ],
-            [
-                "Politika ihlali sıçramasında hukuk ve trust-and-safety ortakları tanımlı eskalasyon yoluna ihtiyaç duyar.",
-                "Her içerik şikayetini infra on-call'a yönlendirmeyin; triage tablosu uyku kurtarır.",
-            ],
-            [
-                "Post-incident incelemeler prompt, retrieval index ve config diff'ini içermeli—yalnızca deploy SHA değil.",
-                "AI olayları tek seferlik model tuhaflığı sayılırsa tekrarlar.",
-            ],
-        ],
-    ),
-    points_tr=[
-        "Yalnızca 5xx değil tool hata oranı ve politika ihlali SLO'ları tanımlayın",
-        "Runbook sağlayıcı brownout ve prompt şişmesini kapsamalı",
-        "Eskalasyon yolu güvenlik/hukuku da içermeli",
-        "Post-incident prompt ve config diff'lerini kaydedin",
-    ],
+    blocks=blocks9,
 )
 
 links10 = [
@@ -1022,41 +882,7 @@ seo_post(
     ],
     pts10,
     links10,
-    tr=(
-        "Ajan Tool Yan Etkileri için Idempotency Anahtarları",
-        "Modeller takılınca, gateway timeout olunca veya kullanıcı çift gönderince ajanlar retry yapar. Idempotency yoksa masum retry iki kez ücretlendirir, iki mail atar veya çift satır yazar.",
-        "Idempotent ajan tool çağrıları için staff kalıpları: anahtar tasarımı, dedupe store, onay sırası ve kullanıcı retry'sini runaway döngüden ayıran observability.",
-        [
-            "Retry varsayılan, edge case değil",
-            "Anahtarlar ürün eylemine ait",
-            "Kalıcı yan etkiden sonra ack",
-            "Çift replay'i ölç",
-        ],
-        [
-            [
-                "Streaming ve tool-calling yığınları agresif retry yapar: istemci yeniden bağlanır, worker at-least-once teslim eder, planner kısmi hatadan sonra tool'u yeniden çağırır.",
-                "Ödeme, ticket, CRM güncellemesi gibi her dış yan etkiyi, idempotency hikâyesi code review'da açık olana kadar güvensiz sayın.",
-            ],
-            [
-                "Anahtarları kararlı kullanıcı niyetinden türetin: konuşma id + turn sırası veya gönder ile gelen istemci UUID'si.",
-                "Model aynı mesajı yeniden ifade edince anahtarı döndürmeyin; ham token yerine normalize niyeti hash'leyin.",
-            ],
-            [
-                "Mümkünse idempotency kaydını yan etkiyle aynı transaction'da tutun. Replay'de önceki sonucu duplicate bayrağıyla döndürün.",
-                "Kısmi hata zor durum: faturalama başarılı model başarısızsa retry çift ücret olmamalı—sağlayıcı id ile reconcile edin.",
-            ],
-            [
-                "Tool ve tenant bazında replay oranını pano yapın. Sıçramalar çoğu zaman retry policy bug'ıdır.",
-                "Idempotency, ajanların finansı gece uyandırmadan fail-recover etme hakkını kazanma yoludur.",
-            ],
-        ],
-    ),
-    points_tr=[
-        "Idempotency anahtarını kullanıcı turn sınırında verin, model token'ı başına değil",
-        "Başarı ack'inden önce tool yan etkilerini dedupe store ile kalıcılaştırın",
-        "Faturalama, e-posta ve DB yazıları için retry'leri güvenli yapın",
-        "Ajan döngülerini erken yakalamak için duplicate replay metriklerini açın",
-    ],
+    blocks=blocks10,
 )
 
 links11 = [
@@ -1106,39 +932,5 @@ seo_post(
     ],
     pts11,
     links11,
-    tr=(
-        "LLM Gateway'ler için Sentetik Probeler",
-        "Model sağlayıcı status sayfası yeşilken copilot'unuz hâlâ bozuk route kuralında takılı olabilir. Sentetik probeler kullanıcıya görünen LLM yollarını ölçülebilir SLO'ya çevirir.",
-        "LLM gateway sentetik izleme tasarımı: gerçekçi prompt'lar, streaming tamamlama kontrolleri, bölgesel probeler ve ürünün güvendiği alarm yönlendirme.",
-        [
-            "curl değil kullanıcı gibi probe",
-            "Vendor ile gateway sinyalini ayır",
-            "Gecikme SLO'sunda bölge önemli",
-            "Ticket kuyruğundan önce uyar",
-        ],
-        [
-            [
-                "`/health` vuran kontroller kullanıcının hissettiği hataları kaçırır: boş retrieval, kırık tool schema veya ilk tokenden sonra takılan stream.",
-                "Sentetik yolculuk kimlik doğrulamalı, minimal golden prompt çalıştırmalı ve bütçe içinde stream sonu işaretlerini assert etmeli.",
-            ],
-            [
-                "Probe sonuçlarını sağlayıcı, model id ve route sürümü ile etiketleyin. Gecikme regresyonunda prompt şişmesi mi vendor brownout mu ayırın.",
-                "Probe'ların prod analitiğini kirletmemesi için sabit kotolu canary tenant tutun.",
-            ],
-            [
-                "Kullanıcı tabanınıza uyan bölgelerden probe çalıştırın. Sağlıklı us-east gateway, uzak bölgeye yönlendirilen Avrupa kullanıcıları için INP'yi ihlal edebilir.",
-                "Probe TTFT'yi aynı etiketlerle gerçek RUM ile karşılaştırın—büyük fark örnekleme veya routing bug'ıdır.",
-            ],
-            [
-                "Copilot gelir kritikse probe hatalarını ödeme kesintisiyle aynı on-call rotasına yönlendirin.",
-                "Sentetik izleme, sessiz model kesintisini retro'da açıklamaktan ucuzdur.",
-            ],
-        ],
-    ),
-    points_tr=[
-        "Kullanıcının vurduğu yolu probe edin: auth, retrieval, model route, stream tamamlama",
-        "Panoda sağlayıcı kesintisini gateway regresyonundan ayırın",
-        "Gecikme SLO'su globalse çok bölgeli probe çalıştırın",
-        "Destek ticket'ları sıçramadan probe hatasında page edin",
-    ],
+    blocks=blocks11,
 )

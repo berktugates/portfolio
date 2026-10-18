@@ -55,6 +55,12 @@ export type ContentUi = {
   blogsMetaTitlePaged: string;
   minRead: string;
   publishedBy: string;
+  shareArticle: string;
+  shareNavAria: string;
+  shareOnFacebook: string;
+  shareOnX: string;
+  shareOnReddit: string;
+  shareOnWhatsApp: string;
   previous: string;
   next: string;
   paginationAria: string;

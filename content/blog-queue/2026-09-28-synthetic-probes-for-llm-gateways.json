@@ -70,35 +70,43 @@
         {
           "heading": "curl değil kullanıcı gibi probe",
           "paragraphs": [
-            "`/health` vuran kontroller kullanıcının hissettiği hataları kaçırır: boş retrieval, kırık tool schema veya ilk tokenden sonra takılan stream.",
-            "Sentetik yolculuk kimlik doğrulamalı, minimal golden prompt çalıştırmalı ve bütçe içinde stream sonu işaretlerini assert etmeli."
+            [
+              "`/health` vuran kontroller kullanıcının hissettiği hataları kaçırır: boş retrieval, kırık tool schema veya ilk tokenden sonra takılan stream.",
+              "Sentetik yolculuk kimlik doğrulamalı, minimal golden prompt çalıştırmalı ve bütçe içinde stream sonu işaretlerini assert etmeli."
+            ]
           ]
         },
         {
           "heading": "Vendor ile gateway sinyalini ayır",
           "paragraphs": [
-            "Probe sonuçlarını sağlayıcı, model id ve route sürümü ile etiketleyin. Gecikme regresyonunda prompt şişmesi mi vendor brownout mu ayırın.",
-            "Probe'ların prod analitiğini kirletmemesi için sabit kotolu canary tenant tutun."
+            [
+              "Probe sonuçlarını sağlayıcı, model id ve route sürümü ile etiketleyin. Gecikme regresyonunda prompt şişmesi mi vendor brownout mu ayırın.",
+              "Probe'ların prod analitiğini kirletmemesi için sabit kotolu canary tenant tutun."
+            ]
           ],
           "points": [
-            "Kullanıcının vurduğu yolu probe edin: auth, retrieval, model route, stream tamamlama",
-            "Panoda sağlayıcı kesintisini gateway regresyonundan ayırın",
-            "Gecikme SLO'su globalse çok bölgeli probe çalıştırın",
-            "Destek ticket'ları sıçramadan probe hatasında page edin"
+            "Probe the same path users hit: auth, retrieval, model route, and stream completion",
+            "Separate provider outages from your gateway regressions in dashboards",
+            "Run probes from multiple regions when latency SLOs are global",
+            "Page on failed probes before support tickets spike"
           ]
         },
         {
           "heading": "Gecikme SLO'sunda bölge önemli",
           "paragraphs": [
-            "Kullanıcı tabanınıza uyan bölgelerden probe çalıştırın. Sağlıklı us-east gateway, uzak bölgeye yönlendirilen Avrupa kullanıcıları için INP'yi ihlal edebilir.",
-            "Probe TTFT'yi aynı etiketlerle gerçek RUM ile karşılaştırın—büyük fark örnekleme veya routing bug'ıdır."
+            [
+              "Kullanıcı tabanınıza uyan bölgelerden probe çalıştırın. Sağlıklı us-east gateway, uzak bölgeye yönlendirilen Avrupa kullanıcıları için INP'yi ihlal edebilir.",
+              "Probe TTFT'yi aynı etiketlerle gerçek RUM ile karşılaştırın—büyük fark örnekleme veya routing bug'ıdır."
+            ]
           ]
         },
         {
           "heading": "Ticket kuyruğundan önce uyar",
           "paragraphs": [
-            "Copilot gelir kritikse probe hatalarını ödeme kesintisiyle aynı on-call rotasına yönlendirin.",
-            "Sentetik izleme, sessiz model kesintisini retro'da açıklamaktan ucuzdur."
+            [
+              "Copilot gelir kritikse probe hatalarını ödeme kesintisiyle aynı on-call rotasına yönlendirin.",
+              "Sentetik izleme, sessiz model kesintisini retro'da açıklamaktan ucuzdur."
+            ]
           ],
           "links": [
             {
@@ -114,22 +122,26 @@
       ]
     },
     "de": {
-      "title": "Synthetic Probes for LLM Gateways",
-      "excerpt": "Model vendor status pages go green while your copilot still fails on a bad route rule. Synthetic probes turn user-visible LLM paths into measurable SLOs.",
-      "description": "How staff engineers design synthetic monitoring for LLM gateways: realistic prompts, streaming completion checks, regional probes, and alert routing that product trusts.",
+      "title": "Synthetische Probes für LLM-Gateways",
+      "excerpt": "Vendor-Status kann grün sein, während der Copilot an einer kaputten Route scheitert. Synthetische Probes machen nutzersichtbare LLM-Pfade zu SLOs.",
+      "description": "Staff-Design für synthetisches Monitoring: realistische Prompts, Streaming-Completion-Checks, regionale Probes und Alert-Routing.",
       "sections": [
         {
-          "heading": "Probe like a user, not like curl",
+          "heading": "Proben wie ein Nutzer, nicht wie curl",
           "paragraphs": [
-            "Health checks that hit `/health` miss the failure modes users feel: empty retrieval, broken tool schema, or streams that stall after the first token.",
-            "Synthetic journeys should authenticate, run a minimal golden prompt, and assert end-of-stream markers within budget."
+            [
+              "Checks auf `/health` verpassen leere Retrieval, kaputtes Tool-Schema oder Streams, die nach dem ersten Token hängen.",
+              "Synthetische Journeys authentifizieren, goldenen Minimal-Prompt fahren und End-of-Stream innerhalb Budget asserten."
+            ]
           ]
         },
         {
-          "heading": "Split vendor vs gateway signals",
+          "heading": "Vendor- vs Gateway-Signale trennen",
           "paragraphs": [
-            "Tag probe results with provider, model id, and route version. When latency regresses, you need to know whether prompt templates grew or the vendor browned out.",
-            "Keep a canary tenant with fixed quotas so probes do not pollute production analytics."
+            [
+              "Ergebnisse mit Provider, Modell-ID und Route-Version taggen. Latenz-Regression: Prompt-Bloat oder Vendor-Brownout?",
+              "Canary-Tenant mit festen Quotas, damit Probes Analytics nicht vergiften."
+            ]
           ],
           "points": [
             "Probe the same path users hit: auth, retrieval, model route, and stream completion",
@@ -139,17 +151,21 @@
           ]
         },
         {
-          "heading": "Region matters for latency SLOs",
+          "heading": "Region zählt für Latenz-SLOs",
           "paragraphs": [
-            "Run probes from regions that match your user base. A healthy us-east gateway can still breach INP for European users routed through a distant region.",
-            "Compare probe TTFT to real user RUM with the same labels—large gaps mean sampling or routing bugs."
+            [
+              "Probes aus Regionen, die zur Nutzerbasis passen. Gesundes us-east kann INP für Europa verletzen.",
+              "Probe-TTFT mit RUM unter gleichen Labels vergleichen—große Lücken = Sampling- oder Routing-Bug."
+            ]
           ]
         },
         {
-          "heading": "Alert before the ticket queue",
+          "heading": "Alarm vor der Ticket-Warteschlange",
           "paragraphs": [
-            "Route probe failures to the same on-call rotation as payment outages when the copilot is revenue-critical.",
-            "Synthetic monitoring is cheaper than explaining a silent model outage in a launch retro."
+            [
+              "Bei revenue-kritischem Copilot Probe-Failures an dieselbe On-Call-Rotation wie Payment.",
+              "Synthetisches Monitoring ist billiger als stille Model-Ausfälle im Retro zu erklären."
+            ]
           ],
           "links": [
             {
@@ -165,22 +181,26 @@
       ]
     },
     "fr": {
-      "title": "Synthetic Probes for LLM Gateways",
-      "excerpt": "Model vendor status pages go green while your copilot still fails on a bad route rule. Synthetic probes turn user-visible LLM paths into measurable SLOs.",
-      "description": "How staff engineers design synthetic monitoring for LLM gateways: realistic prompts, streaming completion checks, regional probes, and alert routing that product trusts.",
+      "title": "Sondes synthétiques pour passerelles LLM",
+      "excerpt": "La page statut fournisseur peut être verte pendant que le copilote échoue sur une mauvaise règle de route. Les sondes rendent les chemins LLM visibles mesurables en SLO.",
+      "description": "Design staff : prompts réalistes, checks fin de stream, sondes régionales et routage d'alerte de confiance.",
       "sections": [
         {
-          "heading": "Probe like a user, not like curl",
+          "heading": "Sonder comme un utilisateur, pas curl",
           "paragraphs": [
-            "Health checks that hit `/health` miss the failure modes users feel: empty retrieval, broken tool schema, or streams that stall after the first token.",
-            "Synthetic journeys should authenticate, run a minimal golden prompt, and assert end-of-stream markers within budget."
+            [
+              "Les checks `/health` ratent retrieval vide, schema outil cassé ou stream bloqué après le premier token.",
+              "Parcours synthétique : auth, prompt golden minimal, marqueurs fin de stream dans le budget."
+            ]
           ]
         },
         {
-          "heading": "Split vendor vs gateway signals",
+          "heading": "Séparer signaux vendor et gateway",
           "paragraphs": [
-            "Tag probe results with provider, model id, and route version. When latency regresses, you need to know whether prompt templates grew or the vendor browned out.",
-            "Keep a canary tenant with fixed quotas so probes do not pollute production analytics."
+            [
+              "Taguer résultats avec fournisseur, id modèle et version route. Régression latence : gonflement prompt ou brownout?",
+              "Tenant canary à quotas fixes pour ne pas polluer l'analytics prod."
+            ]
           ],
           "points": [
             "Probe the same path users hit: auth, retrieval, model route, and stream completion",
@@ -190,17 +210,21 @@
           ]
         },
         {
-          "heading": "Region matters for latency SLOs",
+          "heading": "La région compte pour SLO latence",
           "paragraphs": [
-            "Run probes from regions that match your user base. A healthy us-east gateway can still breach INP for European users routed through a distant region.",
-            "Compare probe TTFT to real user RUM with the same labels—large gaps mean sampling or routing bugs."
+            [
+              "Sondes depuis régions alignées utilisateurs. us-east sain peut violer INP pour l'Europe routée loin.",
+              "Comparer TTFT sonde et RUM avec mêmes labels—gros écarts = bug sampling ou routage."
+            ]
           ]
         },
         {
-          "heading": "Alert before the ticket queue",
+          "heading": "Alerter avant la file tickets",
           "paragraphs": [
-            "Route probe failures to the same on-call rotation as payment outages when the copilot is revenue-critical.",
-            "Synthetic monitoring is cheaper than explaining a silent model outage in a launch retro."
+            [
+              "Si copilote revenue-critical, échecs sonde vers même rotation on-call que paiements.",
+              "Monitoring synthétique coûte moins qu'expliquer une panne modèle silencieuse au retro."
+            ]
           ],
           "links": [
             {
@@ -216,22 +240,26 @@
       ]
     },
     "it": {
-      "title": "Synthetic Probes for LLM Gateways",
-      "excerpt": "Model vendor status pages go green while your copilot still fails on a bad route rule. Synthetic probes turn user-visible LLM paths into measurable SLOs.",
-      "description": "How staff engineers design synthetic monitoring for LLM gateways: realistic prompts, streaming completion checks, regional probes, and alert routing that product trusts.",
+      "title": "Probe sintetiche per gateway LLM",
+      "excerpt": "Lo status page del vendor può essere verde mentre il copilot fallisce su una regola di route rotta. Le probe rendono SLO i percorsi LLM visibili all'utente.",
+      "description": "Design staff per monitoring sintetico: prompt realistici, check completamento stream, probe regionali e routing alert.",
       "sections": [
         {
-          "heading": "Probe like a user, not like curl",
+          "heading": "Sondare come utente, non curl",
           "paragraphs": [
-            "Health checks that hit `/health` miss the failure modes users feel: empty retrieval, broken tool schema, or streams that stall after the first token.",
-            "Synthetic journeys should authenticate, run a minimal golden prompt, and assert end-of-stream markers within budget."
+            [
+              "Check su `/health` perdono retrieval vuoto, schema tool rotto o stream bloccato dopo il primo token.",
+              "Journey sintetico: auth, golden prompt minimale, assert marker fine stream nel budget."
+            ]
           ]
         },
         {
-          "heading": "Split vendor vs gateway signals",
+          "heading": "Separare segnali vendor e gateway",
           "paragraphs": [
-            "Tag probe results with provider, model id, and route version. When latency regresses, you need to know whether prompt templates grew or the vendor browned out.",
-            "Keep a canary tenant with fixed quotas so probes do not pollute production analytics."
+            [
+              "Tag esiti con provider, model id e versione route. Regressione latenza: prompt gonfiato o brownout vendor?",
+              "Tenant canary a quota fissa per non inquinare analytics prod."
+            ]
           ],
           "points": [
             "Probe the same path users hit: auth, retrieval, model route, and stream completion",
@@ -241,17 +269,21 @@
           ]
         },
         {
-          "heading": "Region matters for latency SLOs",
+          "heading": "La regione conta per SLO latenza",
           "paragraphs": [
-            "Run probes from regions that match your user base. A healthy us-east gateway can still breach INP for European users routed through a distant region.",
-            "Compare probe TTFT to real user RUM with the same labels—large gaps mean sampling or routing bugs."
+            [
+              "Probe da regioni allineate agli utenti. us-east sano può violare INP per Europa routata lontano.",
+              "Confronta TTFT probe e RUM con stesse label—gap grandi = bug sampling o routing."
+            ]
           ]
         },
         {
-          "heading": "Alert before the ticket queue",
+          "heading": "Alert prima della coda ticket",
           "paragraphs": [
-            "Route probe failures to the same on-call rotation as payment outages when the copilot is revenue-critical.",
-            "Synthetic monitoring is cheaper than explaining a silent model outage in a launch retro."
+            [
+              "Se copilot revenue-critical, failure probe alla stessa rotazione on-call dei pagamenti.",
+              "Monitoring sintetico costa meno spiegare outage modello silenzioso in retro."
+            ]
           ],
           "links": [
             {
@@ -267,22 +299,26 @@
       ]
     },
     "zh": {
-      "title": "Synthetic Probes for LLM Gateways",
-      "excerpt": "Model vendor status pages go green while your copilot still fails on a bad route rule. Synthetic probes turn user-visible LLM paths into measurable SLOs.",
-      "description": "How staff engineers design synthetic monitoring for LLM gateways: realistic prompts, streaming completion checks, regional probes, and alert routing that product trusts.",
+      "title": "LLM 网关的合成探测",
+      "excerpt": "供应商状态页全绿时 copilot 仍可能死在错误路由规则上。合成探测把用户可见 LLM 路径变成可测 SLO。",
+      "description": "LLM 网关合成监控设计：真实 prompt、流式完成检查、区域探测与产品信任的告警路由。",
       "sections": [
         {
-          "heading": "Probe like a user, not like curl",
+          "heading": "像用户而非 curl 探测",
           "paragraphs": [
-            "Health checks that hit `/health` miss the failure modes users feel: empty retrieval, broken tool schema, or streams that stall after the first token.",
-            "Synthetic journeys should authenticate, run a minimal golden prompt, and assert end-of-stream markers within budget."
+            [
+              "打 `/health` 的健康检查会漏空检索、坏 tool schema 或首 token 后停滞的流。",
+              "合成旅程应鉴权、跑最小 golden prompt 并在预算内断言流结束标记。"
+            ]
           ]
         },
         {
-          "heading": "Split vendor vs gateway signals",
+          "heading": "拆分供应商与网关信号",
           "paragraphs": [
-            "Tag probe results with provider, model id, and route version. When latency regresses, you need to know whether prompt templates grew or the vendor browned out.",
-            "Keep a canary tenant with fixed quotas so probes do not pollute production analytics."
+            [
+              "结果打标供应商、模型 id、路由版本。延迟回归需区分 prompt 膨胀还是 vendor brownout。",
+              "固定配额金丝雀租户避免污染生产分析。"
+            ]
           ],
           "points": [
             "Probe the same path users hit: auth, retrieval, model route, and stream completion",
@@ -292,17 +328,21 @@
           ]
         },
         {
-          "heading": "Region matters for latency SLOs",
+          "heading": "延迟 SLO 下区域重要",
           "paragraphs": [
-            "Run probes from regions that match your user base. A healthy us-east gateway can still breach INP for European users routed through a distant region.",
-            "Compare probe TTFT to real user RUM with the same labels—large gaps mean sampling or routing bugs."
+            [
+              "从与用户群匹配的区域跑探测。健康的 us-east 仍可能让远路由欧洲用户 INP 违约。",
+              "同标签对比 probe TTFT 与真实 RUM—大差距即采样或路由 bug。"
+            ]
           ]
         },
         {
-          "heading": "Alert before the ticket queue",
+          "heading": "工单排队前先告警",
           "paragraphs": [
-            "Route probe failures to the same on-call rotation as payment outages when the copilot is revenue-critical.",
-            "Synthetic monitoring is cheaper than explaining a silent model outage in a launch retro."
+            [
+              "copilot 收入关键时，探测失败应路由到与支付 outage 相同的 on-call。",
+              "合成监控比复盘里解释静默模型故障便宜。"
+            ]
           ],
           "links": [
             {
@@ -318,22 +358,26 @@
       ]
     },
     "ja": {
-      "title": "Synthetic Probes for LLM Gateways",
-      "excerpt": "Model vendor status pages go green while your copilot still fails on a bad route rule. Synthetic probes turn user-visible LLM paths into measurable SLOs.",
-      "description": "How staff engineers design synthetic monitoring for LLM gateways: realistic prompts, streaming completion checks, regional probes, and alert routing that product trusts.",
+      "title": "LLMゲートウェイ向け合成プローブ",
+      "excerpt": "ベンダーステータスが緑でもコパイロットは壊れたルールで失敗しうる。合成プローブはユーザー可視LLM経路を測定可能SLOにする。",
+      "description": "LLMゲートウェイ合成監視：現実的プロンプト、ストリーム完了チェック、地域プローブ、信頼できるアラートルーティング。",
       "sections": [
         {
-          "heading": "Probe like a user, not like curl",
+          "heading": "curlではなくユーザーとしてプローブ",
           "paragraphs": [
-            "Health checks that hit `/health` miss the failure modes users feel: empty retrieval, broken tool schema, or streams that stall after the first token.",
-            "Synthetic journeys should authenticate, run a minimal golden prompt, and assert end-of-stream markers within budget."
+            [
+              "`/health`チェックは空の取得、壊れたツールスキーマ、初トークン後停滞を見逃す。",
+              "合成ジャーニーは認証、最小ゴールデンプロンプト、予算内ストリーム終了assert。"
+            ]
           ]
         },
         {
-          "heading": "Split vendor vs gateway signals",
+          "heading": "ベンダーとゲートウェイ信号を分離",
           "paragraphs": [
-            "Tag probe results with provider, model id, and route version. When latency regresses, you need to know whether prompt templates grew or the vendor browned out.",
-            "Keep a canary tenant with fixed quotas so probes do not pollute production analytics."
+            [
+              "結果にプロバイダ・モデルid・ルート版をタグ。レイテンシ回帰はプロンプト肥大かブラウンアウトか。",
+              "固定クォータのカナリテナントで本番分析を汚さない。"
+            ]
           ],
           "points": [
             "Probe the same path users hit: auth, retrieval, model route, and stream completion",
@@ -343,17 +387,21 @@
           ]
         },
         {
-          "heading": "Region matters for latency SLOs",
+          "heading": "レイテンシSLOでは地域が重要",
           "paragraphs": [
-            "Run probes from regions that match your user base. A healthy us-east gateway can still breach INP for European users routed through a distant region.",
-            "Compare probe TTFT to real user RUM with the same labels—large gaps mean sampling or routing bugs."
+            [
+              "ユーザーベースに合う地域からプローブ。健全なus-eastでも遠方ルーティング欧州ユーザーのINPを破る。",
+              "同ラベルでprobe TTFTとRUM比較—大ギャップはサンプリングかルーティングバグ。"
+            ]
           ]
         },
         {
-          "heading": "Alert before the ticket queue",
+          "heading": "チケット列の前にアラート",
           "paragraphs": [
-            "Route probe failures to the same on-call rotation as payment outages when the copilot is revenue-critical.",
-            "Synthetic monitoring is cheaper than explaining a silent model outage in a launch retro."
+            [
+              "収益クリティカルならプローブ失敗を決済 outage と同じオンコールへ。",
+              "合成監視はサイレントモデル障害をレトロで説明するより安い。"
+            ]
           ],
           "links": [
             {

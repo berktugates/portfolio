@@ -2,7 +2,12 @@ type BlogShareProps = {
   title: string;
   /** Absolute or site-relative path used for share links. */
   url: string;
-  label?: string;
+  label: string;
+  navAriaLabel: string;
+  facebookAriaLabel: string;
+  xAriaLabel: string;
+  redditAriaLabel: string;
+  whatsAppAriaLabel: string;
 };
 
 function FacebookIcon({ className }: { className?: string }) {
@@ -40,21 +45,30 @@ function WhatsAppIcon({ className }: { className?: string }) {
 const shareLinkClassName =
   "inline-flex size-9 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50";
 
-export function BlogShare({ title, url, label = "Share" }: BlogShareProps) {
+export function BlogShare({
+  title,
+  url,
+  label,
+  navAriaLabel,
+  facebookAriaLabel,
+  xAriaLabel,
+  redditAriaLabel,
+  whatsAppAriaLabel,
+}: BlogShareProps) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://berktugberke.com";
   const absolute = url.startsWith("http") ? url : `${siteUrl}${url}`;
   const encodedUrl = encodeURIComponent(absolute);
   const encodedTitle = encodeURIComponent(title);
 
   return (
-    <nav aria-label="Share this article" className="mt-8 flex items-center gap-1">
+    <nav aria-label={navAriaLabel} className="mt-8 flex items-center gap-1">
       <span className="mr-2 text-sm text-zinc-500 dark:text-zinc-400">{label}</span>
       <a
         href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
         target="_blank"
         rel="noreferrer"
         className={shareLinkClassName}
-        aria-label="Share on Facebook"
+        aria-label={facebookAriaLabel}
       >
         <FacebookIcon className="size-4" />
       </a>
@@ -63,7 +77,7 @@ export function BlogShare({ title, url, label = "Share" }: BlogShareProps) {
         target="_blank"
         rel="noreferrer"
         className={shareLinkClassName}
-        aria-label="Share on X"
+        aria-label={xAriaLabel}
       >
         <XIcon className="size-4" />
       </a>
@@ -72,7 +86,7 @@ export function BlogShare({ title, url, label = "Share" }: BlogShareProps) {
         target="_blank"
         rel="noreferrer"
         className={shareLinkClassName}
-        aria-label="Share on Reddit"
+        aria-label={redditAriaLabel}
       >
         <RedditIcon className="size-4" />
       </a>
@@ -81,7 +95,7 @@ export function BlogShare({ title, url, label = "Share" }: BlogShareProps) {
         target="_blank"
         rel="noreferrer"
         className={shareLinkClassName}
-        aria-label="Share on WhatsApp"
+        aria-label={whatsAppAriaLabel}
       >
         <WhatsAppIcon className="size-4" />
       </a>

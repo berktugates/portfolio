@@ -70,35 +70,43 @@
         {
           "heading": "Retry varsayılan, edge case değil",
           "paragraphs": [
-            "Streaming ve tool-calling yığınları agresif retry yapar: istemci yeniden bağlanır, worker at-least-once teslim eder, planner kısmi hatadan sonra tool'u yeniden çağırır.",
-            "Ödeme, ticket, CRM güncellemesi gibi her dış yan etkiyi, idempotency hikâyesi code review'da açık olana kadar güvensiz sayın."
+            [
+              "Streaming ve tool-calling yığınları agresif retry yapar: istemci yeniden bağlanır, worker at-least-once teslim eder, planner kısmi hatadan sonra tool'u yeniden çağırır.",
+              "Ödeme, ticket, CRM güncellemesi gibi her dış yan etkiyi, idempotency hikâyesi code review'da açık olana kadar güvensiz sayın."
+            ]
           ]
         },
         {
           "heading": "Anahtarlar ürün eylemine ait",
           "paragraphs": [
-            "Anahtarları kararlı kullanıcı niyetinden türetin: konuşma id + turn sırası veya gönder ile gelen istemci UUID'si.",
-            "Model aynı mesajı yeniden ifade edince anahtarı döndürmeyin; ham token yerine normalize niyeti hash'leyin."
+            [
+              "Anahtarları kararlı kullanıcı niyetinden türetin: konuşma id + turn sırası veya gönder ile gelen istemci UUID'si.",
+              "Model aynı mesajı yeniden ifade edince anahtarı döndürmeyin; ham token yerine normalize niyeti hash'leyin."
+            ]
           ],
           "points": [
-            "Idempotency anahtarını kullanıcı turn sınırında verin, model token'ı başına değil",
-            "Başarı ack'inden önce tool yan etkilerini dedupe store ile kalıcılaştırın",
-            "Faturalama, e-posta ve DB yazıları için retry'leri güvenli yapın",
-            "Ajan döngülerini erken yakalamak için duplicate replay metriklerini açın"
+            "Issue idempotency keys at the user turn boundary, not per model token",
+            "Persist tool side effects with dedupe stores before acknowledging success",
+            "Make retries safe for billing, email, and database writes",
+            "Expose duplicate replay metrics to catch agent loops early"
           ]
         },
         {
           "heading": "Kalıcı yan etkiden sonra ack",
           "paragraphs": [
-            "Mümkünse idempotency kaydını yan etkiyle aynı transaction'da tutun. Replay'de önceki sonucu duplicate bayrağıyla döndürün.",
-            "Kısmi hata zor durum: faturalama başarılı model başarısızsa retry çift ücret olmamalı—sağlayıcı id ile reconcile edin."
+            [
+              "Mümkünse idempotency kaydını yan etkiyle aynı transaction'da tutun. Replay'de önceki sonucu duplicate bayrağıyla döndürün.",
+              "Kısmi hata zor durum: faturalama başarılı model başarısızsa retry çift ücret olmamalı—sağlayıcı id ile reconcile edin."
+            ]
           ]
         },
         {
           "heading": "Çift replay'i ölç",
           "paragraphs": [
-            "Tool ve tenant bazında replay oranını pano yapın. Sıçramalar çoğu zaman retry policy bug'ıdır.",
-            "Idempotency, ajanların finansı gece uyandırmadan fail-recover etme hakkını kazanma yoludur."
+            [
+              "Tool ve tenant bazında replay oranını pano yapın. Sıçramalar çoğu zaman retry policy bug'ıdır.",
+              "Idempotency, ajanların finansı gece uyandırmadan fail-recover etme hakkını kazanma yoludur."
+            ]
           ],
           "links": [
             {
@@ -114,22 +122,26 @@
       ]
     },
     "de": {
-      "title": "Idempotency Keys for Agent Tool Side Effects",
-      "excerpt": "Agents retry when models stall, gateways timeout, or users double-tap send. Without idempotency, a harmless retry charges twice, emails twice, or writes duplicate rows.",
-      "description": "Staff patterns for idempotent agent tool calls: key design, dedupe stores, acknowledgment ordering, and observability that separates user retries from runaway loops.",
+      "title": "Idempotenz-Schlüssel für Agent-Tool-Nebenwirkungen",
+      "excerpt": "Agenten retrien bei Stall, Gateway-Timeout oder Doppel-Tap. Ohne Idempotenz lädt ein harmloser Retry doppelt ab oder schreibt doppelt.",
+      "description": "Staff-Muster für idempotente Agent-Tools: Key-Design, Dedupe-Stores, Ack-Reihenfolge und Observability für Retries vs. Loops.",
       "sections": [
         {
-          "heading": "Retries are the default, not the edge case",
+          "heading": "Retries sind der Default",
           "paragraphs": [
-            "Streaming and tool-calling stacks retry aggressively: client reconnects, worker at-least-once delivery, and planner steps that re-invoke tools after partial failures.",
-            "Treat every external side effect—payments, tickets, CRM updates—as unsafe until your idempotency story is explicit in code review."
+            [
+              "Streaming- und Tool-Stacks retrien aggressiv: Reconnects, at-least-once, Planner ruft Tools nach Partial Failure erneut.",
+              "Jede externe Side Effect ist unsicher, bis Idempotenz im Code-Review explizit ist."
+            ]
           ]
         },
         {
-          "heading": "Keys belong to product actions",
+          "heading": "Keys gehören zu Produktaktionen",
           "paragraphs": [
-            "Derive keys from stable user intent: conversation id plus turn sequence, or a client-generated UUID submitted with the send action.",
-            "Do not rotate keys when the model rephrases the same user message; hash normalized intent instead of raw tokens."
+            [
+              "Keys aus stabiler Nutzerintention: Conversation-ID plus Turn oder Client-UUID beim Send.",
+              "Keys nicht rotieren, wenn das Modell umformuliert—normalisierte Intent-Hashes statt Rohtokens."
+            ]
           ],
           "points": [
             "Issue idempotency keys at the user turn boundary, not per model token",
@@ -139,17 +151,21 @@
           ]
         },
         {
-          "heading": "Ack only after durable side effects",
+          "heading": "Ack erst nach durable Side Effects",
           "paragraphs": [
-            "Store idempotency records in the same transaction as the side effect when possible. Return the prior result on replay with a clear duplicate flag for logs.",
-            "Partial failures are the hard case: if billing succeeded but the model failed, retries must not double charge—reconcile with provider ids."
+            [
+              "Idempotency-Record wenn möglich in derselben Transaktion wie Side Effect. Bei Replay vorheriges Ergebnis mit Duplicate-Flag.",
+              "Partial Failure: Billing ok, Modell fail—Retry darf nicht doppelt belasten."
+            ]
           ]
         },
         {
-          "heading": "Measure duplicate replays",
+          "heading": "Duplicate Replays messen",
           "paragraphs": [
-            "Dashboard replay rate by tool and tenant. Spikes often mean a bug in retry policy, not enthusiastic users.",
-            "Idempotency is how agents earn the right to fail and recover without finance paging you at midnight."
+            [
+              "Replay-Rate pro Tool und Tenant dashboarden. Spikes deuten oft auf Retry-Policy-Bugs.",
+              "Idempotenz erlaubt Fail-Recover ohne Finance-Paging um Mitternacht."
+            ]
           ],
           "links": [
             {
@@ -165,22 +181,26 @@
       ]
     },
     "fr": {
-      "title": "Idempotency Keys for Agent Tool Side Effects",
-      "excerpt": "Agents retry when models stall, gateways timeout, or users double-tap send. Without idempotency, a harmless retry charges twice, emails twice, or writes duplicate rows.",
-      "description": "Staff patterns for idempotent agent tool calls: key design, dedupe stores, acknowledgment ordering, and observability that separates user retries from runaway loops.",
+      "title": "Clés d'idempotence pour effets de bord d'outils agent",
+      "excerpt": "Les agents retentent sur stall, timeout gateway ou double envoi. Sans idempotence, un retry facture deux fois ou écrit en double.",
+      "description": "Patterns staff : design de clés, stores dedupe, ordre d'ack et observabilité retries vs boucles.",
       "sections": [
         {
-          "heading": "Retries are the default, not the edge case",
+          "heading": "Les retries sont la norme",
           "paragraphs": [
-            "Streaming and tool-calling stacks retry aggressively: client reconnects, worker at-least-once delivery, and planner steps that re-invoke tools after partial failures.",
-            "Treat every external side effect—payments, tickets, CRM updates—as unsafe until your idempotency story is explicit in code review."
+            [
+              "Stacks streaming et tools retentent fort : reconnect client, at-least-once, planner ré-invoque après échec partiel.",
+              "Tout effet externe est unsafe tant que l'idempotence n'est pas explicite en review."
+            ]
           ]
         },
         {
-          "heading": "Keys belong to product actions",
+          "heading": "Les clés appartiennent à l'action produit",
           "paragraphs": [
-            "Derive keys from stable user intent: conversation id plus turn sequence, or a client-generated UUID submitted with the send action.",
-            "Do not rotate keys when the model rephrases the same user message; hash normalized intent instead of raw tokens."
+            [
+              "Clés depuis intention stable : id conversation + tour ou UUID client à l'envoi.",
+              "Ne pas faire tourner les clés si le modèle reformule—hasher l'intent normalisé."
+            ]
           ],
           "points": [
             "Issue idempotency keys at the user turn boundary, not per model token",
@@ -190,17 +210,21 @@
           ]
         },
         {
-          "heading": "Ack only after durable side effects",
+          "heading": "Ack après effets durables",
           "paragraphs": [
-            "Store idempotency records in the same transaction as the side effect when possible. Return the prior result on replay with a clear duplicate flag for logs.",
-            "Partial failures are the hard case: if billing succeeded but the model failed, retries must not double charge—reconcile with provider ids."
+            [
+              "Enregistrement idempotence dans la même transaction que l'effet si possible. Replay renvoie résultat prior avec flag duplicate.",
+              "Échec partiel : billing ok, modèle fail—retry ne doit pas double facturer."
+            ]
           ]
         },
         {
-          "heading": "Measure duplicate replays",
+          "heading": "Mesurer les replays dupliqués",
           "paragraphs": [
-            "Dashboard replay rate by tool and tenant. Spikes often mean a bug in retry policy, not enthusiastic users.",
-            "Idempotency is how agents earn the right to fail and recover without finance paging you at midnight."
+            [
+              "Dashboard taux replay par outil et tenant. Pics = souvent bug de politique retry.",
+              "L'idempotence permet fail-recover sans réveiller la finance."
+            ]
           ],
           "links": [
             {
@@ -216,22 +240,26 @@
       ]
     },
     "it": {
-      "title": "Idempotency Keys for Agent Tool Side Effects",
-      "excerpt": "Agents retry when models stall, gateways timeout, or users double-tap send. Without idempotency, a harmless retry charges twice, emails twice, or writes duplicate rows.",
-      "description": "Staff patterns for idempotent agent tool calls: key design, dedupe stores, acknowledgment ordering, and observability that separates user retries from runaway loops.",
+      "title": "Chiavi di idempotenza per effetti collaterali tool agente",
+      "excerpt": "Gli agenti ritentano su stall, timeout gateway o doppio invio. Senza idempotenza un retry innocuo addebita o scrive due volte.",
+      "description": "Pattern staff per tool agent idempotenti: design chiavi, dedupe store, ordine ack e observability retry vs loop.",
       "sections": [
         {
-          "heading": "Retries are the default, not the edge case",
+          "heading": "I retry sono il default",
           "paragraphs": [
-            "Streaming and tool-calling stacks retry aggressively: client reconnects, worker at-least-once delivery, and planner steps that re-invoke tools after partial failures.",
-            "Treat every external side effect—payments, tickets, CRM updates—as unsafe until your idempotency story is explicit in code review."
+            [
+              "Stack streaming e tool ritentano aggressivamente: reconnect, at-least-once, planner richiama tool dopo fallimento parziale.",
+              "Ogni side effect esterno è unsafe finché l'idempotenza non è esplicita in review."
+            ]
           ]
         },
         {
-          "heading": "Keys belong to product actions",
+          "heading": "Le chiavi appartengono all'azione prodotto",
           "paragraphs": [
-            "Derive keys from stable user intent: conversation id plus turn sequence, or a client-generated UUID submitted with the send action.",
-            "Do not rotate keys when the model rephrases the same user message; hash normalized intent instead of raw tokens."
+            [
+              "Chiavi da intent stabile: id conversazione + turno o UUID client all'invio.",
+              "Non ruotare chiavi se il modello riformula—hash intent normalizzato."
+            ]
           ],
           "points": [
             "Issue idempotency keys at the user turn boundary, not per model token",
@@ -241,17 +269,21 @@
           ]
         },
         {
-          "heading": "Ack only after durable side effects",
+          "heading": "Ack solo dopo effetti duraturi",
           "paragraphs": [
-            "Store idempotency records in the same transaction as the side effect when possible. Return the prior result on replay with a clear duplicate flag for logs.",
-            "Partial failures are the hard case: if billing succeeded but the model failed, retries must not double charge—reconcile with provider ids."
+            [
+              "Record idempotenza nella stessa transazione dell'effetto se possibile. Replay restituisce risultato precedente con flag duplicate.",
+              "Fallimento parziale: billing ok, modello fail—retry non deve addebitare due volte."
+            ]
           ]
         },
         {
-          "heading": "Measure duplicate replays",
+          "heading": "Misurare replay duplicati",
           "paragraphs": [
-            "Dashboard replay rate by tool and tenant. Spikes often mean a bug in retry policy, not enthusiastic users.",
-            "Idempotency is how agents earn the right to fail and recover without finance paging you at midnight."
+            [
+              "Dashboard replay rate per tool e tenant. Picchi spesso = bug policy retry.",
+              "Idempotenza permette fail-recover senza svegliare finance a mezzanotte."
+            ]
           ],
           "links": [
             {
@@ -267,22 +299,26 @@
       ]
     },
     "zh": {
-      "title": "Idempotency Keys for Agent Tool Side Effects",
-      "excerpt": "Agents retry when models stall, gateways timeout, or users double-tap send. Without idempotency, a harmless retry charges twice, emails twice, or writes duplicate rows.",
-      "description": "Staff patterns for idempotent agent tool calls: key design, dedupe stores, acknowledgment ordering, and observability that separates user retries from runaway loops.",
+      "title": "智能体工具副作用的幂等键",
+      "excerpt": "模型卡住、网关超时或用户连点时 agent 会重试。无幂等则无害重试也会双扣费、双发信或双写行。",
+      "description": "幂等 agent 工具调用的 staff 模式：键设计、去重存储、确认顺序与区分用户重试与失控循环的可观测性。",
       "sections": [
         {
-          "heading": "Retries are the default, not the edge case",
+          "heading": "重试是默认而非边缘",
           "paragraphs": [
-            "Streaming and tool-calling stacks retry aggressively: client reconnects, worker at-least-once delivery, and planner steps that re-invoke tools after partial failures.",
-            "Treat every external side effect—payments, tickets, CRM updates—as unsafe until your idempotency story is explicit in code review."
+            [
+              "流式与 tool 栈积极重试：客户端重连、至少一次投递、规划器部分失败后再次调用工具。",
+              "支付、工单、CRM 等外部副作用在 code review 明确幂等前视为不安全。"
+            ]
           ]
         },
         {
-          "heading": "Keys belong to product actions",
+          "heading": "键属于产品动作",
           "paragraphs": [
-            "Derive keys from stable user intent: conversation id plus turn sequence, or a client-generated UUID submitted with the send action.",
-            "Do not rotate keys when the model rephrases the same user message; hash normalized intent instead of raw tokens."
+            [
+              "从稳定用户意图派生键：会话 id + 轮次或发送时客户端 UUID。",
+              "模型改写同一消息时不要轮换键；对归一化意图哈希而非原始 token。"
+            ]
           ],
           "points": [
             "Issue idempotency keys at the user turn boundary, not per model token",
@@ -292,17 +328,21 @@
           ]
         },
         {
-          "heading": "Ack only after durable side effects",
+          "heading": "持久副作用后再 ack",
           "paragraphs": [
-            "Store idempotency records in the same transaction as the side effect when possible. Return the prior result on replay with a clear duplicate flag for logs.",
-            "Partial failures are the hard case: if billing succeeded but the model failed, retries must not double charge—reconcile with provider ids."
+            [
+              "可能时将幂等记录与副作用同事务。replay 返回先前结果并标 duplicate。",
+              "部分失败：计费成功模型失败—重试不得双扣，用供应商 id 对账。"
+            ]
           ]
         },
         {
-          "heading": "Measure duplicate replays",
+          "heading": "度量重复 replay",
           "paragraphs": [
-            "Dashboard replay rate by tool and tenant. Spikes often mean a bug in retry policy, not enthusiastic users.",
-            "Idempotency is how agents earn the right to fail and recover without finance paging you at midnight."
+            [
+              "按工具与租户 dashboard replay 率。尖峰常是重试策略 bug。",
+              "幂等让 agent 可在半夜不吵醒财务的情况下失败恢复。"
+            ]
           ],
           "links": [
             {
@@ -318,22 +358,26 @@
       ]
     },
     "ja": {
-      "title": "Idempotency Keys for Agent Tool Side Effects",
-      "excerpt": "Agents retry when models stall, gateways timeout, or users double-tap send. Without idempotency, a harmless retry charges twice, emails twice, or writes duplicate rows.",
-      "description": "Staff patterns for idempotent agent tool calls: key design, dedupe stores, acknowledgment ordering, and observability that separates user retries from runaway loops.",
+      "title": "エージェントツール副作用の冪等キー",
+      "excerpt": "モデル停滞、ゲートウェイタイムアウト、二重送信でエージェントはリトライする。冪等性なしでは二重課金・二重メール・二重行が起きる。",
+      "description": "冪等エージェントツール呼び出し：キー設計、dedupeストア、ack順序、ユーザーリトライと暴走ループを分ける可観測性。",
       "sections": [
         {
-          "heading": "Retries are the default, not the edge case",
+          "heading": "リトライがデフォルト",
           "paragraphs": [
-            "Streaming and tool-calling stacks retry aggressively: client reconnects, worker at-least-once delivery, and planner steps that re-invoke tools after partial failures.",
-            "Treat every external side effect—payments, tickets, CRM updates—as unsafe until your idempotency story is explicit in code review."
+            [
+              "ストリーミングとtoolスタックは積極リトライ：再接続、at-least-once、部分失敗後の再呼び出し。",
+              "課金・チケット・CRMなど外部副作用はreviewで冪等が明示されるまでunsafe。"
+            ]
           ]
         },
         {
-          "heading": "Keys belong to product actions",
+          "heading": "キーはプロダクトアクションに属する",
           "paragraphs": [
-            "Derive keys from stable user intent: conversation id plus turn sequence, or a client-generated UUID submitted with the send action.",
-            "Do not rotate keys when the model rephrases the same user message; hash normalized intent instead of raw tokens."
+            [
+              "安定したユーザー意図からキー：会話id+ターンまたは送信時クライアントUUID。",
+              "モデルが言い換えてもキーを回転させない—生トークンではなく正規化意図をハッシュ。"
+            ]
           ],
           "points": [
             "Issue idempotency keys at the user turn boundary, not per model token",
@@ -343,17 +387,21 @@
           ]
         },
         {
-          "heading": "Ack only after durable side effects",
+          "heading": "永続副作用の後にack",
           "paragraphs": [
-            "Store idempotency records in the same transaction as the side effect when possible. Return the prior result on replay with a clear duplicate flag for logs.",
-            "Partial failures are the hard case: if billing succeeded but the model failed, retries must not double charge—reconcile with provider ids."
+            [
+              "可能なら冪等レコードを副作用と同一トランザクション。replayはduplicateフラグ付きで前結果。",
+              "部分失敗：課金成功・モデル失敗—リトライで二重課金不可、プロバイダidで照合。"
+            ]
           ]
         },
         {
-          "heading": "Measure duplicate replays",
+          "heading": "重複replayを計測",
           "paragraphs": [
-            "Dashboard replay rate by tool and tenant. Spikes often mean a bug in retry policy, not enthusiastic users.",
-            "Idempotency is how agents earn the right to fail and recover without finance paging you at midnight."
+            [
+              "ツール・テナント別replay率をダッシュボード。スパイクは多くリトライポリシーバグ。",
+              "冪等性は深夜financeを起こさずfail-recoverする資格。"
+            ]
           ],
           "links": [
             {

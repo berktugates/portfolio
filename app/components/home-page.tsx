@@ -14,6 +14,7 @@ import {
   localePath,
   localeUrl,
 } from "../lib/i18n";
+import { formatMessage } from "../lib/i18n/format";
 import { shareImageMeta } from "../lib/share-image";
 import { AUTHOR_ID, visibleAuthorMeta, WEBSITE_ID, jsonLd } from "../lib/seo";
 
@@ -57,6 +58,10 @@ export async function HomePage({ locale }: { locale: Locale }) {
   ]);
   const meta = localeMeta[locale];
   const homeHref = localePath(locale);
+  const dateFormatter = new Intl.DateTimeFormat(meta.htmlLang, {
+    dateStyle: "medium",
+    timeZone: "UTC",
+  });
   const cjk = locale === "zh" || locale === "ja";
   const structuredData = {
     "@context": "https://schema.org",
@@ -114,6 +119,9 @@ export async function HomePage({ locale }: { locale: Locale }) {
                 title: post.title,
                 excerpt: post.excerpt,
                 href: blogPostPath(locale, post.slug),
+                publishedAt: post.publishedAt,
+                dateLabel: dateFormatter.format(new Date(post.publishedAt)),
+                readLabel: formatMessage(content.ui.minRead, { minutes: post.readingMinutes }),
               }))}
               labels={{
                 previous: content.ui.previous,

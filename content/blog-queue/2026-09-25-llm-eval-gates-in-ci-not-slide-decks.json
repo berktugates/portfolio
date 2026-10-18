@@ -70,35 +70,43 @@
         {
           "heading": "Eval'ler release altyapısıdır",
           "paragraphs": [
-            "Yalnızca gözle kontrol eden ekipler hataları destek ticket'larında görür. Eval harness'leri 'iyi görünüyor'u prompt, tool ve locale boyunca karşılaştırılabilir skorlara çevirir.",
-            "Veri setlerini kod gibi versiyonlayın; onaysız golden case düzenlemesi model regresyonunu davranış değişikliğinden ayıramaz."
+            [
+              "Yalnızca gözle kontrol eden ekipler hataları destek ticket'larında görür. Eval harness'leri 'iyi görünüyor'u prompt, tool ve locale boyunca karşılaştırılabilir skorlara çevirir.",
+              "Veri setlerini kod gibi versiyonlayın; onaysız golden case düzenlemesi model regresyonunu davranış değişikliğinden ayıramaz."
+            ]
           ]
         },
         {
           "heading": "Golden set'in sahibi olmalı",
           "paragraphs": [
-            "Gelir veya uyum yollarına bağlı küçük, yüksek sinyalli golden set ile başlayın—pazarlama kopyasından yüzlerce belirsiz prompt değil.",
-            "Her vaka tool şekli, atıf, red davranışı veya sayısal sınır assert etmeli; yalnızca benzerlik skoru yetmez."
+            [
+              "Gelir veya uyum yollarına bağlı küçük, yüksek sinyalli golden set ile başlayın—pazarlama kopyasından yüzlerce belirsiz prompt değil.",
+              "Her vaka tool şekli, atıf, red davranışı veya sayısal sınır assert etmeli; yalnızca benzerlik skoru yetmez."
+            ]
           ],
           "points": [
-            "Eval suite'leri fixture ve versiyonlu veri setiyle unit test gibi işleyin",
-            "Tek şanslı koşuma değil regresyon eşiğine göre release bloklayın",
-            "Offline eval ile online shadow trafiğini ayırın",
-            "Eval panolarını hata bütçesinin yanında yayınlayın"
+            "Treat eval suites like unit tests with fixtures and versioned datasets",
+            "Block releases on regression thresholds, not single lucky runs",
+            "Separate offline eval from online shadow traffic",
+            "Publish eval dashboards next to error budgets"
           ]
         },
         {
           "heading": "Online örnekle, offline kilitle",
           "paragraphs": [
-            "CI her PR'da hızlı eval alt kümesi, gece tam suite çalıştırmalı. Pahalı judge modeller zamanlanmış job'larda olmalı, her push'ta değil.",
-            "Prod shadow trafik offline eval'i tamamlar; kapının yerini tutmaz çünkü olay zaten kullanıcıya görünür."
+            [
+              "CI her PR'da hızlı eval alt kümesi, gece tam suite çalıştırmalı. Pahalı judge modeller zamanlanmış job'larda olmalı, her push'ta değil.",
+              "Prod shadow trafik offline eval'i tamamlar; kapının yerini tutmaz çünkü olay zaten kullanıcıya görünür."
+            ]
           ]
         },
         {
           "heading": "Regresyonları görünür kıl",
           "paragraphs": [
-            "Eval trendlerini gecikme ve maliyetin yanında yayınlayın. Model yükseltmesi kalite skorunu kazanıp token maliyetini ikiye katlarsa ürün tek panoda görmeli.",
-            "Eval kapıları, lansman gecesi kahramanlık olmadan model değiştirme hakkı verir."
+            [
+              "Eval trendlerini gecikme ve maliyetin yanında yayınlayın. Model yükseltmesi kalite skorunu kazanıp token maliyetini ikiye katlarsa ürün tek panoda görmeli.",
+              "Eval kapıları, lansman gecesi kahramanlık olmadan model değiştirme hakkı verir."
+            ]
           ],
           "links": [
             {
@@ -114,22 +122,26 @@
       ]
     },
     "de": {
-      "title": "LLM Eval Gates in CI, Not Slide Decks",
-      "excerpt": "Demo-quality prompts do not survive production traffic. If evals live only in notebooks, every model swap becomes a product lottery.",
-      "description": "Staff patterns for LLM evaluation in CI: golden datasets, regression thresholds, cost-aware sampling, and release gates that product teams can trust.",
+      "title": "LLM-Eval-Gates in der CI, nicht in Folien",
+      "excerpt": "Demo-Prompts scheitern im Produktionsverkehr. Leben Evals nur in Notebooks, wird jeder Modelltausch zur Lotterie.",
+      "description": "Staff-Muster für LLM-Eval in CI: Golden Sets, Regressionsschwellen, kostenbewusstes Sampling und Release-Gates.",
       "sections": [
         {
-          "heading": "Evals are release infrastructure",
+          "heading": "Evals sind Release-Infrastruktur",
           "paragraphs": [
-            "Teams that only eyeball outputs before launch discover failures in support tickets. Eval harnesses turn subjective 'looks fine' into comparable scores across prompts, tools, and locales.",
-            "Version datasets like code. When someone edits a golden case without review, you lose the ability to detect model regressions versus intentional behavior changes."
+            [
+              "Wer nur visuell prüft, findet Fehler in Support-Tickets. Eval-Harnesses machen aus 'sieht ok' vergleichbare Scores über Prompts, Tools und Locales.",
+              "Datensätze wie Code versionieren; unreviewte Golden-Case-Edits verblenden Modell-Regressionen."
+            ]
           ]
         },
         {
-          "heading": "Golden sets need ownership",
+          "heading": "Golden Sets brauchen Owner",
           "paragraphs": [
-            "Start with a small, high-signal golden set tied to revenue or compliance paths—not hundreds of vague prompts copied from marketing.",
-            "Each case should assert tool shape, citation presence, refusal behavior, or numeric bounds—not poetic similarity alone."
+            [
+              "Klein starten: hochsignal Golden Set an Revenue- oder Compliance-Pfaden.",
+              "Jeder Fall assertiert Tool-Form, Zitation, Refusal oder numerische Grenzen—not nur Ähnlichkeit."
+            ]
           ],
           "points": [
             "Treat eval suites like unit tests with fixtures and versioned datasets",
@@ -139,17 +151,21 @@
           ]
         },
         {
-          "heading": "Sample online, gate offline",
+          "heading": "Online sampeln, offline sperren",
           "paragraphs": [
-            "CI should run fast eval subsets on every PR and fuller suites nightly. Expensive judge models belong in scheduled jobs, not every push.",
-            "Shadow traffic in production complements offline eval; it should not replace gates because incidents are already user-visible."
+            [
+              "CI: schnelle Eval-Teilmenge pro PR, volle Suite nachts. Teure Judge-Modelle in Jobs, nicht jeden Push.",
+              "Shadow-Traffic ergänzt offline Eval, ersetzt Gates nicht."
+            ]
           ]
         },
         {
-          "heading": "Make regressions visible",
+          "heading": "Regressionen sichtbar machen",
           "paragraphs": [
-            "Publish eval trends beside latency and cost. When a model upgrade wins on quality score but doubles token spend, product should see that trade in one dashboard.",
-            "Eval gates earn the right to change models without heroics on launch night."
+            [
+              "Eval-Trends neben Latenz und Kosten publizieren. Qualitätsgewinn bei doppelten Token-Kosten muss sichtbar sein.",
+              "Eval-Gates erlauben Modellwechsel ohne Launch-Heldentum."
+            ]
           ],
           "links": [
             {
@@ -165,22 +181,26 @@
       ]
     },
     "fr": {
-      "title": "LLM Eval Gates in CI, Not Slide Decks",
-      "excerpt": "Demo-quality prompts do not survive production traffic. If evals live only in notebooks, every model swap becomes a product lottery.",
-      "description": "Staff patterns for LLM evaluation in CI: golden datasets, regression thresholds, cost-aware sampling, and release gates that product teams can trust.",
+      "title": "Portes d'eval LLM en CI, pas en slides",
+      "excerpt": "Les prompts démo s'effondrent en prod. Si les evals vivent seulement dans des notebooks, chaque swap modèle devient loterie.",
+      "description": "Patterns staff : jeux golden, seuils de régression, échantillonnage coût-aware et gates de release fiables.",
       "sections": [
         {
-          "heading": "Evals are release infrastructure",
+          "heading": "Les evals sont infra de release",
           "paragraphs": [
-            "Teams that only eyeball outputs before launch discover failures in support tickets. Eval harnesses turn subjective 'looks fine' into comparable scores across prompts, tools, and locales.",
-            "Version datasets like code. When someone edits a golden case without review, you lose the ability to detect model regressions versus intentional behavior changes."
+            [
+              "Les équipes qui eyeballent avant launch découvrent les échecs au support. Les harness transforment 'ça a l'air bien' en scores comparables.",
+              "Versionner les datasets comme le code ; éditer un golden sans review aveugle les régressions."
+            ]
           ]
         },
         {
-          "heading": "Golden sets need ownership",
+          "heading": "Les golden sets ont un owner",
           "paragraphs": [
-            "Start with a small, high-signal golden set tied to revenue or compliance paths—not hundreds of vague prompts copied from marketing.",
-            "Each case should assert tool shape, citation presence, refusal behavior, or numeric bounds—not poetic similarity alone."
+            [
+              "Commencer petit : golden set à fort signal sur chemins revenue ou compliance.",
+              "Chaque cas assert forme d'outil, citation, refus ou bornes—not seulement similarité."
+            ]
           ],
           "points": [
             "Treat eval suites like unit tests with fixtures and versioned datasets",
@@ -190,17 +210,21 @@
           ]
         },
         {
-          "heading": "Sample online, gate offline",
+          "heading": "Échantillonner online, verrouiller offline",
           "paragraphs": [
-            "CI should run fast eval subsets on every PR and fuller suites nightly. Expensive judge models belong in scheduled jobs, not every push.",
-            "Shadow traffic in production complements offline eval; it should not replace gates because incidents are already user-visible."
+            [
+              "CI : sous-ensemble rapide à chaque PR, suite complète la nuit. Juges coûteux en jobs planifiés.",
+              "Le shadow prod complète l'eval offline ; ne remplace pas les gates."
+            ]
           ]
         },
         {
-          "heading": "Make regressions visible",
+          "heading": "Rendre les régressions visibles",
           "paragraphs": [
-            "Publish eval trends beside latency and cost. When a model upgrade wins on quality score but doubles token spend, product should see that trade in one dashboard.",
-            "Eval gates earn the right to change models without heroics on launch night."
+            [
+              "Publier tendances eval à côté latence et coût. Un upgrade qualité qui double les tokens doit être visible.",
+              "Les gates eval permettent de changer de modèle sans héroïsme de launch."
+            ]
           ],
           "links": [
             {
@@ -216,22 +240,26 @@
       ]
     },
     "it": {
-      "title": "LLM Eval Gates in CI, Not Slide Decks",
-      "excerpt": "Demo-quality prompts do not survive production traffic. If evals live only in notebooks, every model swap becomes a product lottery.",
-      "description": "Staff patterns for LLM evaluation in CI: golden datasets, regression thresholds, cost-aware sampling, and release gates that product teams can trust.",
+      "title": "Gate di eval LLM in CI, non slide",
+      "excerpt": "I prompt da demo crollano in produzione. Eval solo in notebook rende ogni cambio modello una lotteria.",
+      "description": "Pattern staff per eval LLM in CI: golden set, soglie regressione, campionamento cost-aware e gate di release.",
       "sections": [
         {
-          "heading": "Evals are release infrastructure",
+          "heading": "Gli eval sono infrastruttura di release",
           "paragraphs": [
-            "Teams that only eyeball outputs before launch discover failures in support tickets. Eval harnesses turn subjective 'looks fine' into comparable scores across prompts, tools, and locales.",
-            "Version datasets like code. When someone edits a golden case without review, you lose the ability to detect model regressions versus intentional behavior changes."
+            [
+              "Chi controlla a occhio scopre i fallimenti nei ticket. Gli harness trasformano 'sembra ok' in punteggi comparabili su prompt, tool e locale.",
+              "Versiona i dataset come codice; edit golden senza review offusca regressioni modello."
+            ]
           ]
         },
         {
-          "heading": "Golden sets need ownership",
+          "heading": "I golden set hanno un owner",
           "paragraphs": [
-            "Start with a small, high-signal golden set tied to revenue or compliance paths—not hundreds of vague prompts copied from marketing.",
-            "Each case should assert tool shape, citation presence, refusal behavior, or numeric bounds—not poetic similarity alone."
+            [
+              "Parti piccolo: golden ad alto segnale su percorsi revenue o compliance.",
+              "Ogni caso assert forma tool, citazione, rifiuto o bound numerici—not solo similarità."
+            ]
           ],
           "points": [
             "Treat eval suites like unit tests with fixtures and versioned datasets",
@@ -241,17 +269,21 @@
           ]
         },
         {
-          "heading": "Sample online, gate offline",
+          "heading": "Campiona online, blocca offline",
           "paragraphs": [
-            "CI should run fast eval subsets on every PR and fuller suites nightly. Expensive judge models belong in scheduled jobs, not every push.",
-            "Shadow traffic in production complements offline eval; it should not replace gates because incidents are already user-visible."
+            [
+              "CI: subset veloce ogni PR, suite piena di notte. Judge costosi in job schedulati.",
+              "Shadow in prod completa eval offline, non sostituisce i gate."
+            ]
           ]
         },
         {
-          "heading": "Make regressions visible",
+          "heading": "Rendi visibili le regressioni",
           "paragraphs": [
-            "Publish eval trends beside latency and cost. When a model upgrade wins on quality score but doubles token spend, product should see that trade in one dashboard.",
-            "Eval gates earn the right to change models without heroics on launch night."
+            [
+              "Pubblica trend eval accanto a latenza e costo. Upgrade qualità che raddoppia token deve essere visibile.",
+              "I gate eval permettono cambio modello senza eroi alla launch."
+            ]
           ],
           "links": [
             {
@@ -267,22 +299,26 @@
       ]
     },
     "zh": {
-      "title": "LLM Eval Gates in CI, Not Slide Decks",
-      "excerpt": "Demo-quality prompts do not survive production traffic. If evals live only in notebooks, every model swap becomes a product lottery.",
-      "description": "Staff patterns for LLM evaluation in CI: golden datasets, regression thresholds, cost-aware sampling, and release gates that product teams can trust.",
+      "title": "CI 中的 LLM 评测门，而非幻灯片",
+      "excerpt": "演示级 prompt 扛不住生产流量。评测若只活在 notebook，每次换模型都是产品抽奖。",
+      "description": "CI 中 LLM 评测的 staff 模式：黄金集、回归阈值、成本敏感抽样与可信赖发布门。",
       "sections": [
         {
-          "heading": "Evals are release infrastructure",
+          "heading": "评测是发布基础设施",
           "paragraphs": [
-            "Teams that only eyeball outputs before launch discover failures in support tickets. Eval harnesses turn subjective 'looks fine' into comparable scores across prompts, tools, and locales.",
-            "Version datasets like code. When someone edits a golden case without review, you lose the ability to detect model regressions versus intentional behavior changes."
+            [
+              "只肉眼验收的团队在工单里发现失败。评测 harness 把“看起来还行”变成可比分。",
+              "数据集像代码一样版本化；未审 golden 编辑会混淆模型回归与行为变更。"
+            ]
           ]
         },
         {
-          "heading": "Golden sets need ownership",
+          "heading": "黄金集需要负责人",
           "paragraphs": [
-            "Start with a small, high-signal golden set tied to revenue or compliance paths—not hundreds of vague prompts copied from marketing.",
-            "Each case should assert tool shape, citation presence, refusal behavior, or numeric bounds—not poetic similarity alone."
+            [
+              "从小而高信号 golden 集起步，绑 revenue 或合规路径。",
+              "每例应断言工具形态、引用、拒绝或数值界，而非仅相似度。"
+            ]
           ],
           "points": [
             "Treat eval suites like unit tests with fixtures and versioned datasets",
@@ -292,17 +328,21 @@
           ]
         },
         {
-          "heading": "Sample online, gate offline",
+          "heading": "在线抽样、离线门禁",
           "paragraphs": [
-            "CI should run fast eval subsets on every PR and fuller suites nightly. Expensive judge models belong in scheduled jobs, not every push.",
-            "Shadow traffic in production complements offline eval; it should not replace gates because incidents are already user-visible."
+            [
+              "CI 每 PR 跑快评子集，夜间全量；贵 judge 放定时任务。",
+              "生产 shadow 补充离线评测，不能替代门禁。"
+            ]
           ]
         },
         {
-          "heading": "Make regressions visible",
+          "heading": "让回归可见",
           "paragraphs": [
-            "Publish eval trends beside latency and cost. When a model upgrade wins on quality score but doubles token spend, product should see that trade in one dashboard.",
-            "Eval gates earn the right to change models without heroics on launch night."
+            [
+              "评测趋势与延迟、成本同屏。质量升而 token 翻倍须在一张盘里可见。",
+              "评测门让你无需 launch 夜英雄式换模型。"
+            ]
           ],
           "links": [
             {
@@ -318,22 +358,26 @@
       ]
     },
     "ja": {
-      "title": "LLM Eval Gates in CI, Not Slide Decks",
-      "excerpt": "Demo-quality prompts do not survive production traffic. If evals live only in notebooks, every model swap becomes a product lottery.",
-      "description": "Staff patterns for LLM evaluation in CI: golden datasets, regression thresholds, cost-aware sampling, and release gates that product teams can trust.",
+      "title": "スライドではなくCIのLLM評価ゲート",
+      "excerpt": "デモ品質プロンプトは本番トラフィックで崩れる。評価がノートブックだけならモデル差し替えは宝くじになる。",
+      "description": "CIでのLLM評価：ゴールデンセット、回帰閾値、コスト意識サンプリング、信頼できるリリースゲート。",
       "sections": [
         {
-          "heading": "Evals are release infrastructure",
+          "heading": "Evalはリリース基盤",
           "paragraphs": [
-            "Teams that only eyeball outputs before launch discover failures in support tickets. Eval harnesses turn subjective 'looks fine' into comparable scores across prompts, tools, and locales.",
-            "Version datasets like code. When someone edits a golden case without review, you lose the ability to detect model regressions versus intentional behavior changes."
+            [
+              "目視だけのチームはサポートチケットで失敗に気づく。Harnessは「良さそう」を比較可能スコアに。",
+              "データセットをコード同様バージョン管理；未レビューgolden編集は回帰検知を壊す。"
+            ]
           ]
         },
         {
-          "heading": "Golden sets need ownership",
+          "heading": "ゴールデンセットにオーナー",
           "paragraphs": [
-            "Start with a small, high-signal golden set tied to revenue or compliance paths—not hundreds of vague prompts copied from marketing.",
-            "Each case should assert tool shape, citation presence, refusal behavior, or numeric bounds—not poetic similarity alone."
+            [
+              "小さく高信号のゴールデンから。収益・コンプライアンス経路に紐づける。",
+              "各ケースはツール形状・引用・拒否・数値境界をassert；類似度だけでは不足。"
+            ]
           ],
           "points": [
             "Treat eval suites like unit tests with fixtures and versioned datasets",
@@ -343,17 +387,21 @@
           ]
         },
         {
-          "heading": "Sample online, gate offline",
+          "heading": "オンラインでサンプル、オフラインでゲート",
           "paragraphs": [
-            "CI should run fast eval subsets on every PR and fuller suites nightly. Expensive judge models belong in scheduled jobs, not every push.",
-            "Shadow traffic in production complements offline eval; it should not replace gates because incidents are already user-visible."
+            [
+              "CIはPRごとに高速サブセット、夜間フル。高コストジャッジはスケジュールジョブ。",
+              "本番シャドウはオフラインevalを補完しゲートの代わりにならない。"
+            ]
           ]
         },
         {
-          "heading": "Make regressions visible",
+          "heading": "回帰を可視化",
           "paragraphs": [
-            "Publish eval trends beside latency and cost. When a model upgrade wins on quality score but doubles token spend, product should see that trade in one dashboard.",
-            "Eval gates earn the right to change models without heroics on launch night."
+            [
+              "evalトレンドをレイテンシ・コスト横に公開。品質向上でトークン2倍なら一枚の盤で見えるべき。",
+              "Evalゲートはローンチ夜のヒーローなしでモデル変更を可能にする。"
+            ]
           ],
           "links": [
             {

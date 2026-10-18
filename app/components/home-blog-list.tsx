@@ -11,6 +11,9 @@ export type HomeBlogListPost = {
   title: string;
   excerpt: string;
   href: string;
+  publishedAt: string;
+  dateLabel: string;
+  readLabel: string;
 };
 
 type HomeBlogListProps = {
@@ -50,6 +53,11 @@ export function HomeBlogList({ posts, labels }: HomeBlogListProps) {
               </span>
               <span className="mt-1 block text-sm leading-6 text-zinc-500 dark:text-zinc-400">
                 {post.excerpt}
+              </span>
+              <span className="mt-2 block text-xs text-zinc-400 dark:text-zinc-500">
+                <time dateTime={post.publishedAt}>{post.dateLabel}</time>
+                {" · "}
+                {post.readLabel}
               </span>
             </span>
           </BlogTransitionLink>

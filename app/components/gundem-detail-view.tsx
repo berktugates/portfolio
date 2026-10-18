@@ -121,7 +121,16 @@ export async function GundemDetailView({ params }: Props) {
             </div>
             <h1 className="mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">{briefing.title}</h1>
             <p className="!my-0 mt-5 text-lg leading-8 text-zinc-600 dark:text-zinc-300">{briefing.excerpt}</p>
-            <BlogShare title={briefing.title} url={canonical} label="Paylaş" />
+            <BlogShare
+              title={briefing.title}
+              url={canonical}
+              label="Paylaş"
+              navAriaLabel="Bu yazıyı paylaş"
+              facebookAriaLabel="Facebook'ta paylaş"
+              xAriaLabel="X'te paylaş"
+              redditAriaLabel="Reddit'te paylaş"
+              whatsAppAriaLabel="WhatsApp'ta paylaş"
+            />
           </header>
 
           <figure className="mb-10 overflow-hidden rounded-xl">

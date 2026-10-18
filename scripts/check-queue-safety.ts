@@ -57,6 +57,15 @@ async function scanDir(relative: string) {
           `${relative}/${name}: locales.tr.title mirrors English; add Turkish overlay (pnpm blog-queue:sync).`,
         );
       }
+      const locales = raw.locales as Record<string, { title?: string }> | undefined;
+      for (const code of ["de", "fr", "it", "zh", "ja"] as const) {
+        const locTitle = locales?.[code]?.title;
+        if (locTitle && enTitle && locTitle === enTitle) {
+          throw new Error(
+            `${relative}/${name}: locales.${code}.title mirrors English; add locale overlay (pnpm blog-queue:sync).`,
+          );
+        }
+      }
     }
   }
 }
