@@ -29,7 +29,7 @@ export function withLocalePath(locale: Locale, pathname: string): string {
 
 export function blogsIndexPath(locale: Locale, page = 1): string {
   if (page <= 1) return withLocalePath(locale, "/blogs");
-  return withLocalePath(locale, `/blogs/pages/${page}`);
+  return withLocalePath(locale, `/blogs/page/${page}`);
 }
 
 export function blogPostPath(locale: Locale, slug: string): string {

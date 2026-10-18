@@ -98,7 +98,7 @@ export async function ProjectDetailPage({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "@id": `${absoluteUrl(path)}#software`,
+    "@id": absoluteUrl(path),
     name: project.title,
     description: project.description,
     url: absoluteUrl(path),

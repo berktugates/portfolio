@@ -11,6 +11,20 @@ const nextConfig: NextConfig = {
     ],
   },
   poweredByHeader: false,
+  async redirects() {
+    return [
+      {
+        source: "/blogs/pages/:page",
+        destination: "/blogs/page/:page",
+        permanent: true,
+      },
+      {
+        source: "/:locale(tr|de|fr|it|zh|ja)/blogs/pages/:page",
+        destination: "/:locale/blogs/page/:page",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

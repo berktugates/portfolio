@@ -99,7 +99,7 @@ const offerCatalogs = jsonLdObjects(home).filter((item) => item["@type"] === "Of
 if (offerCatalogs.length !== 2) {
   throw new Error(`Expected two OfferCatalog nodes (engagements + services), found ${offerCatalogs.length}`);
 }
-const serviceCatalog = offerCatalogs.find((catalog) => catalog["@id"] === "https://berktugberke.com/#service-catalog");
+const serviceCatalog = offerCatalogs.find((catalog) => catalog["@id"] === "https://berktugberke.com/id/service-catalog");
 if (!serviceCatalog || serviceCatalog.numberOfItems !== 16) {
   throw new Error(`Service OfferCatalog must list exactly 16 service offers, found ${serviceCatalog?.numberOfItems}`);
 }

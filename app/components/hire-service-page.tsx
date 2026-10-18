@@ -21,6 +21,7 @@ import {
   WEBSITE_ID,
   absoluteUrl,
   jsonLd,
+  pageSchemaId,
 } from "../lib/seo";
 import {
   SERVICE_OFFERS,
@@ -101,7 +102,7 @@ export async function HireServicePage({
     "@graph": [
       {
         "@type": "WebPage",
-        "@id": `${pageUrl}#webpage`,
+        "@id": pageSchemaId(pageUrl, "webpage"),
         url: pageUrl,
         name: copy.metaTitle,
         description: copy.metaDescription,
@@ -109,11 +110,11 @@ export async function HireServicePage({
         isPartOf: { "@id": WEBSITE_ID },
         about: { "@id": serviceEntityId(slug) },
         mainEntity: { "@id": serviceOfferId(slug) },
-        breadcrumb: { "@id": `${pageUrl}#breadcrumb` },
+        breadcrumb: { "@id": pageSchemaId(pageUrl, "breadcrumb") },
       },
       {
         "@type": "BreadcrumbList",
-        "@id": `${pageUrl}#breadcrumb`,
+        "@id": pageSchemaId(pageUrl, "breadcrumb"),
         itemListElement: [
           {
             "@type": "ListItem",
@@ -156,10 +157,10 @@ export async function HireServicePage({
       },
       {
         "@type": "FAQPage",
-        "@id": `${pageUrl}#faq`,
+        "@id": pageSchemaId(pageUrl, "faq"),
         url: pageUrl,
         inLanguage: meta.htmlLang,
-        isPartOf: { "@id": `${pageUrl}#webpage` },
+        isPartOf: { "@id": pageSchemaId(pageUrl, "webpage") },
         mainEntity: copy.faqs.map((faq) => ({
           "@type": "Question",
           name: faq.question,

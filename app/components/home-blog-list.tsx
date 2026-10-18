@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { BlogTransitionLink } from "./blog-transition-link";
 
 const POSTS_PER_PAGE = 5;
@@ -26,6 +26,7 @@ type HomeBlogListProps = {
 };
 
 export function HomeBlogList({ posts, labels }: HomeBlogListProps) {
+  const scrollAnchorRef = useRef<HTMLDivElement>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
   const firstPost = (currentPage - 1) * POSTS_PER_PAGE;
@@ -34,7 +35,7 @@ export function HomeBlogList({ posts, labels }: HomeBlogListProps) {
   const goToPage = (page: number) => {
     setCurrentPage(Math.min(Math.max(page, 1), totalPages));
     requestAnimationFrame(() => {
-      document.getElementById("blog")?.scrollIntoView({
+      scrollAnchorRef.current?.scrollIntoView({
         behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
         block: "start",
       });
@@ -43,6 +44,7 @@ export function HomeBlogList({ posts, labels }: HomeBlogListProps) {
 
   return (
     <>
+      <div ref={scrollAnchorRef} className="scroll-mt-24" aria-hidden="true" />
       <div className="space-y-1">
         {visiblePosts.map((post) => (
           <BlogTransitionLink key={post.slug} href={post.href} className="blog-card group">

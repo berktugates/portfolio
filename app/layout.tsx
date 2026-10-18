@@ -22,6 +22,7 @@ import { documentLang } from "./lib/document-lang";
 import { LOCALE_REDIRECT_SCRIPT, getDictionary, hreflangLanguages, localeMeta, type Locale } from "./lib/i18n";
 import { shareImageMeta } from "./lib/share-image";
 import { THEME_INLINE_BOOTSTRAP_SCRIPT } from "./lib/theme";
+import { CleanUrlBar } from "./components/clean-url-bar";
 import { ThemeSync } from "./components/theme-sync";
 const geistMono = Geist_Mono({ subsets: ["latin"], display: "swap" });
 const structuredData = {
@@ -122,6 +123,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body className={`${geistMono.className} tracking-tight`}>
         <ThemeSync />
+        <CleanUrlBar />
         <GoogleTagManager />
         <ContentGroupBeacon />
         <a href="#main-content" className="sr-only focus:not-sr-only">

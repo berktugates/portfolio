@@ -16,7 +16,7 @@ import {
 } from "../lib/i18n";
 import { formatMessage } from "../lib/i18n/format";
 import { shareImageMeta } from "../lib/share-image";
-import { AUTHOR_ID, visibleAuthorMeta, WEBSITE_ID, jsonLd } from "../lib/seo";
+import { AUTHOR_ID, WEBSITE_ID, jsonLd, pageSchemaId, visibleAuthorMeta } from "../lib/seo";
 
 export async function createHomeMetadata(locale: Locale): Promise<Metadata> {
   const dict = await getDictionary(locale);
@@ -66,7 +66,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
-    "@id": `${localeUrl(locale)}#profile-page`,
+    "@id": pageSchemaId(localeUrl(locale), "profile-page"),
     url: localeUrl(locale),
     name: dict.metaTitle,
     description: dict.metaDescription,
@@ -101,7 +101,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         <main className="space-y-24">
           <h1 className="sr-only">{dict.h1}</h1>
 
-          <section id="blog" aria-labelledby="blog-heading">
+          <section aria-labelledby="blog-heading">
             <div className="mb-3 flex items-center justify-between">
               <h2 id="blog-heading" className="text-lg font-medium">
                 {dict.latestBlog}

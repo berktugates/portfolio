@@ -85,7 +85,7 @@ export async function GundemDetailView({ params }: Props) {
         inLanguage: "tr-TR",
         mainEntityOfPage: canonical,
         author: { "@type": "Person", "@id": AUTHOR_ID, name: dict.headerName, url: haberlerUrl("/yazar/berktug-berke-ates") },
-        publisher: { "@id": "https://haberler.berktugberke.com/#publisher" },
+        publisher: { "@id": "https://haberler.berktugberke.com/id/publisher" },
         articleSection: formatGundemCategory(briefing.category),
         isAccessibleForFree: true,
         citation: briefing.sources.map((s) => s.url),

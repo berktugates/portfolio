@@ -1,4 +1,4 @@
-import { AREA_SERVED, AUTHOR_ID, SITE_URL } from "./seo";
+import { AREA_SERVED, AUTHOR_ID, SITE_URL, schemaId } from "./seo";
 
 /**
  * Canonical service catalog for schema.org, llms.txt, and hire-page GEO.
@@ -235,15 +235,15 @@ export const SERVICE_OFFERS: readonly ServiceDefinition[] = [
   },
 ] as const;
 
-export const SERVICE_CATALOG_ID = `${SITE_URL}/#service-catalog`;
+export const SERVICE_CATALOG_ID = schemaId("service-catalog");
 export const EXPECTED_SERVICE_COUNT = SERVICE_OFFERS.length;
 
 export function serviceOfferId(slug: ServiceSlug) {
-  return `${SITE_URL}/#service-${slug}`;
+  return schemaId("service", slug);
 }
 
 export function serviceEntityId(slug: ServiceSlug) {
-  return `${SITE_URL}/#service-entity-${slug}`;
+  return schemaId("service-entity", slug);
 }
 
 /** schema.org OfferCatalog of service offerings (not engagement types). */

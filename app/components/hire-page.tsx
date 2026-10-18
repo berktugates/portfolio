@@ -19,6 +19,7 @@ import {
   WEBSITE_ID,
   absoluteUrl,
   jsonLd,
+  pageSchemaId,
 } from "../lib/seo";
 
 function ArrowIcon() {
@@ -78,7 +79,7 @@ export async function HirePage({ locale }: { locale: Locale }) {
     "@graph": [
       {
         "@type": "WebPage",
-        "@id": `${pageUrl}#webpage`,
+        "@id": pageSchemaId(pageUrl, "webpage"),
         url: pageUrl,
         name: dict.hire.metaTitle,
         description: dict.hire.metaDescription,
@@ -87,13 +88,13 @@ export async function HirePage({ locale }: { locale: Locale }) {
         mainEntity: { "@id": AUTHOR_ID },
         about: { "@id": AUTHOR_ID },
         hasPart: [
-          { "@id": `${pageUrl}#faq` },
-          { "@id": `${pageUrl}#services` },
+          { "@id": pageSchemaId(pageUrl, "faq") },
+          { "@id": pageSchemaId(pageUrl, "services") },
         ],
       },
       {
         "@type": "ItemList",
-        "@id": `${pageUrl}#services`,
+        "@id": pageSchemaId(pageUrl, "services"),
         name: dict.hire.servicesHeading,
         description: dict.hire.servicesIntro,
         numberOfItems: dict.hire.services.length,
@@ -107,10 +108,10 @@ export async function HirePage({ locale }: { locale: Locale }) {
       },
       {
         "@type": "FAQPage",
-        "@id": `${pageUrl}#faq`,
-        url: `${pageUrl}#faq`,
+        "@id": pageSchemaId(pageUrl, "faq"),
+        url: pageUrl,
         inLanguage: meta.htmlLang,
-        isPartOf: { "@id": `${pageUrl}#webpage` },
+        isPartOf: { "@id": pageSchemaId(pageUrl, "webpage") },
         mainEntity: dict.hire.faqs.map((faq) => ({
           "@type": "Question",
           name: faq.question,

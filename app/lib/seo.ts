@@ -22,14 +22,25 @@ export const GITHUB_PROFILE = "https://github.com/berktugates";
 export const LINKEDIN_PROFILE = "https://www.linkedin.com/in/berktugates/";
 export const FIRAT_UNIVERSITY_URL = "https://www.firat.edu.tr";
 
-export const AUTHOR_ID = `${SITE_URL}/#person`;
-export const WEBSITE_ID = `${SITE_URL}/#website`;
-export const FIRAT_UNIVERSITY_ID = `${SITE_URL}/#firat-university`;
-export const PROFESSIONAL_SERVICE_ID = `${SITE_URL}/#professional-service`;
-export const OFFER_CATALOG_ID = `${SITE_URL}/#offer-catalog`;
-export const OFFER_PROJECT_BASED_ID = `${SITE_URL}/#offer-project-based`;
-export const OFFER_FULL_TIME_ID = `${SITE_URL}/#offer-full-time`;
-export const OFFER_PART_TIME_ID = `${SITE_URL}/#offer-part-time`;
+/** Stable schema.org @id values — path-based, no URL fragments. */
+export function schemaId(...segments: string[]) {
+  return `${SITE_URL}/id/${segments.join("/")}`;
+}
+
+/** Page-scoped schema entities under `{canonical}/id/...`. */
+export function pageSchemaId(canonicalUrl: string, ...segments: string[]) {
+  const base = canonicalUrl.replace(/\/$/, "");
+  return `${base}/id/${segments.join("/")}`;
+}
+
+export const AUTHOR_ID = schemaId("person");
+export const WEBSITE_ID = schemaId("website");
+export const FIRAT_UNIVERSITY_ID = schemaId("firat-university");
+export const PROFESSIONAL_SERVICE_ID = schemaId("professional-service");
+export const OFFER_CATALOG_ID = schemaId("offer-catalog");
+export const OFFER_PROJECT_BASED_ID = schemaId("offer-project-based");
+export const OFFER_FULL_TIME_ID = schemaId("offer-full-time");
+export const OFFER_PART_TIME_ID = schemaId("offer-part-time");
 
 export const AREA_SERVED = buildAreaServedFromRegions();
 

@@ -16,6 +16,7 @@ import {
   WEBSITE_ID,
   absoluteUrl,
   jsonLd,
+  pageSchemaId,
 } from "../lib/seo";
 import { BlogShare } from "./blog-share";
 import { CopyUrl } from "./copy-url";
@@ -116,7 +117,7 @@ export async function BlogDetailPage({
     "@graph": [
       {
         "@type": "BreadcrumbList",
-        "@id": `${absoluteUrl(path)}#breadcrumb`,
+        "@id": pageSchemaId(absoluteUrl(path), "breadcrumb"),
         itemListElement: [
           {
             "@type": "ListItem",
@@ -140,7 +141,7 @@ export async function BlogDetailPage({
       },
       {
         "@type": "BlogPosting",
-        "@id": `${absoluteUrl(path)}#article`,
+        "@id": absoluteUrl(path),
         headline: post.title,
         description: post.description,
         image: absoluteUrl(shareImagePath(locale)),

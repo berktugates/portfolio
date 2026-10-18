@@ -216,11 +216,11 @@ test.describe("SEO program acceptance", () => {
     expect(postCanonical).not.toContain("utm_");
     expect(canonicals.join(" ")).not.toContain("utm_");
 
-    const pageTwo = await (await request.get("/tr/blogs/pages/2")).text();
+    const pageTwo = await (await request.get("/tr/blogs/page/2")).text();
     expect([...pageTwo.matchAll(/<link rel="canonical" href="([^"]+)"/g)].map((match) => match[1])).toEqual([
-      "https://berktugberke.com/tr/blogs/pages/2",
+      "https://berktugberke.com/tr/blogs/page/2",
     ]);
-    expect(pageTwo).toContain('property="og:url" content="https://berktugberke.com/tr/blogs/pages/2"');
+    expect(pageTwo).toContain('property="og:url" content="https://berktugberke.com/tr/blogs/page/2"');
     expect(pageTwo.match(/property="og:locale" content="([^"]+)"/)?.[1]).toBe("tr_TR");
 
     const slash = await request.get("/tr/hire/web-app/", { maxRedirects: 0 });
@@ -336,7 +336,7 @@ test.describe("SEO program acceptance", () => {
     const crumb = '"@type":"ListItem","position":1,"name":"Berktuğ Berke Ateş"';
     expect(blog).toContain(crumb);
     expect(hire).toContain(crumb);
-    expect(project).toContain('"author":{"@id":"https://berktugberke.com/#person","@type":"Person","name":"Berktuğ Berke Ateş"}');
+    expect(project).toContain('"author":{"@id":"https://berktugberke.com/id/person","@type":"Person","name":"Berktuğ Berke Ateş"}');
     expect(hire).not.toContain('property="og:site_name" content="Berktug Berke Ates"');
   });
 

@@ -35,7 +35,7 @@ export function publicationIdentity(): PublicationIdentity {
 export function newsPublisherJsonLd() {
   return {
     "@type": "NewsMediaOrganization",
-    "@id": "https://haberler.berktugberke.com/#publisher",
+    "@id": "https://haberler.berktugberke.com/id/publisher",
     name: NEWS_PUBLICATION_NAME,
     url: "https://haberler.berktugberke.com/",
     contactPoint: {
