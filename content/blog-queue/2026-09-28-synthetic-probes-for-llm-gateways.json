@@ -1,0 +1,372 @@
+{
+  "slug": "synthetic-probes-for-llm-gateways",
+  "title": "Synthetic Probes for LLM Gateways",
+  "excerpt": "Model vendor status pages go green while your copilot still fails on a bad route rule. Synthetic probes turn user-visible LLM paths into measurable SLOs.",
+  "description": "How staff engineers design synthetic monitoring for LLM gateways: realistic prompts, streaming completion checks, regional probes, and alert routing that product trusts.",
+  "readingMinutes": 7,
+  "keywords": [
+    "synthetic monitoring",
+    "LLM gateway",
+    "SLO",
+    "observability",
+    "AI infrastructure"
+  ],
+  "socialThreadTr": [
+    "Vendor status yeşilken copilot kırık olabilir; sentetik probe şart. 🧵",
+    "Auth, retrieval, stream tamamlama. Detay: https://berktugberke.com/tr/blogs/synthetic-probes-for-llm-gateways"
+  ],
+  "sections": [
+    {
+      "heading": "Probe like a user, not like curl",
+      "paragraphs": [
+        "Health checks that hit `/health` miss the failure modes users feel: empty retrieval, broken tool schema, or streams that stall after the first token.",
+        "Synthetic journeys should authenticate, run a minimal golden prompt, and assert end-of-stream markers within budget."
+      ]
+    },
+    {
+      "heading": "Split vendor vs gateway signals",
+      "paragraphs": [
+        "Tag probe results with provider, model id, and route version. When latency regresses, you need to know whether prompt templates grew or the vendor browned out.",
+        "Keep a canary tenant with fixed quotas so probes do not pollute production analytics."
+      ],
+      "points": [
+        "Probe the same path users hit: auth, retrieval, model route, and stream completion",
+        "Separate provider outages from your gateway regressions in dashboards",
+        "Run probes from multiple regions when latency SLOs are global",
+        "Page on failed probes before support tickets spike"
+      ]
+    },
+    {
+      "heading": "Region matters for latency SLOs",
+      "paragraphs": [
+        "Run probes from regions that match your user base. A healthy us-east gateway can still breach INP for European users routed through a distant region.",
+        "Compare probe TTFT to real user RUM with the same labels—large gaps mean sampling or routing bugs."
+      ]
+    },
+    {
+      "heading": "Alert before the ticket queue",
+      "paragraphs": [
+        "Route probe failures to the same on-call rotation as payment outages when the copilot is revenue-critical.",
+        "Synthetic monitoring is cheaper than explaining a silent model outage in a launch retro."
+      ],
+      "links": [
+        {
+          "label": "Google SRE — Monitoring distributed systems",
+          "url": "https://sre.google/sre-book/monitoring-distributed-systems/"
+        },
+        {
+          "label": "OpenAI — Production best practices",
+          "url": "https://platform.openai.com/docs/guides/production-best-practices"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "LLM Gateway'ler için Sentetik Probeler",
+      "excerpt": "Model sağlayıcı status sayfası yeşilken copilot'unuz hâlâ bozuk route kuralında takılı olabilir. Sentetik probeler kullanıcıya görünen LLM yollarını ölçülebilir SLO'ya çevirir.",
+      "description": "LLM gateway sentetik izleme tasarımı: gerçekçi prompt'lar, streaming tamamlama kontrolleri, bölgesel probeler ve ürünün güvendiği alarm yönlendirme.",
+      "sections": [
+        {
+          "heading": "curl değil kullanıcı gibi probe",
+          "paragraphs": [
+            "`/health` vuran kontroller kullanıcının hissettiği hataları kaçırır: boş retrieval, kırık tool schema veya ilk tokenden sonra takılan stream.",
+            "Sentetik yolculuk kimlik doğrulamalı, minimal golden prompt çalıştırmalı ve bütçe içinde stream sonu işaretlerini assert etmeli."
+          ]
+        },
+        {
+          "heading": "Vendor ile gateway sinyalini ayır",
+          "paragraphs": [
+            "Probe sonuçlarını sağlayıcı, model id ve route sürümü ile etiketleyin. Gecikme regresyonunda prompt şişmesi mi vendor brownout mu ayırın.",
+            "Probe'ların prod analitiğini kirletmemesi için sabit kotolu canary tenant tutun."
+          ],
+          "points": [
+            "Kullanıcının vurduğu yolu probe edin: auth, retrieval, model route, stream tamamlama",
+            "Panoda sağlayıcı kesintisini gateway regresyonundan ayırın",
+            "Gecikme SLO'su globalse çok bölgeli probe çalıştırın",
+            "Destek ticket'ları sıçramadan probe hatasında page edin"
+          ]
+        },
+        {
+          "heading": "Gecikme SLO'sunda bölge önemli",
+          "paragraphs": [
+            "Kullanıcı tabanınıza uyan bölgelerden probe çalıştırın. Sağlıklı us-east gateway, uzak bölgeye yönlendirilen Avrupa kullanıcıları için INP'yi ihlal edebilir.",
+            "Probe TTFT'yi aynı etiketlerle gerçek RUM ile karşılaştırın—büyük fark örnekleme veya routing bug'ıdır."
+          ]
+        },
+        {
+          "heading": "Ticket kuyruğundan önce uyar",
+          "paragraphs": [
+            "Copilot gelir kritikse probe hatalarını ödeme kesintisiyle aynı on-call rotasına yönlendirin.",
+            "Sentetik izleme, sessiz model kesintisini retro'da açıklamaktan ucuzdur."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — Monitoring distributed systems",
+              "url": "https://sre.google/sre-book/monitoring-distributed-systems/"
+            },
+            {
+              "label": "OpenAI — Production best practices",
+              "url": "https://platform.openai.com/docs/guides/production-best-practices"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Synthetic Probes for LLM Gateways",
+      "excerpt": "Model vendor status pages go green while your copilot still fails on a bad route rule. Synthetic probes turn user-visible LLM paths into measurable SLOs.",
+      "description": "How staff engineers design synthetic monitoring for LLM gateways: realistic prompts, streaming completion checks, regional probes, and alert routing that product trusts.",
+      "sections": [
+        {
+          "heading": "Probe like a user, not like curl",
+          "paragraphs": [
+            "Health checks that hit `/health` miss the failure modes users feel: empty retrieval, broken tool schema, or streams that stall after the first token.",
+            "Synthetic journeys should authenticate, run a minimal golden prompt, and assert end-of-stream markers within budget."
+          ]
+        },
+        {
+          "heading": "Split vendor vs gateway signals",
+          "paragraphs": [
+            "Tag probe results with provider, model id, and route version. When latency regresses, you need to know whether prompt templates grew or the vendor browned out.",
+            "Keep a canary tenant with fixed quotas so probes do not pollute production analytics."
+          ],
+          "points": [
+            "Probe the same path users hit: auth, retrieval, model route, and stream completion",
+            "Separate provider outages from your gateway regressions in dashboards",
+            "Run probes from multiple regions when latency SLOs are global",
+            "Page on failed probes before support tickets spike"
+          ]
+        },
+        {
+          "heading": "Region matters for latency SLOs",
+          "paragraphs": [
+            "Run probes from regions that match your user base. A healthy us-east gateway can still breach INP for European users routed through a distant region.",
+            "Compare probe TTFT to real user RUM with the same labels—large gaps mean sampling or routing bugs."
+          ]
+        },
+        {
+          "heading": "Alert before the ticket queue",
+          "paragraphs": [
+            "Route probe failures to the same on-call rotation as payment outages when the copilot is revenue-critical.",
+            "Synthetic monitoring is cheaper than explaining a silent model outage in a launch retro."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — Monitoring distributed systems",
+              "url": "https://sre.google/sre-book/monitoring-distributed-systems/"
+            },
+            {
+              "label": "OpenAI — Production best practices",
+              "url": "https://platform.openai.com/docs/guides/production-best-practices"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Synthetic Probes for LLM Gateways",
+      "excerpt": "Model vendor status pages go green while your copilot still fails on a bad route rule. Synthetic probes turn user-visible LLM paths into measurable SLOs.",
+      "description": "How staff engineers design synthetic monitoring for LLM gateways: realistic prompts, streaming completion checks, regional probes, and alert routing that product trusts.",
+      "sections": [
+        {
+          "heading": "Probe like a user, not like curl",
+          "paragraphs": [
+            "Health checks that hit `/health` miss the failure modes users feel: empty retrieval, broken tool schema, or streams that stall after the first token.",
+            "Synthetic journeys should authenticate, run a minimal golden prompt, and assert end-of-stream markers within budget."
+          ]
+        },
+        {
+          "heading": "Split vendor vs gateway signals",
+          "paragraphs": [
+            "Tag probe results with provider, model id, and route version. When latency regresses, you need to know whether prompt templates grew or the vendor browned out.",
+            "Keep a canary tenant with fixed quotas so probes do not pollute production analytics."
+          ],
+          "points": [
+            "Probe the same path users hit: auth, retrieval, model route, and stream completion",
+            "Separate provider outages from your gateway regressions in dashboards",
+            "Run probes from multiple regions when latency SLOs are global",
+            "Page on failed probes before support tickets spike"
+          ]
+        },
+        {
+          "heading": "Region matters for latency SLOs",
+          "paragraphs": [
+            "Run probes from regions that match your user base. A healthy us-east gateway can still breach INP for European users routed through a distant region.",
+            "Compare probe TTFT to real user RUM with the same labels—large gaps mean sampling or routing bugs."
+          ]
+        },
+        {
+          "heading": "Alert before the ticket queue",
+          "paragraphs": [
+            "Route probe failures to the same on-call rotation as payment outages when the copilot is revenue-critical.",
+            "Synthetic monitoring is cheaper than explaining a silent model outage in a launch retro."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — Monitoring distributed systems",
+              "url": "https://sre.google/sre-book/monitoring-distributed-systems/"
+            },
+            {
+              "label": "OpenAI — Production best practices",
+              "url": "https://platform.openai.com/docs/guides/production-best-practices"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Synthetic Probes for LLM Gateways",
+      "excerpt": "Model vendor status pages go green while your copilot still fails on a bad route rule. Synthetic probes turn user-visible LLM paths into measurable SLOs.",
+      "description": "How staff engineers design synthetic monitoring for LLM gateways: realistic prompts, streaming completion checks, regional probes, and alert routing that product trusts.",
+      "sections": [
+        {
+          "heading": "Probe like a user, not like curl",
+          "paragraphs": [
+            "Health checks that hit `/health` miss the failure modes users feel: empty retrieval, broken tool schema, or streams that stall after the first token.",
+            "Synthetic journeys should authenticate, run a minimal golden prompt, and assert end-of-stream markers within budget."
+          ]
+        },
+        {
+          "heading": "Split vendor vs gateway signals",
+          "paragraphs": [
+            "Tag probe results with provider, model id, and route version. When latency regresses, you need to know whether prompt templates grew or the vendor browned out.",
+            "Keep a canary tenant with fixed quotas so probes do not pollute production analytics."
+          ],
+          "points": [
+            "Probe the same path users hit: auth, retrieval, model route, and stream completion",
+            "Separate provider outages from your gateway regressions in dashboards",
+            "Run probes from multiple regions when latency SLOs are global",
+            "Page on failed probes before support tickets spike"
+          ]
+        },
+        {
+          "heading": "Region matters for latency SLOs",
+          "paragraphs": [
+            "Run probes from regions that match your user base. A healthy us-east gateway can still breach INP for European users routed through a distant region.",
+            "Compare probe TTFT to real user RUM with the same labels—large gaps mean sampling or routing bugs."
+          ]
+        },
+        {
+          "heading": "Alert before the ticket queue",
+          "paragraphs": [
+            "Route probe failures to the same on-call rotation as payment outages when the copilot is revenue-critical.",
+            "Synthetic monitoring is cheaper than explaining a silent model outage in a launch retro."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — Monitoring distributed systems",
+              "url": "https://sre.google/sre-book/monitoring-distributed-systems/"
+            },
+            {
+              "label": "OpenAI — Production best practices",
+              "url": "https://platform.openai.com/docs/guides/production-best-practices"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "Synthetic Probes for LLM Gateways",
+      "excerpt": "Model vendor status pages go green while your copilot still fails on a bad route rule. Synthetic probes turn user-visible LLM paths into measurable SLOs.",
+      "description": "How staff engineers design synthetic monitoring for LLM gateways: realistic prompts, streaming completion checks, regional probes, and alert routing that product trusts.",
+      "sections": [
+        {
+          "heading": "Probe like a user, not like curl",
+          "paragraphs": [
+            "Health checks that hit `/health` miss the failure modes users feel: empty retrieval, broken tool schema, or streams that stall after the first token.",
+            "Synthetic journeys should authenticate, run a minimal golden prompt, and assert end-of-stream markers within budget."
+          ]
+        },
+        {
+          "heading": "Split vendor vs gateway signals",
+          "paragraphs": [
+            "Tag probe results with provider, model id, and route version. When latency regresses, you need to know whether prompt templates grew or the vendor browned out.",
+            "Keep a canary tenant with fixed quotas so probes do not pollute production analytics."
+          ],
+          "points": [
+            "Probe the same path users hit: auth, retrieval, model route, and stream completion",
+            "Separate provider outages from your gateway regressions in dashboards",
+            "Run probes from multiple regions when latency SLOs are global",
+            "Page on failed probes before support tickets spike"
+          ]
+        },
+        {
+          "heading": "Region matters for latency SLOs",
+          "paragraphs": [
+            "Run probes from regions that match your user base. A healthy us-east gateway can still breach INP for European users routed through a distant region.",
+            "Compare probe TTFT to real user RUM with the same labels—large gaps mean sampling or routing bugs."
+          ]
+        },
+        {
+          "heading": "Alert before the ticket queue",
+          "paragraphs": [
+            "Route probe failures to the same on-call rotation as payment outages when the copilot is revenue-critical.",
+            "Synthetic monitoring is cheaper than explaining a silent model outage in a launch retro."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — Monitoring distributed systems",
+              "url": "https://sre.google/sre-book/monitoring-distributed-systems/"
+            },
+            {
+              "label": "OpenAI — Production best practices",
+              "url": "https://platform.openai.com/docs/guides/production-best-practices"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "Synthetic Probes for LLM Gateways",
+      "excerpt": "Model vendor status pages go green while your copilot still fails on a bad route rule. Synthetic probes turn user-visible LLM paths into measurable SLOs.",
+      "description": "How staff engineers design synthetic monitoring for LLM gateways: realistic prompts, streaming completion checks, regional probes, and alert routing that product trusts.",
+      "sections": [
+        {
+          "heading": "Probe like a user, not like curl",
+          "paragraphs": [
+            "Health checks that hit `/health` miss the failure modes users feel: empty retrieval, broken tool schema, or streams that stall after the first token.",
+            "Synthetic journeys should authenticate, run a minimal golden prompt, and assert end-of-stream markers within budget."
+          ]
+        },
+        {
+          "heading": "Split vendor vs gateway signals",
+          "paragraphs": [
+            "Tag probe results with provider, model id, and route version. When latency regresses, you need to know whether prompt templates grew or the vendor browned out.",
+            "Keep a canary tenant with fixed quotas so probes do not pollute production analytics."
+          ],
+          "points": [
+            "Probe the same path users hit: auth, retrieval, model route, and stream completion",
+            "Separate provider outages from your gateway regressions in dashboards",
+            "Run probes from multiple regions when latency SLOs are global",
+            "Page on failed probes before support tickets spike"
+          ]
+        },
+        {
+          "heading": "Region matters for latency SLOs",
+          "paragraphs": [
+            "Run probes from regions that match your user base. A healthy us-east gateway can still breach INP for European users routed through a distant region.",
+            "Compare probe TTFT to real user RUM with the same labels—large gaps mean sampling or routing bugs."
+          ]
+        },
+        {
+          "heading": "Alert before the ticket queue",
+          "paragraphs": [
+            "Route probe failures to the same on-call rotation as payment outages when the copilot is revenue-critical.",
+            "Synthetic monitoring is cheaper than explaining a silent model outage in a launch retro."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — Monitoring distributed systems",
+              "url": "https://sre.google/sre-book/monitoring-distributed-systems/"
+            },
+            {
+              "label": "OpenAI — Production best practices",
+              "url": "https://platform.openai.com/docs/guides/production-best-practices"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

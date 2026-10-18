@@ -1,0 +1,372 @@
+{
+  "slug": "idempotency-keys-for-agent-tool-side-effects",
+  "title": "Idempotency Keys for Agent Tool Side Effects",
+  "excerpt": "Agents retry when models stall, gateways timeout, or users double-tap send. Without idempotency, a harmless retry charges twice, emails twice, or writes duplicate rows.",
+  "description": "Staff patterns for idempotent agent tool calls: key design, dedupe stores, acknowledgment ordering, and observability that separates user retries from runaway loops.",
+  "readingMinutes": 7,
+  "keywords": [
+    "idempotency",
+    "AI agents",
+    "tool calling",
+    "distributed systems",
+    "reliability"
+  ],
+  "socialThreadTr": [
+    "Ajan retry'leri idempotency olmadan çift ücret ve çift e-posta demek. 🧵",
+    "Turn sınırında anahtar, tool yan etkilerinde dedupe. Detay: https://berktugberke.com/tr/blogs/idempotency-keys-for-agent-tool-side-effects"
+  ],
+  "sections": [
+    {
+      "heading": "Retries are the default, not the edge case",
+      "paragraphs": [
+        "Streaming and tool-calling stacks retry aggressively: client reconnects, worker at-least-once delivery, and planner steps that re-invoke tools after partial failures.",
+        "Treat every external side effect—payments, tickets, CRM updates—as unsafe until your idempotency story is explicit in code review."
+      ]
+    },
+    {
+      "heading": "Keys belong to product actions",
+      "paragraphs": [
+        "Derive keys from stable user intent: conversation id plus turn sequence, or a client-generated UUID submitted with the send action.",
+        "Do not rotate keys when the model rephrases the same user message; hash normalized intent instead of raw tokens."
+      ],
+      "points": [
+        "Issue idempotency keys at the user turn boundary, not per model token",
+        "Persist tool side effects with dedupe stores before acknowledging success",
+        "Make retries safe for billing, email, and database writes",
+        "Expose duplicate replay metrics to catch agent loops early"
+      ]
+    },
+    {
+      "heading": "Ack only after durable side effects",
+      "paragraphs": [
+        "Store idempotency records in the same transaction as the side effect when possible. Return the prior result on replay with a clear duplicate flag for logs.",
+        "Partial failures are the hard case: if billing succeeded but the model failed, retries must not double charge—reconcile with provider ids."
+      ]
+    },
+    {
+      "heading": "Measure duplicate replays",
+      "paragraphs": [
+        "Dashboard replay rate by tool and tenant. Spikes often mean a bug in retry policy, not enthusiastic users.",
+        "Idempotency is how agents earn the right to fail and recover without finance paging you at midnight."
+      ],
+      "links": [
+        {
+          "label": "Stripe — Idempotent requests",
+          "url": "https://stripe.com/docs/api/idempotent_requests"
+        },
+        {
+          "label": "AWS — Lambda idempotency",
+          "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Ajan Tool Yan Etkileri için Idempotency Anahtarları",
+      "excerpt": "Modeller takılınca, gateway timeout olunca veya kullanıcı çift gönderince ajanlar retry yapar. Idempotency yoksa masum retry iki kez ücretlendirir, iki mail atar veya çift satır yazar.",
+      "description": "Idempotent ajan tool çağrıları için staff kalıpları: anahtar tasarımı, dedupe store, onay sırası ve kullanıcı retry'sini runaway döngüden ayıran observability.",
+      "sections": [
+        {
+          "heading": "Retry varsayılan, edge case değil",
+          "paragraphs": [
+            "Streaming ve tool-calling yığınları agresif retry yapar: istemci yeniden bağlanır, worker at-least-once teslim eder, planner kısmi hatadan sonra tool'u yeniden çağırır.",
+            "Ödeme, ticket, CRM güncellemesi gibi her dış yan etkiyi, idempotency hikâyesi code review'da açık olana kadar güvensiz sayın."
+          ]
+        },
+        {
+          "heading": "Anahtarlar ürün eylemine ait",
+          "paragraphs": [
+            "Anahtarları kararlı kullanıcı niyetinden türetin: konuşma id + turn sırası veya gönder ile gelen istemci UUID'si.",
+            "Model aynı mesajı yeniden ifade edince anahtarı döndürmeyin; ham token yerine normalize niyeti hash'leyin."
+          ],
+          "points": [
+            "Idempotency anahtarını kullanıcı turn sınırında verin, model token'ı başına değil",
+            "Başarı ack'inden önce tool yan etkilerini dedupe store ile kalıcılaştırın",
+            "Faturalama, e-posta ve DB yazıları için retry'leri güvenli yapın",
+            "Ajan döngülerini erken yakalamak için duplicate replay metriklerini açın"
+          ]
+        },
+        {
+          "heading": "Kalıcı yan etkiden sonra ack",
+          "paragraphs": [
+            "Mümkünse idempotency kaydını yan etkiyle aynı transaction'da tutun. Replay'de önceki sonucu duplicate bayrağıyla döndürün.",
+            "Kısmi hata zor durum: faturalama başarılı model başarısızsa retry çift ücret olmamalı—sağlayıcı id ile reconcile edin."
+          ]
+        },
+        {
+          "heading": "Çift replay'i ölç",
+          "paragraphs": [
+            "Tool ve tenant bazında replay oranını pano yapın. Sıçramalar çoğu zaman retry policy bug'ıdır.",
+            "Idempotency, ajanların finansı gece uyandırmadan fail-recover etme hakkını kazanma yoludur."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Idempotent requests",
+              "url": "https://stripe.com/docs/api/idempotent_requests"
+            },
+            {
+              "label": "AWS — Lambda idempotency",
+              "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"
+            }
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Idempotency Keys for Agent Tool Side Effects",
+      "excerpt": "Agents retry when models stall, gateways timeout, or users double-tap send. Without idempotency, a harmless retry charges twice, emails twice, or writes duplicate rows.",
+      "description": "Staff patterns for idempotent agent tool calls: key design, dedupe stores, acknowledgment ordering, and observability that separates user retries from runaway loops.",
+      "sections": [
+        {
+          "heading": "Retries are the default, not the edge case",
+          "paragraphs": [
+            "Streaming and tool-calling stacks retry aggressively: client reconnects, worker at-least-once delivery, and planner steps that re-invoke tools after partial failures.",
+            "Treat every external side effect—payments, tickets, CRM updates—as unsafe until your idempotency story is explicit in code review."
+          ]
+        },
+        {
+          "heading": "Keys belong to product actions",
+          "paragraphs": [
+            "Derive keys from stable user intent: conversation id plus turn sequence, or a client-generated UUID submitted with the send action.",
+            "Do not rotate keys when the model rephrases the same user message; hash normalized intent instead of raw tokens."
+          ],
+          "points": [
+            "Issue idempotency keys at the user turn boundary, not per model token",
+            "Persist tool side effects with dedupe stores before acknowledging success",
+            "Make retries safe for billing, email, and database writes",
+            "Expose duplicate replay metrics to catch agent loops early"
+          ]
+        },
+        {
+          "heading": "Ack only after durable side effects",
+          "paragraphs": [
+            "Store idempotency records in the same transaction as the side effect when possible. Return the prior result on replay with a clear duplicate flag for logs.",
+            "Partial failures are the hard case: if billing succeeded but the model failed, retries must not double charge—reconcile with provider ids."
+          ]
+        },
+        {
+          "heading": "Measure duplicate replays",
+          "paragraphs": [
+            "Dashboard replay rate by tool and tenant. Spikes often mean a bug in retry policy, not enthusiastic users.",
+            "Idempotency is how agents earn the right to fail and recover without finance paging you at midnight."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Idempotent requests",
+              "url": "https://stripe.com/docs/api/idempotent_requests"
+            },
+            {
+              "label": "AWS — Lambda idempotency",
+              "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"
+            }
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Idempotency Keys for Agent Tool Side Effects",
+      "excerpt": "Agents retry when models stall, gateways timeout, or users double-tap send. Without idempotency, a harmless retry charges twice, emails twice, or writes duplicate rows.",
+      "description": "Staff patterns for idempotent agent tool calls: key design, dedupe stores, acknowledgment ordering, and observability that separates user retries from runaway loops.",
+      "sections": [
+        {
+          "heading": "Retries are the default, not the edge case",
+          "paragraphs": [
+            "Streaming and tool-calling stacks retry aggressively: client reconnects, worker at-least-once delivery, and planner steps that re-invoke tools after partial failures.",
+            "Treat every external side effect—payments, tickets, CRM updates—as unsafe until your idempotency story is explicit in code review."
+          ]
+        },
+        {
+          "heading": "Keys belong to product actions",
+          "paragraphs": [
+            "Derive keys from stable user intent: conversation id plus turn sequence, or a client-generated UUID submitted with the send action.",
+            "Do not rotate keys when the model rephrases the same user message; hash normalized intent instead of raw tokens."
+          ],
+          "points": [
+            "Issue idempotency keys at the user turn boundary, not per model token",
+            "Persist tool side effects with dedupe stores before acknowledging success",
+            "Make retries safe for billing, email, and database writes",
+            "Expose duplicate replay metrics to catch agent loops early"
+          ]
+        },
+        {
+          "heading": "Ack only after durable side effects",
+          "paragraphs": [
+            "Store idempotency records in the same transaction as the side effect when possible. Return the prior result on replay with a clear duplicate flag for logs.",
+            "Partial failures are the hard case: if billing succeeded but the model failed, retries must not double charge—reconcile with provider ids."
+          ]
+        },
+        {
+          "heading": "Measure duplicate replays",
+          "paragraphs": [
+            "Dashboard replay rate by tool and tenant. Spikes often mean a bug in retry policy, not enthusiastic users.",
+            "Idempotency is how agents earn the right to fail and recover without finance paging you at midnight."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Idempotent requests",
+              "url": "https://stripe.com/docs/api/idempotent_requests"
+            },
+            {
+              "label": "AWS — Lambda idempotency",
+              "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"
+            }
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Idempotency Keys for Agent Tool Side Effects",
+      "excerpt": "Agents retry when models stall, gateways timeout, or users double-tap send. Without idempotency, a harmless retry charges twice, emails twice, or writes duplicate rows.",
+      "description": "Staff patterns for idempotent agent tool calls: key design, dedupe stores, acknowledgment ordering, and observability that separates user retries from runaway loops.",
+      "sections": [
+        {
+          "heading": "Retries are the default, not the edge case",
+          "paragraphs": [
+            "Streaming and tool-calling stacks retry aggressively: client reconnects, worker at-least-once delivery, and planner steps that re-invoke tools after partial failures.",
+            "Treat every external side effect—payments, tickets, CRM updates—as unsafe until your idempotency story is explicit in code review."
+          ]
+        },
+        {
+          "heading": "Keys belong to product actions",
+          "paragraphs": [
+            "Derive keys from stable user intent: conversation id plus turn sequence, or a client-generated UUID submitted with the send action.",
+            "Do not rotate keys when the model rephrases the same user message; hash normalized intent instead of raw tokens."
+          ],
+          "points": [
+            "Issue idempotency keys at the user turn boundary, not per model token",
+            "Persist tool side effects with dedupe stores before acknowledging success",
+            "Make retries safe for billing, email, and database writes",
+            "Expose duplicate replay metrics to catch agent loops early"
+          ]
+        },
+        {
+          "heading": "Ack only after durable side effects",
+          "paragraphs": [
+            "Store idempotency records in the same transaction as the side effect when possible. Return the prior result on replay with a clear duplicate flag for logs.",
+            "Partial failures are the hard case: if billing succeeded but the model failed, retries must not double charge—reconcile with provider ids."
+          ]
+        },
+        {
+          "heading": "Measure duplicate replays",
+          "paragraphs": [
+            "Dashboard replay rate by tool and tenant. Spikes often mean a bug in retry policy, not enthusiastic users.",
+            "Idempotency is how agents earn the right to fail and recover without finance paging you at midnight."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Idempotent requests",
+              "url": "https://stripe.com/docs/api/idempotent_requests"
+            },
+            {
+              "label": "AWS — Lambda idempotency",
+              "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "Idempotency Keys for Agent Tool Side Effects",
+      "excerpt": "Agents retry when models stall, gateways timeout, or users double-tap send. Without idempotency, a harmless retry charges twice, emails twice, or writes duplicate rows.",
+      "description": "Staff patterns for idempotent agent tool calls: key design, dedupe stores, acknowledgment ordering, and observability that separates user retries from runaway loops.",
+      "sections": [
+        {
+          "heading": "Retries are the default, not the edge case",
+          "paragraphs": [
+            "Streaming and tool-calling stacks retry aggressively: client reconnects, worker at-least-once delivery, and planner steps that re-invoke tools after partial failures.",
+            "Treat every external side effect—payments, tickets, CRM updates—as unsafe until your idempotency story is explicit in code review."
+          ]
+        },
+        {
+          "heading": "Keys belong to product actions",
+          "paragraphs": [
+            "Derive keys from stable user intent: conversation id plus turn sequence, or a client-generated UUID submitted with the send action.",
+            "Do not rotate keys when the model rephrases the same user message; hash normalized intent instead of raw tokens."
+          ],
+          "points": [
+            "Issue idempotency keys at the user turn boundary, not per model token",
+            "Persist tool side effects with dedupe stores before acknowledging success",
+            "Make retries safe for billing, email, and database writes",
+            "Expose duplicate replay metrics to catch agent loops early"
+          ]
+        },
+        {
+          "heading": "Ack only after durable side effects",
+          "paragraphs": [
+            "Store idempotency records in the same transaction as the side effect when possible. Return the prior result on replay with a clear duplicate flag for logs.",
+            "Partial failures are the hard case: if billing succeeded but the model failed, retries must not double charge—reconcile with provider ids."
+          ]
+        },
+        {
+          "heading": "Measure duplicate replays",
+          "paragraphs": [
+            "Dashboard replay rate by tool and tenant. Spikes often mean a bug in retry policy, not enthusiastic users.",
+            "Idempotency is how agents earn the right to fail and recover without finance paging you at midnight."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Idempotent requests",
+              "url": "https://stripe.com/docs/api/idempotent_requests"
+            },
+            {
+              "label": "AWS — Lambda idempotency",
+              "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"
+            }
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "Idempotency Keys for Agent Tool Side Effects",
+      "excerpt": "Agents retry when models stall, gateways timeout, or users double-tap send. Without idempotency, a harmless retry charges twice, emails twice, or writes duplicate rows.",
+      "description": "Staff patterns for idempotent agent tool calls: key design, dedupe stores, acknowledgment ordering, and observability that separates user retries from runaway loops.",
+      "sections": [
+        {
+          "heading": "Retries are the default, not the edge case",
+          "paragraphs": [
+            "Streaming and tool-calling stacks retry aggressively: client reconnects, worker at-least-once delivery, and planner steps that re-invoke tools after partial failures.",
+            "Treat every external side effect—payments, tickets, CRM updates—as unsafe until your idempotency story is explicit in code review."
+          ]
+        },
+        {
+          "heading": "Keys belong to product actions",
+          "paragraphs": [
+            "Derive keys from stable user intent: conversation id plus turn sequence, or a client-generated UUID submitted with the send action.",
+            "Do not rotate keys when the model rephrases the same user message; hash normalized intent instead of raw tokens."
+          ],
+          "points": [
+            "Issue idempotency keys at the user turn boundary, not per model token",
+            "Persist tool side effects with dedupe stores before acknowledging success",
+            "Make retries safe for billing, email, and database writes",
+            "Expose duplicate replay metrics to catch agent loops early"
+          ]
+        },
+        {
+          "heading": "Ack only after durable side effects",
+          "paragraphs": [
+            "Store idempotency records in the same transaction as the side effect when possible. Return the prior result on replay with a clear duplicate flag for logs.",
+            "Partial failures are the hard case: if billing succeeded but the model failed, retries must not double charge—reconcile with provider ids."
+          ]
+        },
+        {
+          "heading": "Measure duplicate replays",
+          "paragraphs": [
+            "Dashboard replay rate by tool and tenant. Spikes often mean a bug in retry policy, not enthusiastic users.",
+            "Idempotency is how agents earn the right to fail and recover without finance paging you at midnight."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Idempotent requests",
+              "url": "https://stripe.com/docs/api/idempotent_requests"
+            },
+            {
+              "label": "AWS — Lambda idempotency",
+              "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

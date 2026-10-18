@@ -974,3 +974,171 @@ seo_post(
         "Post-incident prompt ve config diff'lerini kaydedin",
     ],
 )
+
+links10 = [
+    {"label": "Stripe — Idempotent requests", "url": "https://stripe.com/docs/api/idempotent_requests"},
+    {"label": "AWS — Lambda idempotency", "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"},
+]
+pts10 = [
+    "Issue idempotency keys at the user turn boundary, not per model token",
+    "Persist tool side effects with dedupe stores before acknowledging success",
+    "Make retries safe for billing, email, and database writes",
+    "Expose duplicate replay metrics to catch agent loops early",
+]
+seo_post(
+    "2026-09-27-idempotency-keys-for-agent-tool-side-effects.json",
+    "idempotency-keys-for-agent-tool-side-effects",
+    "Idempotency Keys for Agent Tool Side Effects",
+    "Agents retry when models stall, gateways timeout, or users double-tap send. Without idempotency, a harmless retry charges twice, emails twice, or writes duplicate rows.",
+    "Staff patterns for idempotent agent tool calls: key design, dedupe stores, acknowledgment ordering, and observability that separates user retries from runaway loops.",
+    ["idempotency", "AI agents", "tool calling", "distributed systems", "reliability"],
+    [
+        "Ajan retry'leri idempotency olmadan çift ücret ve çift e-posta demek. 🧵",
+        "Turn sınırında anahtar, tool yan etkilerinde dedupe. Detay: https://berktugberke.com/tr/blogs/idempotency-keys-for-agent-tool-side-effects",
+    ],
+    [
+        "Retries are the default, not the edge case",
+        "Keys belong to product actions",
+        "Ack only after durable side effects",
+        "Measure duplicate replays",
+    ],
+    [
+        [
+            "Streaming and tool-calling stacks retry aggressively: client reconnects, worker at-least-once delivery, and planner steps that re-invoke tools after partial failures.",
+            "Treat every external side effect—payments, tickets, CRM updates—as unsafe until your idempotency story is explicit in code review.",
+        ],
+        [
+            "Derive keys from stable user intent: conversation id plus turn sequence, or a client-generated UUID submitted with the send action.",
+            "Do not rotate keys when the model rephrases the same user message; hash normalized intent instead of raw tokens.",
+        ],
+        [
+            "Store idempotency records in the same transaction as the side effect when possible. Return the prior result on replay with a clear duplicate flag for logs.",
+            "Partial failures are the hard case: if billing succeeded but the model failed, retries must not double charge—reconcile with provider ids.",
+        ],
+        [
+            "Dashboard replay rate by tool and tenant. Spikes often mean a bug in retry policy, not enthusiastic users.",
+            "Idempotency is how agents earn the right to fail and recover without finance paging you at midnight.",
+        ],
+    ],
+    pts10,
+    links10,
+    tr=(
+        "Ajan Tool Yan Etkileri için Idempotency Anahtarları",
+        "Modeller takılınca, gateway timeout olunca veya kullanıcı çift gönderince ajanlar retry yapar. Idempotency yoksa masum retry iki kez ücretlendirir, iki mail atar veya çift satır yazar.",
+        "Idempotent ajan tool çağrıları için staff kalıpları: anahtar tasarımı, dedupe store, onay sırası ve kullanıcı retry'sini runaway döngüden ayıran observability.",
+        [
+            "Retry varsayılan, edge case değil",
+            "Anahtarlar ürün eylemine ait",
+            "Kalıcı yan etkiden sonra ack",
+            "Çift replay'i ölç",
+        ],
+        [
+            [
+                "Streaming ve tool-calling yığınları agresif retry yapar: istemci yeniden bağlanır, worker at-least-once teslim eder, planner kısmi hatadan sonra tool'u yeniden çağırır.",
+                "Ödeme, ticket, CRM güncellemesi gibi her dış yan etkiyi, idempotency hikâyesi code review'da açık olana kadar güvensiz sayın.",
+            ],
+            [
+                "Anahtarları kararlı kullanıcı niyetinden türetin: konuşma id + turn sırası veya gönder ile gelen istemci UUID'si.",
+                "Model aynı mesajı yeniden ifade edince anahtarı döndürmeyin; ham token yerine normalize niyeti hash'leyin.",
+            ],
+            [
+                "Mümkünse idempotency kaydını yan etkiyle aynı transaction'da tutun. Replay'de önceki sonucu duplicate bayrağıyla döndürün.",
+                "Kısmi hata zor durum: faturalama başarılı model başarısızsa retry çift ücret olmamalı—sağlayıcı id ile reconcile edin.",
+            ],
+            [
+                "Tool ve tenant bazında replay oranını pano yapın. Sıçramalar çoğu zaman retry policy bug'ıdır.",
+                "Idempotency, ajanların finansı gece uyandırmadan fail-recover etme hakkını kazanma yoludur.",
+            ],
+        ],
+    ),
+    points_tr=[
+        "Idempotency anahtarını kullanıcı turn sınırında verin, model token'ı başına değil",
+        "Başarı ack'inden önce tool yan etkilerini dedupe store ile kalıcılaştırın",
+        "Faturalama, e-posta ve DB yazıları için retry'leri güvenli yapın",
+        "Ajan döngülerini erken yakalamak için duplicate replay metriklerini açın",
+    ],
+)
+
+links11 = [
+    {"label": "Google SRE — Monitoring distributed systems", "url": "https://sre.google/sre-book/monitoring-distributed-systems/"},
+    {"label": "OpenAI — Production best practices", "url": "https://platform.openai.com/docs/guides/production-best-practices"},
+]
+pts11 = [
+    "Probe the same path users hit: auth, retrieval, model route, and stream completion",
+    "Separate provider outages from your gateway regressions in dashboards",
+    "Run probes from multiple regions when latency SLOs are global",
+    "Page on failed probes before support tickets spike",
+]
+seo_post(
+    "2026-09-28-synthetic-probes-for-llm-gateways.json",
+    "synthetic-probes-for-llm-gateways",
+    "Synthetic Probes for LLM Gateways",
+    "Model vendor status pages go green while your copilot still fails on a bad route rule. Synthetic probes turn user-visible LLM paths into measurable SLOs.",
+    "How staff engineers design synthetic monitoring for LLM gateways: realistic prompts, streaming completion checks, regional probes, and alert routing that product trusts.",
+    ["synthetic monitoring", "LLM gateway", "SLO", "observability", "AI infrastructure"],
+    [
+        "Vendor status yeşilken copilot kırık olabilir; sentetik probe şart. 🧵",
+        "Auth, retrieval, stream tamamlama. Detay: https://berktugberke.com/tr/blogs/synthetic-probes-for-llm-gateways",
+    ],
+    [
+        "Probe like a user, not like curl",
+        "Split vendor vs gateway signals",
+        "Region matters for latency SLOs",
+        "Alert before the ticket queue",
+    ],
+    [
+        [
+            "Health checks that hit `/health` miss the failure modes users feel: empty retrieval, broken tool schema, or streams that stall after the first token.",
+            "Synthetic journeys should authenticate, run a minimal golden prompt, and assert end-of-stream markers within budget.",
+        ],
+        [
+            "Tag probe results with provider, model id, and route version. When latency regresses, you need to know whether prompt templates grew or the vendor browned out.",
+            "Keep a canary tenant with fixed quotas so probes do not pollute production analytics.",
+        ],
+        [
+            "Run probes from regions that match your user base. A healthy us-east gateway can still breach INP for European users routed through a distant region.",
+            "Compare probe TTFT to real user RUM with the same labels—large gaps mean sampling or routing bugs.",
+        ],
+        [
+            "Route probe failures to the same on-call rotation as payment outages when the copilot is revenue-critical.",
+            "Synthetic monitoring is cheaper than explaining a silent model outage in a launch retro.",
+        ],
+    ],
+    pts11,
+    links11,
+    tr=(
+        "LLM Gateway'ler için Sentetik Probeler",
+        "Model sağlayıcı status sayfası yeşilken copilot'unuz hâlâ bozuk route kuralında takılı olabilir. Sentetik probeler kullanıcıya görünen LLM yollarını ölçülebilir SLO'ya çevirir.",
+        "LLM gateway sentetik izleme tasarımı: gerçekçi prompt'lar, streaming tamamlama kontrolleri, bölgesel probeler ve ürünün güvendiği alarm yönlendirme.",
+        [
+            "curl değil kullanıcı gibi probe",
+            "Vendor ile gateway sinyalini ayır",
+            "Gecikme SLO'sunda bölge önemli",
+            "Ticket kuyruğundan önce uyar",
+        ],
+        [
+            [
+                "`/health` vuran kontroller kullanıcının hissettiği hataları kaçırır: boş retrieval, kırık tool schema veya ilk tokenden sonra takılan stream.",
+                "Sentetik yolculuk kimlik doğrulamalı, minimal golden prompt çalıştırmalı ve bütçe içinde stream sonu işaretlerini assert etmeli.",
+            ],
+            [
+                "Probe sonuçlarını sağlayıcı, model id ve route sürümü ile etiketleyin. Gecikme regresyonunda prompt şişmesi mi vendor brownout mu ayırın.",
+                "Probe'ların prod analitiğini kirletmemesi için sabit kotolu canary tenant tutun.",
+            ],
+            [
+                "Kullanıcı tabanınıza uyan bölgelerden probe çalıştırın. Sağlıklı us-east gateway, uzak bölgeye yönlendirilen Avrupa kullanıcıları için INP'yi ihlal edebilir.",
+                "Probe TTFT'yi aynı etiketlerle gerçek RUM ile karşılaştırın—büyük fark örnekleme veya routing bug'ıdır.",
+            ],
+            [
+                "Copilot gelir kritikse probe hatalarını ödeme kesintisiyle aynı on-call rotasına yönlendirin.",
+                "Sentetik izleme, sessiz model kesintisini retro'da açıklamaktan ucuzdur.",
+            ],
+        ],
+    ),
+    points_tr=[
+        "Kullanıcının vurduğu yolu probe edin: auth, retrieval, model route, stream tamamlama",
+        "Panoda sağlayıcı kesintisini gateway regresyonundan ayırın",
+        "Gecikme SLO'su globalse çok bölgeli probe çalıştırın",
+        "Destek ticket'ları sıçramadan probe hatasında page edin",
+    ],
+)
