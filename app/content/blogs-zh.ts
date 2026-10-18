@@ -31,7 +31,7 @@ const blogs: BlogLocaleMap = {
       {
         heading: "隔离纪律",
         paragraphs: [
-          "不要对没有 owner 的不稳定测试无限重试，否则 CI 只是在Teaching团队忽略红色构建。",
+          "不要对没有 owner 的不稳定测试无限重试，否则 CI 只是在纵容团队忽略红色构建。",
           "维护带 SLA 的隔离列表，并把每条 flaky spec 绑定到具体负责人。",
           "与 release 经理每周审查隔离；超 SLA 项应阻断发布列车或删除 spec。",
         ],
