@@ -36,6 +36,7 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
   const turnstileContainerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
   const ignoreTurnstileCallbacksRef = useRef(false);
+  const turnstileRetryRef = useRef(0);
   const startedRef = useRef(false);
 
   const [state, setState] = useState<"idle" | "sending" | "success" | "error">("idle");
@@ -50,28 +51,7 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
   const [turnstileScriptReady, setTurnstileScriptReady] = useState(false);
   const [turnstileError, setTurnstileError] = useState(false);
 
-  const onTurnstileSuccess = useCallback((token: string) => {
-    setTurnstileToken(token);
-    setTurnstileReady(Boolean(token));
-    setTurnstileError(false);
-  }, []);
-
-  const onTurnstileExpired = useCallback(() => {
-    if (ignoreTurnstileCallbacksRef.current) return;
-    setTurnstileToken("");
-    setTurnstileReady(false);
-    setTurnstileError(false);
-    if (widgetIdRef.current && window.turnstile) {
-      window.turnstile.reset(widgetIdRef.current);
-    }
-  }, []);
-
-  const onTurnstileError = useCallback(() => {
-    if (ignoreTurnstileCallbacksRef.current) return;
-    setTurnstileToken("");
-    setTurnstileReady(false);
-    setTurnstileError(true);
-  }, []);
+  const mountTurnstileRef = useRef<() => void>(() => {});
 
   const destroyTurnstileWidget = useCallback(() => {
     ignoreTurnstileCallbacksRef.current = true;
@@ -89,6 +69,18 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
     }
   }, []);
 
+  const scheduleTurnstileRemount = useCallback(() => {
+    if (turnstileRetryRef.current >= 3) {
+      setTurnstileError(true);
+      return;
+    }
+    turnstileRetryRef.current += 1;
+    destroyTurnstileWidget();
+    window.setTimeout(() => {
+      mountTurnstileRef.current();
+    }, 400);
+  }, [destroyTurnstileWidget]);
+
   const mountTurnstile = useCallback(() => {
     if (!siteKey || !turnstileContainerRef.current || !window.turnstile) return;
     if (widgetIdRef.current != null) return;
@@ -102,15 +94,35 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
         action: "contact",
         theme: "auto",
         size: "normal",
-        callback: onTurnstileSuccess,
-        "expired-callback": onTurnstileExpired,
-        "error-callback": onTurnstileError,
+        callback: (token: string) => {
+          turnstileRetryRef.current = 0;
+          setTurnstileToken(token);
+          setTurnstileReady(Boolean(token));
+          setTurnstileError(false);
+        },
+        "expired-callback": () => {
+          if (ignoreTurnstileCallbacksRef.current) return;
+          setTurnstileToken("");
+          setTurnstileReady(false);
+          setTurnstileError(false);
+          if (widgetIdRef.current && window.turnstile) {
+            window.turnstile.reset(widgetIdRef.current);
+          }
+        },
+        "error-callback": () => {
+          if (ignoreTurnstileCallbacksRef.current) return;
+          setTurnstileToken("");
+          setTurnstileReady(false);
+          scheduleTurnstileRemount();
+        },
       });
     } catch {
       widgetIdRef.current = null;
       setTurnstileError(true);
     }
-  }, [onTurnstileError, onTurnstileExpired, onTurnstileSuccess, siteKey]);
+  }, [scheduleTurnstileRemount, siteKey]);
+
+  mountTurnstileRef.current = mountTurnstile;
 
   useEffect(() => {
     setStartedAt((current) => (current > 0 ? current : Date.now()));
@@ -121,7 +133,7 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
   }, []);
 
   const fieldsValid = isContactFormFieldsValid(name, email, details);
-  const shouldRunTurnstile = fieldsValid && state !== "success";
+  const shouldRunTurnstile = state !== "success";
 
   useEffect(() => {
     if (!shouldRunTurnstile || !turnstileScriptReady) {
@@ -130,6 +142,7 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
         setTurnstileToken("");
         setTurnstileReady(false);
         setTurnstileError(false);
+        turnstileRetryRef.current = 0;
       }
       return;
     }
