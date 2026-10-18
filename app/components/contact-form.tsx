@@ -5,11 +5,14 @@ import Script from "next/script";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   CONTACT_PROJECT_TYPES,
+  type ContactProjectType,
   contactFormLimits,
+  contactProjectLabel,
   contactSubmissionUserMessage,
   isContactFormFieldsValid,
   validateContactFieldsClient,
 } from "../lib/contact-form";
+import { sendContactViaFormSubmitClient } from "../lib/contact-formsubmit-client";
 import type { Locale } from "../lib/i18n";
 import type { ContactPageCopy } from "../lib/i18n/contact-page-copy";
 
@@ -32,6 +35,7 @@ type ContactFormProps = {
 
 export function ContactForm({ locale, copy }: ContactFormProps) {
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+  const formSubmitId = process.env.NEXT_PUBLIC_FORMSUBMIT_ID?.trim();
   const formRef = useRef<HTMLFormElement>(null);
   const turnstileContainerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
@@ -202,8 +206,25 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
         body: formData,
         headers: { Accept: "application/json" },
       });
-      const data = (await response.json().catch(() => ({}))) as { message?: string; error?: string };
+      const data = (await response.json().catch(() => ({}))) as {
+        message?: string;
+        error?: string;
+        deliverViaFormSubmit?: string;
+      };
       if (!response.ok) throw new Error(data.error ?? copy.form.sendFailed);
+
+      if (data.deliverViaFormSubmit === "true" && formSubmitId) {
+        const projectType = String(formData.get("projectType") ?? "") as ContactProjectType | "";
+        const delivered = await sendContactViaFormSubmitClient(formSubmitId, {
+          name: name.trim(),
+          email: email.trim().toLowerCase(),
+          projectTypeLabel: contactProjectLabel(projectType, locale),
+          details: details.trim(),
+          locale,
+        });
+        if (!delivered) throw new Error(copy.form.sendFailed);
+      }
+
       formRef.current?.reset();
       setName("");
       setEmail("");

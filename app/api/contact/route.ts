@@ -7,8 +7,8 @@ import {
   parseFormLocale,
 } from "../../lib/contact-form";
 import { getContactPageCopy } from "../../lib/i18n/contact-page-copy";
+import { contactDeliveryConfigured, useClientFormSubmitDelivery } from "../../lib/contact-delivery-mode";
 import { sendContactEmail } from "../../lib/send-contact-email";
-import { isZohoSmtpConfigured } from "../../lib/send-via-zoho-smtp";
 
 export const dynamic = "force-dynamic";
 
@@ -112,20 +112,24 @@ export async function POST(request: Request) {
     return json({ error: api.turnstileFailed }, 400);
   }
 
-  const canDeliver =
-    isZohoSmtpConfigured() ||
-    Boolean(process.env.CONTACT_FORMSUBMIT_ID?.trim() || process.env.CONTACT_FORMSUBMIT_EMAIL?.trim()) ||
-    Boolean(process.env.CONTENT_PUBLISHER_CONTACT_URL?.trim() && process.env.CONTACT_INGEST_SECRET?.trim()) ||
-    Boolean(
-      process.env.EMAILJS_SERVICE_ID?.trim() &&
-        process.env.EMAILJS_TEMPLATE_ID?.trim() &&
-        process.env.EMAILJS_PUBLIC_KEY?.trim(),
-    );
-  if (!canDeliver) {
+  if (!contactDeliveryConfigured()) {
     return json({ error: api.serviceUnavailable }, 503);
   }
 
   recentIps.set(key, now);
+
+  if (useClientFormSubmitDelivery()) {
+    const response = json({ message: api.success, deliverViaFormSubmit: "true" }, 200);
+    response.cookies.set("contact_cooldown", "1", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: COOLDOWN_SECONDS,
+      path: "/api/contact",
+    });
+    return response;
+  }
+
   let delivered = false;
   try {
     delivered = await sendContactEmail({
