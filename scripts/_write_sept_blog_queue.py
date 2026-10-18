@@ -8,6 +8,7 @@ if str(_script_dir) not in sys.path:
     sys.path.insert(0, str(_script_dir))
 from blog_queue_points import POINTS_BY_POST  # noqa: E402
 from blog_queue_en_depth import EN_CLOSING, EN_EXTRA_PARAS  # noqa: E402
+from blog_queue_locale_depth import apply_locale_depth  # noqa: E402
 from blog_queue_seo_blocks import (  # noqa: E402
     blocks5,
     blocks6,
@@ -82,6 +83,15 @@ def finalize_en_body(body):
     return body
 
 
+def finalize_locale_bodies(body):
+    slug = body.get("slug")
+    locales = body.get("locales")
+    if not slug or not locales:
+        return body
+    body["locales"] = apply_locale_depth(slug, locales)
+    return body
+
+
 def write_post(filename, body):
     slug = body.get("slug")
     blogs_ts = Path(__file__).resolve().parent.parent / "app" / "data" / "blogs.ts"
@@ -94,6 +104,7 @@ def write_post(filename, body):
             print(f"skip {filename} (already live)")
             return
     body = finalize_en_body(body)
+    body = finalize_locale_bodies(body)
     path = QUEUE / filename
     path.write_text(json.dumps(body, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(path.name)

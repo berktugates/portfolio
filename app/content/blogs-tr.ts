@@ -1,6 +1,72 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"reducing-flaky-e2e-tests-in-expo-apps": {
+    title: "Expo Uygulamalarında Flaky E2E Testleri Azaltmak",
+    excerpt: "Flaky E2E güveni öldürür; retry maskesi değil deterministik kurulum ister.",
+    description: "Expo'da flaky E2E'yi azaltma: deterministik fixture, ağ stub'ları, karantina politikası ve gerçek cihaz matrisi.",
+    sections: [
+      {
+        heading: "Flaky test bir ürün riskidir",
+        paragraphs: [
+          "Animasyon ve ağ yarışları Expo E2E'de en sık kök nedenlerdir.",
+          "Staff ekipler flake oranını release metriği sayar.",
+          "Test paketini ürün altyapısı sayın: flake eşiği aşılınca sahiplik ve kök neden ticket'ı olmadan yeni spec eklemeyin.",
+        ],
+      },
+      {
+        heading: "Zamanlayıcı değil sözleşme bekle",
+        paragraphs: [
+          "Sabit test kullanıcıları ve bilinen backend durumu kullanın.",
+          "sleep yerine görünürlük ve API yanıtı bekleyin.",
+          "Her retry'da değil, bir kez video ve ağ HAR kaydedin; artefakt flake'i açıklasın, şansla yeniden üretmesin.",
+        ],
+        points: [
+          "Spec'ler arasında uygulama durumunu ve sunucu fixture'larını deterministik sıfırlayın",
+          "Ağ sınırında stub kullanın; animasyonlarda sleep'ten kaçının",
+          "Flaky testleri sahip ve SLA ile karantinaya alın, sonsuza susturmayın",
+          "Her PR'da alt küme, gece gerçek cihazda tam matris çalıştırın",
+        ],
+      },
+      {
+        heading: "Karantina disiplini",
+        paragraphs: [
+          "Flaky testleri sahipsiz retry ile sonsuza kadar susturmayın.",
+          "Sahip ve düzeltme SLA'sı olan karantina listesi tutun.",
+          "Karantinayı release manager'larla haftalık gözden geçirin; SLA'sı geçen maddeler treni durdursun veya spec silinsin.",
+        ],
+      },
+      {
+        heading: "CI'ı gerçekçi katmanla",
+        paragraphs: [
+          "Her PR'da smoke, gece tam matris.",
+          "Gerçek cihazda Metro ve native modül farklarını yakalayın.",
+          "Flake oranını build süresinin yanında yayınlayın; ürün mobil CI sağlığının maliyetini hissetsin.",
+        ],
+        links: [
+          {
+            label: "Detox — Getting started",
+            url: "https://wix.github.io/Detox/docs/introduction/getting-started/",
+          },
+          {
+            label: "Expo — E2E testing",
+            url: "https://docs.expo.dev/develop/development-builds/introduction/",
+          },
+          {
+            label: "Maestro — Mobile UI testing",
+            url: "https://maestro.mobile.dev/",
+          },
+        ],
+      },
+      {
+        heading: "Güvenilirliği görünür kıl",
+        paragraphs: [
+          "Bu sprintte bir flake metriği, bir karantina SLA'sı ve bir gerçek cihaz katmanı seçin—release manager'lara güven gerçekten arttı mı diye sorun.",
+          "Staff sahiplik, E2E'yi piyangodan haftalık Expo ship eden ekibin güvendiği bir enstrümana çevirir.",
+        ],
+      },
+    ],
+  },
 "versioning-public-apis-used-by-mobile-clients": {
     title: "Mobil İstemcilerin Kullandığı Genel API'leri Sürümlemek",
     excerpt: "Mobil haftalık deploy etmez; API sürümleme bunu yok sayarsa üretim kırılır.",

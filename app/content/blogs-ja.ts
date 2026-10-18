@@ -1,6 +1,72 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"reducing-flaky-e2e-tests-in-expo-apps": {
+    title: "ExpoアプリでフレーキーE2Eを減らす",
+    excerpt: "フレーキーE2Eは信頼を壊す。リトライは決定的セットアップの代わりにならない。",
+    description: "決定的フィクスチャ、ネットワークスタブ、隔離規律、実機マトリクス。",
+    sections: [
+      {
+        heading: "フレーキーはプロダクトリスク",
+        paragraphs: [
+          "アニメーションとネットワーク競合が典型。",
+          "フレーク率はリリース指標。",
+          "スイートをプロダクト基盤と見なす。フレーク閾値超過時はオーナーと根本原因チケットなしに新specを止める。",
+        ],
+      },
+      {
+        heading: "契約を待つ",
+        paragraphs: [
+          "固定テストユーザーと既知のバックエンド状態。",
+          "sleepではなく可視性を待つ。",
+          "リトライ毎ではなく失敗時に一度だけ動画とネットワークHARを残す。成果物がフレークを説明すべき。",
+        ],
+        points: [
+          "スペック間でアプリ状態とサーバーフィクスチャを決定的にリセット",
+          "境界でネットワークをスタブ；アニメーションでsleepしない",
+          "フレーキーテストはオーナーとSLA付き隔離、永久ミュート禁止",
+          "PR毎にサブセット、夜間は実機でフルマトリクス",
+        ],
+      },
+      {
+        heading: "隔離の規律",
+        paragraphs: [
+          "オーナーなし無限リトライ禁止。",
+          "SLA付き隔離リスト。",
+          "リリースマネージャーと週次で隔離をレビュー。SLA超過はトレイン停止かspec削除。",
+        ],
+      },
+      {
+        heading: "現実的なCI層",
+        paragraphs: [
+          "PRごとにスモーク、夜間フルマトリクス。",
+          "実機でネイティブ差分を捕捉。",
+          "フレーク率をビルド時間と並べて公開し、プロダクトがコストを感じるようにする。",
+        ],
+        links: [
+          {
+            label: "Detox — Getting started",
+            url: "https://wix.github.io/Detox/docs/introduction/getting-started/",
+          },
+          {
+            label: "Expo — E2E testing",
+            url: "https://docs.expo.dev/develop/development-builds/introduction/",
+          },
+          {
+            label: "Maestro — Mobile UI testing",
+            url: "https://maestro.mobile.dev/",
+          },
+        ],
+      },
+      {
+        heading: "信頼性を可視化する",
+        paragraphs: [
+          "このスプリントでフレーク指標、隔離SLA、実機ティアを一つ選び、リリースマネージャーに信頼が動いたか問う。",
+          "Staff ownershipはE2Eを宝くじから、Expoを週次で出すチームが信頼する計器に変える。",
+        ],
+      },
+    ],
+  },
 "versioning-public-apis-used-by-mobile-clients": {
     title: "モバイルクライアント向け公開APIのバージョニング",
     excerpt: "モバイルは毎週デプロイできない。無視すると本番が壊れる。",

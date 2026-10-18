@@ -1,6 +1,72 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"reducing-flaky-e2e-tests-in-expo-apps": {
+    title: "减少 Expo 应用中的不稳定 E2E 测试",
+    excerpt: "不稳定 E2E 摧毁信心；重试不能替代确定性环境。",
+    description: "Expo E2E：确定性夹具、网络桩、隔离纪律与真机矩阵。",
+    sections: [
+      {
+        heading: "不稳定是产品风险",
+        paragraphs: [
+          "动画与网络竞态是常见根因。",
+          "flake 率应是发布指标。",
+          "把测试套件当作产品基础设施：flake 超阈值时，没有 owner 与根因工单就暂停新增 spec。",
+        ],
+      },
+      {
+        heading: "等契约而非计时",
+        paragraphs: [
+          "固定测试用户与已知后端状态。",
+          "用可见性等待而非 sleep。",
+          "失败时录一次视频与网络 HAR，而非每次重试——产物应解释 flake，而非靠运气复现。",
+        ],
+        points: [
+          "各 spec 之间确定性重置应用状态与服务端 fixture",
+          "在边界 stub 网络；动画上避免 sleep",
+          "将不稳定测试隔离并指定 owner 与 SLA，不要永久静音",
+          "每个 PR 跑子集，夜间在真机跑全矩阵",
+        ],
+      },
+      {
+        heading: "隔离纪律",
+        paragraphs: [
+          "不要对没有 owner 的不稳定测试无限重试，否则 CI 只是在Teaching团队忽略红色构建。",
+          "维护带 SLA 的隔离列表，并把每条 flaky spec 绑定到具体负责人。",
+          "与 release 经理每周审查隔离；超 SLA 项应阻断发布列车或删除 spec。",
+        ],
+      },
+      {
+        heading: "分层 CI",
+        paragraphs: [
+          "每个 PR 跑快速冒烟套件；夜间或发布前在完整真机矩阵上跑全量 E2E。",
+          "模拟器能抓逻辑问题，真机才能暴露键盘、推送权限与原生模块边界。",
+          "将 flake 率与构建时间一并公布，让产品感知移动端 CI 健康的代价。",
+        ],
+        links: [
+          {
+            label: "Detox — Getting started",
+            url: "https://wix.github.io/Detox/docs/introduction/getting-started/",
+          },
+          {
+            label: "Expo — E2E testing",
+            url: "https://docs.expo.dev/develop/development-builds/introduction/",
+          },
+          {
+            label: "Maestro — Mobile UI testing",
+            url: "https://maestro.mobile.dev/",
+          },
+        ],
+      },
+      {
+        heading: "让可靠性可见",
+        paragraphs: [
+          "本 sprint 选一个 flake 指标、一条隔离 SLA 和一层真机覆盖——问 release 经理信心是否真的提升。",
+          "Staff 级 ownership 把 E2E 从抽奖变成团队每周发布 Expo 时信任的工具。",
+        ],
+      },
+    ],
+  },
 "versioning-public-apis-used-by-mobile-clients": {
     title: "面向移动客户端的公共 API 版本化",
     excerpt: "移动客户端无法每周发布；忽视这一点会打爆生产。",

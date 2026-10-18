@@ -23,6 +23,87 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "reducing-flaky-e2e-tests-in-expo-apps",
+    title: "Reducing Flaky E2E Tests in Expo Apps",
+    excerpt: "A green CI badge means nothing if engineers rerun the pipeline until luck strikes. Flaky mobile E2E is a product risk signal, not a nuisance ticket.",
+    description: "Practical staff-engineer tactics to reduce flaky end-to-end tests in Expo apps: deterministic fixtures, network stubs, quarantine policy, and a realistic device matrix in CI.",
+    publishedAt: "2026-10-20",
+    readingMinutes: 5,
+    keywords: [
+      "Expo E2E",
+      "Detox",
+      "Maestro",
+      "mobile testing",
+      "flaky tests",
+      "CI reliability",
+    ],
+    socialThreadTr: [
+      "Yeşil CI rozeti şansla üçüncü rerun'da geliyorsa güven yoktur. Expo E2E flake bir gürültü değil, ürün risk sinyalidir. 🧵",
+      "Deterministik fixture, ağ stub'ı, karantina ve cihaz matrisi. Detay: https://berktugberke.com/tr/blogs/reducing-flaky-e2e-tests-in-expo-apps",
+    ],
+    sections: [
+      {
+        heading: "Flaky E2E is a trust problem",
+        paragraphs: [
+          "Animation races, Metro reload timing, and real network dependencies turn mobile E2E into a lottery. Teams that 'just retry' teach themselves to ignore red builds until a release is blocked.",
+          "Staff engineers track flake rate like error budget: visible, owned, and trending down. Reliability of the test system is part of shipping confidence for Expo products.",
+          "Treat the suite as product infrastructure: when flakes exceed a threshold, freeze feature work on new specs until ownership and root-cause tickets exist.",
+        ],
+      },
+      {
+        heading: "Wait on contracts, not clocks",
+        paragraphs: [
+          "Use fixed test accounts, seeded data, and known API responses. Stub HTTP at the client boundary when the goal is UI flow, not backend integration—reserve a smaller integration suite for cross-service truth.",
+          "Replace arbitrary sleeps with visibility and network idle predicates from your runner. If a test needs a five-second sleep, it is documenting a missing synchronization contract.",
+          "Record video and network HAR on failure once, not on every retry—artifacts should explain the flake, not recreate it probabilistically.",
+        ],
+        points: [
+          "Reset app state and server fixtures deterministically between specs",
+          "Stub network at the boundary; avoid sleeping on animations",
+          "Quarantine flaky tests with owner and SLA, do not mute forever",
+          "Run a subset on every PR, full matrix nightly on real devices",
+        ],
+      },
+      {
+        heading: "Quarantine with discipline",
+        paragraphs: [
+          "Move flaky specs to a quarantine job with an owner and fix-by date. Unlimited retries in the main pipeline hide debt and burn CI minutes.",
+          "When a quarantined test fails consistently, that is progress—it is now deterministic enough to debug.",
+          "Review quarantine weekly with release managers; items past SLA should block the train or force deletion of the spec.",
+        ],
+      },
+      {
+        heading: "Layer CI realistically",
+        paragraphs: [
+          "Run a fast smoke suite on every pull request; run the full device matrix nightly or pre-release. Emulators catch logic; real devices catch keyboard, push permissions, and native module edge cases.",
+          "Reducing flake is how Expo teams keep shipping weekly without pretending mobile is just small web.",
+          "Publish flake rate beside build time so product feels the cost of ignoring mobile CI health.",
+        ],
+        links: [
+          {
+            label: "Detox — Getting started",
+            url: "https://wix.github.io/Detox/docs/introduction/getting-started/",
+          },
+          {
+            label: "Expo — E2E testing",
+            url: "https://docs.expo.dev/develop/development-builds/introduction/",
+          },
+          {
+            label: "Maestro — Mobile UI testing",
+            url: "https://maestro.mobile.dev/",
+          },
+        ],
+      },
+      {
+        heading: "Make reliability visible",
+        paragraphs: [
+          "Pick one flake metric, one quarantine SLA, and one real-device tier to improve this sprint—then ask release managers whether confidence actually moved.",
+          "Staff ownership turns E2E from a lottery into an instrument the team trusts when shipping Expo apps weekly.",
+        ],
+      },
+    ],
+  },
+    {
     slug: "versioning-public-apis-used-by-mobile-clients",
     title: "Versioning Public APIs Used by Mobile Clients",
     excerpt: "Mobile clients ship on human timelines. If your API versioning story assumes everyone refreshes weekly, you will break production users who cannot update until the store approves.",

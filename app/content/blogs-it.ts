@@ -1,6 +1,72 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"reducing-flaky-e2e-tests-in-expo-apps": {
+    title: "Ridurre test E2E flaky in app Expo",
+    excerpt: "E2E flaky uccide la fiducia; i retry non sostituiscono setup deterministico.",
+    description: "Fixture deterministiche, stub di rete, quarantena e matrice dispositivi per Expo.",
+    sections: [
+      {
+        heading: "Flaky è rischio prodotto",
+        paragraphs: [
+          "Race di animazione e rete sono cause comuni.",
+          "Il flake rate è metrica di release.",
+          "Tratta la suite come infrastruttura prodotto: sopra soglia flake, congela nuove spec senza owner e ticket root cause.",
+        ],
+      },
+      {
+        heading: "Aspettare il contratto",
+        paragraphs: [
+          "Utenti test fissi e stato backend noto.",
+          "Niente sleep—attendere visibilità.",
+          "Video e HAR di rete una volta al fallimento, non a ogni retry—gli artefatti spiegano il flake.",
+        ],
+        points: [
+          "Reset deterministico di app state e fixture server tra le spec",
+          "Stub di rete al confine; evitare sleep sulle animazioni",
+          "Quarantena test flaky con owner e SLA, non mutare per sempre",
+          "Sottoinsieme ogni PR, matrice piena di notte su dispositivi reali",
+        ],
+      },
+      {
+        heading: "Disciplina quarantena",
+        paragraphs: [
+          "Niente retry infiniti senza owner.",
+          "Quarantena con SLA.",
+          "Revisione settimanale quarantena con release manager; SLA scaduto blocca il train o elimina la spec.",
+        ],
+      },
+      {
+        heading: "CI a strati realistici",
+        paragraphs: [
+          "Smoke ogni PR, matrice piena di notte.",
+          "Dispositivi reali per gap nativi.",
+          "Pubblica il flake rate accanto al build time così il product sente il costo.",
+        ],
+        links: [
+          {
+            label: "Detox — Getting started",
+            url: "https://wix.github.io/Detox/docs/introduction/getting-started/",
+          },
+          {
+            label: "Expo — E2E testing",
+            url: "https://docs.expo.dev/develop/development-builds/introduction/",
+          },
+          {
+            label: "Maestro — Mobile UI testing",
+            url: "https://maestro.mobile.dev/",
+          },
+        ],
+      },
+      {
+        heading: "Rendere visibile l'affidabilità",
+        paragraphs: [
+          "Scegli questo sprint una metrica flake, una SLA di quarantena e un tier dispositivi reali—chiedi ai release manager se la fiducia è cresciuta.",
+          "Lo staff ownership trasforma l'E2E da lotteria a strumento fidato per ship settimanale Expo.",
+        ],
+      },
+    ],
+  },
 "versioning-public-apis-used-by-mobile-clients": {
     title: "Versionare API pubbliche per client mobile",
     excerpt: "I client mobile non deployano ogni settimana; ignorarlo rompe la produzione.",
