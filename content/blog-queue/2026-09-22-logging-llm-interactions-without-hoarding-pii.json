@@ -85,10 +85,10 @@
             ]
           ],
           "points": [
-            "Log prompts and outputs with redaction tiers, not raw dumps by default",
-            "Separate PII-bearing transcripts from aggregate quality metrics",
-            "Define retention per tier with legal and product sign-off",
-            "Alert on export volume spikes like any other data exfil path"
+            "Varsayılan ham dump yerine redaksiyon katmanlı prompt/çıktı loglayın",
+            "PII taşıyan transkriptleri aggregate kalite metriklerinden ayırın",
+            "Katman bazlı saklamayı hukuk ve ürün onayıyla tanımlayın",
+            "Export hacmi sıçramalarını veri sızıntısı yolu gibi alarm layın"
           ]
         },
         {
@@ -144,10 +144,10 @@
             ]
           ],
           "points": [
-            "Log prompts and outputs with redaction tiers, not raw dumps by default",
-            "Separate PII-bearing transcripts from aggregate quality metrics",
-            "Define retention per tier with legal and product sign-off",
-            "Alert on export volume spikes like any other data exfil path"
+            "Prompts/Ausgaben mit Redaktionsstufen loggen, nicht rohe Dumps default",
+            "PII-Transkripte von aggregierten Qualitätsmetriken trennen",
+            "Retention pro Tier mit Legal- und Produktfreigabe definieren",
+            "Export-Spikes wie Exfil-Pfade alarmieren"
           ]
         },
         {
@@ -203,10 +203,10 @@
             ]
           ],
           "points": [
-            "Log prompts and outputs with redaction tiers, not raw dumps by default",
-            "Separate PII-bearing transcripts from aggregate quality metrics",
-            "Define retention per tier with legal and product sign-off",
-            "Alert on export volume spikes like any other data exfil path"
+            "Logger prompts/sorties par niveaux de rédaction, pas dumps bruts par défaut",
+            "Séparer transcriptions PII des métriques qualité agrégées",
+            "Définir rétention par tier avec sign-off juridique et produit",
+            "Alerter sur pics d'export comme voies d'exfiltration"
           ]
         },
         {
@@ -262,10 +262,10 @@
             ]
           ],
           "points": [
-            "Log prompts and outputs with redaction tiers, not raw dumps by default",
-            "Separate PII-bearing transcripts from aggregate quality metrics",
-            "Define retention per tier with legal and product sign-off",
-            "Alert on export volume spikes like any other data exfil path"
+            "Loggare prompt/output con tier di redazione, non dump grezzi di default",
+            "Separare trascritti PII dalle metriche qualità aggregate",
+            "Definire retention per tier con ok legale e prodotto",
+            "Allarmare su picchi export come percorsi exfil"
           ]
         },
         {
@@ -321,10 +321,10 @@
             ]
           ],
           "points": [
-            "Log prompts and outputs with redaction tiers, not raw dumps by default",
-            "Separate PII-bearing transcripts from aggregate quality metrics",
-            "Define retention per tier with legal and product sign-off",
-            "Alert on export volume spikes like any other data exfil path"
+            "默认按脱敏分层记录 prompt/输出，而非原始 dump",
+            "将含 PII 的 transcript 与聚合质量指标分离",
+            "按层定义保留策略并获法务与产品签批",
+            "导出量激增按数据外泄路径告警"
           ]
         },
         {
@@ -380,10 +380,10 @@
             ]
           ],
           "points": [
-            "Log prompts and outputs with redaction tiers, not raw dumps by default",
-            "Separate PII-bearing transcripts from aggregate quality metrics",
-            "Define retention per tier with legal and product sign-off",
-            "Alert on export volume spikes like any other data exfil path"
+            "デフォルトは生dumpではなく redaction tier で prompt/出力をログ",
+            "PII transcript を集約品質メトリクスから分離",
+            "層ごとの保持を法務・プロダクト承認で定義",
+            "エクスポート急増を exfil 経路としてアラート"
           ]
         },
         {

@@ -20,10 +20,10 @@ const blogs: BlogLocaleMap = {
           "Alanları ölçülü deprecation olmadan kaldırmayın; sunset ipuçlarını yapılandırılmış hatalarda döndürün.",
         ],
         points: [
-          "Publish a mobile compatibility matrix with minimum app versions per API epoch",
-          "Treat breaking changes as contract events with sunset dates in responses",
-          "Run shadow traffic from oldest supported app builds in CI",
-          "Instrument version skew: which app builds hit deprecated fields",
+          "API epoch başına minimum uygulama sürümü içeren mobil uyumluluk matrisi yayınlayın",
+          "Breaking change'leri yanıtta sunset tarihli sözleşme olayları olarak ele alın",
+          "CI'da en eski desteklenen uygulama build'lerinden shadow trafik çalıştırın",
+          "Sürüm skew'ini ölçün: hangi build'ler deprecated alanlara vuruyor",
         ],
       },
       {

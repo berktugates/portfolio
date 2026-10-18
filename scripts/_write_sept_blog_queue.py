@@ -6,6 +6,7 @@ from pathlib import Path
 _script_dir = Path(__file__).resolve().parent
 if str(_script_dir) not in sys.path:
     sys.path.insert(0, str(_script_dir))
+from blog_queue_points import POINTS_BY_POST  # noqa: E402
 from blog_queue_seo_blocks import (  # noqa: E402
     blocks5,
     blocks6,
@@ -283,6 +284,42 @@ write_post(
 )
 
 def pack_locales2(links, points):
+    points_tr = [
+        "API epoch başına minimum uygulama sürümü içeren mobil uyumluluk matrisi yayınlayın",
+        "Breaking change'leri yanıtta sunset tarihli sözleşme olayları olarak ele alın",
+        "CI'da en eski desteklenen uygulama build'lerinden shadow trafik çalıştırın",
+        "Sürüm skew'ini ölçün: hangi build'ler deprecated alanlara vuruyor",
+    ]
+    points_de = [
+        "Mobile-Kompatibilitätsmatrix mit Mindest-App-Versionen pro API-Epoch veröffentlichen",
+        "Breaking Changes als Vertragsereignisse mit Sunset-Datum in Responses behandeln",
+        "Shadow-Traffic vom ältesten unterstützten App-Build in CI fahren",
+        "Versions-Skew messen: welche Builds deprecated Felder treffen",
+    ]
+    points_fr = [
+        "Publier une matrice de compatibilité mobile avec versions minimales par époque d'API",
+        "Traiter les breaking changes comme événements de contrat avec dates de sunset dans les réponses",
+        "Exécuter du trafic shadow depuis les plus vieux builds supportés en CI",
+        "Instrumenter le skew de version : quels builds touchent les champs dépréciés",
+    ]
+    points_it = [
+        "Pubblicare matrice compatibilità mobile con versioni minime app per epoca API",
+        "Trattare breaking change come eventi di contratto con date sunset nelle risposte",
+        "Eseguire shadow traffic dal bundle app più vecchio supportato in CI",
+        "Misurare skew versione: quali build colpiscono campi deprecati",
+    ]
+    points_zh = [
+        "发布含各 API 纪元最低应用版本的移动兼容矩阵",
+        "将破坏性变更视为响应中带下线日期的契约事件",
+        "在 CI 用最旧支持应用构建跑影子流量",
+        "度量版本偏斜：哪些构建仍命中废弃字段",
+    ]
+    points_ja = [
+        "APIエポック毎の最小アプリ版を載せたモバイル互換マトリクスを公開",
+        "破壊的変更をレスポンスのサンセット日付付き契約イベントとして扱う",
+        "CIで最古サポートビルドからシャドウトラフィックを実行",
+        "バージョンスキューを計測：どのビルドが非推奨フィールドに当たるか",
+    ]
     headings_tr = ["Mobil gecikme kalıcı bir kısıttır", "Sürümü sözleşmede tutun", "Release ve destekle koordine edin", "Kesmeden önce skew ölçün"]
     paras_tr = [
         ["Mağaza incelemesi, MDM dondurmaları ve güncellemeyi yok sayan kullanıcılar API'nizin birden fazla istemci neslini aynı anda sunmasını gerektirir.", "En eski desteklenen uygulama sürümünü birinci sınıf tüketici sayın."],
@@ -291,12 +328,12 @@ def pack_locales2(links, points):
         ["Aktif uygulama sürümlerini API epoch kullanımına karşı panoda izleyin.", "Disiplinli sürümleme, mobil'i rehin almadan backend geliştirmenizi sağlar."],
     ]
     return {
-        "tr": loc("Mobil İstemcilerin Kullandığı Genel API'leri Sürümlemek", "Mobil haftalık deploy etmez; API sürümleme bunu yok sayarsa üretim kırılır.", "Mobil tüketen genel API'ler için epoch, additive evrim, zorunlu güncelleme guardrail'leri ve skew telemetrisi.", headings_tr, paras_tr, points, links),
-        "de": loc("Versionierung öffentlicher APIs für Mobile Clients", "Mobile Clients deployen nicht wöchentlich; ignoriert Ihre API-Versionierung das, brechen Sie Produktion.", "Epoch-Header, additive Evolution, Upgrade-Guardrails und Deprecation-Telemetrie für Mobile APIs.", ["Mobile Verzögerung ist dauerhaft", "Version in Verträgen", "Mit Release und Support koordinieren", "Skew messen vor Cut"], [["App Store und MDM bedeuten mehrere Client-Generationen parallel.", "Älteste unterstützte App-Version ist First-Class."], ["Explizite API-Epochen und Build-Identität pro Request.", "Felder nicht ohne Deprecation entfernen."], ["Sunsets mit In-App-Upgrade koppeln.", "Contract-Tests auf ältestem Bundle."], ["Dashboard Versionen vs Epochen.", "Vorhersagbare Evolution statt Chaos."]], points, links),
-        "fr": loc("Versionner les API publiques pour clients mobiles", "Les clients mobiles ne déploient pas chaque semaine; ignorer cela casse la prod.", "Époques d'API, évolution additive, garde-fous de mise à jour et télémétrie de dépréciation.", ["Le décalage mobile est permanent", "Versionner par contrat", "Coordonner release et support", "Mesurer le skew avant coupure"], [["Review store et MDM imposent plusieurs générations clients.", "La plus vieille version supportée est un consommateur de premier plan."], ["Époques explicites et identité de build par requête.", "Pas de retrait de champs sans dépréciation mesurée."], ["Sunsets avec upgrade in-app.", "Tests de contrat sur le plus vieux bundle."], ["Tableaux de bord versions vs époques.", "Évolution prévisible."]], points, links),
-        "it": loc("Versionare API pubbliche per client mobile", "I client mobile non deployano ogni settimana; ignorarlo rompe la produzione.", "Epoche API, evoluzione additiva, guardrail di upgrade e telemetria deprecazione.", ["Il lag mobile è permanente", "Versione nel contratto", "Coordinare release e supporto", "Misurare lo skew prima del taglio"], [["Review store e MDM richiedono più generazioni client.", "La versione app più vecchia supportata è first-class."], ["Epoche esplicite e build identity per richiesta.", "Non rimuovere campi senza deprecazione."], ["Sunset con upgrade in-app.", "Contract test sul bundle più vecchio."], ["Dashboard versioni vs epoche.", "Evoluzione prevedibile."]], points, links),
-        "zh": loc("面向移动客户端的公共 API 版本化", "移动客户端无法每周发布；忽视这一点会打爆生产。", "API 纪元、加法演进、强制升级护栏与废弃遥测。", ["移动滞后是长期约束", "用契约承载版本", "与发布和支持协同", "切断前测量偏斜"], [["应用商店与 MDM 意味着多代客户端并存。", "最旧支持版本是一等消费者。"], ["显式 API 纪元与每次请求的构建身份。", "无度量废弃期不删字段。"], ["下线与应用内升级配对。", "CI 跑最旧 bundle 契约测试。"], ["看板对比版本与纪元。", "可预测的演进。"]], points, links),
-        "ja": loc("モバイルクライアント向け公開APIのバージョニング", "モバイルは毎週デプロイできない。無視すると本番が壊れる。", "APIエポック、加法進化、アップグレードガードレール、非推奨テレメトリ。", ["モバイル遅延は恒常的制約", "契約でバージョン管理", "リリースとサポートと調整", "切断前にスキュー計測"], [["ストア審査とMDMは複数世代の併存を意味する。", "最古サポート版を第一級消費者に。"], ["明示的エポックとリクエスト毎のビルドID。", "測定された非推奨なしにフィールド削除しない。"], ["サンセットとアプリ内アップグレードを連動。", "最古バンドルで契約テスト。"], ["バージョンとエポックのダッシュボード。", "予測可能な進化。"]], points, links),
+        "tr": loc("Mobil İstemcilerin Kullandığı Genel API'leri Sürümlemek", "Mobil haftalık deploy etmez; API sürümleme bunu yok sayarsa üretim kırılır.", "Mobil tüketen genel API'ler için epoch, additive evrim, zorunlu güncelleme guardrail'leri ve skew telemetrisi.", headings_tr, paras_tr, points_tr, links),
+        "de": loc("Versionierung öffentlicher APIs für Mobile Clients", "Mobile Clients deployen nicht wöchentlich; ignoriert Ihre API-Versionierung das, brechen Sie Produktion.", "Epoch-Header, additive Evolution, Upgrade-Guardrails und Deprecation-Telemetrie für Mobile APIs.", ["Mobile Verzögerung ist dauerhaft", "Version in Verträgen", "Mit Release und Support koordinieren", "Skew messen vor Cut"], [["App Store und MDM bedeuten mehrere Client-Generationen parallel.", "Älteste unterstützte App-Version ist First-Class."], ["Explizite API-Epochen und Build-Identität pro Request.", "Felder nicht ohne Deprecation entfernen."], ["Sunsets mit In-App-Upgrade koppeln.", "Contract-Tests auf ältestem Bundle."], ["Dashboard Versionen vs Epochen.", "Vorhersagbare Evolution statt Chaos."]], points_de, links),
+        "fr": loc("Versionner les API publiques pour clients mobiles", "Les clients mobiles ne déploient pas chaque semaine; ignorer cela casse la prod.", "Époques d'API, évolution additive, garde-fous de mise à jour et télémétrie de dépréciation.", ["Le décalage mobile est permanent", "Versionner par contrat", "Coordonner release et support", "Mesurer le skew avant coupure"], [["Review store et MDM imposent plusieurs générations clients.", "La plus vieille version supportée est un consommateur de premier plan."], ["Époques explicites et identité de build par requête.", "Pas de retrait de champs sans dépréciation mesurée."], ["Sunsets avec upgrade in-app.", "Tests de contrat sur le plus vieux bundle."], ["Tableaux de bord versions vs époques.", "Évolution prévisible."]], points_fr, links),
+        "it": loc("Versionare API pubbliche per client mobile", "I client mobile non deployano ogni settimana; ignorarlo rompe la produzione.", "Epoche API, evoluzione additiva, guardrail di upgrade e telemetria deprecazione.", ["Il lag mobile è permanente", "Versione nel contratto", "Coordinare release e supporto", "Misurare lo skew prima del taglio"], [["Review store e MDM richiedono più generazioni client.", "La versione app più vecchia supportata è first-class."], ["Epoche esplicite e build identity per richiesta.", "Non rimuovere campi senza deprecazione."], ["Sunset con upgrade in-app.", "Contract test sul bundle più vecchio."], ["Dashboard versioni vs epoche.", "Evoluzione prevedibile."]], points_it, links),
+        "zh": loc("面向移动客户端的公共 API 版本化", "移动客户端无法每周发布；忽视这一点会打爆生产。", "API 纪元、加法演进、强制升级护栏与废弃遥测。", ["移动滞后是长期约束", "用契约承载版本", "与发布和支持协同", "切断前测量偏斜"], [["应用商店与 MDM 意味着多代客户端并存。", "最旧支持版本是一等消费者。"], ["显式 API 纪元与每次请求的构建身份。", "无度量废弃期不删字段。"], ["下线与应用内升级配对。", "CI 跑最旧 bundle 契约测试。"], ["看板对比版本与纪元。", "可预测的演进。"]], points_zh, links),
+        "ja": loc("モバイルクライアント向け公開APIのバージョニング", "モバイルは毎週デプロイできない。無視すると本番が壊れる。", "APIエポック、加法進化、アップグレードガードレール、非推奨テレメトリ。", ["モバイル遅延は恒常的制約", "契約でバージョン管理", "リリースとサポートと調整", "切断前にスキュー計測"], [["ストア審査とMDMは複数世代の併存を意味する。", "最古サポート版を第一級消費者に。"], ["明示的エポックとリクエスト毎のビルドID。", "測定された非推奨なしにフィールド削除しない。"], ["サンセットとアプリ内アップグレードを連動。", "最古バンドルで契約テスト。"], ["バージョンとエポックのダッシュボード。", "予測可能な進化。"]], points_ja, links),
     }
 
 
@@ -354,8 +391,12 @@ write_post(
 )
 
 
-def i18n(blocks, points, links):
-    return {code: loc(b[0], b[1], b[2], b[3], b[4], points, links) for code, b in blocks.items()}
+def i18n(blocks, points, links, points_by_locale=None):
+    points_by_locale = points_by_locale or {}
+    return {
+        code: loc(b[0], b[1], b[2], b[3], b[4], points_by_locale.get(code, points), links)
+        for code, b in blocks.items()
+    }
 
 
 def para(*pairs):
@@ -449,7 +490,7 @@ write_post(
             ],
             links3,
         ),
-        "locales": i18n(blocks3, pts3, links3),
+        "locales": i18n(blocks3, pts3, links3, POINTS_BY_POST[3]),
     },
 )
 
@@ -540,7 +581,7 @@ write_post(
             ],
             links4,
         ),
-        "locales": i18n(blocks4, pts4, links4),
+        "locales": i18n(blocks4, pts4, links4, POINTS_BY_POST[4]),
     },
 )
 
@@ -572,9 +613,10 @@ def seo_post(
     tr=None,
     points_tr=None,
     blocks=None,
+    points_by_locale=None,
 ):
     if blocks is not None:
-        locales = i18n(blocks, points, links)
+        locales = i18n(blocks, points, links, points_by_locale)
     elif tr is not None and points_tr is not None:
         locales = locales_tr_plus_en_mirror(tr, points_tr, title, excerpt, description, h, paras, points, links)
     else:
@@ -643,6 +685,7 @@ seo_post(
     pts5,
     links5,
     blocks=blocks5,
+    points_by_locale=POINTS_BY_POST[5],
 )
 
 links6 = [
@@ -693,6 +736,7 @@ seo_post(
     pts6,
     links6,
     blocks=blocks6,
+    points_by_locale=POINTS_BY_POST[6],
 )
 
 links7 = [
@@ -743,6 +787,7 @@ seo_post(
     pts7,
     links7,
     blocks=blocks7,
+    points_by_locale=POINTS_BY_POST[7],
 )
 
 links8 = [
@@ -793,6 +838,7 @@ seo_post(
     pts8,
     links8,
     blocks=blocks8,
+    points_by_locale=POINTS_BY_POST[8],
 )
 
 links9 = [
@@ -843,6 +889,7 @@ seo_post(
     pts9,
     links9,
     blocks=blocks9,
+    points_by_locale=POINTS_BY_POST[9],
 )
 
 links10 = [
@@ -893,6 +940,7 @@ seo_post(
     pts10,
     links10,
     blocks=blocks10,
+    points_by_locale=POINTS_BY_POST[10],
 )
 
 links11 = [
@@ -943,4 +991,5 @@ seo_post(
     pts11,
     links11,
     blocks=blocks11,
+    points_by_locale=POINTS_BY_POST[11],
 )

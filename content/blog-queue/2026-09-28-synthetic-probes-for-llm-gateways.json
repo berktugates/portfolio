@@ -85,10 +85,10 @@
             ]
           ],
           "points": [
-            "Probe the same path users hit: auth, retrieval, model route, and stream completion",
-            "Separate provider outages from your gateway regressions in dashboards",
-            "Run probes from multiple regions when latency SLOs are global",
-            "Page on failed probes before support tickets spike"
+            "Kullanıcının vurduğu yolu probe edin: auth, retrieval, model route, stream tamamlama",
+            "Panoda sağlayıcı kesintisini gateway regresyonundan ayırın",
+            "Gecikme SLO'su globalse çok bölgeli probe çalıştırın",
+            "Destek ticket'ları sıçramadan probe hatasında page edin"
           ]
         },
         {
@@ -144,10 +144,10 @@
             ]
           ],
           "points": [
-            "Probe the same path users hit: auth, retrieval, model route, and stream completion",
-            "Separate provider outages from your gateway regressions in dashboards",
-            "Run probes from multiple regions when latency SLOs are global",
-            "Page on failed probes before support tickets spike"
+            "User-Pfad sonden: Auth, Retrieval, Model-Route, Stream-Ende",
+            "Provider-Ausfall vs Gateway-Regression in Dashboards trennen",
+            "Multi-Region-Probes bei globalen Latenz-SLOs",
+            "Bei Probe-Fail pagern vor Ticket-Spike"
           ]
         },
         {
@@ -203,10 +203,10 @@
             ]
           ],
           "points": [
-            "Probe the same path users hit: auth, retrieval, model route, and stream completion",
-            "Separate provider outages from your gateway regressions in dashboards",
-            "Run probes from multiple regions when latency SLOs are global",
-            "Page on failed probes before support tickets spike"
+            "Sonder le chemin utilisateur : auth, retrieval, route modèle, fin stream",
+            "Séparer panne fournisseur et régression gateway en dashboard",
+            "Probes multi-régions si SLO latence global",
+            "Pager sur échec probe avant pic tickets support"
           ]
         },
         {
@@ -262,10 +262,10 @@
             ]
           ],
           "points": [
-            "Probe the same path users hit: auth, retrieval, model route, and stream completion",
-            "Separate provider outages from your gateway regressions in dashboards",
-            "Run probes from multiple regions when latency SLOs are global",
-            "Page on failed probes before support tickets spike"
+            "Sondare percorso utente: auth, retrieval, route modello, fine stream",
+            "Separare outage provider e regressione gateway in dashboard",
+            "Probe multi-regione con SLO latenza globali",
+            "Pager su fail probe prima del picco ticket"
           ]
         },
         {
@@ -321,10 +321,10 @@
             ]
           ],
           "points": [
-            "Probe the same path users hit: auth, retrieval, model route, and stream completion",
-            "Separate provider outages from your gateway regressions in dashboards",
-            "Run probes from multiple regions when latency SLOs are global",
-            "Page on failed probes before support tickets spike"
+            "探测用户路径：鉴权、检索、模型路由、流完成",
+            "看板区分供应商中断与网关回归",
+            "全球延迟 SLO 时多区域探测",
+            "工单激增前对探测失败分页"
           ]
         },
         {
@@ -380,10 +380,10 @@
             ]
           ],
           "points": [
-            "Probe the same path users hit: auth, retrieval, model route, and stream completion",
-            "Separate provider outages from your gateway regressions in dashboards",
-            "Run probes from multiple regions when latency SLOs are global",
-            "Page on failed probes before support tickets spike"
+            "ユーザー経路をプローブ：auth、retrieval、モデルルート、ストリーム完了",
+            "ダッシュボードでプロバイダ障害とゲートウェイ回帰を分離",
+            "グローバル遅延SLOなら多リージョンプローブ",
+            "チケット急増前にプローブ失敗でページ"
           ]
         },
         {

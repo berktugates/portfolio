@@ -85,10 +85,10 @@
             ]
           ],
           "points": [
-            "Define SLOs on tool failure rate and policy violations, not only 5xx",
-            "Runbooks must cover model provider brownouts and prompt bloat",
-            "Escalation paths include safety and legal, not only infra",
-            "Post-incident reviews capture prompt and config diffs"
+            "Yalnızca 5xx değil tool hata oranı ve politika ihlali SLO'ları tanımlayın",
+            "Runbook sağlayıcı brownout ve prompt şişmesini kapsamalı",
+            "Eskalasyon yolu güvenlik/hukuku da içermeli",
+            "Post-incident prompt ve config diff'lerini kaydedin"
           ]
         },
         {
@@ -144,10 +144,10 @@
             ]
           ],
           "points": [
-            "Define SLOs on tool failure rate and policy violations, not only 5xx",
-            "Runbooks must cover model provider brownouts and prompt bloat",
-            "Escalation paths include safety and legal, not only infra",
-            "Post-incident reviews capture prompt and config diffs"
+            "SLOs auf Tool-Fehler und Policy-Verstöße, nicht nur 5xx",
+            "Runbooks für Provider-Brownouts und Prompt-Bloat",
+            "Eskalation inkl. Safety und Legal",
+            "Post-Incident Prompt- und Config-Diffs festhalten"
           ]
         },
         {
@@ -203,10 +203,10 @@
             ]
           ],
           "points": [
-            "Define SLOs on tool failure rate and policy violations, not only 5xx",
-            "Runbooks must cover model provider brownouts and prompt bloat",
-            "Escalation paths include safety and legal, not only infra",
-            "Post-incident reviews capture prompt and config diffs"
+            "SLO sur échecs outils et violations policy, pas seulement 5xx",
+            "Runbooks couvrant brownouts fournisseur et prompt bloat",
+            "Escalade incluant sécurité et juridique",
+            "Post-incident : diffs prompts et config"
           ]
         },
         {
@@ -262,10 +262,10 @@
             ]
           ],
           "points": [
-            "Define SLOs on tool failure rate and policy violations, not only 5xx",
-            "Runbooks must cover model provider brownouts and prompt bloat",
-            "Escalation paths include safety and legal, not only infra",
-            "Post-incident reviews capture prompt and config diffs"
+            "SLO su errori tool e violazioni policy, non solo 5xx",
+            "Runbook per brownout provider e prompt bloat",
+            "Escalation include safety e legal",
+            "Post-incident: diff prompt e config"
           ]
         },
         {
@@ -321,10 +321,10 @@
             ]
           ],
           "points": [
-            "Define SLOs on tool failure rate and policy violations, not only 5xx",
-            "Runbooks must cover model provider brownouts and prompt bloat",
-            "Escalation paths include safety and legal, not only infra",
-            "Post-incident reviews capture prompt and config diffs"
+            "定义 tool 失败与策略违规 SLO，不仅 5xx",
+            "Runbook 覆盖供应商 brownout 与 prompt 膨胀",
+            "升级路径含安全与法务",
+            "事后记录 prompt 与 config diff"
           ]
         },
         {
@@ -380,10 +380,10 @@
             ]
           ],
           "points": [
-            "Define SLOs on tool failure rate and policy violations, not only 5xx",
-            "Runbooks must cover model provider brownouts and prompt bloat",
-            "Escalation paths include safety and legal, not only infra",
-            "Post-incident reviews capture prompt and config diffs"
+            "5xxだけでなくtool失敗とポリシー違反のSLO",
+            "Runbookにプロバイダbrownoutとprompt肥大を含める",
+            "エスカレーションにセーフティ/法務を含む",
+            "ポストモーテムでprompt/config diffを記録"
           ]
         },
         {

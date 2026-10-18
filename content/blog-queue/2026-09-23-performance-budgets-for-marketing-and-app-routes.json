@@ -85,10 +85,10 @@
             ]
           ],
           "points": [
-            "Budget LCP and INP per template, not only globally",
-            "Tie perf regressions to release trains and rollback rules",
-            "Measure real devices and slow networks in CI smoke",
-            "Publish perf dashboards beside error rate for product"
+            "LCP ve INP'yi yalnızca global değil şablon bazında bütçele",
+            "Perf regresyonlarını release train ve rollback kurallarına bağla",
+            "CI smoke'ta gerçek cihaz ve yavaş ağ ölç",
+            "Hata oranının yanında perf panolarını ürüne aç"
           ]
         },
         {
@@ -144,10 +144,10 @@
             ]
           ],
           "points": [
-            "Budget LCP and INP per template, not only globally",
-            "Tie perf regressions to release trains and rollback rules",
-            "Measure real devices and slow networks in CI smoke",
-            "Publish perf dashboards beside error rate for product"
+            "LCP/INP pro Template budgetieren, nicht nur global",
+            "Perf-Regressionen an Release Train und Rollback koppeln",
+            "Smoke auf echten Geräten und langsamen Netzen in CI",
+            "Perf-Dashboards neben Fehlerrate für Produkt sichtbar"
           ]
         },
         {
@@ -203,10 +203,10 @@
             ]
           ],
           "points": [
-            "Budget LCP and INP per template, not only globally",
-            "Tie perf regressions to release trains and rollback rules",
-            "Measure real devices and slow networks in CI smoke",
-            "Publish perf dashboards beside error rate for product"
+            "Budgéter LCP/INP par template, pas seulement global",
+            "Lier régressions perf au release train et rollback",
+            "Smoke sur vrais appareils et réseaux lents en CI",
+            "Tableaux perf visibles produit à côté du taux d'erreur"
           ]
         },
         {
@@ -262,10 +262,10 @@
             ]
           ],
           "points": [
-            "Budget LCP and INP per template, not only globally",
-            "Tie perf regressions to release trains and rollback rules",
-            "Measure real devices and slow networks in CI smoke",
-            "Publish perf dashboards beside error rate for product"
+            "Budget LCP/INP per template, non solo globali",
+            "Collegare regressioni perf a release train e rollback",
+            "Smoke su dispositivi reali e reti lente in CI",
+            "Dashboard perf visibili al prodotto accanto al tasso errori"
           ]
         },
         {
@@ -321,10 +321,10 @@
             ]
           ],
           "points": [
-            "Budget LCP and INP per template, not only globally",
-            "Tie perf regressions to release trains and rollback rules",
-            "Measure real devices and slow networks in CI smoke",
-            "Publish perf dashboards beside error rate for product"
+            "按模板而非仅全局预算 LCP/INP",
+            "将性能回归绑定发布列车与回滚规则",
+            "CI 冒烟在真机与慢网上测量",
+            "与错误率并列向产品展示性能看板"
           ]
         },
         {
@@ -380,10 +380,10 @@
             ]
           ],
           "points": [
-            "Budget LCP and INP per template, not only globally",
-            "Tie perf regressions to release trains and rollback rules",
-            "Measure real devices and slow networks in CI smoke",
-            "Publish perf dashboards beside error rate for product"
+            "LCP/INPをグローバルだけでなくテンプレート単位で予算化",
+            "Perf回帰をリリーストレインとロールバックに結び付け",
+            "CIスモークで実機と遅いネットワークを計測",
+            "エラー率の横にプロダクト向けPerfダッシュボード"
           ]
         },
         {

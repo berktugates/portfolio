@@ -90,10 +90,10 @@
             ]
           ],
           "points": [
-            "Reset app state and server fixtures deterministically between specs",
-            "Stub network at the boundary; avoid sleeping on animations",
-            "Quarantine flaky tests with owner and SLA, do not mute forever",
-            "Run a subset on every PR, full matrix nightly on real devices"
+            "Spec'ler arasında uygulama durumunu ve sunucu fixture'larını deterministik sıfırlayın",
+            "Ağ sınırında stub kullanın; animasyonlarda sleep'ten kaçının",
+            "Flaky testleri sahip ve SLA ile karantinaya alın, sonsuza susturmayın",
+            "Her PR'da alt küme, gece gerçek cihazda tam matris çalıştırın"
           ]
         },
         {
@@ -153,10 +153,10 @@
             ]
           ],
           "points": [
-            "Reset app state and server fixtures deterministically between specs",
-            "Stub network at the boundary; avoid sleeping on animations",
-            "Quarantine flaky tests with owner and SLA, do not mute forever",
-            "Run a subset on every PR, full matrix nightly on real devices"
+            "App-State und Server-Fixtures zwischen Specs deterministisch zurücksetzen",
+            "Netzwerk an der Grenze stubben; kein Sleep auf Animationen",
+            "Flaky Tests mit Owner und SLA in Quarantäne, nicht dauerhaft stumm",
+            "Subset pro PR, volle Matrix nachts auf echten Geräten"
           ]
         },
         {
@@ -216,10 +216,10 @@
             ]
           ],
           "points": [
-            "Reset app state and server fixtures deterministically between specs",
-            "Stub network at the boundary; avoid sleeping on animations",
-            "Quarantine flaky tests with owner and SLA, do not mute forever",
-            "Run a subset on every PR, full matrix nightly on real devices"
+            "Réinitialiser état app et fixtures serveur de façon déterministe entre specs",
+            "Stub réseau à la frontière; éviter sleep sur animations",
+            "Quarantaine flaky avec owner et SLA, pas de mute infini",
+            "Sous-ensemble à chaque PR, matrice complète la nuit sur appareils réels"
           ]
         },
         {
@@ -279,10 +279,10 @@
             ]
           ],
           "points": [
-            "Reset app state and server fixtures deterministically between specs",
-            "Stub network at the boundary; avoid sleeping on animations",
-            "Quarantine flaky tests with owner and SLA, do not mute forever",
-            "Run a subset on every PR, full matrix nightly on real devices"
+            "Reset deterministico di app state e fixture server tra le spec",
+            "Stub di rete al confine; evitare sleep sulle animazioni",
+            "Quarantena test flaky con owner e SLA, non mutare per sempre",
+            "Sottoinsieme ogni PR, matrice piena di notte su dispositivi reali"
           ]
         },
         {
@@ -342,10 +342,10 @@
             ]
           ],
           "points": [
-            "Reset app state and server fixtures deterministically between specs",
-            "Stub network at the boundary; avoid sleeping on animations",
-            "Quarantine flaky tests with owner and SLA, do not mute forever",
-            "Run a subset on every PR, full matrix nightly on real devices"
+            "各 spec 之间确定性重置应用状态与服务端 fixture",
+            "在边界 stub 网络；动画上避免 sleep",
+            "将不稳定测试隔离并指定 owner 与 SLA，不要永久静音",
+            "每个 PR 跑子集，夜间在真机跑全矩阵"
           ]
         },
         {
@@ -405,10 +405,10 @@
             ]
           ],
           "points": [
-            "Reset app state and server fixtures deterministically between specs",
-            "Stub network at the boundary; avoid sleeping on animations",
-            "Quarantine flaky tests with owner and SLA, do not mute forever",
-            "Run a subset on every PR, full matrix nightly on real devices"
+            "スペック間でアプリ状態とサーバーフィクスチャを決定的にリセット",
+            "境界でネットワークをスタブ；アニメーションでsleepしない",
+            "フレーキーテストはオーナーとSLA付き隔離、永久ミュート禁止",
+            "PR毎にサブセット、夜間は実機でフルマトリクス"
           ]
         },
         {

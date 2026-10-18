@@ -85,10 +85,10 @@
             ]
           ],
           "points": [
-            "Issue idempotency keys at the user turn boundary, not per model token",
-            "Persist tool side effects with dedupe stores before acknowledging success",
-            "Make retries safe for billing, email, and database writes",
-            "Expose duplicate replay metrics to catch agent loops early"
+            "Idempotency anahtarını kullanıcı turn sınırında verin, model token'ı başına değil",
+            "Başarı ack'inden önce tool yan etkilerini dedupe store ile kalıcılaştırın",
+            "Faturalama, e-posta ve DB yazıları için retry'leri güvenli yapın",
+            "Ajan döngülerini erken yakalamak için duplicate replay metriklerini açın"
           ]
         },
         {
@@ -144,10 +144,10 @@
             ]
           ],
           "points": [
-            "Issue idempotency keys at the user turn boundary, not per model token",
-            "Persist tool side effects with dedupe stores before acknowledging success",
-            "Make retries safe for billing, email, and database writes",
-            "Expose duplicate replay metrics to catch agent loops early"
+            "Idempotency-Keys pro User-Turn, nicht pro Modell-Token",
+            "Tool-Nebenwirkungen vor Ack in Dedupe-Store persistieren",
+            "Retries sicher für Billing, Mail und DB-Writes",
+            "Duplicate-Replay-Metriken für Agent-Loops"
           ]
         },
         {
@@ -203,10 +203,10 @@
             ]
           ],
           "points": [
-            "Issue idempotency keys at the user turn boundary, not per model token",
-            "Persist tool side effects with dedupe stores before acknowledging success",
-            "Make retries safe for billing, email, and database writes",
-            "Expose duplicate replay metrics to catch agent loops early"
+            "Clés idempotence au tour utilisateur, pas par token modèle",
+            "Persister effets outils avant ack via dedupe store",
+            "Retries sûrs pour facturation, email et écritures DB",
+            "Métriques replay duplicate pour boucles agent"
           ]
         },
         {
@@ -262,10 +262,10 @@
             ]
           ],
           "points": [
-            "Issue idempotency keys at the user turn boundary, not per model token",
-            "Persist tool side effects with dedupe stores before acknowledging success",
-            "Make retries safe for billing, email, and database writes",
-            "Expose duplicate replay metrics to catch agent loops early"
+            "Chiavi idempotency al turn utente, non per token modello",
+            "Persistere side effect tool prima dell'ack con dedupe store",
+            "Retry sicuri per billing, email e scritture DB",
+            "Metriche replay duplicate per loop agent"
           ]
         },
         {
@@ -321,10 +321,10 @@
             ]
           ],
           "points": [
-            "Issue idempotency keys at the user turn boundary, not per model token",
-            "Persist tool side effects with dedupe stores before acknowledging success",
-            "Make retries safe for billing, email, and database writes",
-            "Expose duplicate replay metrics to catch agent loops early"
+            "在用户 turn 边界发 idempotency key，而非每 token",
+            "ack 前用 dedupe store 持久化 tool 副作用",
+            "计费、邮件、DB 写入的 retry 要安全",
+            "用 duplicate replay 指标抓 agent 循环"
           ]
         },
         {
@@ -380,10 +380,10 @@
             ]
           ],
           "points": [
-            "Issue idempotency keys at the user turn boundary, not per model token",
-            "Persist tool side effects with dedupe stores before acknowledging success",
-            "Make retries safe for billing, email, and database writes",
-            "Expose duplicate replay metrics to catch agent loops early"
+            "モデルトークンではなくユーザーターン境界でidempotency key",
+            "ack前にdedupe storeでtool副作用を永続化",
+            "課金・メール・DB書き込みのretryを安全に",
+            "duplicate replay指標でエージェントループ検知"
           ]
         },
         {

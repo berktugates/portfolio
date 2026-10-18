@@ -85,10 +85,10 @@
             ]
           ],
           "points": [
-            "Treat eval suites like unit tests with fixtures and versioned datasets",
-            "Block releases on regression thresholds, not single lucky runs",
-            "Separate offline eval from online shadow traffic",
-            "Publish eval dashboards next to error budgets"
+            "Eval suite'leri fixture ve versiyonlu veri setiyle unit test gibi işleyin",
+            "Tek şanslı koşuma değil regresyon eşiğine göre release bloklayın",
+            "Offline eval ile online shadow trafiğini ayırın",
+            "Eval panolarını hata bütçesinin yanında yayınlayın"
           ]
         },
         {
@@ -144,10 +144,10 @@
             ]
           ],
           "points": [
-            "Treat eval suites like unit tests with fixtures and versioned datasets",
-            "Block releases on regression thresholds, not single lucky runs",
-            "Separate offline eval from online shadow traffic",
-            "Publish eval dashboards next to error budgets"
+            "Eval-Suites wie Unit-Tests mit Fixtures und versionierten Datensätzen",
+            "Releases bei Regressions-Schwellen blocken, nicht nach Glückslauf",
+            "Offline-Eval von Online-Shadow-Traffic trennen",
+            "Eval-Dashboards neben Error Budget veröffentlichen"
           ]
         },
         {
@@ -203,10 +203,10 @@
             ]
           ],
           "points": [
-            "Treat eval suites like unit tests with fixtures and versioned datasets",
-            "Block releases on regression thresholds, not single lucky runs",
-            "Separate offline eval from online shadow traffic",
-            "Publish eval dashboards next to error budgets"
+            "Traiter suites eval comme tests unitaires avec fixtures et jeux versionnés",
+            "Bloquer releases sur seuils de régression, pas un run chanceux",
+            "Séparer eval offline du trafic shadow online",
+            "Publier tableaux eval à côté du budget d'erreur"
           ]
         },
         {
@@ -262,10 +262,10 @@
             ]
           ],
           "points": [
-            "Treat eval suites like unit tests with fixtures and versioned datasets",
-            "Block releases on regression thresholds, not single lucky runs",
-            "Separate offline eval from online shadow traffic",
-            "Publish eval dashboards next to error budgets"
+            "Suite eval come unit test con fixture e dataset versionati",
+            "Bloccare release su soglie regressione, non singola run fortunata",
+            "Separare eval offline da shadow traffic online",
+            "Pubblicare dashboard eval accanto all'error budget"
           ]
         },
         {
@@ -321,10 +321,10 @@
             ]
           ],
           "points": [
-            "Treat eval suites like unit tests with fixtures and versioned datasets",
-            "Block releases on regression thresholds, not single lucky runs",
-            "Separate offline eval from online shadow traffic",
-            "Publish eval dashboards next to error budgets"
+            "像单元测试一样用 fixture 与版本化数据集运行 eval",
+            "按回归阈值阻断发布，而非单次侥幸通过",
+            "分离离线 eval 与在线 shadow 流量",
+            "在错误预算旁发布 eval 看板"
           ]
         },
         {
@@ -380,10 +380,10 @@
             ]
           ],
           "points": [
-            "Treat eval suites like unit tests with fixtures and versioned datasets",
-            "Block releases on regression thresholds, not single lucky runs",
-            "Separate offline eval from online shadow traffic",
-            "Publish eval dashboards next to error budgets"
+            "evalスイートをfixtureと版付きデータセットでユニットテスト化",
+            "一発当たりではなく回帰閾値でリリースブロック",
+            "オフラインevalとオンラインshadowを分離",
+            "エラーバジェット横にevalダッシュボード公開"
           ]
         },
         {

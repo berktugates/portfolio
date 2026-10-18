@@ -90,10 +90,10 @@
             ]
           ],
           "points": [
-            "Define event tiers: product analytics vs audit vs model training",
-            "Use aggregated rollups before deleting raw events",
-            "Document lawful basis and deletion SLAs per data class",
-            "Make retention config code-reviewed like schema migrations"
+            "Olay katmanlarını tanımlayın: ürün analitiği, denetim, model eğitimi",
+            "Ham olayları silmeden önce aggregate rollup kullanın",
+            "Katman başına hukuki dayanak ve silme SLA'sını belgeleyin",
+            "Saklama config'ini şema migrasyonu gibi code-review edin"
           ]
         },
         {
@@ -153,10 +153,10 @@
             ]
           ],
           "points": [
-            "Define event tiers: product analytics vs audit vs model training",
-            "Use aggregated rollups before deleting raw events",
-            "Document lawful basis and deletion SLAs per data class",
-            "Make retention config code-reviewed like schema migrations"
+            "Event-Tiers definieren: Produkt-Analytics, Audit, Modell-Training",
+            "Aggregierte Rollups vor Löschung roher Events",
+            "Rechtsgrundlage und Lösch-SLA pro Tier dokumentieren",
+            "Retention-Config wie Schema-Migration reviewen"
           ]
         },
         {
@@ -216,10 +216,10 @@
             ]
           ],
           "points": [
-            "Define event tiers: product analytics vs audit vs model training",
-            "Use aggregated rollups before deleting raw events",
-            "Document lawful basis and deletion SLAs per data class",
-            "Make retention config code-reviewed like schema migrations"
+            "Définir tiers d'événements : analytics produit, audit, entraînement modèle",
+            "Rollups agrégés avant suppression des events bruts",
+            "Documenter base légale et SLA suppression par tier",
+            "Revoir config rétention comme migrations schéma"
           ]
         },
         {
@@ -279,10 +279,10 @@
             ]
           ],
           "points": [
-            "Define event tiers: product analytics vs audit vs model training",
-            "Use aggregated rollups before deleting raw events",
-            "Document lawful basis and deletion SLAs per data class",
-            "Make retention config code-reviewed like schema migrations"
+            "Definire tier eventi: analytics prodotto, audit, training modello",
+            "Rollup aggregati prima di eliminare eventi raw",
+            "Documentare base legale e SLA cancellazione per tier",
+            "Review config retention come migrazioni schema"
           ]
         },
         {
@@ -342,10 +342,10 @@
             ]
           ],
           "points": [
-            "Define event tiers: product analytics vs audit vs model training",
-            "Use aggregated rollups before deleting raw events",
-            "Document lawful basis and deletion SLAs per data class",
-            "Make retention config code-reviewed like schema migrations"
+            "定义事件分层：产品分析、审计、模型训练",
+            "删除原始事件前使用聚合 rollup",
+            "按层记录法律依据与删除 SLA",
+            "保留配置像 schema 迁移一样 code review"
           ]
         },
         {
@@ -405,10 +405,10 @@
             ]
           ],
           "points": [
-            "Define event tiers: product analytics vs audit vs model training",
-            "Use aggregated rollups before deleting raw events",
-            "Document lawful basis and deletion SLAs per data class",
-            "Make retention config code-reviewed like schema migrations"
+            "イベント階層を定義：プロダクト分析、監査、モデル学習",
+            "生イベント削除前に集約ロールアップ",
+            "層ごとに法的根拠と削除SLAを文書化",
+            "保持設定をスキーマ移行同様にレビュー"
           ]
         },
         {

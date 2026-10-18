@@ -66,6 +66,23 @@ async function scanDir(relative: string) {
           );
         }
       }
+      const enSections = raw.sections as { points?: string[] }[] | undefined;
+      const trSections = (locales?.tr as { sections?: { points?: string[] }[] } | undefined)?.sections;
+      if (enSections && trSections) {
+        for (let i = 0; i < trSections.length; i++) {
+          const trPoints = trSections[i]?.points;
+          const enPoints = enSections[i]?.points;
+          if (
+            trPoints?.length &&
+            enPoints?.length &&
+            trPoints[0] === enPoints[0]
+          ) {
+            throw new Error(
+              `${relative}/${name}: locales.tr sections[${i}].points mirror English; localize bullets (scripts/blog_queue_points.py).`,
+            );
+          }
+        }
+      }
     }
   }
 }
