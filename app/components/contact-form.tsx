@@ -39,7 +39,8 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
 
   const [state, setState] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
-  const [startedAt, setStartedAt] = useState(() => Date.now());
+  // Must not use Date.now() in the initial state: SSG bakes that value into HTML and hydration mismatches.
+  const [startedAt, setStartedAt] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [details, setDetails] = useState("");
@@ -64,16 +65,25 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
     if (!siteKey || !turnstileContainerRef.current || !window.turnstile) return;
     if (widgetIdRef.current != null) return;
 
-    widgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
-      sitekey: siteKey,
-      action: "contact",
-      theme: "auto",
-      size: "normal",
-      callback: onTurnstileSuccess,
-      "expired-callback": onTurnstileClear,
-      "error-callback": onTurnstileClear,
-    });
+    try {
+      widgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
+        sitekey: siteKey,
+        action: "contact",
+        theme: "auto",
+        size: "normal",
+        callback: onTurnstileSuccess,
+        "expired-callback": onTurnstileClear,
+        "error-callback": onTurnstileClear,
+      });
+    } catch {
+      widgetIdRef.current = null;
+      setTurnstileError(true);
+    }
   }, [onTurnstileClear, onTurnstileSuccess, siteKey]);
+
+  useEffect(() => {
+    setStartedAt((current) => (current > 0 ? current : Date.now()));
+  }, []);
 
   useEffect(() => {
     if (window.turnstile) setTurnstileScriptReady(true);
@@ -87,7 +97,11 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
     return () => {
       const id = widgetIdRef.current;
       if (id && window.turnstile) {
-        window.turnstile.remove(id);
+        try {
+          window.turnstile.remove(id);
+        } catch {
+          // ignore Turnstile teardown errors (e.g. React Strict Mode remount)
+        }
         widgetIdRef.current = null;
       }
     };
