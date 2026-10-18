@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"observability-for-streaming-llm-responses": {
+    title: "Observabilité des réponses LLM en streaming",
+    excerpt: "Le time-to-first-token change la perception qualité. Si vos traces s'arrêtent à HTTP, vous volez à l'aveugle pendant la plus longue partie de la requête.",
+    description: "Patterns staff engineer : spans SSE, budgets token/latence, déconnexion client, signaux mid-stream et tableaux de bord séparant régressions modèle et produit.",
+    sections: [
+      {
+        heading: "Le streaming est une surface d'échec différente",
+        paragraphs: [
+          "L'inférence batch cache la latence. Le streaming expose échecs partiels : premier token lent, chunks bloqués, JSON tronqué.",
+          "Instrumentez du rendu client aux effets de bord outils.",
+        ],
+      },
+      {
+        heading: "Span le flux, pas seulement le socket",
+        paragraphs: [
+          "Une trace par tour avec spans enfants pour retrieval, routage, premier token, outils, finalisation.",
+          "Propagez le contexte via SSE/WebSocket ou corrélez avec un turn id stable.",
+        ],
+        points: [
+          "Métriques séparées TTFT fournisseur vs gateway",
+          "Taux de déconnexion client et facturation",
+          "Transcriptions complètes échantillonnées pour eval",
+          "Alertes sur gaps de stall avant timeouts",
+        ],
+      },
+      {
+        heading: "Les signaux qualité sur la même timeline",
+        paragraphs: [
+          "Contrôles légers en cours de stream : citations, refus, forme d'appel outil, hit retrieval.",
+          "Comparez cohortes streaming et baselines batch en A/B.",
+        ],
+      },
+      {
+        heading: "Exploiter les streams comme SLO produit",
+        paragraphs: [
+          "SLO sur TTFT p95, complétion sans stall, finalisation outil.",
+          "Mesurez l'expérience visible, pas seulement les 5xx.",
+        ],
+        links: [
+          {
+            label: "OpenTelemetry — Semantic conventions",
+            url: "https://opentelemetry.io/docs/specs/semconv/",
+          },
+          {
+            label: "MDN — Server-sent events",
+            url: "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events",
+          },
+          {
+            label: "Vercel AI SDK — Streaming",
+            url: "https://sdk.vercel.ai/docs/ai-sdk-core/streaming",
+          },
+        ],
+      },
+    ],
+  },
 "permission-models-for-multi-tenant-ai-copilots": {
     title: "Modèles de permissions pour copilotes IA multi-tenant",
     excerpt: "Un copilote IA multi-tenant qui hérite des permissions de chat mais ignore les ACL données citera avec assurance le mauvais tenant. Les appels d'outils doivent suivre le même chemin d'autorisation que vos API—scoped par tenant, rôle et ressource.",

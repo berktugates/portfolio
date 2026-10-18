@@ -1,8 +1,30 @@
 {
   "version": 1,
   "site": "https://berktugberke.com",
-  "generatedAt": "2026-09-27T19:39:07.866Z",
+  "generatedAt": "2026-10-18T20:04:17.431Z",
   "posts": [
+    {
+      "id": "observability-for-streaming-llm-responses",
+      "slug": "observability-for-streaming-llm-responses",
+      "title": "Observability for Streaming LLM Responses",
+      "url": "https://berktugberke.com/blogs/observability-for-streaming-llm-responses",
+      "publishedAt": "2026-10-18",
+      "tags": [
+        "LLM observability",
+        "streaming responses",
+        "OpenTelemetry",
+        "SSE",
+        "AI product metrics",
+        "production LLM"
+      ],
+      "excerpt": "Time-to-first-token and partial output change how users judge quality. If your traces stop at the HTTP boundary, you are flying blind through the longest part of the request.",
+      "bodyPlain": "Batch inference hides latency behind a single completion event. Streaming exposes partial failure: slow first token, stalled chunks, truncated JSON, or a confident preamble before a policy violation. Product teams feel these as 'the assistant froze' long before your error rate spikes.\n\nTreat the stream as a first-class workload. Instrument from client render through gateway, router, model provider, and tool side effects. A trace that ends when headers return misses the user-visible story.\n\nModel one trace per user turn with child spans for retrieval, routing, first token, tool calls, and finalization. Record time-to-first-token (TTFT), inter-chunk gaps, total tokens, and whether the client aborted mid-flight.\n\nPropagate trace context through SSE or WebSocket frames where your stack allows. When it cannot, correlate with a stable turn id and log structured events at chunk boundaries so you can reconstruct stall points without storing full prompts in logs.\n\nSeparate metrics for provider TTFT versus your gateway overhead\n\nTrack client disconnect rate and whether billing still accrues\n\nSample full transcripts for eval, not for default metrics cardinality\n\nAlert on rising stall gaps before hard timeouts fire\n\nAttach lightweight checks as the stream progresses: citation coverage, refusal patterns, tool-call shape, or retrieval hit rate. You do not need to block every chunk—aggregate signals at end-of-stream for dashboards and at thresholds for automatic degrade.\n\nCompare streaming cohorts to batch baselines when you A/B route models. A model that wins on final BLEU can lose on perceived speed if TTFT regresses. Observability should make that trade visible to product, not only to infra.\n\nDefine SLOs on TTFT p95, stall-free completion rate, and successful tool finalization—not only 5xx rate. Runbooks should distinguish provider brownouts, prompt bloat, retrieval timeouts, and client network loss.\n\nStreaming observability is how AI products earn the right to feel instant. Measure the experience users actually see, or you will optimize the wrong graph while churn quietly rises.",
+      "contentHash": "3ca67e92c8533837",
+      "socialThreadTr": [
+        "Streaming yanıtta kalite algısı ilk tokenden başlar. Trace HTTP sınırında bitiyorsa, isteğin en uzun kısmında körsünüz. 🧵",
+        "Span modeli, TTFT, disconnect ve mid-stream sinyaller. Detay: https://berktugberke.com/tr/blogs/observability-for-streaming-llm-responses"
+      ]
+    },
     {
       "id": "permission-models-for-multi-tenant-ai-copilots",
       "slug": "permission-models-for-multi-tenant-ai-copilots",

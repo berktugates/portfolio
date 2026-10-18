@@ -6,7 +6,6 @@ import { handleCorrectionRequest } from "./corrections";
 import { handleContactIngest } from "./contact-ingest";
 
 const HABER_CRON = "7,22,37,52 * * * *";
-const BLOG_CRON = "0 6 * * 1";
 
 export default {
   async scheduled(event: ScheduledEvent, env: Env): Promise<void> {
@@ -14,8 +13,6 @@ export default {
       await flushRevalidatePending(env);
       if (event.cron === HABER_CRON) {
         await runHaberCron(env);
-      } else if (event.cron === BLOG_CRON) {
-        await runBlogCron(env);
       } else {
         console.log(`content-publisher: unknown cron ${event.cron}`);
       }

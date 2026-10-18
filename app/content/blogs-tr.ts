@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"observability-for-streaming-llm-responses": {
+    title: "Streaming LLM Yanıtları için Observability",
+    excerpt: "İlk token süresi ve kısmi çıktı kalite algısını değiştirir. Trace'leriniz HTTP sınırında bitiyorsa, isteğin en uzun kısmında körsünüz.",
+    description: "Streaming LLM yanıtlarında observability için staff mühendis kalıpları: SSE span modelleri, token ve gecikme bütçeleri, client disconnect semantiği, akış ortası kalite sinyalleri ve model ile ürün regresyonlarını ayıran panolar.",
+    sections: [
+      {
+        heading: "Streaming farklı bir hata yüzeyidir",
+        paragraphs: [
+          "Batch çıkarım gecikmeyi tek tamamlanma olayının arkasına gizler. Streaming kısmi hatayı açığa çıkarır: yavaş ilk token, takılan chunk'lar, kesik JSON veya politika ihlalinden önce gelen kendinden emin giriş.",
+          "Akışı birinci sınıf iş yükü sayın. Client render'dan gateway, router, model sağlayıcı ve tool yan etkilerine kadar ölçün.",
+        ],
+      },
+      {
+        heading: "Yalnızca soketi değil, akışı span'leyin",
+        paragraphs: [
+          "Kullanıcı turu başına bir trace modelleyin; retrieval, routing, ilk token, tool çağrıları ve finalize için child span'ler ekleyin.",
+          "Stack izin verdiğinde trace context'i SSE veya WebSocket frame'leri boyunca taşıyın; değilse stabil turn id ile chunk sınırında yapılandırılmış olaylar loglayın.",
+        ],
+        points: [
+          "Sağlayıcı TTFT ile gateway ek yükünü ayrı metrikleyin",
+          "Client disconnect oranını ve faturalamanın sürüp sürmediğini izleyin",
+          "Eval için tam transkript örnekleyin, varsayılan kardinalite için değil",
+          "Sert timeout'lardan önce artan stall aralıklarına alarm kurun",
+        ],
+      },
+      {
+        heading: "Kalite sinyalleri aynı zaman çizgisinde olmalı",
+        paragraphs: [
+          "Akış ilerlerken hafif kontroller ekleyin: atıf kapsamı, red kalıpları, tool-call şekli veya retrieval isabet oranı.",
+          "Modelleri A/B yönlendirirken streaming kohortlarını batch baz çizgileriyle karşılaştırın; TTFT regresyonu algılanan hızı bozar.",
+        ],
+      },
+      {
+        heading: "Akışları ürün SLO'su gibi işletin",
+        paragraphs: [
+          "TTFT p95, takılmadan tamamlanma oranı ve başarılı tool finalize üzerine SLO tanımlayın.",
+          "Streaming observability, kullanıcının gerçekten gördüğü deneyimi ölçmeden anında hissettirme hakkını kazanamazsınız.",
+        ],
+        links: [
+          {
+            label: "OpenTelemetry — Semantic conventions",
+            url: "https://opentelemetry.io/docs/specs/semconv/",
+          },
+          {
+            label: "MDN — Server-sent events",
+            url: "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events",
+          },
+          {
+            label: "Vercel AI SDK — Streaming",
+            url: "https://sdk.vercel.ai/docs/ai-sdk-core/streaming",
+          },
+        ],
+      },
+    ],
+  },
 "permission-models-for-multi-tenant-ai-copilots": {
     title: "Çok Kiracılı AI Copilot'lar için İzin Modelleri",
     excerpt: "Sohbet iznini miras alıp veri ACL'sini yok sayan çok kiracılı AI copilott yanlış tenant'ı kendinden emin alıntılar. Tool çağrıları API'lerinizle aynı yetkilendirme yolunu kullanmalı—tenant, rol ve kaynak başına scoped.",

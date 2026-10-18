@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"observability-for-streaming-llm-responses": {
+    title: "流式 LLM 响应的可观测性",
+    excerpt: "首 token 时间与部分输出改变质量判断。追踪在 HTTP 边界结束意味着在最长一段请求中盲目飞行。",
+    description: "流式 LLM 可观测性模式：SSE span、token 与延迟预算、客户端断开语义、流中质量信号，以及区分模型与产品回归的看板。",
+    sections: [
+      {
+        heading: "流式是不同的失败面",
+        paragraphs: [
+          "批式推理隐藏延迟。流式暴露部分失败：首 token 慢、块停滞、JSON 截断。",
+          "从客户端渲染到工具副作用全程埋点。",
+        ],
+      },
+      {
+        heading: "为流建 span",
+        paragraphs: [
+          "每轮一条追踪，子 span 覆盖检索、路由、首 token、工具与收尾。",
+          "通过 SSE/WebSocket 传播上下文，或用稳定 turn id 在块边界关联。",
+        ],
+        points: [
+          "分开提供商 TTFT 与网关开销",
+          "跟踪客户端断开与计费",
+          "评测抽样完整转录",
+          "硬超时前对停滞间隔告警",
+        ],
+      },
+      {
+        heading: "质量信号在同一时间线",
+        paragraphs: [
+          "流中轻量检查：引用、拒绝、工具形态、检索命中。",
+          "A/B 时将流式人群与批式基线对比。",
+        ],
+      },
+      {
+        heading: "像产品 SLO 运营流",
+        paragraphs: [
+          "在 TTFT p95、无停滞完成、工具收尾上定义 SLO。",
+          "测量用户真正看到的体验。",
+        ],
+        links: [
+          {
+            label: "OpenTelemetry — Semantic conventions",
+            url: "https://opentelemetry.io/docs/specs/semconv/",
+          },
+          {
+            label: "MDN — Server-sent events",
+            url: "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events",
+          },
+          {
+            label: "Vercel AI SDK — Streaming",
+            url: "https://sdk.vercel.ai/docs/ai-sdk-core/streaming",
+          },
+        ],
+      },
+    ],
+  },
 "permission-models-for-multi-tenant-ai-copilots": {
     title: "多租户 AI 副驾驶的权限模型",
     excerpt: "继承聊天权限却忽略数据 ACL 的多租户 AI 副驾驶会自信地引用错误租户。工具调用需要与你们的 API 走同一条授权路径——按租户、角色与资源限定范围。",

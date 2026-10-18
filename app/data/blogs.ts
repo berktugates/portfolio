@@ -23,6 +23,76 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "observability-for-streaming-llm-responses",
+    title: "Observability for Streaming LLM Responses",
+    excerpt: "Time-to-first-token and partial output change how users judge quality. If your traces stop at the HTTP boundary, you are flying blind through the longest part of the request.",
+    description: "Staff-engineer patterns for observability on streaming LLM responses: span models for SSE, token and latency budgets, client disconnect semantics, quality signals mid-stream, and dashboards that separate model from product regressions.",
+    publishedAt: "2026-10-18",
+    readingMinutes: 7,
+    keywords: [
+      "LLM observability",
+      "streaming responses",
+      "OpenTelemetry",
+      "SSE",
+      "AI product metrics",
+      "production LLM",
+    ],
+    socialThreadTr: [
+      "Streaming yanıtta kalite algısı ilk tokenden başlar. Trace HTTP sınırında bitiyorsa, isteğin en uzun kısmında körsünüz. 🧵",
+      "Span modeli, TTFT, disconnect ve mid-stream sinyaller. Detay: https://berktugberke.com/tr/blogs/observability-for-streaming-llm-responses",
+    ],
+    sections: [
+      {
+        heading: "Streaming is a different failure surface",
+        paragraphs: [
+          "Batch inference hides latency behind a single completion event. Streaming exposes partial failure: slow first token, stalled chunks, truncated JSON, or a confident preamble before a policy violation. Product teams feel these as 'the assistant froze' long before your error rate spikes.",
+          "Treat the stream as a first-class workload. Instrument from client render through gateway, router, model provider, and tool side effects. A trace that ends when headers return misses the user-visible story.",
+        ],
+      },
+      {
+        heading: "Span the stream, not only the socket",
+        paragraphs: [
+          "Model one trace per user turn with child spans for retrieval, routing, first token, tool calls, and finalization. Record time-to-first-token (TTFT), inter-chunk gaps, total tokens, and whether the client aborted mid-flight.",
+          "Propagate trace context through SSE or WebSocket frames where your stack allows. When it cannot, correlate with a stable turn id and log structured events at chunk boundaries so you can reconstruct stall points without storing full prompts in logs.",
+        ],
+        points: [
+          "Separate metrics for provider TTFT versus your gateway overhead",
+          "Track client disconnect rate and whether billing still accrues",
+          "Sample full transcripts for eval, not for default metrics cardinality",
+          "Alert on rising stall gaps before hard timeouts fire",
+        ],
+      },
+      {
+        heading: "Quality signals belong in the same timeline",
+        paragraphs: [
+          "Attach lightweight checks as the stream progresses: citation coverage, refusal patterns, tool-call shape, or retrieval hit rate. You do not need to block every chunk—aggregate signals at end-of-stream for dashboards and at thresholds for automatic degrade.",
+          "Compare streaming cohorts to batch baselines when you A/B route models. A model that wins on final BLEU can lose on perceived speed if TTFT regresses. Observability should make that trade visible to product, not only to infra.",
+        ],
+      },
+      {
+        heading: "Operate streams like a product SLO",
+        paragraphs: [
+          "Define SLOs on TTFT p95, stall-free completion rate, and successful tool finalization—not only 5xx rate. Runbooks should distinguish provider brownouts, prompt bloat, retrieval timeouts, and client network loss.",
+          "Streaming observability is how AI products earn the right to feel instant. Measure the experience users actually see, or you will optimize the wrong graph while churn quietly rises.",
+        ],
+        links: [
+          {
+            label: "OpenTelemetry — Semantic conventions",
+            url: "https://opentelemetry.io/docs/specs/semconv/",
+          },
+          {
+            label: "MDN — Server-sent events",
+            url: "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events",
+          },
+          {
+            label: "Vercel AI SDK — Streaming",
+            url: "https://sdk.vercel.ai/docs/ai-sdk-core/streaming",
+          },
+        ],
+      },
+    ],
+  },
+    {
     slug: "permission-models-for-multi-tenant-ai-copilots",
     title: "Permission Models for Multi-Tenant AI Copilots",
     excerpt: "A multi-tenant AI copilot that inherits chat permissions but ignores data ACLs will confidently quote the wrong tenant. Tool calls need the same authorization path as your APIs—scoped per tenant, role, and resource.",

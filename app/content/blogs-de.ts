@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"observability-for-streaming-llm-responses": {
+    title: "Observability für gestreamte LLM-Antworten",
+    excerpt: "Time-to-first-token und Teiloutput ändern die Qualitätswahrnehmung. Enden Traces an der HTTP-Grenze, fliegen Sie blind durch den längsten Teil der Anfrage.",
+    description: "Staff-Engineer-Muster für Observability bei gestreamten LLM-Antworten: Span-Modelle für SSE, Token- und Latenz-Budgets, Client-Disconnect-Semantik und Dashboards die Modell- von Produkt-Regressionen trennen.",
+    sections: [
+      {
+        heading: "Streaming ist eine andere Failure-Oberfläche",
+        paragraphs: [
+          "Batch-Inferenz versteckt Latenz hinter einem Completion-Event. Streaming legt Teilfehler offen: langsames erstes Token, stockende Chunks oder abgeschnittenes JSON.",
+          "Behandeln Sie den Stream als First-Class-Workload von Client-Render bis Tool-Nebenwirkungen.",
+        ],
+      },
+      {
+        heading: "Den Stream spannen, nicht nur den Socket",
+        paragraphs: [
+          "Ein Trace pro User-Turn mit Child-Spans für Retrieval, Routing, First Token, Tools und Finalisierung.",
+          "Trace-Context durch SSE/WebSocket propagieren oder mit stabiler Turn-ID an Chunk-Grenzen korrelieren.",
+        ],
+        points: [
+          "Provider-TTFT und Gateway-Overhead getrennt metrieren",
+          "Client-Disconnect-Rate und Billing-Fortlauf tracken",
+          "Volle Transkripte für Eval sampeln",
+          "Stall-Gaps vor harten Timeouts alarmieren",
+        ],
+      },
+      {
+        heading: "Qualitätssignale gehören auf dieselbe Timeline",
+        paragraphs: [
+          "Leichte Checks während des Streams: Zitationsabdeckung, Refusal-Muster, Tool-Form, Retrieval-Treffer.",
+          "Streaming-Kohorten mit Batch-Baselines bei A/B-Routing vergleichen.",
+        ],
+      },
+      {
+        heading: "Streams wie ein Produkt-SLO betreiben",
+        paragraphs: [
+          "SLOs auf TTFT p95, stall-freie Completion und Tool-Finalisierung definieren.",
+          "Messen Sie die nutzersichtbare Erfahrung, nicht nur 5xx.",
+        ],
+        links: [
+          {
+            label: "OpenTelemetry — Semantic conventions",
+            url: "https://opentelemetry.io/docs/specs/semconv/",
+          },
+          {
+            label: "MDN — Server-sent events",
+            url: "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events",
+          },
+          {
+            label: "Vercel AI SDK — Streaming",
+            url: "https://sdk.vercel.ai/docs/ai-sdk-core/streaming",
+          },
+        ],
+      },
+    ],
+  },
 "permission-models-for-multi-tenant-ai-copilots": {
     title: "Berechtigungsmodelle für Multi-Tenant-AI-Copilots",
     excerpt: "Ein Multi-Tenant-AI-Copilot der Chat-Permissions erbt aber Data-ACLs ignoriert, zitiert selbstbewusst den falschen Tenant. Tool-Calls brauchen denselben Authorization-Pfad wie Ihre APIs—scoped pro Tenant, Rolle und Resource.",

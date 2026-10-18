@@ -1,7 +1,9 @@
-name: Weekly SEO blog
+name: Daily SEO blog
 
-# Haftalık blog: Cloudflare Worker `berktug-content-publisher` (cron Mon 06:00 UTC ≈ 09:00 TR).
+# Günlük blog: 7 dil kuyruk → git (publish-daily-blog.mjs). Worker blog cron kapalı (EN-only R2).
 on:
+  schedule:
+    - cron: "0 4 * * *"
   workflow_dispatch:
     inputs:
       publish_date:
@@ -77,6 +79,10 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Regenerate blog feed
+        if: steps.publish.outputs.changed == 'true'
+        run: node scripts/generate-blogs-feed.mjs
+
       - name: Commit and push
         if: steps.publish.outputs.changed == 'true'
         run: |
@@ -86,9 +92,9 @@ jobs:
           git add app/data/blogs.ts app/content/blogs-*.ts app/lib/seo.ts content/blog-queue public/blogs/feed.json
           git add -u public/blogs/feed.json 2>/dev/null || true
           git commit -m "$(cat <<'EOF'
-          content: publish weekly SEO blog
+          content: publish daily SEO blog
 
-          Automated queue publish (legacy git path until Blob-only batch).
+          Automated queue publish (7 locales) from content/blog-queue.
           EOF
           )"
           git push

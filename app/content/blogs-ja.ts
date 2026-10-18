@@ -1,6 +1,61 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"observability-for-streaming-llm-responses": {
+    title: "ストリーミングLLM応答の可観測性",
+    excerpt: "初回トークンと部分出力は品質の見え方を変えます。HTTP境界でトレースが終わると最長区間を盲目で飛ばします。",
+    description: "SSEスパン、トークン/レイテンシ予算、クライアント切断、ストリーム途中の品質シグナル、モデルとプロダクト回帰を分けるダッシュボード。",
+    sections: [
+      {
+        heading: "ストリーミングは別の失敗面",
+        paragraphs: [
+          "バッチ推論はレイテンシを隠す。ストリーミングは部分失敗を露わにする。",
+          "クライアント描画からツール副作用まで計測。",
+        ],
+      },
+      {
+        heading: "ストリームをスパンする",
+        paragraphs: [
+          "ターンごとに1トレース、取得・ルーティング・初トークン・ツール・終了の子スパン。",
+          "SSE/WebSocketでコンテキスト伝播、またはturn idで相関。",
+        ],
+        points: [
+          "プロバイダTTFTとゲートウェイを分離",
+          "クライアント切断と課金を追跡",
+          "評価用に全文サンプル",
+          "ハードタイムアウト前に停滞ギャップをアラート",
+        ],
+      },
+      {
+        heading: "品質シグナルは同じタイムライン",
+        paragraphs: [
+          "ストリーム中の軽量チェック：引用、拒否、ツール形状、取得ヒット。",
+          "A/Bでストリーミングコホートとバッチ基準を比較。",
+        ],
+      },
+      {
+        heading: "ストリームをプロダクトSLOとして運用",
+        paragraphs: [
+          "TTFT p95、停滞なし完了、ツール終了でSLO定義。",
+          "ユーザーが見る体験を測る。",
+        ],
+        links: [
+          {
+            label: "OpenTelemetry — Semantic conventions",
+            url: "https://opentelemetry.io/docs/specs/semconv/",
+          },
+          {
+            label: "MDN — Server-sent events",
+            url: "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events",
+          },
+          {
+            label: "Vercel AI SDK — Streaming",
+            url: "https://sdk.vercel.ai/docs/ai-sdk-core/streaming",
+          },
+        ],
+      },
+    ],
+  },
 "permission-models-for-multi-tenant-ai-copilots": {
     title: "マルチテナントAIコパイロットの権限モデル",
     excerpt: "チャット権限を継承しつつデータACLを無視するマルチテナントAIコパイロットは、誤ったテナントを自信満々に引用します。ツール呼び出しはAPIと同じ認可パスを使うべきです—テナント・役割・リソースごとにスコープ。",
