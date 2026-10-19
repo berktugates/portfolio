@@ -9,6 +9,8 @@ if str(_script_dir) not in sys.path:
 from blog_queue_points import POINTS_BY_POST  # noqa: E402
 from blog_queue_en_depth import EN_CLOSING, EN_EXTRA_PARAS  # noqa: E402
 from blog_queue_locale_depth import apply_locale_depth  # noqa: E402
+from blog_queue_long_form import append_long_form_sections  # noqa: E402
+from blog_queue_slug_supplement import supplement_sections  # noqa: E402
 from blog_queue_seo_blocks import (  # noqa: E402
     blocks5,
     blocks6,
@@ -18,6 +20,7 @@ from blog_queue_seo_blocks import (  # noqa: E402
     blocks10,
     blocks11,
 )
+from blog_queue_backlog import write_backlog_posts  # noqa: E402
 
 QUEUE = Path(__file__).resolve().parent.parent / "content" / "blog-queue"
 
@@ -78,6 +81,8 @@ def finalize_en_body(body):
             closing[1],
             closing[2] if len(closing) > 2 else None,
         )
+    sections = append_long_form_sections(slug, "en", sections)
+    sections = [*sections, *supplement_sections(slug, "en")]
     body = {**body, "sections": sections}
     body["readingMinutes"] = reading_minutes_from_sections(sections)
     return body
@@ -88,7 +93,17 @@ def finalize_locale_bodies(body):
     locales = body.get("locales")
     if not slug or not locales:
         return body
-    body["locales"] = apply_locale_depth(slug, locales)
+    locales = apply_locale_depth(slug, locales)
+    body["locales"] = {
+        code: {
+            **copy,
+            "sections": [
+                *append_long_form_sections(slug, code, copy["sections"]),
+                *supplement_sections(slug, code),
+            ],
+        }
+        for code, copy in locales.items()
+    }
     return body
 
 
@@ -482,7 +497,7 @@ def reading_minutes_from_sections(sections):
         parts.extend(section.get("points") or [])
     text = " ".join(p for p in parts if isinstance(p, str) and p.strip())
     words = len(text.split())
-    return max(4, min(15, round(words / 80)))
+    return max(10, min(25, round(words / 80)))
 
 
 # POST 3
@@ -1082,3 +1097,5 @@ seo_post(
     blocks=blocks11,
     points_by_locale=POINTS_BY_POST[11],
 )
+
+write_backlog_posts(write_post, seo_post, en_sections, loc, i18n, {}, POINTS_BY_POST, {}, {}, para)

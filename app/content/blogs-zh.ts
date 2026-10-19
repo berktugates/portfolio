@@ -1,6 +1,100 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"data-retention-policies-that-enable-product-analytics": {
+    title: "在合规前提下支撑产品分析的数据保留",
+    excerpt: "保留是合规，分析是产品，不能同一 TTL。",
+    description: "分层、汇总、法律依据与可观测删除。",
+    sections: [
+      {
+        heading: "保留是产品面",
+        paragraphs: [
+          "永久保留有规模与法律风险；全删则失明。",
+          "按数据类写政策。",
+        ],
+      },
+      {
+        heading: "事件分层",
+        paragraphs: [
+          "分析、审计、训练分开 TTL。",
+          "PII 与匿名指标分离。",
+        ],
+        points: [
+          "定义事件分层：产品分析、审计、模型训练",
+          "删除原始事件前使用聚合 rollup",
+          "按层记录法律依据与删除 SLA",
+          "保留配置像 schema 迁移一样 code review",
+        ],
+      },
+      {
+        heading: "删除前汇总",
+        paragraphs: [
+          "删原始前先 rollup。",
+          "漏斗在聚合上回答。",
+        ],
+      },
+      {
+        heading: "运营纪律",
+        paragraphs: [
+          "保留配置像 schema 一样评审。",
+          "度量删除作业。",
+        ],
+        links: [
+          {
+            label: "GDPR — Storage limitation",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+          {
+            label: "Snowplow — Data retention",
+            url: "https://docs.snowplow.io/docs/understanding-your-pipeline/retention/",
+          },
+          {
+            label: "Amplitude — Data governance",
+            url: "https://amplitude.com/docs/data/data-governance",
+          },
+        ],
+      },
+      {
+        heading: "埋点前先分类事件",
+        paragraphs: [
+          "没有保留设计的 product analytics 会变成敏感行为的意外仓库。事先定义事件类：纯运营遥测、伪匿名产品指标，以及采集前需合同依据的标识符。AI 功能会加入 prompt 衍生属性，即使正文 redact 也应归入受限层。",
+          "工程与法务应共同签署矩阵，将各事件类型映射到存储时长、加密要求与下游消费者。营销要新 funnel 步骤时，评审问题应是保留影响，而非仅 schema 可行性。",
+          "删除必须可证明。静默失败的批 job 让你纸面合规、实际暴露。像监控支付对账一样指标化删除行数、backlog 年龄与重试次数。",
+        ],
+      },
+      {
+        heading: "将分析与安全日志分离",
+        paragraphs: [
+          "共享 schema 诱使团队复用安全日志做 funnel 分析，模糊 GDPR 存储限制原则所描述的保留等级。California CPRA 摘要提醒运营商保留不应超过合理必要——按字段而非按库文档化必要性。",
+          "若 rollup 携带相同分类标签，原始事件过期后 aggregate 表仍可保留趋势。产品分析师保留 cohort 视图；隐私评审者缩短 raw TTL 而不丢 weekly KPI。",
+          "访问控制应遵循数据等级而非组织人气。incident break-glass 角色须自动过期，并留下与分析 self-service 组不同的审计轨迹。 请在下次生产评审中复核这一点，指定负责人并关联带日期的整改工单。",
+        ],
+        links: [
+          {
+            label: "GDPR 第 5 条 — 存储限制",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+          {
+            label: "California CPRA — 保留",
+            url: "https://oag.ca.gov/privacy/ccpa",
+          },
+          {
+            label: "OpenTelemetry — 日志数据模型",
+            url: "https://opentelemetry.io/docs/specs/otel/logs/data-model/",
+          },
+        ],
+      },
+      {
+        heading: "在不牺牲分析能力的前提下落地留存",
+        paragraphs: [
+          "产品团队把留存政策当作法务文件，而分析管道却无限期吞入标识符。打破这一循环：在与追踪 SDK 同一仓库发布事件目录，每行写明 TTL、法律依据与汇总目标。新增属性的 PR 必须更新目录否则 CI 失败。原始 PII 过期后，周报汇总仍保留相同分类标签，队列漏斗分析可以继续。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+          "删除窗口关闭后，汇总表是仪表盘诚实的保障。设计物化视图：去掉用户键但保留足够长的实验分配哈希供读数，并记录哪些图表查 raw、哪些查汇总。为董事会导出 CSV 时，记录请求主体与触及的数据级别。没有审计轨迹的导出，在隐私评审中比缺指标更快被否决。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+          "跨境复制会让天真的留存承诺失效。若事件落入擦除 SLA 不同的区域，在目录中标记副本，删除编排遵循最严策略而非最松桶。预发环境不得无限期保留生产 TTL 例外；工程师用真实用户行调试是反复出现的审计发现。合成夹具应模拟 schema，而非复制生产转储。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+          "像容量规划一样每季度评审留存。衡量仓库存储增长、已删行数、例外与法律保全。新的 AI 或支付流上线时，分析负责人应签字确认默认 TTL 未被悄悄放宽。向工程全员发布一页状态：本月何物过期、哪些汇总回填历史、哪些团队仍在查询应已老化的字段。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+        ],
+      },
+    ],
+  },
 "reducing-flaky-e2e-tests-in-expo-apps": {
     title: "减少 Expo 应用中的不稳定 E2E 测试",
     excerpt: "不稳定 E2E 摧毁信心；重试不能替代确定性环境。",

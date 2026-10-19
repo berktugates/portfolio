@@ -3,7 +3,7 @@
   "title": "Idempotency Keys for Agent Tool Side Effects",
   "excerpt": "Agents retry when models stall, gateways timeout, or users double-tap send. Without idempotency, a harmless retry charges twice, emails twice, or writes duplicate rows.",
   "description": "Staff patterns for idempotent agent tool calls: key design, dedupe stores, acknowledgment ordering, and observability that separates user retries from runaway loops.",
-  "readingMinutes": 4,
+  "readingMinutes": 11,
   "keywords": [
     "idempotency",
     "AI agents",
@@ -63,6 +63,45 @@
           "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"
         }
       ]
+    },
+    {
+      "heading": "Design keys for agent retry semantics",
+      "paragraphs": [
+        "Language-model agents retry tool calls when responses truncate, gateways time out, or orchestrators restart mid-flight. Side effects such as payments, ticket creation, and inventory holds must accept an idempotency key scoped to the logical operation, not merely the HTTP request identifier regenerated on each attempt.",
+        "Persist keys with the tool invocation ledger: model turn, tool name, normalized arguments hash, and tenant identifier. Memory-only deduplication collapses when workers scale horizontally. The ledger becomes the audit trail finance and support query during duplicate charge investigations. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        "Define expiration policies per tool class. Read-only fetches can drop keys quickly; monetary transfers may retain them for days to match processor reconciliation windows. Document which tools are never safe to retry without human confirmation in the same runbook entry on-call reads. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket."
+      ]
+    },
+    {
+      "heading": "Align HTTP and application layers",
+      "paragraphs": [
+        "Stripe documents idempotent POST semantics with a client-supplied key header; mirror that pattern on internal tool gateways even when backends are not card processors. RFC 9110 describes safe and idempotent HTTP methods—use that vocabulary when debating whether GET-style tools should mutate state. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        "Return consistent response bodies on replay so agents do not misinterpret a duplicate as a new success with different identifiers. Integration tests should deliver the same payload twice and assert single side effect counters increment once. Chaos tests that kill workers mid-request expose gaps unit tests miss.",
+        "Expose metrics on duplicate suppressions versus genuine failures. Silent drops hide misconfigured keys; loud failures teach agents to halt rather than loop. Dashboards should segment by tool and tenant to detect abusive retry storms early. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket."
+      ],
+      "links": [
+        {
+          "label": "Stripe — Idempotent requests",
+          "url": "https://docs.stripe.com/api/idempotent_requests"
+        },
+        {
+          "label": "RFC 9110 — HTTP semantics",
+          "url": "https://www.rfc-editor.org/rfc/rfc9110.html"
+        },
+        {
+          "label": "OpenTelemetry — Semantic conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/"
+        }
+      ]
+    },
+    {
+      "heading": "Keys that survive agent retries",
+      "paragraphs": [
+        "Agents retry tool calls aggressively after timeouts or ambiguous model outputs, duplicating payments, tickets, or inventory holds silently without idempotency. Require clients to generate stable keys per logical side effect, persisted with the invocation record in your database, not only in process memory that restarts erase. Keys should combine user or tenant scope with intent hash so parallel legitimate actions still succeed while duplicates collapse to the original response.",
+        "Document which tools are safe to retry automatically versus which need human confirmation in runbooks and OpenAPI descriptions. Integration tests must simulate duplicate deliveries with the same key and conflicting payloads, expecting deterministic rejection or no-op semantics. Partial failures—charge succeeded but ledger write failed—need reconciliation jobs keyed the same way to avoid double settlement during cleanup sweeps.",
+        "Gateway layers should enforce key presence for mutating routes before requests reach domain services. Metrics on replay hits, stale keys, and rejected duplicates help tune TTL windows; keys kept forever blow up storage, keys expiring too soon reintroduce double spend. Align key TTL with business reconciliation windows and card network rules, publishing the matrix to partner teams integrating new tools.",
+        "When orchestrating multi-step agent plans, propagate a parent idempotency scope to child tools so partial replays do not fork inconsistent state. Log key identifiers alongside trace IDs for support lookups without logging full arguments. Security reviews should treat missing idempotency on financial tools as release blockers equal to missing authentication, because the blast radius is customer money, not only log noise."
+      ]
     }
   ],
   "locales": {
@@ -113,6 +152,45 @@
               "label": "AWS — Lambda idempotency",
               "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"
             }
+          ]
+        },
+        {
+          "heading": "Agent yeniden deneme semantiği için anahtar tasarlayın",
+          "paragraphs": [
+            "Dil modeli agent'ları yanıt kesildiğinde, gateway zaman aşımında veya orchestrator uçuş ortasında yeniden başladığında tool çağrılarını yeniden dener. Ödeme, ticket açma ve stok tutma gibi yan etkiler, her denemede yenilenen HTTP istek kimliği değil mantıksal işleme kapsamlı idempotency key kabul etmeli. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Anahtarları tool çağrı defteriyle kalıcı tutun: model turu, tool adı, normalize argüman hash'i ve tenant kimliği. Yalnızca bellekte deduplication yatay ölçeklenince çöker. Defter, mükerrer ücret soruşturmalarında finans ve desteğin baktığı denet izidir. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Tool sınıfına göre sona erme politikası tanımlayın. Salt okunur fetch'ler anahtarları hızlı bırakabilir; parasal transferler işlemci mutabakat pencerelerine uymak için günlerce saklayabilir. İnsan onayı olmadan asla yeniden denenmemesi gereken tool'ları on-call runbook kaydında belgeleyin. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın."
+          ]
+        },
+        {
+          "heading": "HTTP ve uygulama katmanlarını hizalayın",
+          "paragraphs": [
+            "Stripe, istemci tarafı key başlığıyla idempotent POST semantiğini dokümante eder; arka uç kart işlemcisi olmasa bile iç tool gateway'lerinde aynı kalıbı yansıtın. RFC 9110 güvenli ve idempotent HTTP metotlarını tanımlar; GET tarzı tool'ların durum değiştirip değiştirmemesi tartışmasında bu sözcüğü kullanın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Yeniden oynatmada tutarlı gövde dönün; agent mükerreri farklı kimlikli yeni başarı sanmasın. Entegrasyon testleri aynı yükü iki kez iletsin, yan etki sayaçlarının bir kez arttığını assert etsin. Worker'ı istek ortasında öldüren kaos testleri birim testlerinin kaçırdığı boşlukları gösterir. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Mükerrer bastırmalar ile gerçek hataları metrikleyin. Sessiz düşüşler yanlış yapılandırılmış anahtarları gizler; gürültülü hatalar agent'a döngü yerine durmayı öğretir. Dashboard'lar tool ve tenant'a göre segmentleyerek agresif retry fırtınalarını erken yakalasın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Idempotent istekler",
+              "url": "https://docs.stripe.com/api/idempotent_requests"
+            },
+            {
+              "label": "RFC 9110 — HTTP semantiği",
+              "url": "https://www.rfc-editor.org/rfc/rfc9110.html"
+            },
+            {
+              "label": "OpenTelemetry — Semantik kurallar",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "Agent retry'lerinde yaşayan anahtarlar",
+          "paragraphs": [
+            "Agent'lar timeout veya belirsiz model çıktısı sonrası tool call'ları agresif retry eder; idempotency yoksa ödeme, ticket veya stok hold sessizce çoğalır. Mantıksal yan etki başına stabil key üretin; restart'ın sildiği process memory değil invocation kaydıyla DB'de persist edin. Key tenant/kullanıcı kapsamı ile intent hash birleştirsin: paralel meşru işlemler geçsin, duplicate orijinal yanıta collapse olsun. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+            "Hangi tool'un otomatik retry-safe, hangisinin insan onayı gerektirdiğini runbook ve OpenAPI'da yazın. Integration test aynı key ile duplicate delivery ve çakışan payload simüle etsin; deterministik red veya no-op bekleyin. Kısmi failure—charge OK ledger fail—reconciliation job aynı key ile çalışsın, cleanup'ta çift settlement olmasın. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+            "Gateway mutating route'larda domain'e gitmeden key varlığını enforce etsin. Replay hit, stale key, rejected duplicate metrikleri TTL ayarına yardım eder; sonsuz key depo şişirir, erken expiry çift harcamayı geri getirir. Key TTL'yi mutabakat penceresi ve kart ağı kurallarıyla hizalayın; matrisi yeni tool entegre eden partner'e yayınlayın. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+            "Çok adımlı agent planlarında parent idempotency scope'u child tool'lara taşıyın; kısmi replay tutarsız state çatallamasın. Support lookup için trace ID yanında key identifier loglayın, tam argüman değil. Finansal tool'da eksik idempotency, eksik auth kadar release blocker sayılmalı; blast radius müşteri parasıdır. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin."
           ]
         }
       ]
@@ -165,6 +243,45 @@
               "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"
             }
           ]
+        },
+        {
+          "heading": "Keys für Agent-Retry-Semantik entwerfen",
+          "paragraphs": [
+            "LLM-Agenten retried Tool-Calls bei Trunkierung, Gateway-Timeouts oder Orchestrator-Neustarts mid-flight. Side Effects wie Zahlungen, Tickets und Inventory-Holds müssen Idempotency Keys pro logischer Operation akzeptieren, nicht nur pro HTTP-Request-ID, die bei jedem Versuch neu entsteht. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Persistieren Sie Keys im Tool-Invocation-Ledger: Model-Turn, Tool-Name, normalisierter Argument-Hash und Tenant-ID. Memory-only-Deduplication bricht bei horizontaler Skalierung. Das Ledger ist Audit-Trail für Finance und Support bei Duplicate-Charge-Untersuchungen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Definieren Sie Ablauf pro Tool-Klasse. Read-only Fetches können Keys schnell verwerfen; Geldtransfers behalten sie tagelang für Processor-Reconciliation. Dokumentieren Sie Tools, die ohne Human Confirmation nie retry-safe sind, im selben Runbook-Eintrag wie On-Call. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an."
+          ]
+        },
+        {
+          "heading": "HTTP- und Anwendungsschicht ausrichten",
+          "paragraphs": [
+            "Stripe dokumentiert idempotente POST-Semantik mit Client-Key-Header; spiegeln Sie das auf internen Tool-Gateways auch ohne Card-Processor-Backend. RFC 9110 beschreibt safe und idempotente HTTP-Methoden—nutzen Sie dieses Vokabular in Debatten, ob GET-artige Tools State mutieren dürfen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Liefern Sie bei Replay konsistente Response Bodies, damit Agenten Duplikate nicht als neuen Erfolg mit anderen IDs missinterpretieren. Integrationstests senden dieselbe Payload zweimal und asserten einmaligen Side-Effect-Counter. Chaos-Tests, die Worker mid-request killen, zeigen Lücken jenseits Unit-Tests. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Metriken zu unterdrückten Duplikaten versus echten Failures exposen. Stille Drops verbergen falsch konfigurierte Keys; laute Failures lehren Agenten Halt statt Loop. Dashboards segmentieren nach Tool und Tenant für abusive Retry-Storms. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Idempotente Requests",
+              "url": "https://docs.stripe.com/api/idempotent_requests"
+            },
+            {
+              "label": "RFC 9110 — HTTP-Semantik",
+              "url": "https://www.rfc-editor.org/rfc/rfc9110.html"
+            },
+            {
+              "label": "OpenTelemetry — Semantische Konventionen",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "Keys die Agent-Retries überleben",
+          "paragraphs": [
+            "Agents retrien Tool-Calls aggressiv nach Timeouts oder ambiguous Outputs; ohne Idempotency duplizieren Zahlungen, Tickets, Holds still. Stabile Keys pro logischem Side-Effect, persistiert mit Invocation-Record in DB, nicht nur RAM den Restart löscht. Keys kombinieren Tenant/User-Scope mit Intent-Hash: parallele legitime Actions ok, Duplikate kollabieren zur Original-Response. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Dokumentieren welche Tools auto-retry-safe sind vs Human-Confirm in Runbooks und OpenAPI. Integrationstests simulieren Duplicate-Delivery gleicher Key mit konfliktierenden Payloads—deterministische Rejection oder No-Op. Partial Failures—Charge ok, Ledger fail—Reconciliation-Jobs mit gleichem Key gegen Double Settlement bei Cleanup. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Gateway erzwingt Key-Präsenz auf mutierenden Routes vor Domain-Services. Metriken Replay-Hits, stale Keys, rejected Duplicates für TTL-Tuning; ewige Keys blähen Storage, zu kurze TTL Double-Spend. Key-TTL an Reconciliation-Fenster und Card-Network-Regeln, Matrix an Partner-Teams. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Multi-Step-Agent-Pläne: Parent-Idempotency-Scope an Child-Tools propagieren damit Partial-Replays keinen inconsistent Fork erzeugen. Key-IDs neben Trace-IDs loggen ohne volle Args. Security-Reviews: fehlende Idempotency auf Financial Tools Release-Blocker wie fehlende Auth—Blast Radius ist Kundengeld. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht."
+          ]
         }
       ]
     },
@@ -215,6 +332,45 @@
               "label": "AWS — Lambda idempotency",
               "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"
             }
+          ]
+        },
+        {
+          "heading": "Concevoir des clés pour la sémantique retry agent",
+          "paragraphs": [
+            "Les agents LLM retentent appels outils quand réponses tronquent, gateways timeout ou orchestrateurs redémarrent en vol. Effets de bord paiements, tickets et réserves stock doivent accepter clé idempotence scope opération logique, pas seulement identifiant requête HTTP régénéré à chaque tentative. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+            "Persistez clés avec ledger invocation outil : tour modèle, nom outil, hash arguments normalisés et identifiant tenant. Déduplication mémoire seule s'effondre à l'échelle horizontale. Le ledger devient piste audit finance et support lors d'enquêtes double débit. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+            "Définissez expiration par classe d'outil. Fetch read-only peut jeter clés vite ; transferts monétaires les gardent jours pour fenêtres réconciliation processeur. Documentez outils jamais safe à retry sans confirmation humaine dans la même entrée runbook on-call. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté."
+          ]
+        },
+        {
+          "heading": "Aligner couches HTTP et application",
+          "paragraphs": [
+            "Stripe documente POST idempotent avec en-tête clé client ; miroitez ce pattern sur gateways outils internes même sans backend processeur cartes. RFC 9110 décrit méthodes HTTP safe et idempotentes—utilisez ce vocabulaire pour débattre si outils style GET mutent l'état. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+            "Retournez corps réponse cohérents au replay pour que agents ne lisent pas duplicate comme nouveau succès aux identifiants différents. Tests intégration livrent deux fois même payload et assertent compteurs effet de bord incrémentés une fois. Tests chaos tuant workers mid-request exposent gaps unitaires. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+            "Exposez métriques suppressions duplicate versus échecs réels. Drops silencieux cachent clés mal configurées ; échecs bruyants apprennent aux agents arrêt plutôt boucle. Dashboards segmentent par outil et tenant pour détecter tempêtes retry abusives. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Requêtes idempotentes",
+              "url": "https://docs.stripe.com/api/idempotent_requests"
+            },
+            {
+              "label": "RFC 9110 — Sémantique HTTP",
+              "url": "https://www.rfc-editor.org/rfc/rfc9110.html"
+            },
+            {
+              "label": "OpenTelemetry — Conventions sémantiques",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "Clés qui survivent aux retries agent",
+          "paragraphs": [
+            "Les agents retentent agressivement après timeout ou sorties ambiguës ; sans idempotency paiements, tickets, holds se dupliquent silencieusement. Exiger clés stables par effet de bord logique, persistées avec l'enregistrement d'invocation en base, pas seulement RAM effacée au restart. Clés combinent scope tenant/user et hash intent : actions légitimes parallèles ok, doublons collapsent vers réponse originale.",
+            "Documenter outils safe retry auto vs confirmation humaine dans runbooks et OpenAPI. Tests intégration simulent livraisons dupliquées même clé et payloads conflictuels—rejet déterministe ou no-op. Échecs partiels—charge ok ledger fail—jobs réconciliation même clé pour éviter double règlement au cleanup. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+            "Gateway enforce présence clé sur routes mutantes avant services domaine. Métriques replay hits, clés stale, doublons rejetés pour tuner TTL ; clés éternelles gonflent stockage, expiry trop court réintroduit double dépense. Aligner TTL clé sur fenêtres réconciliation et règles réseau cartes ; publier matrice aux partenaires intégrant tools. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+            "Plans agent multi-étapes : propager scope idempotency parent aux tools enfants pour que replays partiels ne forquent pas état incohérent. Logger identifiants clé avec trace IDs sans args complets. Revues sécurité : idempotency manquante sur tools financiers bloque release comme auth manquante—rayon client argent. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident."
           ]
         }
       ]
@@ -267,6 +423,45 @@
               "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"
             }
           ]
+        },
+        {
+          "heading": "Progettare chiavi per semantica retry agent",
+          "paragraphs": [
+            "Gli agent LLM ritentano tool call quando risposte troncano, gateway vanno in timeout o orchestrator ripartono a metà volo. Side effect pagamenti, ticket e hold inventario devono accettare chiave idempotenza scoped all'operazione logica, non solo ID richiesta HTTP rigenerato a ogni tentativo. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "Persistete chiavi con ledger invocazione tool: turn modello, nome tool, hash argomenti normalizzati e identificativo tenant. Deduplicazione solo in memoria collassa scalando orizzontalmente. Il ledger è audit trail per finance e support nelle indagini addebiti duplicati. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "Definite scadenza per classe tool. Fetch read-only possono scartare chiavi presto; trasferimenti monetari possono tenerle giorni per finestre riconciliazione processor. Documentate tool mai safe da ritentare senza conferma umana nella stessa voce runbook on-call. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato."
+          ]
+        },
+        {
+          "heading": "Allineare layer HTTP e applicazione",
+          "paragraphs": [
+            "Stripe documenta semantica POST idempotente con header chiave client; replicate il pattern su gateway tool interni anche senza backend card processor. RFC 9110 descrive metodi HTTP safe e idempotenti—usate quel vocabolario nel dibattito se tool stile GET mutano stato. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "Restituite body coerenti al replay così gli agent non interpretano duplicato come nuovo successo con ID diversi. Test integrazione inviano stesso payload due volte e assertano contatori side effect incrementati una volta. Test chaos che killano worker mid-request espongono gap oltre unit test. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "Esporre metriche su soppressioni duplicate versus failure reali. Drop silenziosi nascondono chiavi mal configurate; failure rumorosi insegnano agli agent halt invece di loop. Dashboard segmentano per tool e tenant per rilevare tempeste retry abusive. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Richieste idempotenti",
+              "url": "https://docs.stripe.com/api/idempotent_requests"
+            },
+            {
+              "label": "RFC 9110 — Semantica HTTP",
+              "url": "https://www.rfc-editor.org/rfc/rfc9110.html"
+            },
+            {
+              "label": "OpenTelemetry — Convenzioni semantiche",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "Chiavi che sopravvivono ai retry agent",
+          "paragraphs": [
+            "Gli agent ritentano tool call aggressivamente dopo timeout o output ambigui; senza idempotency pagamenti, ticket, hold si duplicano silenziosamente. Richiedere chiavi stabili per effetto collaterale logico, persistite con record invocazione in DB, non solo RAM cancellata al restart. Chiavi combinano scope tenant/user e hash intent: azioni legittime parallele ok, duplicati collassano alla risposta originale. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le.",
+            "Documentare tool safe auto-retry vs conferma umana in runbook e OpenAPI. Test integrazione simulano consegne duplicate stessa chiave e payload conflittuali—rifiuto deterministico o no-op. Failure parziali—charge ok ledger fail—job riconciliazione stessa chiave per evitare doppio settlement in cleanup. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+            "Gateway impone presenza chiave su route mutanti prima dei servizi dominio. Metriche replay hit, chiavi stale, duplicati rifiutati per tuning TTL; chiavi eternal gonfiano storage, expiry troppo presto reintroduce double spend. Allineare TTL chiave a finestre riconciliazione e regole network carte; pubblicare matrice ai partner che integrano tool. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+            "Piani agent multi-step: propagare scope idempotency parent ai tool figli così replay parziali non forkano stato inconsistente. Loggare id chiave con trace ID senza argomenti completi. Security review: idempotency mancante su tool finanziari blocca release come auth mancante—blast radius è denaro cliente. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident."
+          ]
         }
       ]
     },
@@ -318,6 +513,45 @@
               "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"
             }
           ]
+        },
+        {
+          "heading": "为 agent 重试语义设计键",
+          "paragraphs": [
+            "当响应截断、gateway 超时或 orchestrator 中途重启时，语言模型 agent 会重试 tool 调用。支付、建单与库存 hold 等副作用必须接受绑定逻辑操作的幂等键，而非每次尝试重新生成的 HTTP 请求 ID。",
+            "将键与 tool 调用账本一并持久化：模型轮次、tool 名、规范化参数哈希与 tenant 标识。仅内存去重在水平扩展时会崩溃。账本是财务与支持在重复扣费调查中的审计轨迹。",
+            "按 tool 类定义过期策略。只读 fetch 可快速丢弃键；资金转移可能保留数日以匹配处理器对账窗口。在 on-call 同一 runbook 条目中记录绝不可在无人工确认下重试的 tool。"
+          ]
+        },
+        {
+          "heading": "对齐 HTTP 与应用层",
+          "paragraphs": [
+            "Stripe 文档说明带客户端键头的幂等 POST 语义；即使后端非卡处理器，内部 tool gateway 也应镜像该模式。RFC 9110 描述安全与幂等 HTTP 方法——在争论 GET 式 tool 是否应改状态时使用该词汇。",
+            "重放时返回一致响应体，避免 agent 将重复误判为不同标识的新成功。集成测试应两次投递相同 payload 并断言副作用计数仅增一次。在请求中途 kill worker 的 chaos 测试暴露单元测试遗漏。",
+            "暴露重复抑制与真实失败的指标。静默丢弃掩盖键配置错误；显式失败教会 agent 停止而非循环。dashboard 按 tool 与 tenant 分段以早期发现滥用重试风暴。"
+          ],
+          "links": [
+            {
+              "label": "Stripe — 幂等请求",
+              "url": "https://docs.stripe.com/api/idempotent_requests"
+            },
+            {
+              "label": "RFC 9110 — HTTP 语义",
+              "url": "https://www.rfc-editor.org/rfc/rfc9110.html"
+            },
+            {
+              "label": "OpenTelemetry — 语义约定",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "经得住 agent 重试的幂等键",
+          "paragraphs": [
+            "Agent 在超时或模型输出含糊时会激进重试 tool 调用；无幂等则支付、工单或库存 hold 会静默重复。要求客户端为每个逻辑副作用生成稳定键，与调用记录一并持久化到数据库，而非仅存于进程重启即失的内存。键应结合租户/用户范围与意图哈希：并行合法操作仍成功，重复请求折叠为原响应。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "在 runbook 与 OpenAPI 中说明哪些 tool 可自动重试、哪些需人工确认。集成测试应模拟同键重复投递与冲突 payload，期望确定性拒绝或 no-op。部分失败——扣款成功账本写入失败——对账任务须用相同键，避免清理扫掠时双重结算。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "网关层应在 mutating 路由到达领域服务前强制携带键。重放命中、过期键、拒绝重复等指标用于调 TTL；键永不过期会撑爆存储，过早过期又引入双花。键 TTL 与业务对账窗口及卡组织规则对齐，并向接入新 tool 的伙伴发布矩阵。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "编排多步 agent 计划时，将父幂等作用域传播到子 tool，避免部分重放分叉不一致状态。为支持查询在 trace ID 旁记录键标识，勿记完整参数。安全评审应将金融 tool 缺失幂等视为与缺失认证同级的发布阻断，爆炸半径是客户资金而非日志噪音。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。"
+          ]
         }
       ]
     },
@@ -368,6 +602,45 @@
               "label": "AWS — Lambda idempotency",
               "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#services-sqs-batchfailurereporting"
             }
+          ]
+        },
+        {
+          "heading": "agent リトライ意味論向けキー設計",
+          "paragraphs": [
+            "LLM agent は応答 truncate、gateway タイムアウト、オーケストレータ mid-flight 再起動で tool call をリトライする。決済、チケット作成、在庫 hold など副作用は各試行で再生成される HTTP リクエスト ID ではなく論理操作スコープの idempotency key を受け入れる必要がある。",
+            "キーを tool 呼び出し ledger と共に永続化する。モデル turn、tool 名、正規化引数ハッシュ、tenant ID。メモリのみ dedupe は水平スケールで崩れる。ledger は二重課金調査で finance と support が見る監査 trail になる。",
+            "tool クラスごとに失効方針を定義する。read-only fetch はキーを早く捨てられる。金銭 transfer は processor  reconciliation 窓に合わせ数日保持しうる。human confirmation なしでは決して retry safe でない tool を on-call runbook 同一項目に記載する。"
+          ]
+        },
+        {
+          "heading": "HTTP とアプリケーション層を整合",
+          "paragraphs": [
+            "Stripe はクライアント供給キーヘッダ付き idempotent POST 意味論を文書化する。バックエンドが card processor でなくても内部 tool gateway で同パターンを mirror する。RFC 9110 は safe と idempotent HTTP メソッドを述べる。GET 風 tool が state を mutate してよいか議論でその語彙を使う。",
+            "replay で一貫 response body を返し、agent が duplicate を別 ID の新成功と誤読しないようにする。integration test は同一 payload を二度送り side effect カウンタが一度だけ増えることを assert する。mid-request で worker を kill する chaos test が unit test の gap を露わにする。",
+            "duplicate 抑制と genuine failure のメトリクスを expose する。silent drop は misconfigured key を隠す。loud failure は agent に loop より halt を教える。dashboard は tool と tenant で segment し abusive retry storm を早期検知する。"
+          ],
+          "links": [
+            {
+              "label": "Stripe — 冪等リクエスト",
+              "url": "https://docs.stripe.com/api/idempotent_requests"
+            },
+            {
+              "label": "RFC 9110 — HTTP 意味論",
+              "url": "https://www.rfc-editor.org/rfc/rfc9110.html"
+            },
+            {
+              "label": "OpenTelemetry — セマンティック規約",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "agent retry を生き延びる idempotency key",
+          "paragraphs": [
+            "agent は timeout や曖昧な model output 後に tool call を積極 retry；idempotency なしでは決済、ticket、hold が静かに重複。論理 side effect ごとに安定 key を生成し、restart で消える process memory ではなく invocation レコードと DB に persist。key は tenant/user scope と intent hash を組み合わせ、並列の正当 action は成功し duplicate は original response に collapse。",
+            "auto-retry safe な tool と human confirm 要る tool を runbook と OpenAPI に明記。integration test は同一 key の duplicate delivery と矛盾 payload を simulate—deterministic reject か no-op。partial failure—charge OK ledger fail—は同 key の reconciliation job で cleanup 時 double settlement 回避。",
+            "gateway は mutating route で domain 到達前に key 存在を enforce。replay hit、stale key、rejected duplicate メトリクスで TTL 調整；永久 key は storage 膨張、短すぎる expiry は double spend 再導入。key TTL を reconciliation 窓と card network 規則に合わせ、新 tool 統合 partner に matrix 公開。",
+            "multi-step agent plan では parent idempotency scope を child tool へ propagateし partial replay で inconsistent fork 禁止。support 用に trace ID 横に key identifier を log、full args は不可。financial tool の idempotency 欠如は auth 欠如と同格 release blocker—blast radius は customer money。"
           ]
         }
       ]

@@ -1,0 +1,645 @@
+{
+  "slug": "circuit-breakers-for-llm-vendor-failures",
+  "title": "Circuit Breakers for LLM Vendor Failures",
+  "excerpt": "Vendor brownouts rarely arrive as clean HTTP 503s. Without per-route circuit breakers, your gateway keeps burning user traffic—and budget—on a sick model path.",
+  "description": "Staff patterns for LLM gateway resilience: vendor-scoped breakers, fallback routes, half-open probes, and product-visible state when models degrade.",
+  "readingMinutes": 11,
+  "keywords": [
+    "circuit breaker",
+    "LLM gateway",
+    "resilience",
+    "fallback",
+    "vendor outage"
+  ],
+  "socialThreadTr": [
+    "Vendor brownout 503 değil; LLM gateway'de circuit breaker şart. 🧵",
+    "Fallback rotası ve half-open probe. Detay: https://berktugberke.com/tr/blogs/circuit-breakers-for-llm-vendor-failures"
+  ],
+  "sections": [
+    {
+      "heading": "Brownout is not a clean 503",
+      "paragraphs": [
+        "Providers sometimes stretch latency, truncate context windows, or return tool schemas that no longer validate—all while HTTP status stays green.",
+        "Define failure thresholds per vendor and route: consecutive timeouts, empty retrieval, or rising refusal rates should trip a breaker before user-visible harm spreads."
+      ]
+    },
+    {
+      "heading": "Pair breakers with routes and budgets",
+      "paragraphs": [
+        "Fallback should not always mean your most expensive model. Document a degraded tier: cheaper draft model, cached answer layer, or honest 'try again' with preserved idempotency keys.",
+        "When the breaker opens, show a clear degraded experience. Silent quality collapse generates support volume that looks like a product bug, not infra."
+      ],
+      "points": [
+        "Per-vendor breakers with explicit fallback routes and budgets",
+        "Half-open probes use cheap prompts, not full user traffic",
+        "Expose breaker state to product dashboards beside error rate",
+        "Game-day provider timeouts before launch week"
+      ]
+    },
+    {
+      "heading": "Half-open uses cheap probes",
+      "paragraphs": [
+        "Half-open recovery should send fixed-cost golden probes, not ten percent of live traffic. Probes must assert streaming completion and tool shape, not just HTTP 200.",
+        "If probes fail, return to open with backoff. Flapping breakers page on-call every few minutes and train teams to ignore alerts."
+      ]
+    },
+    {
+      "heading": "Make state visible to product",
+      "paragraphs": [
+        "Export breaker state as metrics with vendor and route labels. Product should see open/half-open beside error budgets during launches.",
+        "Inject vendor timeouts in game days before major releases. Runbooks need kill-switch owners and fallback ordering, not tribal knowledge."
+      ],
+      "links": [
+        {
+          "label": "Microsoft — Circuit breaker pattern",
+          "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+        },
+        {
+          "label": "Polly — Resilience strategies",
+          "url": "https://www.pollydocs.org/strategies/circuit-breaker.html"
+        }
+      ]
+    },
+    {
+      "heading": "Trip breakers on signals users feel",
+      "paragraphs": [
+        "Providers stretch latency, truncate context, or return tool JSON that fails validation while HTTP status remains two hundred. Define per-vendor thresholds for consecutive timeouts, empty completions, and rising refusal rates instead of waiting for hard five hundreds. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Keep breaker state in the gateway layer so retries do not multiply token spend after the route is already unhealthy. Metrics should label vendor, model route, and tenant tier for post-incident timelines. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Document who may manually force-open a breaker and under which customer commitments that is allowed. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window."
+      ]
+    },
+    {
+      "heading": "Align fallback with product promises",
+      "paragraphs": [
+        "Fallback ordering belongs in runbooks: cheaper draft models, cached retrieval tiers, or explicit retry messaging with stable idempotency keys. Silent quality collapse creates support load that looks like application bugs. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Half-open recovery uses golden probes with fixed token cost that assert streaming completion and tool shape, not a slice of live traffic. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Export open and half-open states beside error budgets so launch reviews discuss degraded mode honestly. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window."
+      ],
+      "links": [
+        {
+          "label": "Microsoft — Circuit breaker pattern",
+          "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+        },
+        {
+          "label": "Polly — Resilience strategies",
+          "url": "https://www.pollydocs.org/strategies/circuit-breaker.html"
+        },
+        {
+          "label": "OpenTelemetry — Semantic conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/"
+        }
+      ]
+    },
+    {
+      "heading": "Breaker operations the gateway team owns",
+      "paragraphs": [
+        "Vendor brownouts often look healthy on HTTP dashboards while latency tails and empty tool payloads erode trust. Scope circuit breakers per vendor, model route, and tenant tier so one sick embedding path does not drain the entire gateway budget. Trip on consecutive timeouts, schema validation failures, and rising refusal rates—not only five hundreds. Export open, half-open, and closed state as metrics product can read beside error budgets during launch week. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Fallback routes need explicit ordering and cost ceilings documented in runbooks, not tribal knowledge in chat. Degraded tiers might use a cheaper draft model, cached retrieval answers, or a honest retry banner with preserved idempotency keys. When the breaker opens, surface degraded mode in the client so support tickets reference infra state instead of mystery quality drops. Game-day injections of provider timeouts should precede major releases. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Half-open recovery must use fixed-cost golden probes that assert streaming completion and tool shape, not a percentage of live traffic. Failed probes should return to open with exponential backoff to prevent alert flapping that trains on-call to ignore pages. Pair breaker transitions with spend caps so automatic retries do not double token bills while users still see errors. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Security and finance reviews should treat missing breakers on paid model routes as release blockers equal to missing authentication. Log breaker decisions with trace identifiers for post-incident timelines without storing full prompts. Quarterly reviews compare breaker thresholds against vendor incident history and tune per region when peering issues dominate failures. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first."
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "LLM Vendor Arızaları İçin Circuit Breaker",
+      "excerpt": "Model sağlayıcıları brownout yaşarken HTTP 503 dönmeyebilir; yanıtlar yavaşlar, tool şemaları kırılır ve faturalandırma devam eder. Circuit breaker olmadan gateway'iniz kullanıcı trafiğini sonsuza kadar bozuk rotaya iter.",
+      "description": "Staff kalıpları: vendor başına breaker, fallback model rotaları, half-open probing ve ürün ekiplerinin güvenebileceği görünür durum makineleri.",
+      "sections": [
+        {
+          "heading": "Vendor brownout HTTP 503 değildir",
+          "paragraphs": [
+            "Sağlayıcılar bazen yalnızca gecikmeyi artırır veya context penceresini sessizce kısaltır; retry döngüleri maliyeti katlar.",
+            "Her vendor için ayrı failure eşiği tanımlayın: ardışık timeout, boş retrieval veya artan refusal oranı breaker'ı açsın."
+          ]
+        },
+        {
+          "heading": "Breaker'ları rota ve bütçeyle eşle",
+          "paragraphs": [
+            "Fallback rotası her zaman en pahalı modele gitmemeli; düşük maliyetli bir draft model veya cached yanıt katmanı tanımlayın.",
+            "Breaker açıkken kullanıcıya net bir degraded mesajı gösterin; sessiz kalite düşüşü destek ticket'larını patlatır."
+          ],
+          "points": [
+            "Vendor başına circuit breaker ve fallback model rotası tanımlayın",
+            "Half-open geçişinde token bütçesi ve latency eşiği kullanın",
+            "Breaker durumunu ürün panosunda error rate ile birlikte gösterin",
+            "Chaos testlerinde provider timeout senaryolarını düzenli çalıştırın"
+          ]
+        },
+        {
+          "heading": "Half-open ucuz probe kullanır",
+          "paragraphs": [
+            "Half-open geçişinde tam trafiğin yüzde onunu değil, sabit maliyetli golden probe prompt'larını gönderin.",
+            "Probe başarısız olursa exponential backoff ile tekrar kapalı duruma dönün; flapping breaker'lar on-call'u yorar."
+          ]
+        },
+        {
+          "heading": "Durumu ürün panosunda göster",
+          "paragraphs": [
+            "Breaker durumunu Prometheus label'ları veya benzeri metriklerle export edin; PM'ler error budget ile aynı grafikte görsün.",
+            "Launch öncesi chaos testinde vendor timeout enjekte edin; runbook'ta kill switch ve fallback sırası yazılı olsun."
+          ],
+          "links": [
+            {
+              "label": "Microsoft — Circuit breaker pattern",
+              "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+            },
+            {
+              "label": "Polly — Resilience strategies",
+              "url": "https://www.pollydocs.org/strategies/circuit-breaker.html"
+            }
+          ]
+        },
+        {
+          "heading": "Kullanıcının hissettiği sinyallerde breaker açın",
+          "paragraphs": [
+            "Sağlayıcılar HTTP iki yüz kalırken gecikmeyi uzatır, context kısaltır veya validation'dan geçmeyen tool JSON döner. Sert beş yüzleri beklemeden vendor başına ardışık timeout, boş completion ve artan refusal eşikleri tanımlayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Breaker state gateway katmanında kalsın; rota zaten hasta iken retry token harcamasını çoğaltmasın. Metrikler vendor, model route ve tenant tier etiketlesin. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Breaker'ı kim manuel force-open edebilir ve hangi müşteri taahhütlerinde izinli olduğunu belgeleyin. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin."
+          ]
+        },
+        {
+          "heading": "Fallback'i ürün vaadiyle hizalayın",
+          "paragraphs": [
+            "Fallback sırası runbook'ta olmalı: ucuz draft model, cached retrieval veya idempotency key'li açık retry mesajı. Sessiz kalite çöküşü uygulama bug'ı gibi destek yükü yaratır. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Half-open recovery streaming completion ve tool shape assert eden sabit token maliyetli golden probe kullanır, live trafik dilimi değil. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Open ve half-open durumlarını error budget yanında export edin; launch review degrade modu dürüstçe tartışsın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin."
+          ],
+          "links": [
+            {
+              "label": "Microsoft — Circuit breaker pattern",
+              "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+            },
+            {
+              "label": "Polly — Dayanıklılık stratejileri",
+              "url": "https://www.pollydocs.org/strategies/circuit-breaker.html"
+            },
+            {
+              "label": "OpenTelemetry — Semantik kurallar",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "Gateway ekibinin sahiplendiği breaker operasyonu",
+          "paragraphs": [
+            "Vendor brownout'ları HTTP dashboard'da sağlıklı görünürken latency kuyruğu ve boş tool payload güveni aşındırır. Circuit breaker'ları vendor, model route ve tenant tier bazında scope edin; tek hasta embedding yolu tüm gateway bütçesini boşaltmasın. Ardışık timeout, schema validation failure ve artan refusal oranında açın—yalnızca beş yüzlerde değil. Open, half-open ve closed durumunu launch haftasında error budget yanında okunabilir metrik olarak export edin.",
+            "Fallback rotalarının sırası ve maliyet tavanları runbook'ta yazılı olsun, chat'teki tribal knowledge'da kalmasın. Degrade katmanı ucuz draft model, cached retrieval veya idempotency key koruyan dürüst retry banner olabilir. Breaker açıkken client'ta degrade modu gösterin; destek ticket'ları gizemli kalite düşüşü yerine infra state referans etsin. Büyük release öncesi provider timeout enjeksiyonlu game-day şart.",
+            "Half-open recovery canlı trafiğin yüzdesi değil, streaming completion ve tool shape assert eden sabit maliyetli golden probe kullanmalı. Probe fail olursa exponential backoff ile open'a dönün; alert flapping on-call'u page'leri ignore etmeye iter. Breaker geçişlerini spend cap ile eşleyin; otomatik retry kullanıcı hata görürken token faturasını ikiye katlamasın.",
+            "Güvenlik ve finans review'ları ücretli model route'larında eksik breaker'ı eksik auth kadar release blocker saymalı. Breaker kararlarını post-incident timeline için trace ID ile loglayın, tam prompt saklamayın. Çeyreklik review breaker eşiklerini vendor incident geçmişiyle kıyaslasın; peering sorunları baskınsa bölge bazında tune edin."
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Circuit Breaker bei LLM-Vendor-Ausfällen",
+      "excerpt": "Model-Anbieter brownouten oft ohne HTTP 503: Latenz steigt, Tool-Schemas brechen, Billing läuft weiter. Ohne Circuit Breaker schiebt Ihr Gateway Nutzertraffic endlos in kaputte Routen.",
+      "description": "Staff-Muster: Breaker pro Vendor, Fallback-Routen, Half-Open-Probes und sichtbare Zustandsmaschinen für Produktteams.",
+      "sections": [
+        {
+          "heading": "Vendor-Brownout ist kein 503",
+          "paragraphs": [
+            "Anbieter erhöhen manch nur Latenz oder kürzen Context leise; Retry-Schleifen verdoppeln Kosten.",
+            "Pro Vendor eigene Failure-Schwelle: Timeouts, leere Retrieval, steigende Refusal-Rate öffnen den Breaker."
+          ]
+        },
+        {
+          "heading": "Breaker an Route und Budget koppeln",
+          "paragraphs": [
+            "Fallback nicht immer zum teuersten Modell; günstiges Draft-Modell oder Cache-Tier definieren.",
+            "Bei offenem Breaker klare Degraded-Message; stille Qualitätsabfälle sprengen Support."
+          ],
+          "points": [
+            "Circuit Breaker und Fallback-Route pro Vendor",
+            "Half-Open mit Token-Budget und Latenz-Schwelle",
+            "Breaker-Status im Produkt-Dashboard neben Error Rate",
+            "Provider-Timeout in Chaos-Tests regelmäßig"
+          ]
+        },
+        {
+          "heading": "Half-Open nutzt günstige Probes",
+          "paragraphs": [
+            "Half-Open sendet keine zehn Prozent Traffic, sondern feste günstige Golden-Probes.",
+            "Schlägt Probe fehl, zurück zu Closed mit Backoff; flapping Breaker ermüdet On-Call."
+          ]
+        },
+        {
+          "heading": "Status im Produkt-Dashboard zeigen",
+          "paragraphs": [
+            "Breaker-State als Metriken exportieren; PMs sehen ihn neben Error Budget.",
+            "Vor Launch Chaos-Test mit Vendor-Timeout; Runbook listet Kill-Switch und Fallback-Reihenfolge."
+          ],
+          "links": [
+            {
+              "label": "Microsoft — Circuit breaker pattern",
+              "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+            },
+            {
+              "label": "Polly — Resilience strategies",
+              "url": "https://www.pollydocs.org/strategies/circuit-breaker.html"
+            }
+          ]
+        },
+        {
+          "heading": "Breaker auf Nutzer-spürbaren Signalen",
+          "paragraphs": [
+            "Provider strecken Latenz, kürzen Context oder liefern Tool-JSON das Validation failt bei HTTP 200. Pro Vendor Schwellen für Timeouts, leere Completions, steigende Refusals statt harter 500. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Breaker-State in Gateway halten damit Retries Token-Spend nicht multiplizieren wenn Route krank ist. Metriken mit Vendor, Modell-Route, Tenant-Tier labeln. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Dokumentieren wer Breaker manuell force-open darf und unter welchen Kundenverpflichtungen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen."
+          ]
+        },
+        {
+          "heading": "Fallback an Produktversprechen ausrichten",
+          "paragraphs": [
+            "Fallback-Reihenfolge im Runbook: günstigeres Draft-Modell, cached Retrieval oder explizite Retry-Messages mit Idempotency-Keys. Stille Quality-Collapse erzeugt Support-Last wie App-Bugs. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Half-Open nutzt Golden Probes mit fixen Token-Kosten für Streaming- und Tool-Shape-Asserts, nicht Live-Traffic-Anteil. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Open und Half-Open neben Error Budgets exportieren für ehrliche Launch-Reviews. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen."
+          ],
+          "links": [
+            {
+              "label": "Microsoft — Circuit-Breaker-Pattern",
+              "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+            },
+            {
+              "label": "Polly — Resilienzstrategien",
+              "url": "https://www.pollydocs.org/strategies/circuit-breaker.html"
+            },
+            {
+              "label": "OpenTelemetry — Semantische Konventionen",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "Breaker-Betrieb im Gateway-Team",
+          "paragraphs": [
+            "Vendor-Brownouts wirken auf HTTP-Dashboards gesund, während Latenz-Tails und leere Tool-Payloads Vertrauen aushöhlen. Circuit Breaker pro Vendor, Modell-Route und Tenant-Tier scopen, damit ein kranker Embedding-Pfad nicht das gesamte Gateway-Budget leert. Öffnen bei Timeouts, Schema-Failures und steigenden Refusal-Rates—not only 500. Open, Half-Open und Closed als Metriken exportieren, die Product neben Error Budgets liest.",
+            "Fallback-Routen brauchen dokumentierte Reihenfolge und Cost-Ceiling in Runbooks, kein Tribal Knowledge. Degraded Tier: günstigeres Draft-Modell, gecachte Retrieval-Antworten oder ehrliches Retry-Banner mit Idempotency-Keys. Bei offenem Breaker Degraded Mode im Client zeigen. Game-Days mit Provider-Timeouts vor Major Releases. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Half-Open-Recovery nutzt fixkostengünstige Golden Probes mit Streaming- und Tool-Shape-Asserts, nicht Prozent Live-Traffic. Fehlgeschlagene Probes zurück zu Open mit Exponential Backoff gegen Alert-Flapping. Breaker-Übergänge mit Spend Caps koppeln, damit Retries Token-Rechnung nicht verdoppeln. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Security- und Finance-Reviews: fehlende Breaker auf Paid-Model-Routes sind Release-Blocker wie fehlende Auth. Breaker-Entscheidungen mit Trace-IDs loggen ohne volle Prompts. Quarterly Reviews vergleichen Schwellen mit Vendor-Incident-Historie und tunen pro Region bei Peering-Dominanz. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein."
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Circuit breaker pour pannes fournisseur LLM",
+      "excerpt": "Les fournisseurs de modèles brownoutent sans HTTP 503 : latence, schémas tool cassés, facturation continue. Sans circuit breaker, la gateway pousse le trafic vers des routes mortes.",
+      "description": "Patterns staff : breaker par fournisseur, routes fallback, probes half-open et machine d'état visible pour le produit.",
+      "sections": [
+        {
+          "heading": "Brownout vendor ≠ 503",
+          "paragraphs": [
+            "Parfois seule la latence monte ou le contexte se réduit silencieusement ; les retries doublent la facture.",
+            "Seuil d'échec par fournisseur : timeouts, retrieval vide, refus en hausse ouvrent le breaker."
+          ]
+        },
+        {
+          "heading": "Coupler breaker à route et budget",
+          "paragraphs": [
+            "Le fallback n'est pas toujours le modèle le plus cher ; draft cheap ou couche cache.",
+            "Breaker ouvert : message dégradé clair ; baisse silencieuse = pic tickets support."
+          ],
+          "points": [
+            "Circuit breaker et route fallback par fournisseur",
+            "Half-open avec budget tokens et seuil latence",
+            "État breaker visible à côté du taux d'erreur produit",
+            "Scénarios timeout provider en chaos tests réguliers"
+          ]
+        },
+        {
+          "heading": "Half-open avec probes bon marché",
+          "paragraphs": [
+            "Half-open n'envoie pas dix pour cent du trafic mais des golden probes à coût fixe.",
+            "Probe échouée : retour closed avec backoff ; breaker qui clignote épuise l'on-call."
+          ]
+        },
+        {
+          "heading": "État visible sur dashboard produit",
+          "paragraphs": [
+            "Exporter l'état breaker en métriques ; PMs le voient à côté de l'error budget.",
+            "Chaos test timeout vendor avant launch ; runbook avec kill switch et ordre fallback."
+          ],
+          "links": [
+            {
+              "label": "Microsoft — Circuit breaker pattern",
+              "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+            },
+            {
+              "label": "Polly — Resilience strategies",
+              "url": "https://www.pollydocs.org/strategies/circuit-breaker.html"
+            }
+          ]
+        },
+        {
+          "heading": "Ouvrir sur signaux ressentis par l'utilisateur",
+          "paragraphs": [
+            "Les providers allongent latence, tronquent context ou renvoient JSON tool invalide avec HTTP 200. Seuils par vendor pour timeouts consécutifs, completions vides, refus croissants plutôt qu'attendre 500 durs. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "État breaker dans gateway pour que retries ne multiplient pas dépense tokens quand route malade. Métriques label vendor, route modèle, tier tenant. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Documenter qui peut force-open manuellement et sous quels engagements client. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement."
+          ]
+        },
+        {
+          "heading": "Aligner fallback sur promesses produit",
+          "paragraphs": [
+            "Ordre fallback dans runbook : modèle draft moins cher, retrieval cache ou message retry explicite avec clés idempotency. Effondrement qualité silencieux charge support comme bugs app. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Half-open utilise sondes golden coût token fixe assert streaming et forme tool, pas tranche trafic live. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Exporter open et half-open à côté error budgets pour reviews launch honnêtes. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement."
+          ],
+          "links": [
+            {
+              "label": "Microsoft — Circuit breaker",
+              "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+            },
+            {
+              "label": "Polly — Stratégies résilience",
+              "url": "https://www.pollydocs.org/strategies/circuit-breaker.html"
+            },
+            {
+              "label": "OpenTelemetry — Conventions sémantiques",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "Exploitation des breakers côté gateway",
+          "paragraphs": [
+            "Les brownouts vendor semblent sains sur les dashboards HTTP pendant que les queues de latence et payloads tool vides érodent la confiance. Scopez les circuit breakers par vendor, route modèle et tier tenant pour qu'un chemin embedding malade ne vide pas tout le budget gateway. Ouvrez sur timeouts consécutifs, échecs validation schéma et refus croissants—pas seulement 500. Exportez états open, half-open et closed en métriques lisibles par le produit à côté des error budgets.",
+            "Les routes fallback exigent ordre explicite et plafonds coût documentés dans runbooks, pas connaissance tribale. Tier dégradé : modèle draft moins cher, réponses retrieval en cache ou bannière retry honnête avec clés idempotency. Breaker ouvert : mode dégradé visible client pour que support référence l'état infra. Game-days avec timeouts provider avant grosses releases. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Recovery half-open utilise sondes golden coût fixe assert completion streaming et forme tool, pas pourcentage trafic live. Sondes échouées retour open avec backoff exponentiel contre flapping alertes. Couplez transitions breaker avec plafonds spend pour que retries automatiques ne doublent pas la facture tokens. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Revues sécurité et finance : breakers manquants sur routes modèle payantes bloquent release comme auth manquante. Logger décisions breaker avec trace IDs sans prompts complets. Revues trimestrielles comparent seuils à historique incidents vendor et ajustent par région si peering domine. Consignez owner, date de revue et rollback dans le même ticket de changement."
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Circuit breaker per failure vendor LLM",
+      "excerpt": "I vendor modelli spesso brownout senza HTTP 503: latenza, schema tool rotti, billing attivo. Senza circuit breaker il gateway spinge traffico in route rotte all'infinito.",
+      "description": "Pattern staff: breaker per vendor, route fallback, probe half-open e macchina a stati visibile al prodotto.",
+      "sections": [
+        {
+          "heading": "Brownout vendor non è 503",
+          "paragraphs": [
+            "A volte sale solo la latenza o si accorcia il context in silenzio; i retry raddoppiano il costo.",
+            "Soglia failure per vendor: timeout, retrieval vuoto, refusal in crescita aprono il breaker."
+          ]
+        },
+        {
+          "heading": "Accoppiare breaker a route e budget",
+          "paragraphs": [
+            "Il fallback non è sempre il modello più costoso; draft economico o tier cache.",
+            "Breaker aperto: messaggio degraded chiaro; calo silenzioso esplode il supporto."
+          ],
+          "points": [
+            "Circuit breaker e route fallback per vendor",
+            "Half-open con budget token e soglia latenza",
+            "Stato breaker in dashboard prodotto accanto error rate",
+            "Timeout provider in chaos test periodici"
+          ]
+        },
+        {
+          "heading": "Half-open usa probe economiche",
+          "paragraphs": [
+            "Half-open non manda il dieci per cento del traffico ma golden probe a costo fisso.",
+            "Probe fallita: ritorno closed con backoff; breaker che flappa stanca l'on-call."
+          ]
+        },
+        {
+          "heading": "Stato visibile in dashboard prodotto",
+          "paragraphs": [
+            "Esportare stato breaker come metriche; PM lo vedono accanto all'error budget.",
+            "Chaos test timeout vendor pre-launch; runbook con kill switch e ordine fallback."
+          ],
+          "links": [
+            {
+              "label": "Microsoft — Circuit breaker pattern",
+              "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+            },
+            {
+              "label": "Polly — Resilience strategies",
+              "url": "https://www.pollydocs.org/strategies/circuit-breaker.html"
+            }
+          ]
+        },
+        {
+          "heading": "Aprire breaker su segnali percepiti dagli utenti",
+          "paragraphs": [
+            "I provider allungano latenza, troncano context o restituiscono JSON tool non valido con HTTP 200. Soglie per vendor su timeout consecutivi, completion vuote, refusal crescenti invece di attendere 500 duri. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Stato breaker nel gateway così i retry non moltiplicano spend token quando la route è malata. Metriche con label vendor, route modello, tier tenant. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Documentare chi può force-open manualmente e sotto quali impegni cliente. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch."
+          ]
+        },
+        {
+          "heading": "Allineare fallback alle promesse prodotto",
+          "paragraphs": [
+            "Ordine fallback nel runbook: modello draft più economico, retrieval in cache o messaggio retry esplicito con chiavi idempotency. Collasso qualità silenzioso genera carico supporto come bug app. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Half-open usa golden probe a costo token fisso che assertano streaming e forma tool, non fetta traffico live. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Esportare open e half-open accanto agli error budget per review launch oneste. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch."
+          ],
+          "links": [
+            {
+              "label": "Microsoft — Circuit breaker",
+              "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+            },
+            {
+              "label": "Polly — Strategie resilienza",
+              "url": "https://www.pollydocs.org/strategies/circuit-breaker.html"
+            },
+            {
+              "label": "OpenTelemetry — Convenzioni semantiche",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "Operatività breaker del team gateway",
+          "paragraphs": [
+            "I brownout vendor sembrano sani sulle dashboard HTTP mentre code di latenza e payload tool vuoti erodono fiducia. Scope circuit breaker per vendor, route modello e tier tenant così un path embedding malato non svuota tutto il budget gateway. Aprite su timeout consecutivi, failure validazione schema e refusal in crescita—non solo 500. Esportate stati open, half-open e closed come metriche leggibili dal product accanto agli error budget.",
+            "Le route fallback richiedono ordine esplicito e ceiling di costo documentati in runbook, non tribal knowledge. Tier degradato: modello draft più economico, risposte retrieval in cache o banner retry onesto con chiavi idempotency. Breaker aperto: mostrare modalità degradata nel client così il supporto cita lo stato infra. Game-day con timeout provider prima delle major release. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Recovery half-open usa golden probe a costo fisso che assertano streaming completion e forma tool, non percentuale traffico live. Probe fallite tornano open con backoff esponenziale contro flapping alert. Accoppiate transizioni breaker con spend cap così i retry automatici non raddoppiano la fattura token. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Review security e finance: breaker mancanti su route modello a pagamento bloccano release come auth mancante. Loggare decisioni breaker con trace ID senza prompt completi. Review trimestrali confrontano soglie con storico incident vendor e tunano per regione se domina peering. Registrate owner, data di review e rollback nello stesso ticket di change."
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "LLM 供应商故障的断路器",
+      "excerpt": "模型供应商 brownout 时未必返回 HTTP 503：延迟升高、tool schema 损坏、计费仍在继续。没有断路器，网关会把用户流量 endless 推入坏路由。",
+      "description": "Staff 模式：按供应商的 breaker、降级路由、半开探测，以及产品团队可见的状态机。",
+      "sections": [
+        {
+          "heading": "供应商 brownout 不是 503",
+          "paragraphs": [
+            "有时只升延迟或悄悄缩短 context；重试循环会翻倍成本。",
+            "每个供应商独立失败阈值：连续 timeout、空检索、拒绝率上升应打开 breaker。"
+          ]
+        },
+        {
+          "heading": "breaker 绑定路由与预算",
+          "paragraphs": [
+            "降级不必总是最贵模型；定义低成本 draft 或缓存层。",
+            "breaker 打开时给用户明确降级提示；静默质量下滑会打爆工单。"
+          ],
+          "points": [
+            "按供应商配置断路器与降级模型路由",
+            "半开状态用 token 预算与延迟阈值",
+            "产品看板同时展示 breaker 状态与错误率",
+            "混沌测试定期演练供应商超时"
+          ]
+        },
+        {
+          "heading": "半开用廉价探测",
+          "paragraphs": [
+            "半开不要放全量 10% 流量，用固定成本的 golden probe prompt。",
+            "探测失败则带 backoff 回到关闭；breaker 抖动会拖垮 on-call。"
+          ]
+        },
+        {
+          "heading": "状态展示在产品看板",
+          "paragraphs": [
+            "导出 breaker 状态指标；PM 与 error budget 同屏查看。",
+            "上线前混沌测试注入供应商 timeout；runbook 写清 kill switch 与降级顺序。"
+          ],
+          "links": [
+            {
+              "label": "Microsoft — Circuit breaker pattern",
+              "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+            },
+            {
+              "label": "Polly — Resilience strategies",
+              "url": "https://www.pollydocs.org/strategies/circuit-breaker.html"
+            }
+          ]
+        },
+        {
+          "heading": "在用户可感信号上跳闸",
+          "paragraphs": [
+            "供应商在 HTTP 仍为 200 时拉长延迟、截断 context 或返回无法通过校验的 tool JSON。按 vendor 定义连续 timeout、空 completion 与拒绝率上升阈值，而非等待硬 500。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "breaker 状态应留在 gateway 层，避免路由已不健康时 retry 放大 token 花费。指标应标注 vendor、模型路由与 tenant tier。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "记录谁可手动 force-open breaker 及在哪些客户承诺下允许。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。"
+          ]
+        },
+        {
+          "heading": "让 fallback 与产品承诺一致",
+          "paragraphs": [
+            "fallback 顺序写入 runbook：更便宜的 draft 模型、缓存 retrieval 或带稳定幂等键的明确重试提示。静默质量下滑会产生像应用 bug 一样的支持负载。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "half-open 使用固定 token 成本的 golden 探针断言流式完成与 tool 形态，而非 live 流量切片。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "在 error budget 旁导出 open 与 half-open，使发布评审诚实讨论降级模式。 请在下次生产评审中复核这一点，指定负责人并关联带日期的整改工单。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。"
+          ],
+          "links": [
+            {
+              "label": "Microsoft — 断路器模式",
+              "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+            },
+            {
+              "label": "Polly — 弹性策略",
+              "url": "https://www.pollydocs.org/strategies/circuit-breaker.html"
+            },
+            {
+              "label": "OpenTelemetry — 语义约定",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "网关团队负责的 breaker 运维",
+          "paragraphs": [
+            "供应商 brownout 在 HTTP 仪表盘上仍显健康，而延迟长尾与空 tool payload 却在侵蚀信任。按供应商、模型路由与租户 tier 划分 circuit breaker，避免单条 embedding 路径拖垮整个网关预算。在连续 timeout、schema 校验失败与拒绝率上升时打开——而非只看 500。将 open、half-open、closed 导出为产品可在发布周与 error budget 同看的指标。",
+            "fallback 路由须在 runbook 中写明顺序与成本上限，而非口口相传。降级层可用更便宜的 draft 模型、缓存检索答案，或保留幂等键的诚实重试提示。breaker 打开时在客户端展示降级模式，让工单引用 infra 状态而非神秘的质量下滑。重大发布前应做注入供应商 timeout 的 game-day。",
+            "half-open 恢复须用固定成本的 golden 探针断言流式完成与 tool 形态，而非 live 流量比例。探针失败应指数退避回到 open，避免告警抖动让 on-call 忽视 paging。breaker 切换应配对 spend cap，防止自动 retry 在用户仍见错时翻倍 token 账单。",
+            "安全与财务评审应将付费模型路由缺失 breaker 视为与缺失认证同级的发布阻断。用 trace ID 记录 breaker 决策，勿存完整 prompt。季度评审将阈值与供应商事故史对照，peering 主导失败时按区域调参。"
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "LLMベンダー障害向けサーキットブレーカー",
+      "excerpt": "モデルベンダーのブラウンアウトはHTTP 503にならないことが多い：レイテンシ上昇、ツールスキーマ破損、課金継続。ブレーカーなしではゲートウェイが壊れたルートへトラフィックを押し続ける。",
+      "description": "Staffパターン：ベンダー別ブレーカー、フォールバックルート、ハーフオープンプローブ、プロダクト向け可視状態機械。",
+      "sections": [
+        {
+          "heading": "ベンダーブラウンアウトは503ではない",
+          "paragraphs": [
+            "レイテンシだけ上がる、コンテキストが静かに短くなることも；リトライでコスト倍増。",
+            "ベンダーごとに失敗閾値：連続timeout、空retrieval、拒否率上昇でブレーカーオープン。"
+          ]
+        },
+        {
+          "heading": "ブレーカーをルートと予算に結合",
+          "paragraphs": [
+            "フォールバックは常に最高価モデルではない；低コストdraftやキャッシュ層を定義。",
+            "オープン時は明確なdegradedメッセージ；静かな品質低下はサポート急増。"
+          ],
+          "points": [
+            "ベンダーごとにサーキットブレーカーとフォールバックルート",
+            "ハーフオープンはトークン予算とレイテンシ閾値",
+            "ブレーカー状態をプロダクトダッシュボードでエラー率と併記",
+            "カオステストでプロバイダタイムアウトを定期実行"
+          ]
+        },
+        {
+          "heading": "ハーフオープンは安価プローブ",
+          "paragraphs": [
+            "ハーフオープンは全トラフィック10%ではなく固定コストのゴールデンプローブ。",
+            "プローブ失敗はbackoffでclosedへ；フラップはオンコールを消耗。"
+          ]
+        },
+        {
+          "heading": "状態をプロダクトダッシュボードに",
+          "paragraphs": [
+            "ブレーカー状態をメトリクス出力；PMはエラーバジェットと同グラフ。",
+            "ローンチ前カオスでベンダーtimeout；runbookにkill switchとフォールバック順。"
+          ],
+          "links": [
+            {
+              "label": "Microsoft — Circuit breaker pattern",
+              "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+            },
+            {
+              "label": "Polly — Resilience strategies",
+              "url": "https://www.pollydocs.org/strategies/circuit-breaker.html"
+            }
+          ]
+        },
+        {
+          "heading": "ユーザーが感じる signal で breaker を open",
+          "paragraphs": [
+            "provider は HTTP 200 のまま latency 延伸、context  truncate、validation fail する tool JSON を返す。hard 500 を待たず vendor ごとに consecutive timeout、空 completion、refusal 増加 threshold。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "breaker state は gateway 層に置き、route が sick のとき retry が token spend を増幅しない。metric は vendor、model route、tenant tier label。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "誰が manual force-open でき、どの customer commitment 下で許可か文書化。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。"
+          ]
+        },
+        {
+          "heading": "fallback を product promise に align",
+          "paragraphs": [
+            "fallback 順序は runbook：安い draft model、cached retrieval、stable idempotency key 付き explicit retry message。silent quality collapse は app bug 風 support load。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "half-open は fixed token cost golden probe で streaming completion と tool shape assert、live traffic slice ではない。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "open と half-open を error budget 横に export し launch review が degraded mode を正直に議論。 次回の production review で再確認し、オーナーを割り当て、日付付き remediation チケットを紐付けてください。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。"
+          ],
+          "links": [
+            {
+              "label": "Microsoft — Circuit breaker",
+              "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker"
+            },
+            {
+              "label": "Polly — Resilience strategies",
+              "url": "https://www.pollydocs.org/strategies/circuit-breaker.html"
+            },
+            {
+              "label": "OpenTelemetry — セマンティック規約",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "gateway チームが担う breaker 運用",
+          "paragraphs": [
+            "vendor brownout は HTTP dashboard では healthy に見え、latency tail と空 tool payload が信頼を削ります。circuit breaker を vendor、model route、tenant tier ごとに scope し、1 本の sick embedding path が gateway 予算全体を drain しないようにする。連続 timeout、schema validation failure、refusal 増加で open—500 だけでなく。open、half-open、closed を product が launch 週に error budget 横で読める metric として export。",
+            "fallback route は runbook に明示順序と cost ceiling を文書化し、tribal knowledge にしない。degraded tier は安い draft model、cached retrieval、idempotency key を保つ honest retry banner。breaker open 時は client に degraded mode を見せ、support が謎の quality drop ではなく infra state を参照。major release 前に provider timeout 注入 game-day。",
+            "half-open recovery は live 流量の割合ではなく、streaming completion と tool shape を assert する fixed-cost golden probe。probe fail は exponential backoff で open へ戻し alert flapping を防ぐ。breaker 遷移は spend cap と pair し、auto retry が token 請求を二重化しない。",
+            "security と finance review では paid model route の breaker 欠如を auth 欠如と同格 release blocker とする。breaker 判断は trace ID で log、full prompt は保存しない。四半期 review で threshold を vendor incident 履歴と比較し、peering 支配時は region 別 tune。"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,645 @@
+{
+  "slug": "secure-webhook-ingestion-patterns",
+  "title": "Secure Webhook Ingestion Patterns",
+  "excerpt": "Webhook endpoints are public and at-least-once by design. Without signature verification and idempotent handlers, duplicate deliveries become double charges and duplicate CRM rows.",
+  "description": "Staff patterns for secure webhook ingestion: HMAC validation, timestamp skew, replay protection, tenant rate limits, and DLQ visibility for failed deliveries.",
+  "readingMinutes": 10,
+  "keywords": [
+    "webhooks",
+    "HMAC",
+    "idempotency",
+    "security",
+    "event ingestion"
+  ],
+  "socialThreadTr": [
+    "Webhook duplicate delivery idempotency olmadan çift ücret demek. 🧵",
+    "HMAC, replay store, DLQ. Detay: https://berktugberke.com/tr/blogs/secure-webhook-ingestion-patterns"
+  ],
+  "sections": [
+    {
+      "heading": "Webhooks are a public surface",
+      "paragraphs": [
+        "Providers retry aggressively; load balancers deliver duplicate POSTs even when your handler succeeded the first time.",
+        "Verify signatures on the raw request body. Parsing JSON first breaks canonicalization and invites subtle bypass bugs."
+      ]
+    },
+    {
+      "heading": "HMAC and replay stores are mandatory",
+      "paragraphs": [
+        "Keep timestamp acceptance windows tight and store seen event ids to block replays.",
+        "Per-tenant rate limits and maximum body sizes defend against DDoS and accidental megabyte payloads."
+      ],
+      "points": [
+        "Require HMAC signatures, timestamp skew limits, and replay stores",
+        "Separate body size and rate limits per tenant",
+        "Make handlers idempotent for safe duplicate delivery",
+        "Surface failed deliveries through DLQ metrics and alerts"
+      ]
+    },
+    {
+      "heading": "Handlers must be idempotent",
+      "paragraphs": [
+        "Do not return 200 until side effects are deduplicated with an idempotency or natural key.",
+        "Use event version fields to handle out-of-order delivery without corrupting state."
+      ]
+    },
+    {
+      "heading": "DLQ metrics expose failure",
+      "paragraphs": [
+        "Route persistent failures to a DLQ and alert on age and depth—not only on HTTP 5xx from your edge.",
+        "Provide a manual replay tool with audit logging so support cannot silently re-run finance events."
+      ],
+      "links": [
+        {
+          "label": "Stripe — Webhook signatures",
+          "url": "https://stripe.com/docs/webhooks/signatures"
+        },
+        {
+          "label": "GitHub — Validating webhook deliveries",
+          "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+        }
+      ]
+    },
+    {
+      "heading": "Authenticate before you parse",
+      "paragraphs": [
+        "Signature verification must run on raw bytes before JSON parsers mutate the body. Enforce timestamp skew windows and store delivery identifiers in a replay table with TTL aligned to partner documentation. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Per-tenant rate limits and maximum body sizes at the edge protect workers from volumetric abuse by a single integration. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Return four hundred one for authentication failures and four hundred twenty-two for schema violations so on-call can triage without reading secrets in chat. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window."
+      ]
+    },
+    {
+      "heading": "Make retries safe for money paths",
+      "paragraphs": [
+        "Handlers commit outcomes keyed by partner idempotency tokens before returning two hundred. Document which events touch money, inventory, or identity and require human review on ambiguous retries. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "DLQ depth, oldest message age, and failure signatures by schema version should page owners, not sit in silent buckets. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Classify webhook fields before shipping them to shared observability backends; PCI and health payloads may need dedicated ingestion accounts. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window."
+      ],
+      "links": [
+        {
+          "label": "Stripe — Webhook signatures",
+          "url": "https://stripe.com/docs/webhooks/signatures"
+        },
+        {
+          "label": "GitHub — Validating webhook deliveries",
+          "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+        },
+        {
+          "label": "OWASP — Webhook security",
+          "url": "https://cheatsheetseries.owasp.org/cheatsheets/Webhook_Security_Cheat_Sheet.html"
+        }
+      ]
+    },
+    {
+      "heading": "Ingestion hardening beyond signature checks",
+      "paragraphs": [
+        "HMAC verification is necessary but not sufficient when replay windows are unbounded or body parsers execute before authentication. Enforce timestamp skew limits, constant-time signature comparison, and a durable replay store keyed by delivery identifier. Reject oversize bodies at the edge with per-tenant rate limits so one noisy partner cannot exhaust workers. Retain redacted raw bodies only in encrypted buffers with short TTL. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Handlers must be idempotent because vendors retry aggressively on any ambiguous response. Persist processing outcomes with the same idempotency key the partner supplies, returning two hundred only after side effects commit. Separate verification failures—four hundred one—from business validation failures so on-call can distinguish attacks from schema drift without reading raw payloads in chat. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Dead-letter queues need metrics, not silent S3 folders. Alert on DLQ growth rate, oldest message age, and repeated failure signatures tied to schema versions. Run contract tests against sample webhook fixtures in CI whenever you change parsing code. Penetration tests should include replayed signed bodies from captured traffic stored in redacted fixtures. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Document data classification for webhook fields before logging them to general observability backends. PCI and PII-bearing events may require dedicated ingestion accounts and shorter retention. Product managers requesting new webhook types owe a threat model covering spoofing, replay, and volumetric abuse, signed off before endpoints go public in partner documentation. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first."
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Güvenli Webhook Alma Kalıpları",
+      "excerpt": "Webhook uçları genelde halka açıktır ve en az bir kez teslimat garantisi vardır. İmza doğrulaması ve idempotency olmadan duplicate event'ler finans ve CRM'de çift yan etki yaratır.",
+      "description": "Staff webhook ingestion: HMAC, timestamp skew, replay koruması, tenant rate limit ve DLQ görünürlüğü.",
+      "sections": [
+        {
+          "heading": "Webhook herkese açık bir yüzeydir",
+          "paragraphs": [
+            "Sağlayıcılar aynı event'i retry eder; siz de load balancer arkasında duplicate POST alırsınız.",
+            "Raw body üzerinde imza doğrulayın; JSON parse sonrası canonicalization imzayı kırar."
+          ]
+        },
+        {
+          "heading": "HMAC ve replay store zorunlu",
+          "paragraphs": [
+            "Timestamp penceresi dar tutulmalı; replay store eski event id'lerini reddetsin.",
+            "Tenant başına rate limit ve max body boyutu DDoS ve fat-finger payload'lara karşı korur."
+          ],
+          "points": [
+            "HMAC imza, timestamp skew ve replay store zorunlu kılın",
+            "Webhook body boyutu ve rate limit'i tenant bazında ayırın",
+            "Idempotent handler ile duplicate delivery'yi güvenli yapın",
+            "Başarısız delivery'leri DLQ ve alert ile görünür kılın"
+          ]
+        },
+        {
+          "heading": "Handler'lar idempotent olmalı",
+          "paragraphs": [
+            "Handler side effect'i idempotency key veya natural key ile dedupe etmeden 200 dönmeyin.",
+            "Out-of-order delivery için event versiyon alanı kullanın."
+          ]
+        },
+        {
+          "heading": "DLQ metrikleri ile başarısızlık görünür",
+          "paragraphs": [
+            "Kalıcı başarısız delivery'leri DLQ'ya yazın ve yaş, derinlik metrikleri ile alert kurun.",
+            "Manuel replay aracı audit log ile birlikte sunulmalı."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Webhook signatures",
+              "url": "https://stripe.com/docs/webhooks/signatures"
+            },
+            {
+              "label": "GitHub — Validating webhook deliveries",
+              "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+            }
+          ]
+        },
+        {
+          "heading": "Parse etmeden önce authenticate",
+          "paragraphs": [
+            "İmza doğrulama JSON parser body'yi değiştirmeden raw byte üzerinde çalışmalı. Timestamp skew penceresi zorunlu kılın; delivery id'leri partner dokümantasyonu TTL'siyle replay tablosunda tutun. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Edge'de tenant başına rate limit ve max body size tek entegrasyonun volumetric abuse'ünü worker'lardan uzak tutar. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Auth failure için dört yüz bir, schema ihlali için dört yüz yirmi iki dönün; on-call chat'te secret okumadan triage edebilsin. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin."
+          ]
+        },
+        {
+          "heading": "Retry'leri para yollarında güvenli kılın",
+          "paragraphs": [
+            "Handler'lar partner idempotency token'ı ile outcome commit edip sonra iki yüz dönsün. Para, stok veya kimlik dokunan event'leri yazın; belirsiz retry'de insan review şart. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "DLQ derinliği, en eski mesaj yaşı ve schema versiyon failure imzası owner'ı pages etsin, sessiz bucket'ta kalmasın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Paylaşılan observability'ye göndermeden webhook alanlarını sınıflandırın; PCI ve health payload ayrı ingestion account gerektirebilir. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Webhook signatures",
+              "url": "https://stripe.com/docs/webhooks/signatures"
+            },
+            {
+              "label": "GitHub — Validating webhook deliveries",
+              "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+            },
+            {
+              "label": "OWASP — Webhook security",
+              "url": "https://cheatsheetseries.owasp.org/cheatsheets/Webhook_Security_Cheat_Sheet.html"
+            }
+          ]
+        },
+        {
+          "heading": "İmza kontrolünün ötesinde ingestion sertleştirme",
+          "paragraphs": [
+            "Replay penceresi sınırsızken veya body parser auth'tan önce çalışırken HMAC yeterli değildir. Timestamp skew limiti, constant-time signature karşılaştırması ve delivery id ile keyed kalıcı replay store zorunlu kılın. Oversize body'leri edge'de tenant başına rate limit ile reddedin; gürültülü partner worker'ları tüketmesin.",
+            "Handler'lar idempotent olmalı; vendor belirsiz yanıtta agresif retry eder. Partner'ın idempotency key'i ile işlem sonucunu persist edin, side effect commit olmadan iki yüz dönmeyin. Doğrulama failure'larını—dört yüz bir—iş validation failure'larından ayırın; on-call saldırı ile schema drift'i chat'te raw payload okumadan ayırsın.",
+            "DLQ metrik ister, sessiz S3 klasörü değil. DLQ büyüme hızı, en eski mesaj yaşı ve schema versiyonuna bağlı tekrarlayan failure imzalarında alert. Parsing kodu değişince CI'da örnek webhook fixture'larına contract test koşun. Pen test redakte fixture'lardaki imzalı body replay'ini içersin.",
+            "Genel observability backend'lerine loglamadan önce webhook alanları için veri sınıflandırması yazın. PCI ve PII taşıyan olaylar ayrı ingestion account ve kısa retention gerektirebilir. Yeni webhook isteyen PM spoofing, replay ve volumetric abuse threat model'i sunsun; partner dokümanında public olmadan onaylansın."
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Sichere Webhook-Ingestion",
+      "excerpt": "Webhook-Endpunkte sind öffentlich und at-least-once. Ohne Signatur und Idempotenz erzeugen Duplikate doppelte Side Effects in Finance und CRM.",
+      "description": "Staff-Muster: HMAC, Timestamp-Skew, Replay-Schutz, Tenant-Rate-Limits, DLQ-Sichtbarkeit.",
+      "sections": [
+        {
+          "heading": "Webhooks sind öffentliche Fläche",
+          "paragraphs": [
+            "Anbieter retrien Events; hinter LB kommen doppelte POSTs an.",
+            "Signatur über Raw Body; JSON-Parse danach bricht Canonicalization."
+          ]
+        },
+        {
+          "heading": "HMAC und Replay-Store Pflicht",
+          "paragraphs": [
+            "Enges Timestamp-Fenster; Replay-Store lehnt alte Event-IDs ab.",
+            "Rate-Limit und Max-Body pro Tenant gegen DDoS und Fat-Finger."
+          ],
+          "points": [
+            "HMAC-Signatur, Timestamp-Skew und Replay-Store erzwingen",
+            "Body-Größe und Rate-Limit pro Tenant",
+            "Idempotente Handler für sichere Duplicate Delivery",
+            "Fehlgeschlagene Deliveries über DLQ und Alerts sichtbar"
+          ]
+        },
+        {
+          "heading": "Handler müssen idempotent sein",
+          "paragraphs": [
+            "Kein 200 ohne deduplizierte Side Effects via Idempotency- oder Natural Key.",
+            "Event-Version für Out-of-Order-Delivery."
+          ]
+        },
+        {
+          "heading": "DLQ-Metriken für Failures",
+          "paragraphs": [
+            "Persistente Failures in DLQ; Alter und Tiefe metrisch alerten.",
+            "Manuelles Replay-Tool mit Audit-Log."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Webhook signatures",
+              "url": "https://stripe.com/docs/webhooks/signatures"
+            },
+            {
+              "label": "GitHub — Validating webhook deliveries",
+              "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+            }
+          ]
+        },
+        {
+          "heading": "Authentifizieren vor Parse",
+          "paragraphs": [
+            "Signatur auf Raw Bytes vor JSON-Parser. Timestamp-Skew und Replay-Tabelle mit Delivery-IDs. Per-Tenant Rate Limits und Body-Max am Edge. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "401 für Auth-Failures, 422 für Schema-Verletzungen für sauberes Triage. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Handler committen Outcomes mit Partner-Idempotency vor 200. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen."
+          ]
+        },
+        {
+          "heading": "Retries auf Geld-Pfaden sicher machen",
+          "paragraphs": [
+            "DLQ-Tiefe, oldest age, Failure-Signaturen pro Schema-Version paget Owner. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Webhook-Felder klassifizieren vor Shared Observability; PCI/Health evtl. dedizierte Accounts. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Threat Models für neue Webhook-Typen vor Public Partner-Docs. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Webhook signatures",
+              "url": "https://stripe.com/docs/webhooks/signatures"
+            },
+            {
+              "label": "GitHub — Validating webhook deliveries",
+              "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+            },
+            {
+              "label": "OWASP — Webhook security",
+              "url": "https://cheatsheetseries.owasp.org/cheatsheets/Webhook_Security_Cheat_Sheet.html"
+            }
+          ]
+        },
+        {
+          "heading": "Ingestion-Härtung jenseits Signaturen",
+          "paragraphs": [
+            "HMAC allein reicht nicht bei unbounded Replay oder Body-Parser vor Auth. Timestamp-Skew-Limits, constant-time Signature-Vergleich, durable Replay-Store keyed by Delivery-ID. Oversize Bodies am Edge mit per-Tenant Rate Limits ablehnen. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Handler idempotent—Vendors retrien bei ambiguous Response. Outcomes mit Partner-Idempotency-Key persistieren; 200 erst nach Side-Effect-Commit. Verification-Failures 401 von Business-Validation trennen für On-Call ohne Raw-Payload-Chat. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "DLQ braucht Metriken: Wachstumsrate, oldest age, wiederkehrende Failure-Signaturen pro Schema-Version. Contract-Tests auf Webhook-Fixtures in CI bei Parser-Änderungen. Pentest mit replayed signed Bodies aus redigierten Fixtures. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Datenklassifikation für Webhook-Felder vor Logging in generelle Observability. PCI/PII-Events evtl. dedizierte Ingestion-Accounts und kürzere Retention. PMs für neue Webhook-Typen liefern Threat Model Spoofing, Replay, Volumetric Abuse vor Public Partner-Docs. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein."
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Patterns d'ingestion webhook sécurisée",
+      "excerpt": "Les endpoints webhook sont publics et at-least-once. Sans signature et idempotence, les doublons doublent les effets finance et CRM.",
+      "description": "Ingestion staff : HMAC, skew timestamp, anti-replay, rate limit tenant, visibilité DLQ.",
+      "sections": [
+        {
+          "heading": "Webhook = surface publique",
+          "paragraphs": [
+            "Les fournisseurs retrivent ; vous recevez des POST dupliqués derrière le LB.",
+            "Signer le raw body ; parser JSON après casse la canonicalisation."
+          ]
+        },
+        {
+          "heading": "HMAC et store replay obligatoires",
+          "paragraphs": [
+            "Fenêtre timestamp étroite ; store replay rejette anciens event id.",
+            "Rate limit et taille body par tenant contre DDoS et gros payloads."
+          ],
+          "points": [
+            "Imposer signature HMAC, skew timestamp et store replay",
+            "Taille body et rate limit par tenant",
+            "Handlers idempotents pour livraisons dupliquées sûres",
+            "Échecs livraison visibles via DLQ et alertes"
+          ]
+        },
+        {
+          "heading": "Handlers idempotents",
+          "paragraphs": [
+            "Pas de 200 sans dedupe des effets via clé idempotence ou clé naturelle.",
+            "Champ version event pour livraisons hors ordre."
+          ]
+        },
+        {
+          "heading": "Échecs visibles via DLQ",
+          "paragraphs": [
+            "Échecs persistants en DLQ ; alertes sur âge et profondeur.",
+            "Outil replay manuel avec journal d'audit."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Webhook signatures",
+              "url": "https://stripe.com/docs/webhooks/signatures"
+            },
+            {
+              "label": "GitHub — Validating webhook deliveries",
+              "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+            }
+          ]
+        },
+        {
+          "heading": "Authentifier avant parser",
+          "paragraphs": [
+            "Vérification signature sur bytes bruts avant parser JSON. Fenêtre skew timestamp et table replay avec ids delivery. Rate limits et taille max par tenant au edge. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "401 pour échecs auth, 422 pour violations schéma pour triage propre. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Handlers commitent outcomes avec tokens idempotency partenaire avant 200. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement."
+          ]
+        },
+        {
+          "heading": "Rendre retries sûrs sur chemins paiement",
+          "paragraphs": [
+            "Profondeur DLQ, âge plus vieux message, signatures échec par version schéma paget owners. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Classifier champs webhook avant observability partagée ; PCI/santé peuvent exiger comptes dédiés. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Threat models pour nouveaux webhooks avant docs partenaires publiques. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Webhook signatures",
+              "url": "https://stripe.com/docs/webhooks/signatures"
+            },
+            {
+              "label": "GitHub — Validating webhook deliveries",
+              "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+            },
+            {
+              "label": "OWASP — Webhook security",
+              "url": "https://cheatsheetseries.owasp.org/cheatsheets/Webhook_Security_Cheat_Sheet.html"
+            }
+          ]
+        },
+        {
+          "heading": "Durcissement ingestion au-delà des signatures",
+          "paragraphs": [
+            "HMAC nécessaire mais insuffisant si fenêtre replay illimitée ou parser body avant auth. Imposer limites skew timestamp, comparaison signature temps constant, store replay durable clé delivery id. Rejeter corps oversize au edge avec rate limits par tenant. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Handlers idempotents car vendors retentent sur réponse ambiguë. Persister outcomes avec clé idempotency partenaire ; 200 seulement après commit effets. Séparer échecs vérification 401 des échecs validation métier pour on-call sans lire payloads bruts. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "DLQ exige métriques : taux croissance, âge message le plus vieux, signatures échec répétées par version schéma. Tests contrat sur fixtures webhook en CI à chaque changement parser. Pentest inclut replay corps signés depuis fixtures rédigées. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Classifier champs webhook avant log observability générale. Événements PCI/PII peuvent exiger comptes ingestion dédiés et rétention courte. PM nouveaux webhooks doivent threat model spoofing, replay, abus volumétrique avant docs partenaires publiques. Consignez owner, date de revue et rollback dans le même ticket de changement."
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Pattern ingestion webhook sicura",
+      "excerpt": "Gli endpoint webhook sono pubblici e at-least-once. Senza firma e idempotenza i duplicati raddoppiano side effect su finance e CRM.",
+      "description": "Ingestion staff: HMAC, skew timestamp, anti-replay, rate limit tenant, visibilità DLQ.",
+      "sections": [
+        {
+          "heading": "Webhook è superficie pubblica",
+          "paragraphs": [
+            "I provider ritentano; dietro LB arrivano POST duplicati.",
+            "Verificare firma sul raw body; parse JSON dopo rompe canonicalizzazione."
+          ]
+        },
+        {
+          "heading": "HMAC e replay store obbligatori",
+          "paragraphs": [
+            "Finestra timestamp stretta; replay store rifiuta vecchi event id.",
+            "Rate limit e max body per tenant contro DDoS e payload enormi."
+          ],
+          "points": [
+            "Obbligare firma HMAC, skew timestamp e replay store",
+            "Dimensione body e rate limit per tenant",
+            "Handler idempotenti per delivery duplicate sicure",
+            "Delivery fallite visibili con DLQ e alert"
+          ]
+        },
+        {
+          "heading": "Handler idempotenti",
+          "paragraphs": [
+            "Niente 200 senza dedupe effetti con chiave idempotency o natural key.",
+            "Campo versione evento per delivery out-of-order."
+          ]
+        },
+        {
+          "heading": "Fallimenti visibili con DLQ",
+          "paragraphs": [
+            "Failure persistenti in DLQ; alert su età e profondità.",
+            "Tool replay manuale con audit log."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Webhook signatures",
+              "url": "https://stripe.com/docs/webhooks/signatures"
+            },
+            {
+              "label": "GitHub — Validating webhook deliveries",
+              "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+            }
+          ]
+        },
+        {
+          "heading": "Autenticare prima di parsare",
+          "paragraphs": [
+            "Verifica firma su byte raw prima del parser JSON. Skew timestamp e tabella replay con delivery id. Rate limit e max body per tenant al edge. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "401 per failure auth, 422 per violazioni schema per triage pulito. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Handler committano outcome con token idempotency partner prima del 200. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch."
+          ]
+        },
+        {
+          "heading": "Rendere retry sicuri su path monetari",
+          "paragraphs": [
+            "Profondità DLQ, età messaggio più vecchio, firme failure per versione schema pagano owner. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Classificare campi webhook prima observability condivisa; PCI/salute possono richiedere account dedicati. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Threat model per nuovi webhook prima doc partner pubbliche. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch."
+          ],
+          "links": [
+            {
+              "label": "Stripe — Webhook signatures",
+              "url": "https://stripe.com/docs/webhooks/signatures"
+            },
+            {
+              "label": "GitHub — Validating webhook deliveries",
+              "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+            },
+            {
+              "label": "OWASP — Webhook security",
+              "url": "https://cheatsheetseries.owasp.org/cheatsheets/Webhook_Security_Cheat_Sheet.html"
+            }
+          ]
+        },
+        {
+          "heading": "Indurimento ingestion oltre le firme",
+          "paragraphs": [
+            "HMAC necessario ma insufficiente con replay illimitato o parser body prima dell'auth. Imporre limiti skew timestamp, confronto firma constant-time, replay store durable keyed by delivery id. Rifiutare body oversize al edge con rate limit per tenant. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Handler idempotenti perché i vendor ritentano su risposta ambigua. Persistere outcome con chiave idempotency partner; 200 solo dopo commit side effect. Separare failure verifica 401 da failure validazione business per on-call senza payload grezzi in chat. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "DLQ richiede metriche: tasso crescita, età messaggio più vecchio, firme failure ripetute per versione schema. Contract test su fixture webhook in CI a ogni cambio parser. Pentest include replay body firmati da fixture redatte. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Classificare campi webhook prima di log su observability generale. Eventi PCI/PII possono richiedere account ingestion dedicati e retention breve. PM per nuovi webhook devono threat model spoofing, replay, abuso volumetrico prima doc partner pubbliche. Registrate owner, data di review e rollback nello stesso ticket di change."
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "安全 Webhook 摄入模式",
+      "excerpt": "Webhook 端点通常公开且至少一次投递。无签名与幂等时，重复事件会在财务与 CRM 产生双倍副作用。",
+      "description": "Staff webhook 摄入：HMAC、时间戳偏移、防重放、租户限速与 DLQ 可见性。",
+      "sections": [
+        {
+          "heading": "Webhook 是公开面",
+          "paragraphs": [
+            "供应商会重试；负载均衡后仍会收到重复 POST。",
+            "在 raw body 上验签；先 parse JSON 会破坏规范化。"
+          ]
+        },
+        {
+          "heading": "强制 HMAC 与重放存储",
+          "paragraphs": [
+            "时间戳窗口要窄；重放存储拒绝旧 event id。",
+            "按租户限速与 body 上限防 DDoS 与超大 payload。"
+          ],
+          "points": [
+            "强制 HMAC 签名、时间戳偏移与重放存储",
+            "按租户区分 body 大小与速率限制",
+            "幂等处理器安全处理重复投递",
+            "失败投递经 DLQ 与告警可见"
+          ]
+        },
+        {
+          "heading": "处理器必须幂等",
+          "paragraphs": [
+            "未对副作用 dedupe 不要返回 200；用幂等键或自然键。",
+            "乱序投递用 event 版本字段。"
+          ]
+        },
+        {
+          "heading": "DLQ 指标暴露失败",
+          "paragraphs": [
+            "持久失败写入 DLQ；对年龄与深度告警。",
+            "手动重放工具需配审计日志。"
+          ],
+          "links": [
+            {
+              "label": "Stripe — Webhook signatures",
+              "url": "https://stripe.com/docs/webhooks/signatures"
+            },
+            {
+              "label": "GitHub — Validating webhook deliveries",
+              "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+            }
+          ]
+        },
+        {
+          "heading": "解析前先认证",
+          "paragraphs": [
+            "签名验证须在 JSON 解析器改动 body 前对 raw byte 执行。强制 timestamp skew 窗口，并在 replay 表按 partner 文档 TTL 存储 delivery id。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "边缘按租户限流与 body 上限，防止单一集成 volumetric abuse 拖垮 worker。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "认证失败返回 401，schema 违规返回 422，便于 on-call 无需在聊天中读 secret 即可分流。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。"
+          ]
+        },
+        {
+          "heading": "让重试在资金路径上安全",
+          "paragraphs": [
+            "处理器在返回 200 前用 partner 幂等 token 提交 outcome。记录触及资金、库存或身份的事件；含糊 retry 须人工复核。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "DLQ 深度、最旧消息年龄与按 schema 版本的失败签名应 paging owner，而非躺在静默桶中。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "写入共享可观测前先分级 webhook 字段；PCI 与健康 payload 可能需要独立 ingestion 账户。 请在下次生产评审中复核这一点，指定负责人并关联带日期的整改工单。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。"
+          ],
+          "links": [
+            {
+              "label": "Stripe — Webhook signatures",
+              "url": "https://stripe.com/docs/webhooks/signatures"
+            },
+            {
+              "label": "GitHub — Validating webhook deliveries",
+              "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+            },
+            {
+              "label": "OWASP — Webhook security",
+              "url": "https://cheatsheetseries.owasp.org/cheatsheets/Webhook_Security_Cheat_Sheet.html"
+            }
+          ]
+        },
+        {
+          "heading": "超越签名校验的接入加固",
+          "paragraphs": [
+            "当 replay 窗口无界或 body 解析器在认证前执行时，HMAC 必要但不充分。强制 timestamp 偏移上限、常数时间签名比较，以及以 delivery id 为键的持久 replay 存储。在边缘按租户限流拒绝超大 body，避免 noisy partner 耗尽 worker。",
+            "处理器必须幂等，因为供应商对任何含糊响应都会激进重试。用伙伴提供的幂等键持久化处理结果，仅在副作用提交后返回 200。将验证失败（401）与业务校验失败分开，便于 on-call 在不于聊天中读 raw payload 的情况下区分攻击与 schema drift。",
+            "DLQ 需要指标而非静默 S3 目录。对 DLQ 增长率、最旧消息年龄及与 schema 版本绑定的重复失败签名告警。解析代码变更时在 CI 对示例 webhook fixture 跑 contract test。渗透测试应包含来自 redact fixture 的重放签名 body。",
+            "写入通用可观测后端前先为 webhook 字段做数据分级。含 PCI/PII 的事件可能需要独立 ingestion 账户与更短 retention。产品经理申请新 webhook 类型须提交涵盖 spoofing、replay 与 volumetric abuse 的威胁模型，并在伙伴文档公开前获批。"
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "安全なWebhook取り込みパターン",
+      "excerpt": "Webhookエンドポイントは公開されat-least-once。署名と冪等性なしでは重複イベントが課金・CRMで二重副作用。",
+      "description": "Staff取り込み：HMAC、タイムスタンプスキュー、リプレイ防御、テナントレート制限、DLQ可視化。",
+      "sections": [
+        {
+          "heading": "Webhookは公開面",
+          "paragraphs": [
+            "プロバイダはリトライ；LB越しに重複POST。",
+            "raw bodyで署名検証；JSON parse後は正規化が壊れる。"
+          ]
+        },
+        {
+          "heading": "HMACとリプレイストア必須",
+          "paragraphs": [
+            "タイムスタンプ窓は狭く；リプレイストアが古いevent id拒否。",
+            "テナント別レートとbody上限でDDoSと巨大payload防御。"
+          ],
+          "points": [
+            "HMAC署名・タイムスタンプスキュー・リプレイストアを必須化",
+            "テナント別にbodyサイズとレート制限",
+            "冪等ハンドラで重複配信を安全に",
+            "失敗配信をDLQとアラートで可視化"
+          ]
+        },
+        {
+          "heading": "ハンドラは冪等",
+          "paragraphs": [
+            "副作用dedupe前に200返さない；冪等キーか自然キー。",
+            "順不同配信用event版フィールド。"
+          ]
+        },
+        {
+          "heading": "DLQ指標で失敗可視",
+          "paragraphs": [
+            "永続失敗をDLQへ；経過と深さでアラート。",
+            "手動リプレイツールは監査ログ付き。"
+          ],
+          "links": [
+            {
+              "label": "Stripe — Webhook signatures",
+              "url": "https://stripe.com/docs/webhooks/signatures"
+            },
+            {
+              "label": "GitHub — Validating webhook deliveries",
+              "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+            }
+          ]
+        },
+        {
+          "heading": "parse 前に authenticate",
+          "paragraphs": [
+            "signature verify は JSON parser 前に raw byte で。timestamp skew window と delivery id replay table。edge で tenant 別 rate limit と body max。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "auth fail 401、schema violation 422 で triage。handler は partner idempotency token で outcome commit 後 200。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "money/inventory/identity event は ambiguous retry で human review。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。"
+          ]
+        },
+        {
+          "heading": "money path で retry を safe に",
+          "paragraphs": [
+            "DLQ depth、oldest age、schema version failure signature が owner page。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "shared observability 前に webhook field classify；PCI/health は dedicated ingestion account の可能性。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "新 webhook は public partner doc 前 threat model。 次回の production review で再確認し、オーナーを割り当て、日付付き remediation チケットを紐付けてください。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。"
+          ],
+          "links": [
+            {
+              "label": "Stripe — Webhook signatures",
+              "url": "https://stripe.com/docs/webhooks/signatures"
+            },
+            {
+              "label": "GitHub — Validating webhook deliveries",
+              "url": "https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries"
+            },
+            {
+              "label": "OWASP — Webhook security",
+              "url": "https://cheatsheetseries.owasp.org/cheatsheets/Webhook_Security_Cheat_Sheet.html"
+            }
+          ]
+        },
+        {
+          "heading": "署名チェックを超える ingestion 硬化",
+          "paragraphs": [
+            "replay 窓が unbounded だったり body parser が auth より先なら HMAC だけでは不十分。timestamp skew limit、constant-time signature compare、delivery id keyed durable replay store を enforce。oversize body は edge で tenant 別 rate limit で reject。",
+            "handler は idempotent—vendor は ambiguous response で aggressive retry。partner idempotency key で outcome persist；side effect commit 後に 200。verification failure 401 を business validation failure と分離し on-call が raw payload なしで attack と schema drift を区別。",
+            "DLQ は metric 必須：成長率、最古 message age、schema version 別 repeated failure signature。parser 変更のたび CI で webhook fixture contract test。pentest は redacted fixture から signed body replay を含む。",
+            "general observability に log する前に webhook field の data classification。PCI/PII event は dedicated ingestion account と短 retention の可能性。新 webhook を求める PM は partner doc public 前に spoofing、replay、volumetric abuse threat model を sign-off。"
+          ]
+        }
+      ]
+    }
+  }
+}

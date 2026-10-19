@@ -1,8 +1,8 @@
 import type { BlogSection } from "../../data/blogs";
 import type { Locale } from "../i18n/config";
 
-const MIN_MINUTES = 4;
-const MAX_MINUTES = 15;
+const MIN_MINUTES = 10;
+const MAX_MINUTES = 25;
 /** Technical long-form pace; aligns with legacy `readingMinutes` on deeper articles. */
 const WORDS_PER_MINUTE = 80;
 /** CJK readers count characters more than space-delimited tokens. */

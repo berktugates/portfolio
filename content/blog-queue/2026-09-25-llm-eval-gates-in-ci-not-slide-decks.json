@@ -3,7 +3,7 @@
   "title": "LLM Eval Gates in CI, Not Slide Decks",
   "excerpt": "Demo-quality prompts do not survive production traffic. If evals live only in notebooks, every model swap becomes a product lottery.",
   "description": "Staff patterns for LLM evaluation in CI: golden datasets, regression thresholds, cost-aware sampling, and release gates that product teams can trust.",
-  "readingMinutes": 4,
+  "readingMinutes": 11,
   "keywords": [
     "LLM evals",
     "CI",
@@ -63,6 +63,45 @@
           "url": "https://www.nist.gov/itl/ai-risk-management-framework"
         }
       ]
+    },
+    {
+      "heading": "Treat eval datasets as versioned code",
+      "paragraphs": [
+        "Slide-deck evals rot the week presenters change teams. Store golden prompts, expected constraints, and grader configuration beside application code with pull-request review. When product changes tone or refusal policy, update datasets in the same merge that ships the behavior, not in a quarterly spreadsheet. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        "Partition sets by risk: smoke cases that run on every commit, broader regression suites nightly, and exploratory buckets that never gate production. CI time is finite; prioritization should reflect customer impact, not whichever demo impressed leadership last. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        "Record dataset hashes in deployment artifacts so incident responders know which eval version approved a release. Without that linkage, postmortems debate subjective memory instead of reproducible commands developers can re-run locally. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket."
+      ]
+    },
+    {
+      "heading": "Gate on regressions, not vanity scores",
+      "paragraphs": [
+        "Absolute accuracy numbers drift when vendors upgrade base models. CI should compare against a frozen baseline and fail on statistically meaningful regressions on critical intents, safety refusals, and tool-call formats. Document tolerance bands product and legal sign explicitly. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        "Automated graders need calibration hooks. pytest-style tests can assert schema validity and forbidden phrases while human rubrics feed weekly spot checks that adjust weights. OpenAI eval guidance and MLflow tracking help teams share runs without exporting raw user transcripts. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        "Waivers for failed gates require named owners, expiry dates, and linked tickets. Permanent exceptions become undeclared policy changes. Make waiver count a visible metric the same way you track flaky tests or security findings. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket."
+      ],
+      "links": [
+        {
+          "label": "OpenAI — Evals guide",
+          "url": "https://platform.openai.com/docs/guides/evals"
+        },
+        {
+          "label": "pytest — Documentation",
+          "url": "https://docs.pytest.org/en/stable/"
+        },
+        {
+          "label": "MLflow — Tracking",
+          "url": "https://mlflow.org/docs/latest/tracking.html"
+        }
+      ]
+    },
+    {
+      "heading": "Eval gates that block merges, not meetings",
+      "paragraphs": [
+        "Slide-deck evals rot the week models change. Treat golden datasets as versioned code: store prompts, expected rubric scores, and judge configuration beside application logic, reviewed in pull requests like migrations. CI should replay a frozen subset on every merge request touching prompts, tools, or routing. Absolute score thresholds drift with base model upgrades; gate on regressions against the last green baseline instead of vanity ninety-five percent headlines.",
+        "Automated graders need calibration humans trust. Schedule weekly spot checks where engineers label a sample of failures; feed disagreements back into rubric wording and judge prompts. Separate flaky eval cases into quarantine with owners, mirroring how you handle flaky end-to-end tests. Failed gates block deploy; waivers require named executives, expiry dates, and linked tickets documenting customer impact accepted.",
+        "Eval harnesses must mirror production constraints—same tool schemas, latency budgets, and retrieval indices—not an optimistic sandbox with god-mode API keys. Record token spend per eval run so finance notices CI creep. Cache embeddings for static corpora, but invalidate when document stores change. Publish eval duration trends beside unit test times; slow eval trains encourage skipping locally, which defeats the purpose of gates.",
+        "Connect eval failures to observability. When a gate catches toxic output or broken JSON, add the case to synthetic probes and on-call playbooks if similar patterns could reach users. Post-incident reviews should append regressions to golden sets, not only Confluence pages nobody reads. The goal is eval gates in CI becoming the authoritative release contract, replacing quarterly deck reviews executives already ignore."
+      ]
     }
   ],
   "locales": {
@@ -113,6 +152,45 @@
               "label": "NIST AI RMF",
               "url": "https://www.nist.gov/itl/ai-risk-management-framework"
             }
+          ]
+        },
+        {
+          "heading": "Eval veri setlerini sürümlü kod sayın",
+          "paragraphs": [
+            "Slayt eval'leri sunucu ekip değiştirdiği hafta çürür. Altın prompt'ları, beklenen kısıtları ve grader yapılandırmasını uygulama kodunun yanında PR incelemesiyle saklayın. Ürün ton veya red politikasını değiştirdiğinde, davranışı ship eden merge'de veri setlerini güncelleyin; çeyreklik tabloda değil. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Kümeleri riske göre bölün: her commit'te koşan duman testleri, gecelik geniş regresyon paketleri ve üretimi asla kilitlemeyen keşif kovaları. CI süresi sınırlıdır; öncelik son liderlik demosunu değil müşteri etkisini yansıtmalı. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Deployment artefaktlerine veri seti hash'lerini kaydedin; olay müdahalecileri hangi eval sürümünün release onayladığını bilsin. Bu bağ olmadan postmortem'ler yerel tekrarlanabilir komutlar yerine öznel hafızayı tartışır. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın."
+          ]
+        },
+        {
+          "heading": "Gösteriş skorlarına değil gerilemelere kapı koyun",
+          "paragraphs": [
+            "Mutlak doğruluk rakamları satıcılar temel modeli yükselttiğinde kayar. CI donmuş baz çizgiye karşı kıyaslamalı ve kritik niyetler, güvenlik redleri ve tool-call formatlarında istatistiksel anlamlı gerilemede fail etmeli. Tolerans bantlarını ürün ve hukuk açıkça imzalasın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Otomatik grader'lar kalibrasyon kancaları ister. pytest tarzı testler şema geçerliliği ve yasak ifadeleri assert eder; insan rubrikleri haftalık spot check ile ağırlıkları ayarlar. OpenAI eval rehberi ve MLflow izleme ham kullanıcı transkripti export etmeden koşu paylaşımına yardım eder. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Başarısız kapılar için waiver adlı sahip, bitiş tarihi ve bağlı ticket ister. Kalıcı istisnalar ilan edilmemiş politika değişikliğidir. Waiver sayısını flake test veya güvenlik bulguları gibi görünür metrik yapın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Eval rehberi",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            },
+            {
+              "label": "pytest — Dokümantasyon",
+              "url": "https://docs.pytest.org/en/stable/"
+            },
+            {
+              "label": "MLflow — Tracking",
+              "url": "https://mlflow.org/docs/latest/tracking.html"
+            }
+          ]
+        },
+        {
+          "heading": "Toplantı değil merge'i durduran eval kapıları",
+          "paragraphs": [
+            "Slayt eval'leri model değiştiği hafta çürür. Golden dataset'leri versiyonlu kod sayın: prompt, beklenen rubric skoru ve judge yapılandırmasını uygulama mantığının yanında tutun, migration gibi PR'da review edilsin. Prompt, tool veya routing'e dokunan her MR'da CI donmuş alt küme replay etsin. Mutlak skor eşikleri base model upgrade ile kayar; yüzde doksan beş başlıkları yerine son yeşil baseline'a regresyona gate koyun.",
+            "Otomatik grader'lar insanın güvendiği kalibrasyon ister. Haftalık spot check'te mühendisler failure örneği etiketlesin; anlaşmazlıklar rubric ve judge prompt'una geri beslensin. Flaky eval case'leri E2E'deki gibi owner'lı karantinaya alın. Başarısız gate deploy'u bloklasın; waiver'da adlı yönetici, süre ve kabul edilen müşteri etkisi ticket'ı olsun. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+            "Eval harness production kısıtlarını yansıtmalı—aynı tool schema, latency bütçesi, retrieval index—god-mode API key'li iyimser sandbox değil. Eval run başına token harcamasını kaydedin; finans CI şişmesini görsün. Statik corpus embedding cache'leyin ama doküman store değişince invalidate edin. Eval süresi trendini unit test yanında yayınlayın; yavaş eval yerelde skip'i teşvik eder. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+            "Eval failure'ları gözlemlenebilirliğe bağlayın. Gate toxic output veya bozuk JSON yakalarsa benzer pattern kullanıcıya ulaşabilirse synthetic probe ve on-call playbook'a ekleyin. Post-incident golden set'e regresyon eklemeli, yalnızca okunmayan wiki değil. Hedef: CI eval gate'leri yetkili release sözleşmesi olsun, yönetici quarterly deck'in yerini alsın. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin."
           ]
         }
       ]
@@ -165,6 +243,45 @@
               "url": "https://www.nist.gov/itl/ai-risk-management-framework"
             }
           ]
+        },
+        {
+          "heading": "Eval-Datasets als versionierten Code behandeln",
+          "paragraphs": [
+            "Slide-Deck-Evals veralten, sobald Presenter das Team wechseln. Golden Prompts, erwartete Constraints und Grader-Config liegen neben App-Code mit PR-Review. Wenn Produkt Ton oder Refusal-Policy ändert, aktualisieren Sie Datasets im selben Merge wie das Verhalten, nicht in quartalsweisen Tabellen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Partitionieren Sie Sets nach Risiko: Smoke auf jedem Commit, breitere Regression nightly, explorative Buckets ohne Prod-Gate. CI-Zeit ist endlich; Priorität folgt Kundenimpact, nicht der Demo, die zuletzt Leadership beeindruckte. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Speichern Sie Dataset-Hashes in Deployment-Artefakten, damit Incident Responder wissen, welche Eval-Version ein Release freigab. Ohne Link diskutieren Postmortems subjektives Gedächtnis statt reproduzierbarer lokaler Commands. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an."
+          ]
+        },
+        {
+          "heading": "Auf Regressionen gaten, nicht auf Vanity-Scores",
+          "paragraphs": [
+            "Absolute Accuracy driftet bei Vendor-Modell-Upgrades. CI vergleicht gegen eingefrorene Baseline und failt bei statistisch meaningful Regressionen auf kritische Intents, Safety-Refusals und Tool-Call-Formate. Dokumentieren Sie Toleranzbänder mit explizitem Product- und Legal-Sign-off. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Automatische Grader brauchen Kalibrierungs-Hooks. pytest-Tests assertieren Schema und verbotene Phrasen; Human-Rubrics speisen wöchentliche Spot-Checks zur Gewichtsanpassung. OpenAI-Eval-Guide und MLflow-Tracking teilen Runs ohne Raw-User-Transcript-Export. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Waivers für failed Gates brauchen Owner, Ablaufdatum und verlinkte Tickets. Permanente Exceptions sind undeclared Policy-Changes. Machen Sie Waiver-Count zu sichtbarer Metrik wie Flaky Tests oder Security Findings. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Evals-Leitfaden",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            },
+            {
+              "label": "pytest — Dokumentation",
+              "url": "https://docs.pytest.org/en/stable/"
+            },
+            {
+              "label": "MLflow — Tracking",
+              "url": "https://mlflow.org/docs/latest/tracking.html"
+            }
+          ]
+        },
+        {
+          "heading": "Eval-Gates stoppen Merges, nicht Meetings",
+          "paragraphs": [
+            "Slide-Deck-Evals vermodern in der Modellwechsel-Woche. Golden Datasets als versionierter Code: Prompts, Rubric-Scores, Judge-Config neben App-Logik, in PRs wie Migrationen reviewen. CI replayt frozen Subset bei jedem MR an Prompts, Tools, Routing. Absolute Score-Schwellen driften mit Base-Model-Upgrades; gating auf Regression gegen letzte grüne Baseline statt Vanity-95%-Headlines. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Automatische Grader brauchen Kalibrierung mit Vertrauen. Wöchentliche Spot-Checks: Engineers labeln Failure-Samples; Disagreements zurück in Rubric und Judge-Prompts. Flaky Eval-Cases in Quarantäne mit Ownern wie flaky E2E. Failed Gates blocken Deploy; Waivers mit named Executives, Expiry, Tickets zu akzeptiertem Customer Impact. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Eval-Harness spiegelt Prod-Constraints—Tool-Schemas, Latenz-Budgets, Retrieval-Indizes—kein Sandbox mit God-Mode-Keys. Token-Spend pro Eval-Run für Finance sichtbar. Embeddings für statische Corpora cachen, invalidieren bei Doc-Store-Changes. Eval-Dauer-Trends neben Unit-Tests publizieren; langsame Evals fördern lokales Skipping. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Eval-Failures an Observability koppeln. Toxic Output oder broken JSON in Gates → Synthetic Probes und On-Call-Playbooks wenn Pattern Nutzer erreichen könnte. Post-Incidents appenden Regressionen zu Golden Sets, nicht nur Confluence. Ziel: CI-Eval-Gates als authoritative Release-Vertrag statt quarterly Deck-Reviews. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht."
+          ]
         }
       ]
     },
@@ -215,6 +332,45 @@
               "label": "NIST AI RMF",
               "url": "https://www.nist.gov/itl/ai-risk-management-framework"
             }
+          ]
+        },
+        {
+          "heading": "Traiter les jeux d'éval comme du code versionné",
+          "paragraphs": [
+            "Les evals en slides pourrissent quand les présentateurs changent d'équipe. Stockez prompts dorés, contraintes attendues et config grader à côté du code applicatif avec revue PR. Quand le produit change ton ou politique de refus, mettez à jour les datasets dans le même merge que le comportement, pas dans un tableur trimestriel.",
+            "Partitionnez par risque : smoke à chaque commit, régression élargie nightly, buckets exploratoires sans gate prod. Le temps CI est fini ; la priorité reflète l'impact client, pas la démo qui a impressionné le leadership. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+            "Enregistrez les hash de dataset dans les artefacts de déploiement pour que l'incident sache quelle version d'eval a approuvé une release. Sans ce lien, les postmortems débattent la mémoire subjective au lieu de commandes reproductibles en local. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté."
+          ]
+        },
+        {
+          "heading": "Gater sur régressions, pas scores vanity",
+          "paragraphs": [
+            "Les scores absolus dérivent quand les vendors upgradent les modèles de base. La CI compare à une baseline gelée et échoue sur régressions statistiquement significatives sur intents critiques, refus safety et formats tool-call. Documentez bandes de tolérance signées produit et juridique. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+            "Les graders auto ont besoin de crochets de calibration. Des tests pytest assertent schéma et phrases interdites ; rubriques humaines alimentent spot checks hebdo ajustant les poids. Guide eval OpenAI et tracking MLflow partagent runs sans exporter transcripts bruts. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+            "Les dérogations pour gates échoués exigent owner nommé, date d'expiry et tickets liés. Exceptions permanentes deviennent changements de policy non déclarés. Rendez le compte de waivers métrique visible comme tests flaky ou findings sécurité. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Guide evals",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            },
+            {
+              "label": "pytest — Documentation",
+              "url": "https://docs.pytest.org/en/stable/"
+            },
+            {
+              "label": "MLflow — Tracking",
+              "url": "https://mlflow.org/docs/latest/tracking.html"
+            }
+          ]
+        },
+        {
+          "heading": "Portes eval qui bloquent les merges",
+          "paragraphs": [
+            "Evals en slides pourrissent la semaine du changement de modèle. Datasets dorés comme code versionné : prompts, scores rubric, config juge à côté de la logique app, revus en PR comme migrations. CI rejoue sous-ensemble gelé sur chaque MR touchant prompts, tools, routing. Seuils absolus dérivent avec upgrades ; gate sur régression vs dernière baseline verte, pas titres vanity 95%.",
+            "Graders auto exigent calibration humaine de confiance. Spot checks hebdo : engineers labellisent échantillon d'échecs ; désaccords alimentent rubric et prompts juge. Cas eval flaky en quarantaine avec owners comme E2E. Gates échoués bloquent deploy ; waivers avec exécutifs nommés, expiry, tickets d'impact client accepté. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+            "Harness eval reflète contraintes prod—schemas tools, budgets latence, indices retrieval—pas sandbox optimiste clés god-mode. Dépense tokens par run eval pour finance. Cache embeddings corpus statiques, invalide si doc store change. Publier tendances durée eval à côté tests unitaires ; evals lentes encouragent skip local. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+            "Relier échecs eval à observabilité. Gate attrape output toxique ou JSON cassé → ajouter probes synthetics et playbooks on-call si pattern peut atteindre users. Post-incident append régressions aux golden sets, pas seulement Confluence. Objectif : gates CI comme contrat release autoritaire remplaçant revues deck trimestrielles. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident."
           ]
         }
       ]
@@ -267,6 +423,45 @@
               "url": "https://www.nist.gov/itl/ai-risk-management-framework"
             }
           ]
+        },
+        {
+          "heading": "Trattare i dataset eval come codice versionato",
+          "paragraphs": [
+            "Eval su slide marciscono quando i presenter cambiano team. Conservate golden prompt, vincoli attesi e config grader accanto al codice applicativo con review PR. Quando prodotto cambia tono o policy di rifiuto, aggiornate dataset nello stesso merge del comportamento, non in foglio trimestrale. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "Partizionate per rischio: smoke a ogni commit, regression più ampie nightly, bucket esplorativi senza gate prod. Il tempo CI è finito; la priorità riflette impatto cliente, non la demo che ha impressionato il leadership. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "Registrate hash dataset negli artefatti di deploy così chi risponde agli incidenti sa quale versione eval approvò una release. Senza quel legame, i postmortem discutono memoria soggettiva invece di comandi riproducibili in locale. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato."
+          ]
+        },
+        {
+          "heading": "Gate su regressioni, non punteggi vanity",
+          "paragraphs": [
+            "Punteggi assoluti driftano quando i vendor upgrade modelli base. La CI confronta baseline congelata e fallisce su regressioni statisticamente significative su intent critici, rifiuti safety e formati tool-call. Documentate bande di tolleranza firmate da prodotto e legale. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "Grader automatici servono hook di calibrazione. Test pytest assertano schema e frasi vietate; rubriche umane alimentano spot check settimanali che regolano pesi. Guida eval OpenAI e tracking MLflow condividono run senza esportare transcript utente grezzi. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "Waiver per gate falliti richiedono owner nominato, scadenza e ticket collegati. Eccezioni permanenti diventano cambi policy non dichiarati. Rendete il conteggio waiver metrica visibile come test flaky o finding sicurezza. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Guida eval",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            },
+            {
+              "label": "pytest — Documentazione",
+              "url": "https://docs.pytest.org/en/stable/"
+            },
+            {
+              "label": "MLflow — Tracking",
+              "url": "https://mlflow.org/docs/latest/tracking.html"
+            }
+          ]
+        },
+        {
+          "heading": "Gate eval che bloccano i merge",
+          "paragraphs": [
+            "Eval su slide marciscono quando cambia il modello. Dataset golden come codice versionato: prompt, punteggi rubric, config judge accanto alla logica app, review in PR come migrazioni. CI replay subset congelato su ogni MR che tocca prompt, tool, routing. Soglie assolute derivano con upgrade base model; gate su regressione vs ultima baseline verde, non titoli vanity 95%.",
+            "Grader automatici servono calibrazione umana fidata. Spot check settimanali: engineer etichettano campione failure; disaccordi alimentano rubric e prompt judge. Casi eval flaky in quarantena con owner come E2E. Gate falliti bloccano deploy; waiver con executive nominati, scadenza, ticket impatto cliente accettato. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+            "Harness eval rispecchia vincoli prod—schema tool, budget latenza, indici retrieval—non sandbox ottimista con chiavi god-mode. Spesa token per run eval visibile a finance. Cache embedding corpora statici, invalida se doc store cambia. Pubblicare trend durata eval accanto unit test; eval lenti incoraggiano skip locale. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+            "Collegare failure eval a observability. Gate cattura output tossico o JSON rotto → aggiungere probe synthetic e playbook on-call se pattern può raggiungere utenti. Post-incident appende regressioni ai golden set, non solo Confluence. Obiettivo: gate CI come contratto release autorevole al posto delle review deck trimestrali. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident."
+          ]
         }
       ]
     },
@@ -318,6 +513,45 @@
               "url": "https://www.nist.gov/itl/ai-risk-management-framework"
             }
           ]
+        },
+        {
+          "heading": "把 eval 数据集当作版本化代码",
+          "paragraphs": [
+            "演示型 eval 在演讲者换团队的那周就会腐烂。将 golden prompt、期望约束与 grader 配置与应用代码同仓并走 PR 评审。产品调整语气或拒绝策略时，应在 ship 行为的同一 merge 更新数据集，而非季度 spreadsheet。",
+            "按风险分区：每次 commit 的 smoke、夜间更广回归套件、永不 gate 生产的探索桶。CI 时间有限；优先级应反映客户影响，而非上次打动管理层的 demo。",
+            "在部署产物中记录 dataset 哈希，使 incident 响应者知道哪版 eval 批准了发布。缺少该链接，postmortem 会争论主观记忆，而非开发者可在本地重跑的命令。"
+          ]
+        },
+        {
+          "heading": "对回归设 gate，而非虚荣分数",
+          "paragraphs": [
+            "厂商升级基座模型时绝对准确率会漂移。CI 应相对冻结基线比较，并在关键意图、安全拒绝与 tool-call 格式上出现统计显著回归时失败。容忍带需产品与法务明确签署。",
+            "自动 grader 需要校准挂钩。pytest 式测试可断言 schema 与禁用短语；人工 rubric 通过每周 spot check 调整权重。OpenAI eval 指南与 MLflow tracking 可在不导出原始用户 transcript 的情况下共享运行。",
+            "失败 gate 的豁免需具名 owner、到期日与关联 ticket。永久例外等于未声明的策略变更。将 waiver 数量做成与 flaky 测试或安全发现同级的可见指标。"
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Eval 指南",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            },
+            {
+              "label": "pytest — 文档",
+              "url": "https://docs.pytest.org/en/stable/"
+            },
+            {
+              "label": "MLflow — Tracking",
+              "url": "https://mlflow.org/docs/latest/tracking.html"
+            }
+          ]
+        },
+        {
+          "heading": "阻断合并而非会议的 eval 门禁",
+          "paragraphs": [
+            "幻灯片 eval 在模型更换当周就会腐烂。将黄金数据集视为版本化代码：prompt、期望 rubric 分数与 judge 配置与应用逻辑同仓，在 PR 中像迁移一样评审。凡改动 prompt、工具或路由的 MR，CI 应重放冻结子集。绝对分数阈值随基座升级漂移；应对相对上次绿基线的回归设门禁，而非 vanity 95% 标题。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "自动评分器需要人可信的校准。每周抽检：工程师标注失败样本；分歧反馈到 rubric 与 judge prompt。不稳定 eval 用例像 flaky E2E 一样隔离并指定 owner。门禁失败应阻断发布；豁免须具名高管、过期日与记录已接受客户影响的工单。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "Eval  harness 须镜像生产约束——相同 tool schema、延迟预算与检索索引——而非带 god-mode 密钥的乐观沙箱。记录每次 eval 的 token 花费供财务发现 CI 膨胀。静态语料 embedding 可缓存，文档库变更须失效。与单元测试并列发布 eval 耗时趋势；过慢会鼓励本地跳过。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "将 eval 失败连到可观测性。门禁捕获有毒输出或坏 JSON 时，若类似模式可能触达用户，应加入合成探针与 on-call 剧本。事后回顾应向黄金集追加回归，而非只改 Confluence。目标让 CI eval 门禁成为权威发布契约，取代管理层已忽视的季度 deck。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。"
+          ]
         }
       ]
     },
@@ -368,6 +602,45 @@
               "label": "NIST AI RMF",
               "url": "https://www.nist.gov/itl/ai-risk-management-framework"
             }
+          ]
+        },
+        {
+          "heading": "eval データセットをバージョン管理コードとして扱う",
+          "paragraphs": [
+            "スライド eval は発表者がチームを変えた週に腐る。golden prompt、期待制約、grader 設定をアプリコード横に PR レビュー付きで置く。プロダクトがトーンや拒否方針を変えるときは四半期表ではなく挙動を ship する merge でデータセットを更新する。",
+            "リスクで分割する。各 commit の smoke、夜間の広い回帰、本番 gate しない探索バケット。CI 時間は有限。優先度は最後にリーダーシップを感動させた demo ではなく顧客 impact を反映すべきだ。",
+            "デプロイ成果物に dataset ハッシュを記録し、インシデント対応者がどの eval 版がリリースを承認したか分かるようにする。リンクがなければ postmortem は再現可能なローカルコマンドではなく主観記憶を議論する。"
+          ]
+        },
+        {
+          "heading": "虚栄スコアではなく回帰で gate する",
+          "paragraphs": [
+            "ベンダーが基盤モデルを上げると絶対精度は drift する。CI は凍結 baseline と比較し、重要 intent、安全拒否、tool-call 形式で統計的に意味ある回帰で fail すべきだ。許容帯はプロダクトと法務が明示署名する。",
+            "自動 grader には校正フックが要る。pytest 的テストは schema と禁止フレーズを assert し、人間 rubric は週次 spot check で重みを調整する。OpenAI eval ガイドと MLflow tracking は生ユーザー transcript を export せず run を共有できる。",
+            "失敗 gate の waiver には指名 owner、失効日、リンク ticket が要る。恒久例外は未宣言 policy 変更になる。waiver 数を flaky テストやセキュリティ finding と同様の可視メトリクスにする。"
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Eval ガイド",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            },
+            {
+              "label": "pytest — ドキュメント",
+              "url": "https://docs.pytest.org/en/stable/"
+            },
+            {
+              "label": "MLflow — Tracking",
+              "url": "https://mlflow.org/docs/latest/tracking.html"
+            }
+          ]
+        },
+        {
+          "heading": "会議ではなく merge を止める eval ゲート",
+          "paragraphs": [
+            "スライド eval はモデル変更週に腐ります。golden dataset を version コード扱い：prompt、期待 rubric スコア、judge 設定をアプリロジック横に置き、migration 同様 PR review。prompt・tool・routing に触れる MR ごとに CI が frozen subset を replay。絶対閾値は base model upgrade で drift；vanity 95% 見出しより最後の緑 baseline への regression で gate。",
+            "自動 grader は人が信じる較正が要る。週次 spot check で engineer が failure サンプルにラベル；不一致は rubric と judge prompt へ。flaky eval case は flaky E2E と同様 owner 付き quarantine。失敗 gate は deploy block；waiver は named executive、失効、受容した customer impact チケット。",
+            "eval harness は prod 制約—tool schema、latency バジェット、retrieval index—を鏡写し、god-mode key の楽観 sandbox 不可。eval run あたり token  spend を finance 向けに記録。静的 corpus embedding は cache、doc store 変更で invalidate。eval 時間 trend を unit test 横に公開；遅い eval は local skip を促進。",
+            "eval failure を observability に接続。gate が toxic output や broken JSON を捕らえたら user に届きうる pattern なら synthetic probe と on-call playbook へ。post-incident は golden set に regression を append、Confluence だけにしない。目標は CI eval gate を authoritative release 契約とし四半期 deck を置換。"
           ]
         }
       ]

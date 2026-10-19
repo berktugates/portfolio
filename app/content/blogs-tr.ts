@@ -1,6 +1,100 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"data-retention-policies-that-enable-product-analytics": {
+    title: "Ürün Analitiğini Mümkün Kılan Veri Saklama Politikaları",
+    excerpt: "Saklama yasal zorunluluk; analitik ise ürün kararı. İkisini aynı çöp kutusuna atmayın.",
+    description: "Ham olayları silip özetleri koruyarak analitiği sürdüren saklama: katmanlar, rollup, hukuki dayanak ve gözlemlenebilir silme.",
+    sections: [
+      {
+        heading: "Saklama ürün yüzeyidir",
+        paragraphs: [
+          "Her şeyi sonsuza kadar tutmak ölçek ve hukuk riski; her şeyi silmek trend körleştirir.",
+          "Staff ekipler veri sınıflarına göre politika yazar.",
+        ],
+      },
+      {
+        heading: "Katmanlı olay sınıfları",
+        paragraphs: [
+          "Ürün analitiği, denetim ve model eğitimi aynı TTL'i paylaşmamalı.",
+          "PII ile anonim metrikleri ayırın.",
+        ],
+        points: [
+          "Olay katmanlarını tanımlayın: ürün analitiği, denetim, model eğitimi",
+          "Ham olayları silmeden önce aggregate rollup kullanın",
+          "Katman başına hukuki dayanak ve silme SLA'sını belgeleyin",
+          "Saklama config'ini şema migrasyonu gibi code-review edin",
+        ],
+      },
+      {
+        heading: "Rollup ile hafıza",
+        paragraphs: [
+          "Ham olayları silmeden önce haftalık/aylık rollup üretin.",
+          "Funnel ve kohort soruları özetlerde cevaplanabilmeli.",
+        ],
+      },
+      {
+        heading: "Operasyonel disiplin",
+        paragraphs: [
+          "Saklama config'i şema migrasyonu gibi review edilsin.",
+          "Silme işlerini metrikleyin; sessiz boşluklar analitik sürprizidir.",
+        ],
+        links: [
+          {
+            label: "GDPR — Storage limitation",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+          {
+            label: "Snowplow — Data retention",
+            url: "https://docs.snowplow.io/docs/understanding-your-pipeline/retention/",
+          },
+          {
+            label: "Amplitude — Data governance",
+            url: "https://amplitude.com/docs/data/data-governance",
+          },
+        ],
+      },
+      {
+        heading: "Enstrümante etmeden önce olayları sınıflandırın",
+        paragraphs: [
+          "Saklama tasarımı olmayan ürün analitiği, hassas davranışların kazara ambarına dönüşür. Önceden olay sınıfları tanımlayın: tamamen operasyonel telemetri, pseudonymous ürün metrikleri ve toplamadan önce sözleşmesel dayanak gerektiren tanımlayıcılar. AI özellikleri metin redakte olsa bile kısıtlı katmana ait prompt türevi öznitelikler ekler. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "Mühendislik ve hukuk her olay tipini saklama süresi, şifreleme gereksinimleri ve downstream tüketicilere eşleyen matrisi birlikte imzalamalı. Pazarlama yeni huni adımı istediğinde inceleme sorusu yalnızca şema değil saklama etkisidir. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "Silme kanıtlanabilir olmalı. Sessizce fail eden batch job'lar kağıtta uyumlu, pratikte açık bırakır. Ödeme mutabakatını izlediğiniz gibi silinen satır, backlog yaşı ve retry sayıları metrikleyin. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+        ],
+      },
+      {
+        heading: "Analitiği güvenlik loglarından ayırın",
+        paragraphs: [
+          "Ortak şemalar ekipleri funnel analizi için güvenlik loglarını yeniden kullanmaya iter; GDPR saklama sınırlaması ilkelerinin bulanıklaştırdığı saklama sınıflarını karıştırır. California CPRA özetleri operatörlere saklamanın makul gerekenden uzun olmaması gerektiğini hatırlatır—gerekliliği veritabanı değil alan bazında belgeleyin. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "Ham olaylar süresi dolunca aggregate tablolar aynı sınıflandırma etiketleriyle tasarlanmış rollup'larla trendleri koruyabilir. Ürün analistleri kohort görünümlerini sürdürür; gizlilik incelemecileri haftalık KPI'ları kaybetmeden daha kısa ham TTL tutar. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "Erişim kontrolleri org chart popülerliğine değil veri sınıfına uymalı. Olay müdahalesi break-glass rolleri otomatik süresi dolmalı ve analitik self-service gruplarından ayrı denet izi bırakmalı. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+        ],
+        links: [
+          {
+            label: "GDPR Madde 5 — Saklama sınırlaması",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+          {
+            label: "California CPRA — Saklama özeti",
+            url: "https://oag.ca.gov/privacy/ccpa",
+          },
+          {
+            label: "OpenTelemetry — Log veri modeli",
+            url: "https://opentelemetry.io/docs/specs/otel/logs/data-model/",
+          },
+        ],
+      },
+      {
+        heading: "Analitiği boğmadan saklama operasyonu",
+        paragraphs: [
+          "Ürün ekipleri saklama politikalarını hukuki evrak sayarken analitik boru hatları tanımlayıcıları süresiz yutmaya devam eder. Döngüyü kırın: izleme SDK'nızla aynı repoda TTL, hukuki dayanak ve rollup hedefi olan bir olay kataloğu yayınlayın. Yeni özellik ekleyen PR'lar kataloğu güncellemeden geçmesin. Ham PII süresi dolunca kohort hunileri haftalık agregalar aynı sınıflandırma etiketlerini taşıdığı için yaşamaya devam eder.",
+          "Silme pencereleri kapandıktan sonra panoları dürüst tutan şey rollup'lardır. Kullanıcı anahtarlarını düşüren ama deney atama hash'lerini okuma süreleri boyunca koruyan materialized view'lar tasarlayın; hangi grafiğin ham hangisinin agregadan beslendiğini belgeleyin. Yönetim sunumu için CSV export edildiğinde isteği yapan principal ve dokunulan veri sınıfı loglansın. Denet izi olmayan export'lar eksik metrikten hızlı privacy review'da düşer. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+          "Sınır ötesi replikasyon naif saklama vaatlerini kırar. Olaylar farklı silme SLA'ları olan bölgelere düşüyorsa replikaları katalogda etiketleyin; silme orkestrasyonu en gevşek bucket değil en sıkı politikayı izlesin. Staging prod TTL istisnalarını otomatik süre dolmadan tutmasın; gerçek kullanıcı satırlarıyla debug tekrarlayan audit bulgusudur. Sentetik fixture'lar şemayı taklit etsin, prod dump kopyalamayın. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+          "Saklamayı çeyreklik kapasite planı gibi gözden geçirin. Depo büyümesini silinen satırlar, istisna sayıları ve açık hukuki hold'larla karşılaştırın. Yeni AI veya ödeme akışları ship olurken analitik liderleri imza atsın; varsayılanların sessizce genişletilmediğini onaylasın. Mühendislik all-hands'e tek sayfa durum: bu ay ne expire oluyor, hangi rollup'lar geçmişi dolduruyor, hangi ekipler yaşlanması gereken alanları hâlâ sorguluyor. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+        ],
+      },
+    ],
+  },
 "reducing-flaky-e2e-tests-in-expo-apps": {
     title: "Expo Uygulamalarında Flaky E2E Testleri Azaltmak",
     excerpt: "Flaky E2E güveni öldürür; retry maskesi değil deterministik kurulum ister.",

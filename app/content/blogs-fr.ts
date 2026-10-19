@@ -1,6 +1,100 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"data-retention-policies-that-enable-product-analytics": {
+    title: "Politiques de rétention compatibles analytics produit",
+    excerpt: "La rétention est compliance; l'analytics est produit.",
+    description: "Couches, rollups, base légale et suppression observable.",
+    sections: [
+      {
+        heading: "La rétention est surface produit",
+        paragraphs: [
+          "Tout garder scale et juridique; tout effacer aveugle.",
+          "Politiques par classe de données.",
+        ],
+      },
+      {
+        heading: "Tiers d'événements",
+        paragraphs: [
+          "Analytics, audit, entraînement: TTL distincts.",
+          "Séparer PII et métriques anonymes.",
+        ],
+        points: [
+          "Définir tiers d'événements : analytics produit, audit, entraînement modèle",
+          "Rollups agrégés avant suppression des events bruts",
+          "Documenter base légale et SLA suppression par tier",
+          "Revoir config rétention comme migrations schéma",
+        ],
+      },
+      {
+        heading: "Rollups avant suppression",
+        paragraphs: [
+          "Rollups avant suppression brute.",
+          "Entonnoirs sur agrégats.",
+        ],
+      },
+      {
+        heading: "Discipline opérationnelle",
+        paragraphs: [
+          "Config reviewée comme schéma.",
+          "Métriquer les jobs de suppression.",
+        ],
+        links: [
+          {
+            label: "GDPR — Storage limitation",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+          {
+            label: "Snowplow — Data retention",
+            url: "https://docs.snowplow.io/docs/understanding-your-pipeline/retention/",
+          },
+          {
+            label: "Amplitude — Data governance",
+            url: "https://amplitude.com/docs/data/data-governance",
+          },
+        ],
+      },
+      {
+        heading: "Classifier les événements avant instrumentation",
+        paragraphs: [
+          "Analytics produit sans design de rétention devient entrepôt accidentel de comportements sensibles. Définissez classes d'événements : télémétrie strictement opérationnelle, métriques produit pseudonymes et identifiants exigeant base contractuelle avant collecte. Features IA ajoutent attributs dérivés de prompts en tiers restreints même texte redigé. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+          "Engineering et juridique co-signent matrice mappant chaque type à durée stockage, chiffrement et consommateurs aval. Quand marketing demande nouvelle étape entonnoir, question revue est impact rétention, pas seulement faisabilité schéma. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+          "Suppression doit être prouvable. Jobs batch silencieux laissent conforme sur papier et exposé en pratique. Émettez métriques lignes supprimées, âge backlog et retries comme réconciliation paiement. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+        ],
+      },
+      {
+        heading: "Séparer analytics et logs sécurité",
+        paragraphs: [
+          "Schémas partagés tentent réutiliser logs sécurité pour analyse entonnoir, brouillant classes rétention que limitation stockage RGPD décrit. Résumés CPRA Californie rappellent rétention pas plus longue que raisonnablement nécessaire—documentez nécessité par champ, pas par base. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+          "Tables agrégées préservent tendances après expiry raw si rollups portent mêmes labels classification. Analystes produit gardent vues cohortes ; reviewers privacy TTL raw plus court sans perdre KPI hebdo. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+          "Contrôles accès suivent classe données, pas popularité organigramme. Rôles break-glass incident doivent auto-expirer et laisser pistes audit distinctes des groupes self-service analytics. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+        ],
+        links: [
+          {
+            label: "RGPD article 5 — Limitation conservation",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+          {
+            label: "California CPRA — Rétention",
+            url: "https://oag.ca.gov/privacy/ccpa",
+          },
+          {
+            label: "OpenTelemetry — Modèle logs",
+            url: "https://opentelemetry.io/docs/specs/otel/logs/data-model/",
+          },
+        ],
+      },
+      {
+        heading: "Checklist opérationnelle rétention et analytics",
+        paragraphs: [
+          "Les équipes produit traitent la rétention comme paperasse juridique pendant que l'analytics ingère des identifiants indéfiniment. Cassez le cycle : catalogue d'événements dans le même repo que le SDK de tracking, TTL, base légale et cible de rollup par ligne. Les PR ajoutant des propriétés échouent sans mise à jour du catalogue. Les entonnoirs de cohortes survivent à l'expiration du PII brut via agrégats hebdo portant les mêmes labels de classification.",
+          "Les rollups gardent les dashboards honnêtes après fermeture des fenêtres de suppression. Vues matérialisées sans clés utilisateur mais avec hashes d'affectation d'expérience ; documentez graphiques raw vs agrégés. Export CSV pour comité de direction : journaliser le principal demandeur et la classe de données. Exports sans piste d'audit échouent plus vite en revue privacy que métriques manquantes.",
+          "La réplication transfrontalière casse les promesses naïves. Si les événements atterrissent dans des régions à SLA d'effacement différents, taguez les réplicas ; l'orchestration de suppression suit la politique la plus stricte. Le staging ne doit pas garder d'exceptions TTL prod sans expiration auto ; debug avec vraies lignes utilisateur est un finding d'audit récurrent. Fixtures synthétiques imitent le schéma, pas dumps prod.",
+          "Revoyez la rétention comme planification de capacité chaque trimestre. Croissance entrepôt vs lignes supprimées, exceptions, legal holds. Les leads analytics signent les nouveaux flux IA ou paiement confirmant l'absence d'élargissement silencieux des défauts. One-pager all-hands : expirations du mois, rollups de backfill, équipes interrogeant encore des champs périmés. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+        ],
+      },
+    ],
+  },
 "reducing-flaky-e2e-tests-in-expo-apps": {
     title: "Réduire les tests E2E flaky dans Expo",
     excerpt: "Les E2E flaky tuent la confiance; les retries ne remplacent pas un setup déterministe.",

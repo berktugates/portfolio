@@ -1,6 +1,100 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"data-retention-policies-that-enable-product-analytics": {
+    title: "プロダクト分析を可能にするデータ保持ポリシー",
+    excerpt: "保持はコンプライアンス、分析はプロダクト。",
+    description: "層、ロールアップ、法的根拠、可観測な削除。",
+    sections: [
+      {
+        heading: "保持はプロダクト面",
+        paragraphs: [
+          "永久保持はスケールと法リスク。",
+          "全削除は盲目。",
+        ],
+      },
+      {
+        heading: "イベント階層",
+        paragraphs: [
+          "分析・監査・学習でTTL分離。",
+          "PIIと匿名指標を分離。",
+        ],
+        points: [
+          "イベント階層を定義：プロダクト分析、監査、モデル学習",
+          "生イベント削除前に集約ロールアップ",
+          "層ごとに法的根拠と削除SLAを文書化",
+          "保持設定をスキーマ移行同様にレビュー",
+        ],
+      },
+      {
+        heading: "削除前ロールアップ",
+        paragraphs: [
+          "生削除前にロールアップ。",
+          "ファネルは集計で。",
+        ],
+      },
+      {
+        heading: "運用規律",
+        paragraphs: [
+          "保持設定をスキーマ同様レビュー。",
+          "削除ジョブを計測。",
+        ],
+        links: [
+          {
+            label: "GDPR — Storage limitation",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+          {
+            label: "Snowplow — Data retention",
+            url: "https://docs.snowplow.io/docs/understanding-your-pipeline/retention/",
+          },
+          {
+            label: "Amplitude — Data governance",
+            url: "https://amplitude.com/docs/data/data-governance",
+          },
+        ],
+      },
+      {
+        heading: "計測前にイベントを分類",
+        paragraphs: [
+          "retention 設計なしの product analytics は敏感行動の accidental warehouse になる。事前に event class を定義する。厳密運用テレメトリ、 pseudonymous product metric、収集前に契約 basis を要する identifier。AI 機能は text を redact しても restricted tier に属する prompt 由来 attribute を足す。",
+          "engineering と法務は各 event type を保存期間、暗号要件、downstream consumer に写す matrix を co-sign する。marketing が新 funnel step を求めるとき review 問いは schema feasibility だけでなく retention impact だ。",
+          "削除は証明可能であること。静かに fail する batch job は紙面 compliant で実務 exposed を残す。payment reconciliation を monitor するように削除行、backlog 年齢、retry 数を metric 化する。",
+        ],
+      },
+      {
+        heading: "analytics と security logging を分離",
+        paragraphs: [
+          "共有 schema は funnel 分析のために security log を reuse させ、GDPR storage limitation が述べる retention class をぼかす。California CPRA summary は reasonably necessary より長く retain しないよう促す。必要性は DB 単位でなく field 単位で文書化する。",
+          "rollup が同じ classification label を持てば raw expire 後も aggregate table は trend を保てる。product analyst は cohort view を維持し、privacy reviewer は weekly KPI を失わず短い raw TTL を保てる。",
+          "access control は org chart 人気ではなく data class に従う。incident break-glass role は auto-expire し analytics self-service 群とは別 audit trail を残す。 次回の production review で再確認し、オーナーを割り当て、日付付き remediation チケットを紐付けてください。",
+        ],
+        links: [
+          {
+            label: "GDPR 第5条 — 保存制限",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+          {
+            label: "California CPRA — Retention",
+            url: "https://oag.ca.gov/privacy/ccpa",
+          },
+          {
+            label: "OpenTelemetry — ログデータモデル",
+            url: "https://opentelemetry.io/docs/specs/otel/logs/data-model/",
+          },
+        ],
+      },
+      {
+        heading: "分析を生かす retention 運用チェックリスト",
+        paragraphs: [
+          "プロダクトチームは retention を法務書類扱いし、分析パイプラインだけが識別子を際限なく取り込み続けます。追跡 SDK と同じリポジトリにイベントカタログを公開し、各行に TTL、法的根拠、ロールアップ先を載せて打破してください。新プロパティを増やす PR はカタログ更新なしで CI 失敗。raw PII 失効後も週次集計が同じ分類タグを継承するためコホート漏斗は維持できます。",
+          "削除ウィンドウ後にダッシュボードを正直に保つのはロールアップです。ユーザー鍵を落としつつ実験割当ハッシュを読み取り期間保持する materialized view を設計し、どのグラフが raw と集計のどちらを見るか文書化。取締役会向け CSV エクスポートは要求主体とデータクラスをログ。監査証跡のないエクスポートは欠損メトリクスより privacy レビューで早く落ちます。",
+          "越境レプリケーションは素朴な retention 約束を壊します。消去 SLA の異なるリージョンにイベントが落ちるならレプリカをカタログでタグ付け、削除オーケストレーションは最も厳しい方針に従います。ステージングは prod TTL 例外を自動失効なしに置かない。実ユーザ行でデバッグは繰り返しの監査指摘。合成フィクスチャはスキーマ模倣で prod ダンプコピー禁止。 担当者、レビュー日、ロールバック条件を同一変更チケットに記録し、次の on-call エンジニアがインシデントを再オープンせず判断を追跡できるようにする。",
+          "retention を四半期ごとのキャパシティ計画のようにレビュー。倉庫成長、削除行、例外、リーガルホールドを測定。新 AI や決済フロー ship 時は分析リードが署名し、デフォルトが静かに広がっていないことを確認。エンジニア all-hands 向け一页: 今月の失効、履歴を埋めるロールアップ、期限切れのはずのフィールドをまだ問い合わせるチーム。 担当者、レビュー日、ロールバック条件を同一変更チケットに記録し、次の on-call エンジニアがインシデントを再オープンせず判断を追跡できるようにする。",
+        ],
+      },
+    ],
+  },
 "reducing-flaky-e2e-tests-in-expo-apps": {
     title: "ExpoアプリでフレーキーE2Eを減らす",
     excerpt: "フレーキーE2Eは信頼を壊す。リトライは決定的セットアップの代わりにならない。",

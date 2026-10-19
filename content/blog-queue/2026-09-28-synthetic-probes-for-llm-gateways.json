@@ -3,7 +3,7 @@
   "title": "Synthetic Probes for LLM Gateways",
   "excerpt": "Model vendor status pages go green while your copilot still fails on a bad route rule. Synthetic probes turn user-visible LLM paths into measurable SLOs.",
   "description": "How staff engineers design synthetic monitoring for LLM gateways: realistic prompts, streaming completion checks, regional probes, and alert routing that product trusts.",
-  "readingMinutes": 4,
+  "readingMinutes": 11,
   "keywords": [
     "synthetic monitoring",
     "LLM gateway",
@@ -63,6 +63,45 @@
           "url": "https://platform.openai.com/docs/guides/production-best-practices"
         }
       ]
+    },
+    {
+      "heading": "Probe the same path production uses",
+      "paragraphs": [
+        "Health checks that hit admin bypass URLs green-light dashboards while customers queue behind rate limits and OAuth failures. Synthetic probes should authenticate like real clients, traverse the same edge routes, and submit prompts sized like production percentiles. Blackbox-style exporters help when you need TLS and DNS validation from outside your cluster.",
+        "Separate liveness from quality. A two-hundred response with empty completions still violates user expectations. Store probe transcripts in an isolated bucket with short retention so monitoring does not feed training loops or leak prompt templates into analytics warehouses. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        "Run probes from multiple regions and providers to catch DNS and peering issues single-region metrics miss. Correlate probe failures with vendor status pages but trust your own signals when partial outages affect only certain model routes. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket."
+      ]
+    },
+    {
+      "heading": "Alert on latency and drift before hard outages",
+      "paragraphs": [
+        "Time-to-first-token rising while error rates stay flat often precedes saturation incidents. OpenTelemetry semantic conventions for generative AI describe attributes you can attach to spans emitted by probe clients, making gateway regressions visible in the same backends SRE already watches. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        "Rotate a small library of probe prompts designed to detect format regressions and safety filter changes, not only HTTP five-hundred responses. Compare embeddings or structured outputs against baselines when deterministic text match is too brittle across model updates. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        "Tune alert routing so probe noise pages the gateway owner, not every model consumer team. Document escalation when probes fail but manual spot checks succeed—that usually indicates feature-flag skew or canary cohort mismatch rather than false positives. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket."
+      ],
+      "links": [
+        {
+          "label": "Prometheus — Blackbox exporter",
+          "url": "https://github.com/prometheus/blackbox_exporter"
+        },
+        {
+          "label": "OpenTelemetry — Semantic conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/"
+        },
+        {
+          "label": "OpenAI — Evals guide",
+          "url": "https://platform.openai.com/docs/guides/evals"
+        }
+      ]
+    },
+    {
+      "heading": "Probes that mirror production client paths",
+      "paragraphs": [
+        "Admin-only health endpoints lie about user experience. Synthetic probes must authenticate like production clients, traverse rate limits, routing rules, and regional gateways, then assert on time-to-first-token and JSON schema validity—not merely HTTP two hundred. Store probe transcripts separately from customer traffic logs to avoid feedback loops where probes pollute training or eval sets. Rotate prompts weekly to detect subtle quality drift, not only hard five hundreds.",
+        "Alert on percentile latency before social media complaints arrive. Baseline probes during known vendor maintenance windows so pages distinguish expected blips from regressions you caused. Include a tool-call probe path if agents are in scope; empty completions with two hundred responses are a common failure mode synthetics miss when checks only ping chat completions without functions enabled.",
+        "Probe failures should link to runbooks and recent deploys automatically in incident tickets. Tag probes by model route and region; a green check in Virginia while Oregon fails still blocks release if your SLA promises global availability. Cost-control teams need dashboards on probe token spend so monitoring does not become its own budget incident. Record the owner, review date, and rollback trigger in the same change ticket so the next on-call engineer can trace decisions.",
+        "Treat probe datasets like production config—review changes in pull requests, version prompts, and document expected rubric scores for qualitative checks where automation compares embeddings distance. After incidents, add failing scenarios to probes before closing the postmortem. Probes complement eval gates in CI; together they catch routing misconfigurations decks never exercise because demos use shortcut API keys."
+      ]
     }
   ],
   "locales": {
@@ -113,6 +152,45 @@
               "label": "OpenAI — Production best practices",
               "url": "https://platform.openai.com/docs/guides/production-best-practices"
             }
+          ]
+        },
+        {
+          "heading": "Üretimin kullandığı yolu probelayın",
+          "paragraphs": [
+            "Admin bypass URL'lerine vuran health check'ler müşteriler rate limit ve OAuth hatalarında beklerken dashboard'ları yeşil gösterir. Sentetik probeler gerçek istemciler gibi kimlik doğrulamalı, aynı edge rotalarından geçmeli ve üretim yüzdeliklerine uygun boyutta prompt göndermeli. Blackbox tarzı exporter'lar cluster dışından TLS ve DNS doğrulaması gerektiğinde yardım eder.",
+            "Canlılığı kaliteden ayırın. Boş completion'lı iki yüzlü yanıt yine kullanıcı beklentisini ihlal eder. Probe transkriptlerini kısa saklamalı izole kovada tutun; izleme eğitim döngüsü beslemesin veya prompt şablonlarını analitik ambarlarına sızdırmasın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Probeleri birden fazla bölge ve sağlayıcıdan çalıştırarak tek bölge metriklerinin kaçırdığı DNS ve peering sorunlarını yakalayın. Probe hatalarını vendor durum sayfalarıyla ilişkilendirin ama kısmi kesintiler yalnızca belirli model rotalarını etkilediğinde kendi sinyallerinize güvenin. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın."
+          ]
+        },
+        {
+          "heading": "Sert kesintilerden önce gecikme ve drift uyarısı",
+          "paragraphs": [
+            "Hata oranları düz kalırken time-to-first-token artışı çoğu zaman doygunluk olaylarını önceler. Generative AI için OpenTelemetry semantik kuralları probe istemcilerinin yaydığı span'lere ekleyebileceğiniz öznitelikleri tanımlar; gateway gerilemeleri SRE'nin zaten izlediği backend'lerde görünür olur. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Yalnızca HTTP beş yüz değil format gerilemeleri ve güvenlik filtresi değişimlerini yakalamak için tasarlanmış küçük probe prompt kütüphanesini döndürün. Model güncellemelerinde deterministik metin eşleşmesi kırılgan olduğunda embedding veya yapılandırılmış çıktıları baz çizgiyle kıyaslayın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Uyarı yönlendirmesini probe gürültüsü gateway sahibini pages etsin, her model tüketici ekibini değil. Probeler fail ederken manuel spot check başarılıysa escalation belgeleyin; bu genelde false positive değil feature-flag skew veya canary kohort uyumsuzluğudur. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın."
+          ],
+          "links": [
+            {
+              "label": "Prometheus — Blackbox exporter",
+              "url": "https://github.com/prometheus/blackbox_exporter"
+            },
+            {
+              "label": "OpenTelemetry — Semantik kurallar",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            },
+            {
+              "label": "OpenAI — Eval rehberi",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            }
+          ]
+        },
+        {
+          "heading": "Prod istemci yolunu yansıtan probeler",
+          "paragraphs": [
+            "Yalnızca admin health endpoint'leri kullanıcı deneyimini yalanlar. Synthetic probeler prod client gibi authenticate olmalı; rate limit, routing ve bölgesel gateway'den geçip time-to-first-token ve JSON schema assert etmeli—yalnızca HTTP 200 değil. Probe transkriptlerini müşteri trafik log'undan ayrı tutun; probe'ların training/eval set'ini kirletmesini önleyin. Haftalık prompt rotasyonu ince kalite drift'ini yakalar, yalnızca sert 500'leri değil. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+            "Sosyal medya şikayetinden önce percentile latency alert edin. Bilinen vendor maintenance penceresinde baseline probe çalıştırın; sayfalar beklenen blip ile sizin regresyonunuzu ayırsın. Agent kapsamdaysa tool-call probe path ekleyin; yalnızca function'sız chat completion ping'leyen check'ler 200 dönen boş completion'ı kaçırır. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+            "Probe failure incident ticket'ında runbook ve son deploy'a otomatik linklensin. Probe'ları model route ve bölgeye tag'leyin; Virginia yeşil Oregon kırmızıysa global SLA varsa release bloklanmalı. Maliyet kontrol ekipleri probe token harcaması dashboard'u görmeli; monitoring kendi bütçe olayına dönmesin. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+            "Probe dataset'lerini prod config gibi yönetin—PR review, versiyonlu prompt, embedding mesafesi ile otomasyon yapılan kalitatif check'lerde beklenen rubric skoru. Postmortem kapanmadan failing senaryoyu probe'a ekleyin. Probe'lar CI eval gate'lerini tamamlar; birlikte deck'lerin shortcut API key ile asla koşmadığı routing misconfig'lerini yakalar. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin."
           ]
         }
       ]
@@ -165,6 +243,45 @@
               "url": "https://platform.openai.com/docs/guides/production-best-practices"
             }
           ]
+        },
+        {
+          "heading": "Den Pfad sonden, den Prod nutzt",
+          "paragraphs": [
+            "Health Checks auf Admin-Bypass-URLs grünen Dashboards, während Kunden hinter Rate Limits und OAuth-Fehlern warten. Synthetische Probes authentifizieren wie echte Clients, durchlaufen dieselben Edge-Routen und senden Prompts in Prod-Perzentil-Größe. Blackbox-Exporter helfen bei TLS- und DNS-Checks von außerhalb des Clusters. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Trennen Sie Liveness von Qualität. Zweihundert mit leeren Completions verletzt trotzdem Erwartungen. Speichern Sie Probe-Transkripte isoliert mit kurzer Retention, damit Monitoring keine Training-Loops speist oder Prompt-Templates in Analytics-Warehouses leakt. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Probes aus mehreren Regionen und Providern fangen DNS- und Peering-Probleme, die Single-Region-Metriken verpassen. Korrelieren Sie mit Vendor-Statusseiten, vertrauen Sie eigenen Signalen bei Partial Outages nur bestimmter Model-Routen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an."
+          ]
+        },
+        {
+          "heading": "Vor harten Outages auf Latenz und Drift alerten",
+          "paragraphs": [
+            "Steigendes Time-to-first-token bei flachen Error Rates geht Saturation Incidents oft voraus. OpenTelemetry-Semconv für Generative AI beschreibt Attribute für Probe-Client-Spans, sodass Gateway-Regressionen in denselben Backends sichtbar werden, die SRE ohnehin watcht. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Rotieren Sie eine kleine Probe-Prompt-Bibliothek für Format-Regressionen und Safety-Filter-Änderungen, nicht nur HTTP-500. Vergleichen Sie Embeddings oder strukturierte Outputs mit Baselines, wenn deterministischer Textmatch über Model-Upgrades zu spröde ist. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Alert-Routing so tunen, dass Probe-Rauschen den Gateway-Owner paget, nicht jedes Model-Consumer-Team. Eskalation dokumentieren, wenn Probes failen aber manuelle Spot Checks passen—meist Feature-Flag-Skew oder Canary-Kohorten-Mismatch statt False Positives. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an."
+          ],
+          "links": [
+            {
+              "label": "Prometheus — Blackbox Exporter",
+              "url": "https://github.com/prometheus/blackbox_exporter"
+            },
+            {
+              "label": "OpenTelemetry — Semantische Konventionen",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            },
+            {
+              "label": "OpenAI — Evals-Leitfaden",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            }
+          ]
+        },
+        {
+          "heading": "Probes spiegeln Prod-Client-Pfade",
+          "paragraphs": [
+            "Admin-only Health-Endpoints lügen über UX. Synthetic Probes authentifizieren wie Prod-Clients, durchlaufen Rate-Limits, Routing, regionale Gateways, asserten Time-to-First-Token und JSON-Schema—not only HTTP 200. Probe-Transcripts getrennt von Customer-Logs gegen Feedback-Loops in Training/Eval. Wöchentliche Prompt-Rotation für subtilen Quality-Drift, nicht nur harte 500er. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Percentile-Latency alerten vor Social-Media-Beschwerden. Baseline-Probes während Vendor-Maintenance damit Pages erwartete Blips von eigenen Regressionen trennen. Tool-Call-Probe-Pfad wenn Agents im Scope; leere Completions mit 200 verpassen Checks die nur Chat ohne Functions pingen. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Probe-Failures verlinken Runbooks und recent Deploys in Incident-Tickets. Probes taggen nach Modell-Route und Region; Virginia grün Oregon rot blockt Release bei globalem SLA. Cost-Control braucht Dashboards Probe-Token-Spend damit Monitoring kein eigenes Budget-Incident wird. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Probe-Datasets wie Prod-Config—PR-Review, versionierte Prompts, erwartete Rubric-Scores bei Embedding-Distanz-Automation. Nach Incidents failing Scenarios zu Probes vor Postmortem-Close. Probes ergänzen CI-Eval-Gates; zusammen fangen Routing-Misconfigs die Decks mit Shortcut-Keys nie testen. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht."
+          ]
         }
       ]
     },
@@ -215,6 +332,45 @@
               "label": "OpenAI — Production best practices",
               "url": "https://platform.openai.com/docs/guides/production-best-practices"
             }
+          ]
+        },
+        {
+          "heading": "Sonder le chemin que la prod emprunte",
+          "paragraphs": [
+            "Des health checks sur URL bypass admin verdissent dashboards pendant que clients attendent derrière rate limits et échecs OAuth. Sondes synthétiques authentifient comme vrais clients, traversent mêmes routes edge et envoient prompts calibrés percentiles prod. Exporteurs blackbox aident pour TLS et DNS depuis hors cluster.",
+            "Séparez liveness et qualité. Deux cents avec completions vides viole quand même attentes utilisateur. Stockez transcripts sonde dans bucket isolé rétention courte pour que monitoring n'alimente pas boucles entraînement ni ne fuite templates prompt vers entrepôts analytics. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+            "Lancez sondes depuis plusieurs régions et providers pour attraper DNS et peering manqués par métriques mono-région. Corrélez échecs sonde avec pages statut vendor mais fiez-vous à vos signaux quand pannes partielles touchent seulement certaines routes modèle. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté."
+          ]
+        },
+        {
+          "heading": "Alerter latence et drift avant outages durs",
+          "paragraphs": [
+            "Time-to-first-token montant avec taux erreur plat précède souvent incidents saturation. Conventions sémantiques OpenTelemetry IA générative décrivent attributs attachables aux spans clients sonde, rendant régressions gateway visibles dans backends déjà watchés par SRE. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+            "Faites tourner petite bibliothèque prompts sonde pour régressions format et changements filtre safety, pas seulement HTTP 500. Comparez embeddings ou sorties structurées aux baselines quand match texte déterministe trop fragile sur upgrades modèle. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+            "Routez alertes pour que bruit sonde page owner gateway, pas chaque équipe consommatrice modèle. Documentez escalade quand sondes échouent mais spot checks manuels passent—souvent skew feature flag ou mismatch cohorte canary plutôt faux positifs. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté."
+          ],
+          "links": [
+            {
+              "label": "Prometheus — Blackbox exporter",
+              "url": "https://github.com/prometheus/blackbox_exporter"
+            },
+            {
+              "label": "OpenTelemetry — Conventions sémantiques",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            },
+            {
+              "label": "OpenAI — Guide evals",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            }
+          ]
+        },
+        {
+          "heading": "Sondes calquées sur les chemins clients prod",
+          "paragraphs": [
+            "Health endpoints admin-only mentent sur l'UX. Probes synthetics s'authentifient comme clients prod, traversent rate limits, routing, gateways régionaux, assert time-to-first-token et schema JSON—pas seulement HTTP 200. Transcripts probes séparés des logs clients pour éviter boucles feedback training/eval. Rotation prompts hebdo pour drift qualité subtil, pas seulement 500 durs. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+            "Alerter latence percentile avant plaintes réseaux sociaux. Baseline probes pendant maintenance vendor connue pour séparer blips attendus de vos régressions. Chemin probe tool-call si agents in scope ; completions vides avec 200 manquées si checks pingent chat sans functions. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+            "Échecs probe lient runbooks et deploys récents dans tickets incident. Tagger probes par route modèle et région ; Virginia vert Oregon rouge bloque release si SLA global. Équipes coût veulent dashboards dépense tokens probes pour que monitoring ne devienne pas incident budget. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+            "Datasets probes comme config prod—review PR, prompts versionnés, scores rubric attendus pour checks qualitatifs par distance embeddings. Après incidents ajouter scénarios failing aux probes avant clôture postmortem. Probes complètent gates eval CI ; ensemble attrapent misconfigs routing que decks avec clés shortcut ne testent jamais. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident."
           ]
         }
       ]
@@ -267,6 +423,45 @@
               "url": "https://platform.openai.com/docs/guides/production-best-practices"
             }
           ]
+        },
+        {
+          "heading": "Sondare lo stesso path della produzione",
+          "paragraphs": [
+            "Health check su URL bypass admin verdeggiano dashboard mentre clienti attendono dietro rate limit e fallimenti OAuth. Sonde sintetiche autenticano come client reali, attraversano stesse route edge e inviano prompt dimensionati ai percentile prod. Exporter blackbox aiutano per TLS e DNS da fuori cluster. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "Separate liveness da qualità. Duecento con completion vuote viola comunque aspettative utente. Conservate transcript sonda in bucket isolato retention breve così monitoring non alimenta loop training né perde template prompt in warehouse analytics. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "Eseguite sonde da più regioni e provider per catturare DNS e peering persi da metriche single-region. Correlate fallimenti sonda con status page vendor ma fidatevi segnali propri su outage parziali che colpiscono solo certe route modello. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato."
+          ]
+        },
+        {
+          "heading": "Alert su latenza e drift prima di outage duri",
+          "paragraphs": [
+            "Time-to-first-token in crescita con error rate piatto precede spesso incident saturazione. Semantic convention OpenTelemetry per AI generativa descrivono attributi per span client sonda, rendendo regressioni gateway visibili negli stessi backend già watchati da SRE. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "Ruotate piccola libreria prompt sonda per regressioni formato e cambi filtro safety, non solo HTTP 500. Confrontate embedding o output strutturati con baseline quando match testo deterministico è troppo fragile su upgrade modello. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "Sintonizzate routing alert così rumore sonda pagina owner gateway, non ogni team consumer modello. Documentate escalation quando sonde falliscono ma spot check manuali passano—di solito skew feature flag o mismatch cohort canary più che falsi positivi. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato."
+          ],
+          "links": [
+            {
+              "label": "Prometheus — Blackbox exporter",
+              "url": "https://github.com/prometheus/blackbox_exporter"
+            },
+            {
+              "label": "OpenTelemetry — Convenzioni semantiche",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            },
+            {
+              "label": "OpenAI — Guida eval",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            }
+          ]
+        },
+        {
+          "heading": "Probe che rispecchiano i path client prod",
+          "paragraphs": [
+            "Health endpoint solo admin mentono sull'UX. Probe synthetic autenticano come client prod, attraversano rate limit, routing, gateway regionali, assert time-to-first-token e schema JSON—non solo HTTP 200. Transcript probe separati da log clienti per evitare feedback loop su training/eval. Rotazione prompt settimanale per drift qualità sottile, non solo 500 duri. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+            "Alertare latenza percentile prima delle lamentele social. Baseline probe durante maintenance vendor nota per separare blip attesi dalle vostre regressioni. Path probe tool-call se agent in scope; completion vuote con 200 perse se check pingano chat senza functions. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+            "Failure probe collegano runbook e deploy recenti nei ticket incident. Tag probe per route modello e regione; Virginia verde Oregon rosso blocca release con SLA globale. Team costo vogliono dashboard spesa token probe così monitoring non diventa incident budget. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+            "Dataset probe come config prod—review PR, prompt versionati, punteggi rubric attesi per check qualitativi con distanza embedding. Dopo incident aggiungere scenari failing alle probe prima chiusura postmortem. Probe completano gate eval CI; insieme catturano misconfig routing che deck con chiavi shortcut non esercitano mai. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident."
+          ]
         }
       ]
     },
@@ -318,6 +513,45 @@
               "url": "https://platform.openai.com/docs/guides/production-best-practices"
             }
           ]
+        },
+        {
+          "heading": "探测生产实际路径",
+          "paragraphs": [
+            "命中 admin bypass URL 的健康检查会在客户因 rate limit 与 OAuth 失败排队时仍把 dashboard 刷绿。合成探针应像真实客户端一样认证、走相同 edge 路由，并提交接近生产分位大小的 prompt。Blackbox exporter 适合从集群外做 TLS 与 DNS 校验。",
+            "将存活与质量分开。空 completion 的 200 仍违背用户预期。探针 transcript 存于短保留的隔离桶，避免监控喂养训练闭环或将 prompt 模板泄漏进分析仓。",
+            "从多区域与多 provider 运行探针，捕获单区域指标遗漏的 DNS 与 peering 问题。探针失败可与 vendor 状态页关联，但当 partial outage 仅影响特定模型路由时仍以自有信号为准。"
+          ]
+        },
+        {
+          "heading": "在硬 outage 前对延迟与 drift 告警",
+          "paragraphs": [
+            "错误率持平而 time-to-first-token 上升常先于饱和事故。生成式 AI 的 OpenTelemetry 语义约定描述探针客户端 span 可附属性，使 gateway 回归出现在 SRE 已在看的后端中。",
+            "轮换小型探针 prompt 库以检测格式回归与安全过滤器变化，而非仅 HTTP 500。模型升级后确定性文本匹配过脆时，将 embedding 或结构化输出与基线比较。",
+            "调整告警路由使探针噪声 paging gateway owner，而非每个模型消费团队。记录探针失败但人工 spot check 成功时的 escalation——通常表示 feature-flag skew 或 canary  cohort 不一致，而非误报。"
+          ],
+          "links": [
+            {
+              "label": "Prometheus — Blackbox exporter",
+              "url": "https://github.com/prometheus/blackbox_exporter"
+            },
+            {
+              "label": "OpenTelemetry — 语义约定",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            },
+            {
+              "label": "OpenAI — Eval 指南",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            }
+          ]
+        },
+        {
+          "heading": "镜像生产客户端路径的探针",
+          "paragraphs": [
+            "仅管理员健康端点无法反映真实体验。合成探针须像生产客户端一样认证，经过限流、路由与区域网关，断言首 token 时间与 JSON schema 有效性——而非只看 HTTP 200。探针转录与客户流量日志分开存储，避免污染训练或 eval 集的反馈环。每周轮换 prompt 以发现细微质量漂移，而非仅硬 500。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "在社交媒体抱怨前对分位延迟告警。在已知供应商维护窗口运行基线探针，使值班能区分预期抖动与自身回归。若范围含 agent，加入 tool-call 探针路径；仅 ping 无 function 的 chat completion 的检查常会漏掉返回 200 的空 completion。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "探针失败应在事件工单中自动链接 runbook 与近期发布。按模型路由与区域标记探针；弗吉尼亚绿而俄勒冈红时，若 SLA 承诺全球可用仍应阻断发布。成本控制团队需要探针 token 花费仪表盘，以免监控本身成为预算事件。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "将探针数据集当作生产配置——PR 评审、版本化 prompt，以及在自动化比较 embedding 距离时记录期望 rubric 分数。事后在关闭 postmortem 前把失败场景加入探针。探针与 CI eval 门禁互补；共同捕获演示用 shortcut API 密钥从未覆盖的路由误配。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。"
+          ]
         }
       ]
     },
@@ -368,6 +602,45 @@
               "label": "OpenAI — Production best practices",
               "url": "https://platform.openai.com/docs/guides/production-best-practices"
             }
+          ]
+        },
+        {
+          "heading": "本番と同じ path を probe する",
+          "paragraphs": [
+            "admin bypass URL を叩く health check は、顧客が rate limit と OAuth 失敗で待つ間も dashboard を緑にする。合成 probe は実クライアント同様に認証し、同 edge ルートを通り、本番パーセンタイル相当サイズの prompt を送る。cluster 外から TLS と DNS を要るなら blackbox exporter が役立つ。",
+            "liveness と quality を分ける。空 completion の 200 もユーザー期待を破る。probe transcript は短 retention の隔離 bucket に置き、monitoring が training loop を feed したり prompt テンプレを analytics warehouse に漏らさない。",
+            "複数 region と provider から probe を走らせ、単一 region メトリクスが逃す DNS と peering を捕まえる。probe 失敗は vendor status と correlate するが、部分 outage が特定 model route のみのときは自前 signal を信頼する。"
+          ]
+        },
+        {
+          "heading": "hard outage 前にレイテンシと drift を alert",
+          "paragraphs": [
+            "error rate が flat のまま time-to-first-token が上がるのは飽和 incident の前触れになりやすい。生成 AI 向け OpenTelemetry semconv は probe クライアント span に付けられる属性を述べ、gateway 回帰を SRE が既に watch する backend で可視化する。",
+            "HTTP 500 だけでなく format 回帰と safety filter 変更を検知する小さな probe prompt ライブラリをローテーションする。model upgrade で決定論テキスト match が脆いときは embedding や structured output を baseline と比較する。",
+            "alert routing を tune し、probe ノイズは各 model consumer チームではなく gateway owner を page する。probe fail だが手動 spot check pass の escalation を文書化する。多くは false positive より feature-flag skew か canary cohort mismatch だ。"
+          ],
+          "links": [
+            {
+              "label": "Prometheus — Blackbox exporter",
+              "url": "https://github.com/prometheus/blackbox_exporter"
+            },
+            {
+              "label": "OpenTelemetry — セマンティック規約",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            },
+            {
+              "label": "OpenAI — Eval ガイド",
+              "url": "https://platform.openai.com/docs/guides/evals"
+            }
+          ]
+        },
+        {
+          "heading": "prod クライアント path を映す probe",
+          "paragraphs": [
+            "admin 専用 health endpoint は UX を嘘つく。synthetic probe は prod client 同様に auth し、rate limit、routing、地域 gateway を通過、time-to-first-token と JSON schema を assert—HTTP 200 だけでない。probe transcript は customer ログと分離し training/eval 汚染の feedback loop 回避。週次 prompt ローテで subtle quality drift を検知、hard 500 だけでない。",
+            "SNS 苦情前に percentile latency を alert。既知 vendor maintenance 中に baseline probe を走らせ、期待 blip と自前 regression を分離。agent scope なら tool-call probe path；function なし chat ping だけの check は 200 の空 completion を見逃す。 担当者、レビュー日、ロールバック条件を同一変更チケットに記録し、次の on-call エンジニアがインシデントを再オープンせず判断を追跡できるようにする。",
+            "probe failure は incident ticket で runbook と recent deploy へ自動 link。model route と region で tag；Virginia 緑 Oregon 赤なら global SLA なら release block。cost control は probe token spend dashboard を要り、monitoring が別 budget incident にならないように。",
+            "probe dataset を prod config 扱い—PR review、version prompt、embedding 距離 automation の qualitative check では期待 rubric score を文書化。incident 後 postmortem close 前に failing scenario を probe へ追加。probe は CI eval gate を補完；deck の shortcut API key では never 走る routing misconfig を両方で捕捉。"
           ]
         }
       ]

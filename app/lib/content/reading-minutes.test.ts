@@ -48,11 +48,11 @@ test("estimateReadingMinutesFromSections uses locale pace", () => {
     [{ heading: "标题", paragraphs: ["中文".repeat(200)] }],
     "zh",
   );
-  assert.ok(en >= 4 && en <= 15);
-  assert.ok(zh >= 4);
+  assert.ok(en >= 10 && en <= 25);
+  assert.ok(zh >= 10);
 });
 
-test("short TR overlay yields lower minutes than hardcoded seven", () => {
+test("short TR overlay clamps to minimum ten minutes", () => {
   const trSections: BlogSection[] = [
     {
       heading: "Mobil gecikme",
@@ -63,5 +63,5 @@ test("short TR overlay yields lower minutes than hardcoded seven", () => {
     },
   ];
   const minutes = estimateReadingMinutesFromSections(trSections, "tr");
-  assert.equal(minutes, 4);
+  assert.equal(minutes, 10);
 });

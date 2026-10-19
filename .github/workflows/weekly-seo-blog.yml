@@ -44,6 +44,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Sync blog queue (7 locales, long-form depth)
+        run: python3 scripts/_write_sept_blog_queue.py
+
       - name: Validate queues and assistant
         run: |
           set -euo pipefail
@@ -58,7 +61,11 @@ jobs:
           COUNT=$(find content/blog-queue -maxdepth 1 -name '*.json' 2>/dev/null | wc -l | tr -d ' ')
           echo "Queued posts remaining: $COUNT"
           if [ "$COUNT" -lt 1 ]; then
-            echo "::warning::Blog queue is empty."
+            echo "::error::Blog queue is empty; add posts via scripts/_write_sept_blog_queue.py"
+            exit 1
+          fi
+          if [ "$COUNT" -lt 7 ]; then
+            echo "::warning::Blog queue below 7 days ($COUNT files)."
           fi
 
       - name: Publish next blog from queue

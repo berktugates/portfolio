@@ -3,6 +3,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { assessContentSafety } from "../app/lib/content-safety";
 import { extractBlogQueuePlainText } from "./lib/blog-queue-body";
+import { assertQueueReadingPost } from "./lib/queue-reading-gate.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 
@@ -50,6 +51,7 @@ async function scanDir(relative: string) {
       throw new Error(`${relative}/${name}: ${result.code} ${result.hits.join(",")}`);
     }
     if (relative === "content/blog-queue") {
+      assertQueueReadingPost(raw, `${relative}/${name}`);
       const tr = (raw.locales as { tr?: { title?: string } } | undefined)?.tr;
       const enTitle = String(raw.title ?? "");
       if (tr?.title && enTitle && tr.title === enTitle) {

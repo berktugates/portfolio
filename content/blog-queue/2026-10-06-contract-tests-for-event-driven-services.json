@@ -1,0 +1,645 @@
+{
+  "slug": "contract-tests-for-event-driven-services",
+  "title": "Contract Tests for Event-Driven Services",
+  "excerpt": "REST teams learned contract tests a decade ago. Behind an async bus, producer deploys still break consumers silently when schemas drift without consumer-driven verification.",
+  "description": "Staff patterns for event-driven contract testing: consumer-driven contracts, semver for event schemas, CI provider verification, and DLQ metrics for poison messages.",
+  "readingMinutes": 10,
+  "keywords": [
+    "contract testing",
+    "event-driven",
+    "Pact",
+    "schema evolution",
+    "microservices"
+  ],
+  "socialThreadTr": [
+    "Async event'te producer deploy consumer'ı sessizce kırar; contract test şart. 🧵",
+    "Pact verify ve semver. Detay: https://berktugberke.com/tr/blogs/contract-tests-for-event-driven-services"
+  ],
+  "sections": [
+    {
+      "heading": "Async failures stay silent",
+      "paragraphs": [
+        "Producers assume new fields are optional; consumers deserialize strictly and messages land in the DLQ without a page.",
+        "Consumer-driven contracts lock expected payload shapes in code reviewable artifacts, not tribal JSON examples."
+      ]
+    },
+    {
+      "heading": "Consumer contracts before deploy",
+      "paragraphs": [
+        "Plan major bumps and dual-publish windows for breaking schema changes.",
+        "Run old and new schemas in parallel during migration so rollback does not require replaying a day's events."
+      ],
+      "points": [
+        "Verify consumer contracts before producer deploys ship",
+        "Apply semver to async event schemas for breaking changes",
+        "Run Pact or equivalent provider verification in CI",
+        "Use DLQ metrics for poison messages and schema drift"
+      ]
+    },
+    {
+      "heading": "Semver event schemas",
+      "paragraphs": [
+        "Run Pact or equivalent provider verification in CI and block producer merges that break consumers.",
+        "Fixtures must be synthetic—never copy production tenant payloads into contract repos."
+      ]
+    },
+    {
+      "heading": "DLQ exposes poison messages",
+      "paragraphs": [
+        "Alert on DLQ depth and schema parse failure rates; they are early signals of contract drift.",
+        "Document poison-message replay runbooks with idempotent handlers so ops cannot double-apply side effects."
+      ],
+      "links": [
+        {
+          "label": "Pact — Consumer driven contracts",
+          "url": "https://docs.pact.io/"
+        },
+        {
+          "label": "CloudEvents — Specification",
+          "url": "https://cloudevents.io/"
+        }
+      ]
+    },
+    {
+      "heading": "Version events like public APIs",
+      "paragraphs": [
+        "Async buses fail quietly when producers merge schema changes consumers never verified. Publish event contracts with semver rules, fixture data, and ownership in a registry linked from pull requests. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "CloudEvents envelopes standardize metadata but payload compatibility still needs explicit optional-field policies and enum extension behavior. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Consumer-driven suites should run in continuous integration on both sides before either deploy merges. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window."
+      ]
+    },
+    {
+      "heading": "Verify providers before they ship",
+      "paragraphs": [
+        "Block producer deploys when provider verification fails, not only consumer deploys, or you recreate monolith release trains in slow motion. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "DLQ metrics—depth, lag, error taxonomy by event type—surface poison messages faster than log grep. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Game days replay redacted production samples into staging buses to validate contract changes under load. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window."
+      ],
+      "links": [
+        {
+          "label": "Pact — Consumer driven contracts",
+          "url": "https://docs.pact.io/"
+        },
+        {
+          "label": "CloudEvents — Specification",
+          "url": "https://cloudevents.io/"
+        },
+        {
+          "label": "AsyncAPI — Event contracts",
+          "url": "https://www.asyncapi.com/docs/reference/specification/v3.0.0"
+        }
+      ]
+    },
+    {
+      "heading": "Async contracts that survive deploy order",
+      "paragraphs": [
+        "Event-driven systems fail quietly when producers ship schema changes consumers never verified. Treat published event schemas like HTTP OpenAPI: semver breaking changes, consumer-driven contract suites, and provider verification jobs in continuous integration before either side merges. CloudEvents envelopes help, but payload fields still need explicit compatibility rules and fixture data representative of production cardinality. Negative contract fixtures should run on every provider pull request. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Pact or equivalent tools should run on both sides—consumers publish expectations, producers prove they emit matching shapes under recorded scenarios. Block producer deploys when verification fails, not only consumer deploys, or you recreate the monolith release train in slow motion. Version negotiation headers or topic suffixes beat silent dual writes that fork analytics pipelines. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Dead-letter queues surface poison messages and schema drift faster than grep in logs. Metric DLQ depth, processing lag, and error taxonomy by event type. Contract tests must include negative cases: unknown fields ignored, required fields missing, and enum extensions forwarded without crash. Document which teams own which event types in a catalog linked from pull request templates. Treat registry drift like API deprecation with explicit sunset dates. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Game days replay production traffic samples into staging buses with redaction to validate contract changes under load. Legal and privacy reviews apply to event payloads the same way they apply to REST bodies—do not log full payment or health events to shared topics. Quarterly audits diff emitted schemas against the registry and retire orphaned topics before they become shadow databases. Registry diffs should block deploy when orphaned topics still receive traffic. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first."
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Olay Güdümlü Servisler İçin Contract Test",
+      "excerpt": "REST için contract test yaygınlaştı; async event bus arkasında aynı disiplin yoksa producer deploy consumer'ları sessizce kırar. Schema registry tek başına yeterli değildir.",
+      "description": "Event-driven contract test: consumer-driven sözleşmeler, semver, CI provider verify ve DLQ ile schema drift görünürlüğü.",
+      "sections": [
+        {
+          "heading": "Async'te sessiz kırılma normaldir",
+          "paragraphs": [
+            "Producer yeni alan eklerken optional sanır; consumer strict deserialize eder ve mesaj DLQ'ya düşer.",
+            "Consumer-driven contract ile beklenen payload şeklini kod olarak kilitleyin."
+          ]
+        },
+        {
+          "heading": "Consumer contract deploy'dan önce",
+          "paragraphs": [
+            "Breaking change için major bump ve dual-publish dönemi planlayın.",
+            "Canlı trafikte eski ve yeni schema paralel tüketilsin."
+          ],
+          "points": [
+            "Consumer contract'ları producer deploy'undan önce doğrulayın",
+            "Async event şemasını breaking change için semver uygulayın",
+            "Pact veya benzeri fixture'ları CI'da provider verify edin",
+            "Poison message ve schema drift için DLQ metrikleri kullanın"
+          ]
+        },
+        {
+          "heading": "Event schema'da semver",
+          "paragraphs": [
+            "Pact veya eşdeğeri CI'da provider verify job'u çalıştırın; merge producer değişikliğini bloklasın.",
+            "Fixture'lar gerçek tenant verisi değil sentetik olmalı."
+          ]
+        },
+        {
+          "heading": "DLQ zehirli mesajları gösterir",
+          "paragraphs": [
+            "DLQ derinliği ve schema parse failure metriklerini alert edin.",
+            "Poison message replay runbook'u idempotent handler ile yazın."
+          ],
+          "links": [
+            {
+              "label": "Pact — Consumer driven contracts",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "CloudEvents — Specification",
+              "url": "https://cloudevents.io/"
+            }
+          ]
+        },
+        {
+          "heading": "Event'leri public API gibi versiyonlayın",
+          "paragraphs": [
+            "Producer schema merge edip consumer verify etmeyince async bus'lar sessizce fail eder. Event contract'ları semver kuralı, fixture ve PR'a bağlı registry sahipliğiyle yayınlayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "CloudEvents metadata'yı standartlaştırır ama payload uyumluluğu optional-field politikası ve enum extension davranışı ister. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Consumer-driven suite'ler deploy merge öncesi iki tarafta CI'da koşmalı. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin."
+          ]
+        },
+        {
+          "heading": "Producer ship etmeden verify edin",
+          "paragraphs": [
+            "Provider verification fail olunca yalnızca consumer değil producer deploy'u da bloklayın yoksa monolith release train yavaş motion'da tekrarlanır. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "DLQ metrikleri—derinlik, lag, event type error taxonomy—poison message'ı log grep'ten hızlı gösterir. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Game day redakte prod sample'ını staging bus'a replay ederek yük altında contract değişimini doğrulayın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin."
+          ],
+          "links": [
+            {
+              "label": "Pact — Consumer driven contracts",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "CloudEvents — Specification",
+              "url": "https://cloudevents.io/"
+            },
+            {
+              "label": "AsyncAPI — Event contracts",
+              "url": "https://www.asyncapi.com/docs/reference/specification/v3.0.0"
+            }
+          ]
+        },
+        {
+          "heading": "Deploy sırasını atlatan async contract'lar",
+          "paragraphs": [
+            "Producer schema değiştirip consumer doğrulamayınca event-driven sistemler sessizce fail eder. Yayınlanan event schema'larını HTTP OpenAPI gibi yönetin: semver breaking change, consumer-driven contract suite ve her iki taraf merge etmeden önce CI provider verification. CloudEvents zarf yardım eder ama payload alanları hâlâ açık uyumluluk kuralı ve prod cardinality temsili fixture ister.",
+            "Pact veya eşdeğeri iki tarafta koşsun—consumer beklenti yayımlar, producer kayıtlı senaryolarda eşleşen shape emit ettiğini kanıtlar. Verification fail olunca yalnızca consumer değil producer deploy'u da bloklayın yoksa monolith release train'i yavaş motion'da tekrarlarsınız. Version negotiation header veya topic suffix, analytics pipeline çatallayan sessiz dual write'dan iyidir.",
+            "DLQ poison message ve schema drift'i log grep'ten hızlı gösterir. DLQ derinliği, işleme lag'i ve event type bazında error taxonomy metrikleyin. Contract test negative case içersin: bilinmeyen alan ignore, required alan eksik, enum extension crash etmeden forward. PR template'e bağlı katalogda event type sahipliğini yazın.",
+            "Game day prod traffic sample'ını redaksiyonlu staging bus'a replay ederek yük altında contract değişimini doğrulayın. Legal ve privacy review event payload'a REST body gibi uygulanır—tam payment veya health event'i paylaşılan topic'e loglamayın. Çeyreklik audit emit edilen schema'yı registry ile diff edip shadow database olan orphan topic'leri emekli edin."
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Contract Tests für event-getriebene Services",
+      "excerpt": "REST hat Contract Tests; hinter Async-Bus fehlt Disziplin → Producer-Deploy bricht Consumer leise. Schema Registry allein reicht nicht.",
+      "description": "Event-Contract-Tests: consumer-driven Verträge, Semver, CI Provider-Verify, DLQ für Schema-Drift.",
+      "sections": [
+        {
+          "heading": "Async bricht leise",
+          "paragraphs": [
+            "Producer hält Feld für optional; Consumer deserialisiert strict → DLQ.",
+            "Consumer-driven Contract fixiert erwartete Payload-Form im Code."
+          ]
+        },
+        {
+          "heading": "Consumer-Vertrag vor Deploy",
+          "paragraphs": [
+            "Breaking Change: Major-Bump und Dual-Publish-Phase.",
+            "Altes und neues Schema parallel im Live-Traffic."
+          ],
+          "points": [
+            "Consumer-Verträge vor Producer-Deploy verifizieren",
+            "Semver für Async-Event-Schema bei Breaking Changes",
+            "Pact-Fixtures in CI gegen Provider prüfen",
+            "DLQ-Metriken für Poison Messages und Schema-Drift"
+          ]
+        },
+        {
+          "heading": "Semver auf Event-Schema",
+          "paragraphs": [
+            "Pact o.ä. Provider-Verify in CI; merge blockiert Producer-Change.",
+            "Fixtures synthetisch, keine echten Tenant-Daten."
+          ]
+        },
+        {
+          "heading": "DLQ zeigt Poison Messages",
+          "paragraphs": [
+            "DLQ-Tiefe und Schema-Parse-Failures alerten.",
+            "Poison-Replay-Runbook mit idempotenten Handlern."
+          ],
+          "links": [
+            {
+              "label": "Pact — Consumer driven contracts",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "CloudEvents — Specification",
+              "url": "https://cloudevents.io/"
+            }
+          ]
+        },
+        {
+          "heading": "Events wie Public APIs versionieren",
+          "paragraphs": [
+            "Async-Busse scheitern leise wenn Producer Schema mergen ohne Consumer-Verifikation. Event-Contracts mit Semver, Fixtures, Registry-Ownership in PRs. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "CloudEvents standardisieren Metadata, Payload braucht Optional-Field-Policies. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Consumer-Driven Suites in CI beidseitig vor Deploy-Merge. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen."
+          ]
+        },
+        {
+          "heading": "Provider vor Ship verifizieren",
+          "paragraphs": [
+            "Producer-Deploy blocken bei Verification-Fail, nicht nur Consumer. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "DLQ-Metriken zeigen Poison Messages schneller als Log-Grep. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Game-Days replay redigierte Prod-Samples in Staging-Bus unter Last. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen."
+          ],
+          "links": [
+            {
+              "label": "Pact — Consumer driven contracts",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "CloudEvents — Specification",
+              "url": "https://cloudevents.io/"
+            },
+            {
+              "label": "AsyncAPI — Event contracts",
+              "url": "https://www.asyncapi.com/docs/reference/specification/v3.0.0"
+            }
+          ]
+        },
+        {
+          "heading": "Async-Verträge unabhängig von Deploy-Reihenfolge",
+          "paragraphs": [
+            "Event-Systeme scheitern leise wenn Producer Schema ändern ohne Consumer-Verifikation. Event-Schemas wie OpenAPI behandeln: Semver-Breaks, Consumer-Driven Contracts, Provider-Verification in CI vor Merge. CloudEvents helfen, Payload-Felder brauchen Compatibility-Regeln und Fixtures mit Prod-Kardinalität. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Pact beidseitig: Consumer Erwartungen, Producer beweist Shapes in recorded Scenarios. Producer-Deploy blocken bei Fail, nicht nur Consumer. Version-Negotiation-Header oder Topic-Suffixe schlagen silent Dual-Writes. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "DLQ zeigt Poison Messages und Schema-Drift schneller als Log-Grep. Metriken Tiefe, Lag, Fehler-Taxonomie pro Event-Type. Contract-Tests negative Cases: unknown fields, missing required, enum extensions. Katalog Event-Ownership in PR-Templates. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Game-Days replay Prod-Samples in Staging-Bus mit Redaction unter Last. Legal/Privacy für Event-Payloads wie REST. Keine vollen Payment/Health-Events in Shared Topics. Quarterly Audit Schema vs Registry, orphan Topics retiren. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein."
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Tests de contrat pour services event-driven",
+      "excerpt": "Le REST a des contract tests ; derrière le bus async, sans discipline le deploy producteur casse les consumers en silence. Registry seule ne suffit pas.",
+      "description": "Contrats event-driven : consumer-driven, semver, verify provider en CI, DLQ pour drift schema.",
+      "sections": [
+        {
+          "heading": "L'async casse en silence",
+          "paragraphs": [
+            "Le producteur croit le champ optionnel ; consumer strict → DLQ.",
+            "Contrat consumer-driven verrouille la forme payload dans le code."
+          ]
+        },
+        {
+          "heading": "Contrat consumer avant deploy",
+          "paragraphs": [
+            "Breaking : major bump et phase dual-publish.",
+            "Ancien et nouveau schéma en parallèle en prod."
+          ],
+          "points": [
+            "Vérifier contrats consumer avant deploy producer",
+            "Semver sur schéma event async pour breaking changes",
+            "Fixtures Pact vérifiées contre provider en CI",
+            "Métriques DLQ pour poison messages et schema drift"
+          ]
+        },
+        {
+          "heading": "Semver sur schéma event",
+          "paragraphs": [
+            "Pact ou équivalent verify provider en CI ; merge bloqué.",
+            "Fixtures synthétiques, pas données tenant réelles."
+          ]
+        },
+        {
+          "heading": "DLQ révèle poison messages",
+          "paragraphs": [
+            "Alerter profondeur DLQ et échecs parse schema.",
+            "Runbook replay poison avec handlers idempotents."
+          ],
+          "links": [
+            {
+              "label": "Pact — Consumer driven contracts",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "CloudEvents — Specification",
+              "url": "https://cloudevents.io/"
+            }
+          ]
+        },
+        {
+          "heading": "Versionner events comme APIs publiques",
+          "paragraphs": [
+            "Bus async échouent silencieusement si producteurs mergent schéma sans vérif consommateurs. Contrats events avec semver, fixtures, ownership registry liée PR. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "CloudEvents standardise métadonnées ; payload exige politiques champs optionnels. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Suites consumer-driven en CI des deux côtés avant merge deploy. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement."
+          ]
+        },
+        {
+          "heading": "Vérifier producteurs avant ship",
+          "paragraphs": [
+            "Bloquer deploy producteur si vérif provider échoue, pas seulement consommateur. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Métriques DLQ révèlent poison messages plus vite que grep logs. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Game days rejouent échantillons prod rédigés sur bus staging sous charge. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement."
+          ],
+          "links": [
+            {
+              "label": "Pact — Consumer driven contracts",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "CloudEvents — Specification",
+              "url": "https://cloudevents.io/"
+            },
+            {
+              "label": "AsyncAPI — Event contracts",
+              "url": "https://www.asyncapi.com/docs/reference/specification/v3.0.0"
+            }
+          ]
+        },
+        {
+          "heading": "Contrats async indépendants de l'ordre de deploy",
+          "paragraphs": [
+            "Les systèmes événementiels échouent silencieusement quand producteurs changent schéma sans vérif consommateurs. Traiter schémas publiés comme OpenAPI HTTP : semver breaking, suites consumer-driven, vérif provider en CI avant merge. CloudEvents aide, champs payload exigent règles compatibilité et fixtures cardinality prod. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Pact des deux côtés : consommateurs publient attentes, producteurs prouvent shapes sous scénarios enregistrés. Bloquer deploy producteur si vérif échoue, pas seulement consommateur. Headers négociation version ou suffixes topic battent dual writes silencieux. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "DLQ révèle poison messages et drift schéma plus vite que grep logs. Métriques profondeur, lag, taxonomie erreurs par type event. Tests contrat cas négatifs : champs inconnus, required manquants, extensions enum. Catalogue ownership lié aux templates PR. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Game days rejouent échantillons trafic prod sur bus staging rédigé sous charge. Revues legal/privacy sur payloads events comme REST. Ne pas logger payment/health complets sur topics partagés. Audit trimestriel schémas émis vs registry, retirer topics orphelins. Consignez owner, date de revue et rollback dans le même ticket de changement."
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Contract test per servizi event-driven",
+      "excerpt": "REST ha contract test; dietro bus async senza disciplina il deploy producer rompe consumer in silenzio. Solo schema registry non basta.",
+      "description": "Contract test event-driven: contratti consumer-driven, semver, verify provider in CI, DLQ per schema drift.",
+      "sections": [
+        {
+          "heading": "L'async si rompe in silenzio",
+          "paragraphs": [
+            "Il producer crede il campo optional; consumer strict → DLQ.",
+            "Contratto consumer-driven fissa la forma payload nel codice."
+          ]
+        },
+        {
+          "heading": "Contratto consumer prima del deploy",
+          "paragraphs": [
+            "Breaking: major bump e fase dual-publish.",
+            "Schema vecchio e nuovo in parallelo in prod."
+          ],
+          "points": [
+            "Verificare contratti consumer prima del deploy producer",
+            "Semver su schema event async per breaking change",
+            "Fixture Pact verificate contro provider in CI",
+            "Metriche DLQ per poison message e schema drift"
+          ]
+        },
+        {
+          "heading": "Semver sullo schema event",
+          "paragraphs": [
+            "Pact o equivalente verify provider in CI; merge bloccato.",
+            "Fixture sintetiche, no dati tenant reali."
+          ]
+        },
+        {
+          "heading": "DLQ mostra poison message",
+          "paragraphs": [
+            "Alert profondità DLQ e failure parse schema.",
+            "Runbook replay poison con handler idempotenti."
+          ],
+          "links": [
+            {
+              "label": "Pact — Consumer driven contracts",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "CloudEvents — Specification",
+              "url": "https://cloudevents.io/"
+            }
+          ]
+        },
+        {
+          "heading": "Versionare eventi come API pubbliche",
+          "paragraphs": [
+            "Bus async falliscono in silenzio se producer mergiano schema senza verifica consumer. Contratti evento con semver, fixture, ownership registry collegata PR. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "CloudEvents standardizza metadata; payload richiede policy campi opzionali. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Suite consumer-driven in CI su entrambi i lati prima merge deploy. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch."
+          ]
+        },
+        {
+          "heading": "Verificare producer prima dello ship",
+          "paragraphs": [
+            "Bloccare deploy producer se verifica provider fallisce, non solo consumer. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Metriche DLQ mostrano poison message più velocemente del grep log. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Game day replay campioni prod redatti su bus staging sotto carico. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch."
+          ],
+          "links": [
+            {
+              "label": "Pact — Consumer driven contracts",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "CloudEvents — Specification",
+              "url": "https://cloudevents.io/"
+            },
+            {
+              "label": "AsyncAPI — Event contracts",
+              "url": "https://www.asyncapi.com/docs/reference/specification/v3.0.0"
+            }
+          ]
+        },
+        {
+          "heading": "Contratti async indipendenti dall'ordine di deploy",
+          "paragraphs": [
+            "I sistemi event-driven falliscono in silenzio quando i producer cambiano schema senza verifica consumer. Trattate schema evento pubblicati come OpenAPI HTTP: semver breaking, suite consumer-driven, verifica provider in CI prima del merge. CloudEvents aiuta, i campi payload richiedono regole compatibilità e fixture cardinality prod. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Pact su entrambi i lati: consumer pubblicano attese, producer provano shape in scenari registrati. Bloccare deploy producer se verifica fallisce, non solo consumer. Header negoziazione versione o suffissi topic battono dual write silenziosi. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "DLQ mostra poison message e drift schema più velocemente del grep log. Metriche profondità, lag, tassonomia errori per tipo evento. Test contratto casi negativi: campi sconosciuti, required mancanti, estensioni enum. Catalogo ownership eventi nei template PR. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Game day replay campioni traffico prod su bus staging redatto sotto carico. Review legal/privacy su payload evento come REST. Non loggare payment/health completi su topic condivisi. Audit trimestrale schema emessi vs registry, ritirare topic orfani. Registrate owner, data di review e rollback nello stesso ticket di change."
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "事件驱动服务的契约测试",
+      "excerpt": "REST 契约测试已普及；异步总线后若缺少同样纪律，生产者部署会静默击垮消费者。仅有 schema registry 不够。",
+      "description": "事件驱动契约测试：消费者驱动契约、semver、CI provider 验证与 DLQ 暴露 schema 漂移。",
+      "sections": [
+        {
+          "heading": "异步静默破坏",
+          "paragraphs": [
+            "生产者以为字段可选；消费者严格反序列化后消息进 DLQ。",
+            "消费者驱动契约把期望 payload 形状锁进代码。"
+          ]
+        },
+        {
+          "heading": "部署前验证消费者契约",
+          "paragraphs": [
+            "破坏性变更用 major 与双发布窗口。",
+            "生产并行消费新旧 schema。"
+          ],
+          "points": [
+            "生产者部署前验证消费者契约",
+            "异步事件 schema 对破坏性变更用语义化版本",
+            "CI 中用 Pact 等 fixture 验证 provider",
+            "用 DLQ 指标监控毒消息与 schema 漂移"
+          ]
+        },
+        {
+          "heading": "事件 schema 用语义化版本",
+          "paragraphs": [
+            "CI 跑 Pact 等 provider 验证；阻塞生产者合并。",
+            "fixture 用合成数据而非真实租户。"
+          ]
+        },
+        {
+          "heading": "DLQ 暴露毒消息",
+          "paragraphs": [
+            "对 DLQ 深度与 schema 解析失败告警。",
+            "毒消息重放 runbook 需幂等处理器。"
+          ],
+          "links": [
+            {
+              "label": "Pact — Consumer driven contracts",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "CloudEvents — Specification",
+              "url": "https://cloudevents.io/"
+            }
+          ]
+        },
+        {
+          "heading": "像公开 API 一样版本化事件",
+          "paragraphs": [
+            "生产者在消费者未验证时合并 schema 变更，异步总线会静默失败。发布带 semver 规则、fixture 与 PR 链接 registry 所有权的事件契约。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "CloudEvents 标准化 metadata，但 payload 仍需明确的可选字段策略与枚举扩展行为。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "消费者驱动套件应在任一方 deploy 合并前双侧 CI 运行。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。"
+          ]
+        },
+        {
+          "heading": "在生产者发布前验证",
+          "paragraphs": [
+            "provider 验证失败时应阻断生产者部署，而非仅阻断消费者，否则会以慢动作重现单体发布列车。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "DLQ 指标——深度、滞后、按事件类型的错误分类——比日志 grep 更快暴露 poison message。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "Game day 将 redact 后的生产样本 replay 到 staging 总线以在负载下验证契约变更。 请在下次生产评审中复核这一点，指定负责人并关联带日期的整改工单。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。"
+          ],
+          "links": [
+            {
+              "label": "Pact — Consumer driven contracts",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "CloudEvents — Specification",
+              "url": "https://cloudevents.io/"
+            },
+            {
+              "label": "AsyncAPI — Event contracts",
+              "url": "https://www.asyncapi.com/docs/reference/specification/v3.0.0"
+            }
+          ]
+        },
+        {
+          "heading": "不受发布顺序影响的异步契约",
+          "paragraphs": [
+            "当生产者发布消费者从未验证的 schema 变更时，事件驱动系统会静默失败。将发布的事件 schema 当作 HTTP OpenAPI：semver 破坏性变更、消费者驱动契约套件，以及任一方合并前的 CI 提供者验证。CloudEvents 信封有帮助，但 payload 字段仍需明确兼容规则与代表生产基数的 fixture。",
+            "Pact 或等价工具应双侧运行——消费者发布期望，生产者在录制场景下证明 emit 匹配形状。验证失败时应阻断生产者部署，而非仅阻断消费者，否则会以慢动作重现单体发布列车。版本协商头或 topic 后缀优于 fork 分析管道的静默双写。",
+            "DLQ 比日志 grep 更快暴露 poison message 与 schema drift。按事件类型指标化 DLQ 深度、处理滞后与错误分类。契约测试须含负例：未知字段忽略、必填缺失、枚举扩展转发且不崩溃。在 PR 模板链接的目录中记录各事件类型 owner。",
+            "Game day 将 redact 后的生产流量样本 replay 到 staging 总线以在负载下验证契约变更。法务与隐私评审同样适用于事件 payload——勿将完整 payment 或 health 事件写入共享 topic。季度审计将 emit schema 与 registry diff，退役成为 shadow database 的 orphan topic。"
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "イベント駆動サービスの契約テスト",
+      "excerpt": "RESTには契約テストが普及；非同期バス裏で規律がないとプロデューサーデプロイがコンシューマーを静かに壊す。スキーマレジストリだけでは不足。",
+      "description": "イベント駆動契約テスト：コンシューマー駆動契約、semver、CIプロバイダー検証、DLQでスキーマドリフト可視化。",
+      "sections": [
+        {
+          "heading": "非同期は静かに破壊",
+          "paragraphs": [
+            "プロデューサーはフィールドをoptionalと思う；コンシューマーstrict deserializeでDLQ。",
+            "コンシューマー駆動契約で期待payload形状をコード固定。"
+          ]
+        },
+        {
+          "heading": "デプロイ前にコンシューマー契約",
+          "paragraphs": [
+            "破壊的変更はmajor bumpとデュアルパブリッシュ期間。",
+            "本番で新旧スキーマ並行消費。"
+          ],
+          "points": [
+            "プロデューサーデプロイ前にコンシューマー契約を検証",
+            "非同期イベントスキーマに破壊的変更でsemver",
+            "CIでPactフィクスチャをプロバイダー検証",
+            "ポイズンメッセージとスキーマドリフトをDLQ指標で"
+          ]
+        },
+        {
+          "heading": "イベントスキーマにsemver",
+          "paragraphs": [
+            "CIでPact等プロバイダーverify；プロデューサー変更mergeブロック。",
+            "フィクスチャは合成データ、実テナント不可。"
+          ]
+        },
+        {
+          "heading": "DLQがポイズンメッセージ可視",
+          "paragraphs": [
+            "DLQ深度とスキーマparse失敗をアラート。",
+            "ポイズンreplay runbookは冪等ハンドラで。"
+          ],
+          "links": [
+            {
+              "label": "Pact — Consumer driven contracts",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "CloudEvents — Specification",
+              "url": "https://cloudevents.io/"
+            }
+          ]
+        },
+        {
+          "heading": "event を public API のように version",
+          "paragraphs": [
+            "producer が consumer 未 verify schema merge すると async bus は静かに fail。semver、fixture、PR リンク registry ownership 付き event contract publish。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "CloudEvents は metadata 標準化；payload は optional field policy が要る。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "consumer-driven suite は deploy merge 前に両側 CI。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。"
+          ]
+        },
+        {
+          "heading": "producer ship 前に verify",
+          "paragraphs": [
+            "provider verify fail で producer deploy も block、consumer のみ禁止。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "DLQ metric が poison message を log grep より速く surface。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "game day で redacted prod sample を staging bus replay し load 下 contract validate。 次回の production review で再確認し、オーナーを割り当て、日付付き remediation チケットを紐付けてください。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。"
+          ],
+          "links": [
+            {
+              "label": "Pact — Consumer driven contracts",
+              "url": "https://docs.pact.io/"
+            },
+            {
+              "label": "CloudEvents — Specification",
+              "url": "https://cloudevents.io/"
+            },
+            {
+              "label": "AsyncAPI — Event contracts",
+              "url": "https://www.asyncapi.com/docs/reference/specification/v3.0.0"
+            }
+          ]
+        },
+        {
+          "heading": "deploy 順序に依存しない async contract",
+          "paragraphs": [
+            "producer が consumer 未 verify の schema change を ship すると event-driven system は静かに fail。published event schema を HTTP OpenAPI 同様に：semver breaking、consumer-driven contract suite、merge 前 CI provider verification。CloudEvents envelope は助けだが payload field は compatibility rule と prod cardinality fixture が要る。",
+            "Pact は両側：consumer が expectation publish、producer が recorded scenario で matching shape emit を証明。verify fail 時 consumer だけでなく producer deploy も block。version negotiation header か topic suffix が silent dual write より良い。",
+            "DLQ は log grep より poison message と schema drift を速く surface。depth、lag、event type 別 error taxonomy を metric。contract test に negative case：unknown field ignore、required missing、enum extension forward without crash。PR template リンク catalog に event type ownership。",
+            "game day で redacted prod traffic sample を staging bus に replay し load 下で contract change validate。legal/privacy review は event payload に REST body 同様適用。full payment/health event を shared topic に log しない。四半期 audit で emit schema を registry と diff し orphan topic retire。"
+          ]
+        }
+      ]
+    }
+  }
+}

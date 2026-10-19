@@ -3,7 +3,7 @@
   "title": "On-Call Runbooks for AI Product Incidents",
   "excerpt": "When the model misbehaves, dashboards full of HTTP 200s lie. AI incidents need runbooks for policy, cost, and tool side effects—not only server restarts.",
   "description": "How staff engineers write on-call runbooks for LLM products: SLOs beyond 5xx, provider failures, retrieval drift, safety escalations, and postmortems that capture prompt changes.",
-  "readingMinutes": 4,
+  "readingMinutes": 11,
   "keywords": [
     "on-call",
     "incident response",
@@ -63,6 +63,45 @@
           "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
         }
       ]
+    },
+    {
+      "heading": "Classify failure modes before paging",
+      "paragraphs": [
+        "AI product incidents blend model outages, retrieval index lag, safety refusals misread as bugs, and client-side streaming parsers that fail on partial JSON. Runbooks should start with a decision tree that separates provider errors from application regressions so on-call engineers do not roll back the wrong layer under executive pressure.",
+        "Each runbook page needs observable signals: error budgets on gateway latency, empty retrieval results, policy violation rates, and cost anomalies. Link dashboards with deep filters prefilled for the service tier that owns the feature. Minutes spent guessing which chart matters become customer-visible downtime. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        "Customer communications templates differ by class. A model outage may justify a status banner; a retrieval misconfiguration might require silent fix without promising capabilities the product never had. Legal and support should pre-approve wording tiers so incident commanders are not drafting novel claims at three in the morning."
+      ]
+    },
+    {
+      "heading": "Exercise controls the runbook references",
+      "paragraphs": [
+        "Kill switches for model routes, feature flags for tool access, and rate-limit overrides fail silently unless tested monthly. Google SRE incident guidance emphasizes practiced mitigation over heroic improvisation. Schedule game days that flip switches in staging, then in production during low-traffic windows with rollback verified.",
+        "Post-incident reviews must update automated eval cases and probes, not only wiki pages. PagerDuty response playbooks recommend capturing timeline artifacts; mirror that discipline by opening pull requests that encode lessons as CI gates. Otherwise the same retrieval blank-screen failure returns next quarter with a new on-call roster.",
+        "Wire billing and quota alerts into the same rotation when AI features can spike spend. Cost incidents are availability incidents for startups with hard vendor caps. Document who can authorize temporary limit raises and how those events get audited afterward. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket."
+      ],
+      "links": [
+        {
+          "label": "Google SRE — Managing incidents",
+          "url": "https://sre.google/sre-book/managing-incidents/"
+        },
+        {
+          "label": "PagerDuty — Incident response guide",
+          "url": "https://response.pagerduty.com/"
+        },
+        {
+          "label": "OpenTelemetry — Semantic conventions",
+          "url": "https://opentelemetry.io/docs/specs/semconv/"
+        }
+      ]
+    },
+    {
+      "heading": "Runbooks operators trust during model outages",
+      "paragraphs": [
+        "AI incidents blur categories—model vendor outages, retrieval index staleness, policy refusals, client-side streaming bugs, and runaway token spend can feel identical to users. Runbooks must start with a decision tree mapping symptoms to checks: gateway five hundreds versus empty completions versus moderation loops. Customer messaging templates differ per class; copying generic status text erodes trust when the root cause is billing, not creativity.",
+        "Kill switches for model routes and feature flags should be tested monthly with game days, discovering broken switches during a real outage is expensive. Document which switch disables tools only, which falls back to cached answers, and which blocks writes. On-call load includes cost spikes—wire billing alerts and rate-limit dashboards into the same paging policy as error rates. Finance should see annotations when incidents force emergency quota raises.",
+        "Tool-heavy agents need runbook steps for external dependency failures—CRM timeouts, payment double posts, ticket systems returning ambiguous errors—not only LLM latency. Include idempotency guidance and customer-safe retry messaging. Post-incident reviews must update eval cases and synthetic probes, not only wiki pages. If a runbook step requires manual SQL, link audited scripts with dry-run examples, not improvised queries at three a.m.",
+        "Runbooks stay useful when operators rehearse them. Rotate shadow on-call for AI features before holiday freezes; new hires should page once with a mentor for benign drills. Capture time-to-mitigate and time-to-root-cause metrics per incident type. Leadership reviews trends quarterly, funding fixes for recurring retrieval gaps or missing circuit breakers instead of adding headcount alone. Record the owner, review date, and rollback trigger in the same change ticket so the next on-call engineer can trace decisions."
+      ]
     }
   ],
   "locales": {
@@ -113,6 +152,45 @@
               "label": "OWASP LLM Top 10",
               "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
             }
+          ]
+        },
+        {
+          "heading": "Sayfalamadan önce arıza modlarını sınıflandırın",
+          "paragraphs": [
+            "AI ürün olayları model kesintileri, retrieval indeks gecikmesi, hata sanılan güvenlik redleri ve kısmi JSON'da çöken istemci streaming ayrıştırıcılarını karıştırır. Runbook'lar sağlayıcı hatalarını uygulama gerilemelerinden ayıran karar ağacıyla başlamalı; on-call yönetici baskısında yanlış katmanı rollback etmesin. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Her runbook sayfası gözlemlenebilir sinyaller ister: gateway gecikmesinde hata bütçeleri, boş retrieval sonuçları, politika ihlal oranları ve maliyet anomalileri. Önceden doldurulmuş filtrelerle feature sahibi servis katmanına dashboard bağlayın. Hangi grafiğin önemli olduğunu tahmin etmek müşteriye görünen kesintiye dönüşür. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Müşteri iletişim şablonları sınıfa göre değişir. Model kesintisi durum banner'ını haklı kılabilir; retrieval yanlış yapılandırması sessiz düzeltme gerektirebilir. Hukuk ve destek wording katmanlarını önceden onaylasın; olay komutanları gece üçte yeni iddia taslağı yazmasın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın."
+          ]
+        },
+        {
+          "heading": "Runbook'un referans verdiği kontrolleri tatbik edin",
+          "paragraphs": [
+            "Model rotaları için kill switch, tool erişimi feature flag'leri ve rate-limit override'ları aylık test edilmezse sessizce bozulur. Google SRE olay rehberi kahramanlık yerine alıştırılmış azaltmayı vurgular. Düşük trafik pencerelerinde staging sonra prod'da switch çeviren game day planlayın; rollback doğrulansın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Olay sonrası incelemeler wiki değil otomatik eval vakalarını ve probeleri güncellemeli. PagerDuty müdahale kitapları zaman çizelgesi artefaktı önerir; dersleri CI kapısı olarak kodlayan PR açın. Aksi halde aynı boş retrieval ekranı çeyrek sonra yeni on-call kadrosuyla döner. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "AI özellikleri harcamayı sıçratabildiğinde faturalama ve kota uyarılarını aynı rotasyona bağlayın. Sert vendor limitli startup'larda maliyet olayları erişilebilirlik olayıdır. Geçici limit artışını kim onaylar ve sonrasında nasıl denetlenir belgeleyin. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — Olay yönetimi",
+              "url": "https://sre.google/sre-book/managing-incidents/"
+            },
+            {
+              "label": "PagerDuty — Müdahale rehberi",
+              "url": "https://response.pagerduty.com/"
+            },
+            {
+              "label": "OpenTelemetry — Semantik kurallar",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "Model kesintisinde güvenilen runbook'lar",
+          "paragraphs": [
+            "AI olayları kategorileri bulanıklaştırır—vendor outage, retrieval index bayatlığı, politika red'i, client streaming bug'ı, token maliyeti patlaması kullanıcıya aynı hissedilir. Runbook semptom→check karar ağacıyla başlamalı: gateway 500 mü, boş completion mı, moderasyon döngüsü mü. Müşteri mesaj şablonları sınıfa göre değişir; kök neden faturalama iken generic status güveni eritir. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+            "Model route kill switch ve feature flag'ler aylık game day ile test edilmeli; gerçek outage'da bozuk switch keşfi pahalıdır. Hangi switch yalnızca tool'u kapatır, hangisi cache cevaba düşer, hangisi write'ı bloklar belgelensin. On-call yükü maliyet spike'ını içerir—billing alert ve rate-limit panolarını error rate ile aynı paging'e bağlayın. Acil kota artışında finans annotation görsün. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+            "Tool ağırlıklı agent runbook'unda CRM timeout, çift ödeme, belirsiz ticket hatası gibi dış bağımlılık adımları olmalı, yalnızca LLM latency değil. Idempotency rehberi ve müşteri güvenli retry mesajı ekleyin. Post-incident eval case ve synthetic probe güncellemeli, yalnızca wiki değil. Runbook SQL gerektiriyorsa dry-run örnekli denetli script linkleyin. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+            "Operatör prova edince runbook yaşar. Tatil freeze öncesi AI için shadow on-call rotasyonu; yeni işe alınan mentor eşliğinde benign page alsın. Olay tipine göre time-to-mitigate ve time-to-root-cause ölçün. Liderlik çeyreklik trend review'da tekrarlayan retrieval açığı veya eksik circuit breaker için headcount yerine fix bütçesi ayırsın. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin."
           ]
         }
       ]
@@ -165,6 +243,45 @@
               "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
             }
           ]
+        },
+        {
+          "heading": "Failure Modes vor dem Paging klassifizieren",
+          "paragraphs": [
+            "KI-Produkt-Incidents mischen Model-Ausfälle, Retrieval-Index-Lag, Safety-Refusals als Bugs und Client-Streaming-Parser, die bei partiellem JSON scheitern. Runbooks starten mit Entscheidungsbaum, der Provider-Fehler von App-Regressionen trennt, damit On-Call unter Druck nicht die falsche Schicht rollbackt. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Jede Runbook-Seite braucht Observable Signals: Error Budgets auf Gateway-Latenz, leere Retrieval-Ergebnisse, Policy-Violation-Rates und Kosten-Anomalien. Verlinken Sie Dashboards mit vorgefilterten Deep Links für den Service-Tier des Features. Minuten zum Raten des richtigen Charts werden kundensichtbare Downtime. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Kundenkommunikations-Templates unterscheiden sich nach Klasse. Model-Ausfall rechtfertigt Status-Banner; Retrieval-Miskonfiguration erfordert evtl. stillen Fix ohne versprochene Fähigkeiten. Legal und Support pre-approven Wording-Tiers, damit Incident Commander um drei Uhr keine neuen Claims formulieren. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an."
+          ]
+        },
+        {
+          "heading": "Controls üben, die das Runbook referenziert",
+          "paragraphs": [
+            "Kill Switches für Model-Routen, Feature Flags für Tool-Zugriff und Rate-Limit-Overrides versagen still ohne monatliche Tests. Google-SRE-Incident-Guidance betont geübte Mitigation statt heroischer Improvisation. Planen Sie Game Days, die Switches in Staging und prod in Low-Traffic-Fenstern flippen, Rollback verifiziert. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Postmortems müssen automatisierte Eval-Cases und Probes updaten, nicht nur Wiki. PagerDuty-Playbooks empfehlen Timeline-Artefakte; spiegeln Sie das mit PRs, die Lessons als CI-Gates kodieren. Sonst kehrt derselbe leere Retrieval-Screen im nächsten Quartal mit neuer On-Call-Roster zurück. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Billing- und Quota-Alerts in dieselbe Rotation, wenn KI-Features Spend spiken kann. Kosten-Incidents sind Verfügbarkeits-Incidents bei harten Vendor-Caps. Dokumentieren Sie, wer temporäre Limit-Erhöhungen autorisiert und wie das auditiert wird. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — Incident Management",
+              "url": "https://sre.google/sre-book/managing-incidents/"
+            },
+            {
+              "label": "PagerDuty — Response Guide",
+              "url": "https://response.pagerduty.com/"
+            },
+            {
+              "label": "OpenTelemetry — Semantische Konventionen",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "Runbooks bei Modellausfällen mit Vertrauen",
+          "paragraphs": [
+            "KI-Incidents verwischen Kategorien—Vendor-Outage, stale Retrieval-Index, Policy-Refusals, Client-Streaming-Bugs, Token-Kosten—fühlen sich für Nutzer gleich an. Runbooks starten mit Entscheidungsbaum Symptom→Check: Gateway-500 vs leere Completions vs Moderation-Loops. Kunden-Templates pro Klasse; generischer Status bei Billing-Ursache zerstört Vertrauen. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Kill-Switches für Modell-Routen monatlich in Game Days testen; kaputte Switches im echten Outage sind teuer. Dokumentieren welcher Switch nur Tools stoppt, welcher auf Cache-Antworten fällt, welcher Writes blockt. On-Call um Cost-Spikes erweitern—Billing-Alerts und Rate-Limit-Dashboards wie Error Rates page. Finance sieht Annotations bei Emergency-Quota. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Tool-heavy Agents brauchen Runbook-Schritte für externe Failures—CRM-Timeout, Doppelzahlungen, ambiguous Ticket-Errors—nicht nur LLM-Latenz. Idempotency-Guidance und kundensichere Retry-Texte. Post-Incidents updaten Eval-Cases und Synthetic Probes, nicht nur Wiki. SQL-Schritte verlinken auditierte Scripts mit Dry-Run, keine ad-hoc Queries um drei Uhr. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Runbooks bleiben nutzbar durch Proben. Shadow On-Call für KI vor Holiday Freeze; New Hires einmal pagend mit Mentor. TTmitigate und TTroot pro Incident-Typ messen. Leadership quarterly Trends reviewen und Fixes für wiederkehrende Retrieval-Lücken statt nur Headcount. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht."
+          ]
         }
       ]
     },
@@ -215,6 +332,45 @@
               "label": "OWASP LLM Top 10",
               "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
             }
+          ]
+        },
+        {
+          "heading": "Classifier les modes de défaillance avant de pager",
+          "paragraphs": [
+            "Les incidents produit IA mélangent pannes modèle, lag d'index retrieval, refus safety pris pour bugs et parseurs streaming client qui échouent sur JSON partiel. Les runbooks commencent par un arbre décisionnel séparant erreurs provider et régressions applicatives pour éviter un rollback de la mauvaise couche sous pression.",
+            "Chaque page runbook exige signaux observables : error budgets latence gateway, résultats retrieval vides, taux violation policy et anomalies coût. Liez des dashboards avec filtres préremplis pour le tier service propriétaire. Les minutes à deviner le bon graphique deviennent downtime visible client. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+            "Les modèles de communication client diffèrent par classe. Panne modèle peut justifier bannière statut ; mauvaise config retrieval exige parfois fix silencieux sans promettre des capacités inexistantes. Juridique et support pré-approuvent des tiers de wording pour éviter de rédiger de nouvelles allégations à trois heures du matin."
+          ]
+        },
+        {
+          "heading": "Exercer les contrôles cités par le runbook",
+          "paragraphs": [
+            "Kill switches routes modèle, feature flags accès outils et overrides rate-limit échouent silencieusement sans tests mensuels. Le guide incident Google SRE privilégie mitigation entraînée à l'improvisation héroïque. Planifiez game days basculant switches en staging puis prod fenêtres faible trafic, rollback vérifié. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+            "Les post-incident doivent mettre à jour cas eval automatisés et sondes, pas seulement wiki. Les playbooks PagerDuty recommandent artefacts timeline ; reflétez cela par PR encodant les leçons en gates CI. Sinon le même écran retrieval vide revient le trimestre suivant avec nouvelle roster on-call.",
+            "Branchez alertes billing et quota dans la même rotation quand les features IA peuvent faire spike la dépense. Incidents coût sont incidents disponibilité pour startups à plafonds vendor durs. Documentez qui autorise hausses temporaires de limites et comment auditer ensuite. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — Gestion d'incident",
+              "url": "https://sre.google/sre-book/managing-incidents/"
+            },
+            {
+              "label": "PagerDuty — Guide de réponse",
+              "url": "https://response.pagerduty.com/"
+            },
+            {
+              "label": "OpenTelemetry — Conventions sémantiques",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "Runbooks de confiance pendant pannes modèle",
+          "paragraphs": [
+            "Incidents IA brouillent catégories—panne vendor, index retrieval périmé, refus policy, bugs streaming client, coût tokens—paraissent identiques aux users. Runbooks commencent par arbre symptôme→checks : 500 gateway vs completions vides vs boucles modération. Templates client diffèrent par classe ; statut générique quand cause facturation érode confiance. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+            "Kill switches routes modèle testés mensuellement en game days ; switches cassés en vraie panne coûtent cher. Documenter switch qui coupe tools seulement, fallback cache, ou bloque writes. On-call inclut pics coût—alertes billing et dashboards rate-limit paginés comme error rates. Finance voit annotations si quota d'urgence. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+            "Agents tool-heavy : étapes pour échecs externes—timeout CRM, double paiement, erreurs tickets ambiguës—pas seulement latence LLM. Guidance idempotency et messages retry sûrs client. Post-incident met à jour eval cases et probes synthetics, pas seulement wiki. SQL manuel → scripts audités avec dry-run, pas requêtes improvisées à 3h. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+            "Runbooks utiles si opérateurs répètent. Shadow on-call IA avant gel holidays ; nouvelles recrues pagées une fois avec mentor. Métriques time-to-mitigate et root-cause par type incident. Leadership revoit tendances trimestrielles et finance fixes gaps retrieval récurrents plutôt que headcount seul. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident."
           ]
         }
       ]
@@ -267,6 +423,45 @@
               "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
             }
           ]
+        },
+        {
+          "heading": "Classificare i failure mode prima del paging",
+          "paragraphs": [
+            "Gli incident prodotto AI mescolano outage modello, lag indice retrieval, rifiuti safety scambiati per bug e parser streaming client che falliscono su JSON parziale. I runbook iniziano con albero decisionale che separa errori provider da regressioni applicative così on-call non fa rollback del layer sbagliato sotto pressione.",
+            "Ogni pagina runbook richiede segnali osservabili: error budget su latenza gateway, risultati retrieval vuoti, tassi violazione policy e anomalie costo. Collegate dashboard con filtri precompilati per il tier servizio owner del feature. Minuti a indovinare il grafico giusto diventano downtime visibile al cliente. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "I template comunicazione cliente differiscono per classe. Outage modello può giustificare banner stato; misconfig retrieval può richiedere fix silenzioso senza promettere capacità mai esistite. Legale e support pre-approvino tier di wording così i commander non redigono claim nuovi alle tre di notte. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato."
+          ]
+        },
+        {
+          "heading": "Esercitare i controlli citati nel runbook",
+          "paragraphs": [
+            "Kill switch route modello, feature flag accesso tool e override rate-limit falliscono in silenzio senza test mensili. La guida incident Google SRE enfatizza mitigazione praticata sull'improvvisazione eroica. Pianificate game day che flip switch in staging poi prod in finestre basso traffico con rollback verificato. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "I post-incident devono aggiornare casi eval automatizzati e sonde, non solo wiki. I playbook PagerDuty raccomandano artefatti timeline; specchiate con PR che codificano lezioni come gate CI. Altrimenti lo stesso schermo retrieval vuoto torna il trimestre dopo con nuova roster on-call. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "Collegare alert billing e quota alla stessa rotazione quando feature AI possono spike spend. Incident costo sono incident disponibilità per startup con cap vendor rigidi. Documentate chi autorizza aumenti temporanei limite e come auditare dopo. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato."
+          ],
+          "links": [
+            {
+              "label": "Google SRE — Gestione incident",
+              "url": "https://sre.google/sre-book/managing-incidents/"
+            },
+            {
+              "label": "PagerDuty — Guida risposta",
+              "url": "https://response.pagerduty.com/"
+            },
+            {
+              "label": "OpenTelemetry — Convenzioni semantiche",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "Runbook fidati durante outage modello",
+          "paragraphs": [
+            "Incident AI confondono categorie—outage vendor, retrieval index stale, rifiuti policy, bug streaming client, costo token—sembrano uguali agli utenti. Runbook inizia con albero sintomo→check: 500 gateway vs completion vuote vs loop moderazione. Template clienti per classe; status generico con causa billing erode fiducia. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+            "Kill switch route modello testati mensilmente in game day; switch rotti in outage reale costano caro. Documentare quale switch disabilita solo tool, fallback cache, o blocca write. On-call include picchi costo—alert billing e dashboard rate-limit paginati come error rate. Finance vede annotation su quota emergenza. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+            "Agent tool-heavy: passi per failure esterni—timeout CRM, doppio pagamento, errori ticket ambigui—non solo latenza LLM. Guida idempotency e messaggi retry sicuri. Post-incident aggiorna eval case e probe synthetic, non solo wiki. SQL manuale → script auditati con dry-run, non query improvvisate alle tre. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+            "Runbook utili se operatori provano. Shadow on-call AI prima freeze festivi; nuovi assunti pagati una volta con mentor. Metriche time-to-mitigate e root-cause per tipo incident. Leadership review trimestrale trend e finanzia fix per gap retrieval ricorrenti invece di solo headcount. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident."
+          ]
         }
       ]
     },
@@ -318,6 +513,45 @@
               "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
             }
           ]
+        },
+        {
+          "heading": "分页前先分类故障模式",
+          "paragraphs": [
+            "AI 产品事故混合模型 outage、检索索引滞后、被误判为 bug 的安全拒绝，以及在 partial JSON 上失败的客户端流式解析器。runbook 应以决策树开篇，区分 provider 错误与应用回归，避免 on-call 在压力下 rollback 错误层。",
+            "每个 runbook 页需要可观测信号：gateway 延迟 error budget、空检索结果、策略违规率与成本异常。链接预填过滤器的 dashboard 到特性所属服务层。猜测哪张图重要所耗分钟会变成用户可见 downtime。",
+            "客户沟通模板因类别而异。模型 outage 可能需要状态横幅；检索误配或需静默修复，而不承诺产品从未具备的能力。法务与支持应预先批准 wording 层级，避免 incident commander 凌晨三点起草新声明。"
+          ]
+        },
+        {
+          "heading": "演练 runbook 引用的控制措施",
+          "paragraphs": [
+            "模型路由 kill switch、tool 访问 feature flag 与 rate-limit  override 若未每月测试会静默失效。Google SRE 事故指南强调演练过的缓解而非英雄式即兴。安排 game day 在 staging 然后低流量窗口 prod 切换，并验证 rollback。",
+            "事后回顾必须更新自动化 eval 用例与探针，而非仅 wiki。PagerDuty 响应手册建议捕获时间线 artefact；以 PR 将教训编码为 CI gate 来镜像该纪律。否则下一季度新 on-call  roster 仍会看到相同空白检索屏。",
+            "当 AI 功能可能 spike 支出时，将账单与 quota 告警接入同一 rotation。对 vendor 硬上限的初创公司，成本事故即可用性事故。记录谁可授权临时提限及事后如何审计。"
+          ],
+          "links": [
+            {
+              "label": "Google SRE — 事故管理",
+              "url": "https://sre.google/sre-book/managing-incidents/"
+            },
+            {
+              "label": "PagerDuty — 响应指南",
+              "url": "https://response.pagerduty.com/"
+            },
+            {
+              "label": "OpenTelemetry — 语义约定",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "模型故障时值班员可信的 runbook",
+          "paragraphs": [
+            "AI 事件类别易混——供应商中断、检索索引过期、策略拒绝、客户端流式 bug、token 费用失控——用户感受相似。Runbook 应以症状→检查决策树开篇：网关 500、空 completion 还是审核循环。客户消息模板按类别区分；根因是账单时复制通用状态会损害信任。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "模型路由 kill switch 与 feature flag 应每月 game day 演练；真实故障才发现开关失效代价高。记录哪个开关仅禁 tool、哪个回退缓存答案、哪个阻断写入。On-call 负荷含成本尖峰——将账单告警与限流仪表盘与错误率同等分页。紧急提配额时财务应看到标注。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "重 tool 的 agent runbook 须覆盖外部依赖失败——CRM 超时、重复扣款、工单系统含糊错误——而非仅 LLM 延迟。含幂等指引与客户安全重试文案。事后须更新 eval 用例与合成探针，而非只改 wiki。若步骤需手工 SQL，链接带 dry-run 的审计脚本，避免凌晨即兴查询。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "值班员演练 runbook 才有用。假日前轮换 AI shadow on-call；新人应在导师陪同下 benign 接警一次。按事件类型记录缓解与根因耗时。领导季度审趋势，为反复出现的检索缺口或缺失熔断器拨款修 fix，而非只加人头。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。"
+          ]
         }
       ]
     },
@@ -368,6 +602,45 @@
               "label": "OWASP LLM Top 10",
               "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
             }
+          ]
+        },
+        {
+          "heading": "ページング前に故障モードを分類",
+          "paragraphs": [
+            "AI プロダクトインシデントはモデル outage、retrieval インデックス遅延、バグと誤認される安全拒否、部分 JSON で落ちるクライアント streaming パーサーが混ざる。runbook は provider エラーとアプリ回帰を分ける決定木から始め、プレッシャー下で間違った層を rollback しない。",
+            "各 runbook ページに observables が要る。gateway レイテンシ error budget、空 retrieval 結果、policy 違反率、コスト異常。機能オーナーのサービス tier 向けにフィルタ済み dashboard をリンクする。正しいグラフ当てに費やす分が顧客可視 downtime になる。",
+            "顧客通信テンプレートはクラスで異なる。モデル outage は status バナーが正当化されうる。retrieval 誤設定は黙って直し、もともと存在しない能力を約束しない。法務と support が wording tier を事前承認し、夜中三点に新 claim を書かせない。"
+          ]
+        },
+        {
+          "heading": "runbook が参照する制御を演習する",
+          "paragraphs": [
+            "モデルルート kill switch、tool アクセス feature flag、rate-limit override は月次テストなしでは静かに失敗する。Google SRE インシデント指針は即興より訓練された mitigation を強調する。低トラフィック窓で staging から prod へ switch を切る game day を計画し rollback を検証する。",
+            "post-incident は wiki だけでなく自動 eval ケースと probe を更新する。PagerDuty playbook は timeline 成果物を推奨する。教訓を CI gate として PR に書き込む。さもなければ同じ空白 retrieval 画面が四半期後に新 on-call roster で戻る。",
+            "AI 機能が spend を spike しうるとき billing と quota アラートを同じ rotation に配線する。ベンダー hard cap のスタートアップではコスト incident は可用性 incident だ。一時 limit 引上げを誰が承認し事後監査するか文書化する。"
+          ],
+          "links": [
+            {
+              "label": "Google SRE — インシデント管理",
+              "url": "https://sre.google/sre-book/managing-incidents/"
+            },
+            {
+              "label": "PagerDuty — レスポンスガイド",
+              "url": "https://response.pagerduty.com/"
+            },
+            {
+              "label": "OpenTelemetry — セマンティック規約",
+              "url": "https://opentelemetry.io/docs/specs/semconv/"
+            }
+          ]
+        },
+        {
+          "heading": "モデル障害で信頼される runbook",
+          "paragraphs": [
+            "AI インシデントは vendor outage、retrieval index  stale、policy refusal、client streaming bug、token コスト急増をユーザーから同じに見せます。runbook は symptom→check 決定木から：gateway 500、空 completion、moderation loop。顧客テンプレはクラス別；billing が原因なのに generic status は trust を削る。",
+            "モデル route kill switch と feature flag は月次 game day でテスト；本番 outage で壊れた switch 発見は高コスト。tools のみ止める switch、cache 回答 fallback、write block を文書化。on-call は cost spike を含む—billing alert と rate-limit dashboard を error rate と同 paging。緊急 quota 増で finance に annotation。",
+            "tool 多い agent は CRM timeout、二重課金、曖昧 ticket エラーなど外部 failure 手順が要り、LLM latency だけでない。idempotency ガイドと顧客安全 retry メッセージ。post-incident は eval case と synthetic probe を更新、wiki のみ禁止。手動 SQL は dry-run 付き監査 script リンク、午前三時の即興 query 禁止。",
+            "オペレータがリハーサルすると runbook が生きる。holiday freeze 前に AI shadow on-call ローテ；新人は mentor 付き benign page 一度。incident タイプ別 time-to-mitigate と root-cause。リーダーシップは四半期 trend を review し recurring retrieval gap や欠落 circuit breaker に headcount だけでなく fix 予算。"
           ]
         }
       ]

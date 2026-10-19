@@ -1,0 +1,645 @@
+{
+  "slug": "postgres-connection-pooling-at-the-edge",
+  "title": "Postgres Connection Pooling at the Edge",
+  "excerpt": "Serverless and edge workers spawn short-lived processes that exhaust Postgres max_connections in minutes. A single global pool cap does not survive distributed cold starts.",
+  "description": "Staff patterns for Postgres pooling at the edge: per-worker limits, PgBouncer transaction mode validation, cold-start jitter, and saturation metrics correlated with database CPU.",
+  "readingMinutes": 10,
+  "keywords": [
+    "Postgres",
+    "connection pooling",
+    "PgBouncer",
+    "serverless",
+    "edge computing"
+  ],
+  "socialThreadTr": [
+    "Edge'de Postgres pool global max ile çözülmez; worker başına limit şart. 🧵",
+    "PgBouncer transaction mode ve cold start jitter. Detay: https://berktugberke.com/tr/blogs/postgres-connection-pooling-at-the-edge"
+  ],
+  "sections": [
+    {
+      "heading": "Global max fails at the edge",
+      "paragraphs": [
+        "Thousands of isolates waking together create connection storms. You see queue backlog before hard database rejections if you are lucky.",
+        "Design per-worker pool ceilings and a regional PgBouncer tier instead of hoping max_connections magically scales."
+      ]
+    },
+    {
+      "heading": "Validate transaction mode with ORM",
+      "paragraphs": [
+        "Session mode often breaks serverless lifecycles. Validate transaction mode with your ORM, prepared statements, and advisory locks in staging.",
+        "Bind ORM connection lifecycle strictly to the request boundary—leaked handles become everyone else's outage."
+      ],
+      "points": [
+        "Cap pools per edge worker, not one global maximum",
+        "Validate PgBouncer transaction mode with your ORM and serverless runtime",
+        "Add jitter after cold starts to prevent connection storms",
+        "Correlate pool saturation metrics with database CPU"
+      ]
+    },
+    {
+      "heading": "Jitter connections after cold start",
+      "paragraphs": [
+        "Replace simultaneous connects on cold start with randomized backoff. Warm pools or minimum instances cost money but earn their keep on revenue paths.",
+        "Document which routes require warm capacity so finance understands the line item."
+      ]
+    },
+    {
+      "heading": "Correlate saturation with DB CPU",
+      "paragraphs": [
+        "Plot pool wait time and active connections beside Postgres CPU and lock waits.",
+        "Page on saturation trends before query timeouts flood application logs and hide the root cause."
+      ],
+      "links": [
+        {
+          "label": "PgBouncer — Documentation",
+          "url": "https://www.pgbouncer.org/usage.html"
+        },
+        {
+          "label": "Neon — Connection pooling",
+          "url": "https://neon.tech/docs/connect/connection-pooling"
+        }
+      ]
+    },
+    {
+      "heading": "Size pools for edge concurrency",
+      "paragraphs": [
+        "Serverless isolates multiply faster than Postgres tolerates connections. Cap pools per worker and region; a single global max either starves functions or hits max_connections on the primary. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "PgBouncer transaction mode breaks prepared statements, advisory locks, and listen-notify unless the ORM is configured explicitly. Test those code paths in staging with the same mode you ship. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Cold starts synchronize connection opens—add jittered backoff on first connect to prevent storms after deploys. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window."
+      ]
+    },
+    {
+      "heading": "Validate ORM against transaction mode",
+      "paragraphs": [
+        "Correlate pool wait time, active clients, and database CPU before customer queries time out. Document session versus transaction pooling per route in architecture records. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Read replicas should not share writer pool names unless drivers target roles explicitly. Failover drills quarterly for Neon, RDS Proxy, or self-hosted bouncer stacks. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Treat checkout and search pool saturation as product incidents with route-labeled metrics, not only DBA tickets. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window."
+      ],
+      "links": [
+        {
+          "label": "PgBouncer — Documentation",
+          "url": "https://www.pgbouncer.org/usage.html"
+        },
+        {
+          "label": "Neon — Connection pooling",
+          "url": "https://neon.tech/docs/connect/connection-pooling"
+        },
+        {
+          "label": "PostgreSQL — Connection limits",
+          "url": "https://www.postgresql.org/docs/current/runtime-config-connection.html"
+        }
+      ]
+    },
+    {
+      "heading": "Pool sizing for serverless and edge workers",
+      "paragraphs": [
+        "Edge functions multiply processes faster than Postgres multiplies connections. Cap pools per worker and region instead of one global maximum that either starves lambdas or exhausts max_connections on the primary. Validate PgBouncer transaction mode against your ORM: prepared statements, advisory locks, and listen-notify patterns break silently when session semantics disappear. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Cold starts create connection storms when every isolate opens a fresh pool simultaneously. Add jittered backoff on first connect and reuse warm pools where the runtime allows. Correlate pool wait time, active clients, and database CPU so saturation shows up before customer queries time out. Document which routes require session pooling versus transaction pooling in the architecture decision record. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Neon, RDS Proxy, and self-hosted PgBouncer differ in TLS termination and credential rotation—test failover drills quarterly. Read replicas should not share the same pool name as writers unless your driver explicitly targets roles. Staging must use smaller pools with the same mode as production; testing session mode in staging and shipping transaction mode invites launch-week surprises. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Treat pool misconfiguration as a product incident when checkout or search routes fail. Export metrics with service and route labels, not only database hostnames. On-call runbooks need explicit steps to drain workers, bounce bouncer, and verify ORM pool settings without restarting the entire cluster. Finance should see connection overhead beside query spend when evaluating edge migration proposals. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first."
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Edge'de Postgres Connection Pooling",
+      "excerpt": "Serverless ve edge worker'lar kısa ömürlü süreçler açar; Postgres max_connections hızla dolar. Global pool limiti tek makinede işe yarar, edge'de fırtına yaratır.",
+      "description": "Edge ve serverless için Postgres pooling: worker başına limitler, PgBouncer transaction mode, cold start jitter ve saturation metrikleri.",
+      "sections": [
+        {
+          "heading": "Edge'de global max yetmez",
+          "paragraphs": [
+            "Her edge POP'ta binlerce isolate aynı anda uyanınca connection storm oluşur; veritabanı reddetmeye başlamadan önce queue backlog görürsünüz.",
+            "Worker başına sabit pool tavanı ve regional PgBouncer katmanı tasarlayın."
+          ]
+        },
+        {
+          "heading": "Transaction mode ORM ile test et",
+          "paragraphs": [
+            "Session mode serverless ile uyumsuz olabilir; transaction mode prepared statement ve advisory lock davranışını staging'de doğrulayın.",
+            "ORM connection yaşam döngüsünü request sınırına sıkı bağlayın."
+          ],
+          "points": [
+            "Edge worker başına pool limiti, global max değil",
+            "PgBouncer transaction mode ile serverless uyumu test edin",
+            "Cold start sonrası connection storm için jitter ekleyin",
+            "Pool saturation metriklerini DB CPU ile birlikte izleyin"
+          ]
+        },
+        {
+          "heading": "Cold start sonrası jitter ekle",
+          "paragraphs": [
+            "Cold start'ta eşzamanlı connect yerine randomized backoff ile bağlantı açın.",
+            "Warm pool veya min instance sayısı maliyetli ama kritik route'larda haklı olabilir."
+          ]
+        },
+        {
+          "heading": "Saturation'ı DB CPU ile izle",
+          "paragraphs": [
+            "Pool wait time ve active connections metriklerini Postgres CPU ve lock wait ile aynı dashboard'da gösterin.",
+            "Saturation alert'leri query timeout'larından önce sayfalamalı."
+          ],
+          "links": [
+            {
+              "label": "PgBouncer — Documentation",
+              "url": "https://www.pgbouncer.org/usage.html"
+            },
+            {
+              "label": "Neon — Connection pooling",
+              "url": "https://neon.tech/docs/connect/connection-pooling"
+            }
+          ]
+        },
+        {
+          "heading": "Edge eşzamanlılık için pool boyutu",
+          "paragraphs": [
+            "Serverless isolate'lar Postgres'in tolere ettiğinden hızlı çoğalır. Worker ve bölge başına pool cap koyun; tek global max ya function'ları aç bırakır ya primary max_connections'a çarpar. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "PgBouncer transaction mode ORM açıkça yapılandırılmazsa prepared statement, advisory lock ve listen-notify'ı kırar. Ship ettiğiniz mode ile staging'de bu path'leri test edin. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Cold start connection açılışlarını senkronize eder—deploy sonrası fırtınayı önlemek için first connect'te jittered backoff ekleyin. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin."
+          ]
+        },
+        {
+          "heading": "ORM'i transaction mode'a doğrulayın",
+          "paragraphs": [
+            "Müşteri sorguları timeout olmadan pool wait, active client ve DB CPU'yu korele edin. Route başına session vs transaction pooling'i mimari kayıtlarda yazın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Driver rol hedeflemedikçe read replica writer pool adını paylaşmasın. Neon, RDS Proxy veya self-hosted bouncer için çeyreklik failover drill. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Checkout ve arama pool saturation'ını yalnızca DBA ticket değil route etiketli metrikli product incident sayın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin."
+          ],
+          "links": [
+            {
+              "label": "PgBouncer — Documentation",
+              "url": "https://www.pgbouncer.org/usage.html"
+            },
+            {
+              "label": "Neon — Connection pooling",
+              "url": "https://neon.tech/docs/connect/connection-pooling"
+            },
+            {
+              "label": "PostgreSQL — Connection limits",
+              "url": "https://www.postgresql.org/docs/current/runtime-config-connection.html"
+            }
+          ]
+        },
+        {
+          "heading": "Serverless ve edge worker için pool boyutlandırma",
+          "paragraphs": [
+            "Edge function'lar Postgres'in connection çoğaltmasından hızlı process çoğaltır. Lambda'ları aç bırakan veya primary max_connections'ı tüketen tek global max yerine worker ve bölge başına pool cap koyun. PgBouncer transaction mode'u ORM'inize karşı doğrulayın: prepared statement, advisory lock ve listen-notify session semantiği kaybolunca sessizce kırılır.",
+            "Cold start her isolate aynı anda taze pool açınca connection fırtınası yaratır. İlk connect'te jittered backoff ekleyin; runtime izin veriyorsa warm pool reuse edin. Pool wait, active client ve DB CPU'yu korele edin; müşteri sorguları timeout olmadan saturation görünsün. ADR'de hangi route'un session pooling, hangisinin transaction pooling gerektirdiğini yazın.",
+            "Neon, RDS Proxy ve self-hosted PgBouncer TLS termination ve credential rotation'da farklıdır—çeyreklik failover drill test edin. Read replica writer ile aynı pool adını paylaşmasın, driver rol hedeflemiyorsa. Staging prod ile aynı mode'da daha küçük pool kullansın; staging'de session, prod'da transaction ship etmek launch sürprizi demektir.",
+            "Checkout veya arama route'ları fail olunca pool misconfig product incident sayılmalı. Metrikleri yalnızca DB hostname değil service ve route label ile export edin. Runbook worker drain, bouncer bounce ve ORM pool ayarını tüm cluster restart etmeden doğrulama adımlarını içersin. Finans edge migration önerilerinde query harcaması yanında connection overhead görsün."
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Postgres Connection Pooling am Edge",
+      "excerpt": "Serverless und Edge-Worker erzeugen kurzlebige Prozesse; max_connections läuft voll. Globales Pool-Limit hilft nicht verteilt am Edge.",
+      "description": "Pooling für Edge/Serverless: Limits pro Worker, PgBouncer Transaction Mode, Cold-Start-Jitter, Saturation-Metriken.",
+      "sections": [
+        {
+          "heading": "Globales Max reicht am Edge nicht",
+          "paragraphs": [
+            "Tausende Isolates wachen gleichzeitig auf → Connection Storm; Queue-Backlog vor harten DB-Abweisungen.",
+            "Festes Pool-Cap pro Worker plus regionales PgBouncer-Tier."
+          ]
+        },
+        {
+          "heading": "Transaction Mode mit ORM testen",
+          "paragraphs": [
+            "Session Mode passt oft nicht zu Serverless; Transaction Mode in Staging mit Prepared Statements prüfen.",
+            "ORM-Lebenszyklus strikt an Request-Grenze binden."
+          ],
+          "points": [
+            "Pool-Limit pro Edge-Worker, nicht global",
+            "PgBouncer Transaction-Mode für Serverless testen",
+            "Jitter gegen Connection-Storm nach Cold Start",
+            "Pool-Sättigung mit DB-CPU korrelieren"
+          ]
+        },
+        {
+          "heading": "Jitter nach Cold Start",
+          "paragraphs": [
+            "Statt simultan connect: randomisiertes Backoff nach Cold Start.",
+            "Warm Pool oder Min-Instances für kritische Routen rechtfertigen Kosten."
+          ]
+        },
+        {
+          "heading": "Saturation mit DB-CPU korrelieren",
+          "paragraphs": [
+            "Pool-Wait und Active Connections mit Postgres-CPU und Lock-Wait in einem Dashboard.",
+            "Saturation-Alerts vor Query-Timeouts pagern."
+          ],
+          "links": [
+            {
+              "label": "PgBouncer — Documentation",
+              "url": "https://www.pgbouncer.org/usage.html"
+            },
+            {
+              "label": "Neon — Connection pooling",
+              "url": "https://neon.tech/docs/connect/connection-pooling"
+            }
+          ]
+        },
+        {
+          "heading": "Pools für Edge-Concurrency",
+          "paragraphs": [
+            "Serverless-Isolates vervielfachen sich schneller als Postgres Connections toleriert. Pools pro Worker und Region cappen. Transaction Mode bricht Prepared Statements ohne ORM-Config. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Staging testet dieselben Pfade im Ship-Mode. Cold Starts brauchen Jitter beim Erstconnect gegen Storms. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Dokumentieren welche Routes Session- vs Transaction-Pooling brauchen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen."
+          ]
+        },
+        {
+          "heading": "ORM gegen Transaction Mode validieren",
+          "paragraphs": [
+            "Pool-Wait, Active Clients und DB-CPU korrelieren vor Customer-Timeouts. Read Replicas nicht gleicher Pool-Name wie Writer ohne Driver-Rollen. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Quarterly Failover-Drills für Proxy/Bouncer-Stacks. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Checkout/Search-Saturation als Product-Incidents mit Route-Labels behandeln. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen."
+          ],
+          "links": [
+            {
+              "label": "PgBouncer — Documentation",
+              "url": "https://www.pgbouncer.org/usage.html"
+            },
+            {
+              "label": "Neon — Connection pooling",
+              "url": "https://neon.tech/docs/connect/connection-pooling"
+            },
+            {
+              "label": "PostgreSQL — Connection limits",
+              "url": "https://www.postgresql.org/docs/current/runtime-config-connection.html"
+            }
+          ]
+        },
+        {
+          "heading": "Pool-Sizing für Serverless und Edge",
+          "paragraphs": [
+            "Edge Functions vervielfachen Prozesse schneller als Postgres Connections. Pools pro Worker und Region cappen statt globalem Maximum, das Lambdas hungern lässt oder max_connections sprengt. PgBouncer Transaction Mode gegen ORM validieren: Prepared Statements, Advisory Locks, Listen-Notify brechen ohne Session-Semantik. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Cold Starts erzeugen Connection Storms wenn jedes Isolate gleichzeitig Pool öffnet. Jittered Backoff beim Erstconnect; warme Pools wo Runtime erlaubt. Pool-Wait, Active Clients und DB-CPU korrelieren. ADR dokumentiert Session- vs Transaction-Pooling pro Route. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Neon, RDS Proxy, self-hosted PgBouncer unterscheiden TLS und Credential-Rotation—Quarterly Failover-Drills. Read Replicas nicht gleicher Pool-Name wie Writer ohne explizite Driver-Rollen. Staging kleinere Pools gleicher Mode wie Prod. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Pool-Misconfig als Product-Incident wenn Checkout oder Search failt. Metriken mit Service- und Route-Labels. Runbook: Worker drain, Bouncer bounce, ORM-Settings ohne Full-Cluster-Restart. Finance sieht Connection-Overhead neben Query-Spend bei Edge-Migration. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein."
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Pooling connexions Postgres à l'edge",
+      "excerpt": "Workers serverless/edge créent des processus éphémères ; max_connections sature. Un max global ne suffit pas distribué à l'edge.",
+      "description": "Pooling Postgres edge : limites par worker, mode transaction PgBouncer, jitter cold start, métriques saturation.",
+      "sections": [
+        {
+          "heading": "Max global insuffisant à l'edge",
+          "paragraphs": [
+            "Des milliers d'isolates se réveillent → tempête connexions ; backlog queue avant refus DB.",
+            "Plafond pool par worker plus couche PgBouncer régionale."
+          ]
+        },
+        {
+          "heading": "Tester mode transaction avec ORM",
+          "paragraphs": [
+            "Mode session souvent incompatible serverless ; valider mode transaction et prepared statements en staging.",
+            "Cycle de vie ORM strictement lié à la requête."
+          ],
+          "points": [
+            "Limite pool par worker edge, pas max global",
+            "Tester PgBouncer mode transaction pour serverless",
+            "Jitter contre tempête connexions après cold start",
+            "Saturation pool corrélée au CPU base"
+          ]
+        },
+        {
+          "heading": "Jitter après cold start",
+          "paragraphs": [
+            "Backoff aléatoire au lieu de connect simultanés après cold start.",
+            "Warm pool ou min instances pour routes critiques."
+          ]
+        },
+        {
+          "heading": "Corréler saturation et CPU DB",
+          "paragraphs": [
+            "Wait pool et connexions actives avec CPU Postgres et lock wait sur un dashboard.",
+            "Alertes saturation avant timeouts requête."
+          ],
+          "links": [
+            {
+              "label": "PgBouncer — Documentation",
+              "url": "https://www.pgbouncer.org/usage.html"
+            },
+            {
+              "label": "Neon — Connection pooling",
+              "url": "https://neon.tech/docs/connect/connection-pooling"
+            }
+          ]
+        },
+        {
+          "heading": "Dimensionner pools pour concurrence edge",
+          "paragraphs": [
+            "Isolates serverless se multiplient plus vite que Postgres n'accepte connexions. Plafonds pool par worker et région. Mode transaction casse prepared statements sans config ORM. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Staging teste mêmes chemins en mode ship. Cold starts : backoff jitteré au premier connect. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Documenter session vs transaction pooling par route. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement."
+          ]
+        },
+        {
+          "heading": "Valider ORM contre mode transaction",
+          "paragraphs": [
+            "Corréler attente pool, clients actifs, CPU avant timeouts clients. Replicas lecture ne partagent pas nom pool writer sans rôle driver. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Drills failover trimestriels pour proxy/bouncer. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Saturation pool checkout/search comme incidents produit avec labels route. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement."
+          ],
+          "links": [
+            {
+              "label": "PgBouncer — Documentation",
+              "url": "https://www.pgbouncer.org/usage.html"
+            },
+            {
+              "label": "Neon — Connection pooling",
+              "url": "https://neon.tech/docs/connect/connection-pooling"
+            },
+            {
+              "label": "PostgreSQL — Connection limits",
+              "url": "https://www.postgresql.org/docs/current/runtime-config-connection.html"
+            }
+          ]
+        },
+        {
+          "heading": "Dimensionnement pool pour edge et serverless",
+          "paragraphs": [
+            "Les edge functions multiplient processus plus vite que Postgres ne multiplie connexions. Plafonds pool par worker et région, pas maximum global qui affame lambdas ou épuise max_connections. Valider mode transaction PgBouncer contre ORM : prepared statements, advisory locks, listen-notify cassent sans sémantique session. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Cold starts créent tempêtes connexion si chaque isolate ouvre pool neuf simultanément. Backoff jitteré au premier connect ; réutiliser pools chauds si runtime le permet. Corréler attente pool, clients actifs, CPU base. ADR documente session vs transaction pooling par route. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Neon, RDS Proxy, PgBouncer self-hosted diffèrent TLS et rotation credentials—drills failover trimestriels. Replicas lecture ne partagent pas nom pool writer sans rôle driver explicite. Staging pools plus petits même mode que prod. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Misconfig pool = incident produit si checkout ou search échoue. Métriques avec labels service et route. Runbook drain workers, bounce bouncer, vérif ORM sans restart cluster entier. Finance voit overhead connexion à côté dépense query pour migrations edge. Consignez owner, date de revue et rollback dans le même ticket de changement."
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Connection pooling Postgres all'edge",
+      "excerpt": "Worker serverless/edge aprono processi effimeri; max_connections si riempie. Un max globale non basta distribuito all'edge.",
+      "description": "Pooling Postgres edge: limiti per worker, PgBouncer transaction mode, jitter cold start, metriche saturazione.",
+      "sections": [
+        {
+          "heading": "Max globale insufficiente all'edge",
+          "paragraphs": [
+            "Migliaia di isolate si svegliano insieme → connection storm; backlog coda prima dei rifiuti DB.",
+            "Cap pool fisso per worker più tier PgBouncer regionale."
+          ]
+        },
+        {
+          "heading": "Testare transaction mode con ORM",
+          "paragraphs": [
+            "Session mode spesso incompatibile serverless; validare transaction mode e prepared statement in staging.",
+            "Ciclo vita ORM legato al confine request."
+          ],
+          "points": [
+            "Limite pool per edge worker, non max globale",
+            "Testare PgBouncer transaction mode per serverless",
+            "Jitter contro connection storm post cold start",
+            "Saturazione pool correlata a CPU DB"
+          ]
+        },
+        {
+          "heading": "Jitter dopo cold start",
+          "paragraphs": [
+            "Backoff randomizzato invece di connect simultanei post cold start.",
+            "Warm pool o min instance per route critiche."
+          ]
+        },
+        {
+          "heading": "Correlare saturazione e CPU DB",
+          "paragraphs": [
+            "Pool wait e connessioni attive con CPU Postgres e lock wait su un dashboard.",
+            "Alert saturazione prima dei timeout query."
+          ],
+          "links": [
+            {
+              "label": "PgBouncer — Documentation",
+              "url": "https://www.pgbouncer.org/usage.html"
+            },
+            {
+              "label": "Neon — Connection pooling",
+              "url": "https://neon.tech/docs/connect/connection-pooling"
+            }
+          ]
+        },
+        {
+          "heading": "Dimensionare pool per concorrenza edge",
+          "paragraphs": [
+            "Isolate serverless moltiplicano più velocemente delle connessioni Postgres. Cap pool per worker e regione. Transaction mode rompe prepared statement senza config ORM. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Staging testa stessi path in mode ship. Cold start: backoff jitter al first connect. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Documentare session vs transaction pooling per route. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch."
+          ]
+        },
+        {
+          "heading": "Validare ORM con transaction mode",
+          "paragraphs": [
+            "Correlare attesa pool, client attivi, CPU DB prima timeout clienti. Read replica non condividono pool writer senza role driver. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Drill failover trimestrali per proxy/bouncer. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Saturazione pool checkout/search come incident product con label route. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch."
+          ],
+          "links": [
+            {
+              "label": "PgBouncer — Documentation",
+              "url": "https://www.pgbouncer.org/usage.html"
+            },
+            {
+              "label": "Neon — Connection pooling",
+              "url": "https://neon.tech/docs/connect/connection-pooling"
+            },
+            {
+              "label": "PostgreSQL — Connection limits",
+              "url": "https://www.postgresql.org/docs/current/runtime-config-connection.html"
+            }
+          ]
+        },
+        {
+          "heading": "Dimensionamento pool per edge e serverless",
+          "paragraphs": [
+            "Le edge function moltiplicano processi più velocemente di Postgres con le connessioni. Cap pool per worker e regione, non massimo globale che affama lambda o esaurisce max_connections. Validare transaction mode PgBouncer con ORM: prepared statement, advisory lock, listen-notify si rompono senza semantica sessione. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Cold start creano tempeste connessione se ogni isolate apre pool fresco insieme. Backoff jitter al primo connect; riuso pool caldi dove il runtime consente. Correlate attesa pool, client attivi, CPU DB. ADR documenta session vs transaction pooling per route. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Neon, RDS Proxy, PgBouncer self-hosted differiscono su TLS e rotazione credential—drill failover trimestrali. Read replica non condividono nome pool writer senza targeting ruolo driver. Staging pool più piccoli stesso mode di prod. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Misconfig pool è incident product se checkout o search falliscono. Metriche con label service e route. Runbook drain worker, bounce bouncer, verifica ORM senza restart cluster intero. Finance vede overhead connessione accanto a spend query per migration edge. Registrate owner, data di review e rollback nello stesso ticket di change."
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "边缘侧的 Postgres 连接池",
+      "excerpt": "Serverless 与 edge worker 创建短生命周期进程，Postgres max_connections 很快打满。全局 pool 上限在分布式 edge 不够用。",
+      "description": "Edge/serverless 的 Postgres 池化：按 worker 限流、PgBouncer 事务模式、冷启动 jitter、饱和指标。",
+      "sections": [
+        {
+          "heading": "边缘上全局 max 不够",
+          "paragraphs": [
+            "大量 isolate 同时唤醒引发连接风暴；在硬拒绝前先看队列积压。",
+            "每 worker 固定 pool 上限加区域 PgBouncer 层。"
+          ]
+        },
+        {
+          "heading": "与 ORM 验证事务模式",
+          "paragraphs": [
+            "Session 模式常与 serverless 不兼容；在预发验证事务模式与 prepared statement。",
+            "ORM 生命周期严格绑定请求边界。"
+          ],
+          "points": [
+            "按 edge worker 设连接池上限而非全局",
+            "验证 PgBouncer 事务模式与 serverless 兼容",
+            "冷启动后用 jitter 缓解连接风暴",
+            "连接池饱和与数据库 CPU 联合观测"
+          ]
+        },
+        {
+          "heading": "冷启动后加 jitter",
+          "paragraphs": [
+            "冷启动用随机 backoff 而非同时 connect。",
+            "关键路由可用 warm pool 或最小实例数。"
+          ]
+        },
+        {
+          "heading": "饱和与 DB CPU 关联",
+          "paragraphs": [
+            "pool 等待与活跃连接和 Postgres CPU、锁等待同屏。",
+            "饱和告警应早于查询 timeout 分页。"
+          ],
+          "links": [
+            {
+              "label": "PgBouncer — Documentation",
+              "url": "https://www.pgbouncer.org/usage.html"
+            },
+            {
+              "label": "Neon — Connection pooling",
+              "url": "https://neon.tech/docs/connect/connection-pooling"
+            }
+          ]
+        },
+        {
+          "heading": "为 edge 并发 sizing 连接池",
+          "paragraphs": [
+            "Serverless isolate 增殖速度快于 Postgres 可承受连接数。按 worker 与区域设 pool 上限。transaction mode 在 ORM 未显式配置时会破坏 prepared statement。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "预发以与生产相同模式测试这些路径。冷启动需首次连接 jitter 退避以防风暴。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "在架构记录中记录各路由的 session 与 transaction pooling。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。"
+          ]
+        },
+        {
+          "heading": "针对 transaction mode 验证 ORM",
+          "paragraphs": [
+            "在客户查询超时前关联 pool 等待、活跃客户端与 CPU。读副本除非驱动按角色路由否则不与 writer 共用 pool 名。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "对 Neon、RDS Proxy 或自建 bouncer 每季度 failover 演练。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "将 checkout/search pool 饱和视为带路由标签的产品事故。 请在下次生产评审中复核这一点，指定负责人并关联带日期的整改工单。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。"
+          ],
+          "links": [
+            {
+              "label": "PgBouncer — Documentation",
+              "url": "https://www.pgbouncer.org/usage.html"
+            },
+            {
+              "label": "Neon — Connection pooling",
+              "url": "https://neon.tech/docs/connect/connection-pooling"
+            },
+            {
+              "label": "PostgreSQL — Connection limits",
+              "url": "https://www.postgresql.org/docs/current/runtime-config-connection.html"
+            }
+          ]
+        },
+        {
+          "heading": "面向 serverless 与 edge 的连接池 sizing",
+          "paragraphs": [
+            "Edge 函数增殖进程的速度快于 Postgres 增殖连接。按 worker 与区域设 pool 上限，而非单一全局最大值——要么饿死 lambda，要么耗尽 primary 的 max_connections。针对 ORM 验证 PgBouncer transaction mode：prepared statement、advisory lock 与 listen-notify 在 session 语义消失时会静默失败。",
+            "冷启动时若每个 isolate 同时打开新 pool 会引发连接风暴。首次连接加入 jitter 退避，运行时允许则复用 warm pool。关联 pool 等待、活跃客户端与数据库 CPU，在客户查询超时前看到饱和。在 ADR 记录哪些路由需要 session pooling、哪些需要 transaction pooling。",
+            "Neon、RDS Proxy 与自建 PgBouncer 在 TLS 终止与凭证轮换上不同——每季度做 failover 演练。读副本不应与 writer 共用 pool 名，除非驱动显式按角色路由。预发应使用与生产相同模式但更小的 pool；预发 session、生产 transaction 的组合会在发布周制造惊喜。",
+            "当 checkout 或 search 路由失败时，应将 pool 误配视为产品事故。按 service 与 route 标签导出指标，而非仅数据库主机名。Runbook 需含 drain worker、bounce bouncer、在不重启整集群情况下验证 ORM pool 的步骤。财务评估 edge 迁移时应同时看到连接开销与查询花费。"
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "エッジでのPostgresコネクションプーリング",
+      "excerpt": "サーバーレスとエッジワーカーは短命プロセスを量産しmax_connectionsが満杯に。グローバルmaxは分散エッジでは不足。",
+      "description": "エッジ/サーバーレス向けPostgresプール：ワーカーごと上限、PgBouncerトランザクションモード、コールドスタートジッター、飽和指標。",
+      "sections": [
+        {
+          "heading": "エッジではグローバルmax不足",
+          "paragraphs": [
+            "多数のisolate同時起動で接続ストーム；DB拒否前にキュー滞留。",
+            "ワーカーごと固定プール上限とリージョナルPgBouncer層。"
+          ]
+        },
+        {
+          "heading": "ORMでトランザクションモード検証",
+          "paragraphs": [
+            "セッションモードはサーバーレスと相性悪い；ステージングでトランザクションモードとprepared statement検証。",
+            "ORMライフサイクルをリクエスト境界に厳密紐付け。"
+          ],
+          "points": [
+            "グローバルmaxではなくエッジワーカーごとにプール上限",
+            "PgBouncerトランザクションモードをサーバーレスで検証",
+            "コールドスタート後の接続ストームにジッター",
+            "プール飽和をDB CPUと相関監視"
+          ]
+        },
+        {
+          "heading": "コールドスタート後ジッター",
+          "paragraphs": [
+            "コールドスタート後は同時connectではなくランダムbackoff。",
+            "クリティカルルートはwarm poolや最小インスタンス。"
+          ]
+        },
+        {
+          "heading": "飽和をDB CPUと相関",
+          "paragraphs": [
+            "プール待ちとアクティブ接続をPostgres CPUとロック待ちと同ダッシュボード。",
+            "飽和アラートはクエリtimeoutより先にページ。"
+          ],
+          "links": [
+            {
+              "label": "PgBouncer — Documentation",
+              "url": "https://www.pgbouncer.org/usage.html"
+            },
+            {
+              "label": "Neon — Connection pooling",
+              "url": "https://neon.tech/docs/connect/connection-pooling"
+            }
+          ]
+        },
+        {
+          "heading": "edge 並行向け pool sizing",
+          "paragraphs": [
+            "serverless isolate は Postgres connection tolerance より速く増殖。worker と region ごと pool cap。transaction mode は ORM config なしで prepared statement を break。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "staging は ship と同 mode で path test。cold start は first connect jitter backoff。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "route ごと session vs transaction pooling を ADR に記載。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。"
+          ]
+        },
+        {
+          "heading": "transaction mode で ORM 検証",
+          "paragraphs": [
+            "customer timeout 前に pool wait、active client、DB CPU correlate。read replica は driver role target なし writer pool 名共有禁止。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "proxy/bouncer で四半期 failover drill。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "checkout/search pool saturation を route label 付き product incident 扱い。 次回の production review で再確認し、オーナーを割り当て、日付付き remediation チケットを紐付けてください。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。"
+          ],
+          "links": [
+            {
+              "label": "PgBouncer — Documentation",
+              "url": "https://www.pgbouncer.org/usage.html"
+            },
+            {
+              "label": "Neon — Connection pooling",
+              "url": "https://neon.tech/docs/connect/connection-pooling"
+            },
+            {
+              "label": "PostgreSQL — Connection limits",
+              "url": "https://www.postgresql.org/docs/current/runtime-config-connection.html"
+            }
+          ]
+        },
+        {
+          "heading": "serverless と edge 向け pool sizing",
+          "paragraphs": [
+            "edge function は Postgres の connection 増より process 増が速い。lambda を飢えさせるか max_connections を枯らす global max ではなく worker と region ごとに pool cap。PgBouncer transaction mode を ORM で検証：prepared statement、advisory lock、listen-notify は session 意味論消失で静かに break。",
+            "cold start で各 isolate が同時に新 pool を開くと connection storm。first connect に jitter backoff；runtime が許せば warm pool reuse。pool wait、active client、DB CPU を correlate。ADR に route ごとの session vs transaction pooling。",
+            "Neon、RDS Proxy、self-hosted PgBouncer は TLS と credential rotation が異なる—四半期 failover drill。read replica は driver が role target しない限り writer と pool 名共有禁止。staging は prod と同 mode で smaller pool。",
+            "checkout や search route fail なら pool misconfig を product incident とする。DB hostname だけでなく service と route label で metric export。runbook に worker drain、bouncer bounce、full cluster restart なし ORM pool 検証。finance は edge migration で query spend 横に connection overhead。"
+          ]
+        }
+      ]
+    }
+  }
+}

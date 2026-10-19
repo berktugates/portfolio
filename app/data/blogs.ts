@@ -23,6 +23,119 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "data-retention-policies-that-enable-product-analytics",
+    title: "Data Retention Policies That Enable Product Analytics",
+    excerpt: "Keeping everything forever is a compliance and cost trap. Deleting everything is a product blindfold. Good retention design preserves the questions product still needs to ask.",
+    description: "How staff engineers design data retention that satisfies privacy while keeping product analytics useful: tiered events, rollups, lawful basis documentation, and observable deletion jobs.",
+    publishedAt: "2026-10-21",
+    readingMinutes: 11,
+    keywords: [
+      "data retention",
+      "product analytics",
+      "GDPR",
+      "privacy engineering",
+      "event pipelines",
+      "data governance",
+    ],
+    socialThreadTr: [
+      "Her şeyi sonsuza saklamak hukuk ve maliyet tuzağı; her şeyi silmek ürünü kör eder. İyi saklama, hâlâ sorulacak soruları korur. 🧵",
+      "Katmanlı olaylar, rollup, hukuki dayanak ve gözlemlenebilir silme. Detay: https://berktugberke.com/tr/blogs/data-retention-policies-that-enable-product-analytics",
+    ],
+    sections: [
+      {
+        heading: "Retention is a product surface",
+        paragraphs: [
+          "Legal teams ask how long you keep personal data. Product teams ask whether last quarter's funnel still works. If one policy answers both with 'delete everything at 30 days,' you traded compliance theater for analytics amnesia.",
+          "Staff engineers classify data by purpose and risk, then attach retention to each class with explicit owners—not a single TTL copied from a blog post.",
+          "Analytics without retention policy becomes an accidental data lake of sensitive events.",
+        ],
+      },
+      {
+        heading: "Tier events by purpose",
+        paragraphs: [
+          "Separate product analytics events from audit logs, support attachments, and model-training corpora. They have different lawful bases, deletion SLAs, and downstream consumers.",
+          "Minimize identifiers in analytics tiers. Pseudonymous user keys with rotation beat shipping emails to your warehouse because it was convenient in v1.",
+          "Define lawful basis per event type before instrumenting new AI or payment flows.",
+        ],
+        points: [
+          "Define event tiers: product analytics vs audit vs model training",
+          "Use aggregated rollups before deleting raw events",
+          "Document lawful basis and deletion SLAs per data class",
+          "Make retention config code-reviewed like schema migrations",
+        ],
+      },
+      {
+        heading: "Roll up before you purge",
+        paragraphs: [
+          "Delete raw high-cardinality events on schedule while retaining weekly cohort rollups and feature adoption summaries that answer roadmap questions without resurrecting PII.",
+          "Document which dashboards break when raw data ages out, and migrate those questions to aggregates before enforcement day.",
+          "Deletion jobs need metrics: rows removed, failures, and backlog age.",
+        ],
+      },
+      {
+        heading: "Operate deletion like migrations",
+        paragraphs: [
+          "Retention configuration should be version-controlled and reviewed. Deletion jobs need metrics: rows removed, failures, and lag. Silent gaps show up as mysterious metric cliffs in product reviews.",
+          "Retention done well is a competitive advantage: you can tell users what you keep, why, and for how long—while still learning from behavior at scale.",
+          "Product analytics and security logging can share schemas, but not retention classes.",
+        ],
+        links: [
+          {
+            label: "GDPR — Storage limitation",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+          {
+            label: "Snowplow — Data retention",
+            url: "https://docs.snowplow.io/docs/understanding-your-pipeline/retention/",
+          },
+          {
+            label: "Amplitude — Data governance",
+            url: "https://amplitude.com/docs/data/data-governance",
+          },
+        ],
+      },
+      {
+        heading: "Classify events before you instrument",
+        paragraphs: [
+          "Product analytics without retention design becomes an accidental warehouse of sensitive behavior. Define event classes up front: strictly operational telemetry, pseudonymous product metrics, and identifiers that require contractual basis before collection. AI features add prompt-derived attributes that belong in restricted tiers even when text itself is redacted.",
+          "Engineering and legal should co-sign a matrix mapping each event type to storage duration, encryption requirements, and downstream consumers. When marketing asks for a new funnel step, the review question is retention impact, not only schema feasibility. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+          "Deletion must be provable. Batch jobs that fail quietly leave you compliant on paper and exposed in practice. Emit metrics on rows removed, backlog age, and retry counts the same way you monitor payment reconciliation. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        ],
+      },
+      {
+        heading: "Separate analytics from security logging",
+        paragraphs: [
+          "Shared schemas tempt teams to reuse security logs for funnel analysis, blurring retention classes GDPR storage limitation principles describe. California CPRA summaries remind operators that retention should be no longer than reasonably necessary—document necessity per field, not per database. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+          "Aggregate tables can preserve trends after raw events expire if you design rollups with the same classification labels. Product analysts keep cohort views; privacy reviewers keep shorter raw TTL without losing weekly KPIs. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+          "Access controls should follow data class, not org chart popularity. Break-glass roles for incident response must auto-expire and leave audit trails distinct from analytics self-service groups. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        ],
+        links: [
+          {
+            label: "GDPR Article 5(1)(e) — Storage limitation",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+          {
+            label: "California CPRA — Retention (OAG summary)",
+            url: "https://oag.ca.gov/privacy/ccpa",
+          },
+          {
+            label: "OpenTelemetry — Logs data model",
+            url: "https://opentelemetry.io/docs/specs/otel/logs/data-model/",
+          },
+        ],
+      },
+      {
+        heading: "Operational checklist for retention and analytics",
+        paragraphs: [
+          "Product teams treat retention policies as legal paperwork while analytics pipelines keep ingesting identifiers forever. Break that cycle by publishing an event catalog in the same repo as your tracking SDK, with TTL, lawful basis, and rollup target on every row. Pull requests that add new properties must update the catalog or fail CI. Analysts still get cohort funnels when raw PII expires, because weekly aggregates inherit the same classification tags downstream.",
+          "Rollups are how you keep dashboards honest after deletion windows close. Design materialized views that drop user keys but preserve experiment assignment hashes long enough for readouts, then document which charts query raw versus aggregated tables. When someone exports a CSV for a board deck, log the export event with the requesting principal and the data class touched. Exports without audit trails fail privacy reviews faster than missing metrics.",
+          "Cross-border replication breaks naive retention promises. If events land in a region with different erasure SLAs, tag replicas in the catalog and run deletion orchestration that follows the strictest policy, not the laxest bucket. Staging environments must not hold production TTL exceptions without automatic expiry; engineers debugging with real user rows is a recurring audit finding. Synthetic fixtures should mimic schema, not copy prod dumps.",
+          "Review retention like capacity planning each quarter. Measure warehouse growth against deleted rows, exception counts, and open legal holds. Product analytics leaders should sign when new AI or payment flows ship, confirming defaults were not silently widened. Publish a one-page status to engineering all-hands: what expires this month, what rollups backfill history, and which teams still query fields that should have aged out.",
+        ],
+      },
+    ],
+  },
+    {
     slug: "reducing-flaky-e2e-tests-in-expo-apps",
     title: "Reducing Flaky E2E Tests in Expo Apps",
     excerpt: "A green CI badge means nothing if engineers rerun the pipeline until luck strikes. Flaky mobile E2E is a product risk signal, not a nuisance ticket.",

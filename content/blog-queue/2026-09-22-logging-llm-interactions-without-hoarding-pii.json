@@ -3,7 +3,7 @@
   "title": "Logging LLM Interactions Without Hoarding PII",
   "excerpt": "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
   "description": "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
-  "readingMinutes": 4,
+  "readingMinutes": 10,
   "keywords": [
     "LLM logging",
     "PII",
@@ -63,6 +63,45 @@
           "url": "https://platform.openai.com/docs/guides/safety-best-practices"
         }
       ]
+    },
+    {
+      "heading": "Contract tests on log schemas",
+      "paragraphs": [
+        "Log pipelines that accept arbitrary JSON become PII sinks within a few releases. Publish an explicit schema for LLM trace events: allowed keys, maximum payload sizes, and typed identifiers instead of free-text user fields. Enforce the contract in continuous integration with golden fixtures so a new field cannot merge without privacy review.",
+        "Keep structured telemetry separate from debug dumps. OpenTelemetry spans should carry model version, token counts, and correlation identifiers while prompts live in a redacted side channel with stricter access controls. When validation fails at ingest, drop the payload and increment a metric rather than writing to an ungoverned fallback topic.",
+        "Schedule quarterly audits that diff production schemas against the documented allowlist. Drift often arrives through log forwarders and vendor agents that remap fields silently. Treat schema divergence as a release blocker for AI features, the same way you would for authentication middleware regressions. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket."
+      ]
+    },
+    {
+      "heading": "Map controls to published standards",
+      "paragraphs": [
+        "Privacy programs require traceability from logged fields to legal basis and retention class. Maintain a data dictionary that links each LLM log attribute to OWASP LLM risks and your DPIA outcomes. Engineers should answer auditor questions without ad hoc chat archaeology across half the company.",
+        "Redaction must be deterministic and unit tested. Regular-expression lists belong in version control with fixtures on representative payloads, including multilingual personal names and formatted national identifiers. Sampling rates change during incidents; redaction rules should not depend on operator memory. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        "Bulk export and notebook rehydration paths need the same controls as the primary store. Federated analytics tools replicate logs into regions counsel never approved. Block cold-archive reads without break-glass roles that expire automatically and emit security alerts. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket."
+      ],
+      "links": [
+        {
+          "label": "OWASP LLM Top 10",
+          "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+        },
+        {
+          "label": "OpenTelemetry — Logs data model",
+          "url": "https://opentelemetry.io/docs/specs/otel/logs/data-model/"
+        },
+        {
+          "label": "GDPR Article 5 — Principles",
+          "url": "https://gdpr-info.eu/art-5-gdpr/"
+        }
+      ]
+    },
+    {
+      "heading": "Logging LLM traffic with defensible minimization",
+      "paragraphs": [
+        "LLM gateways see full prompts unless you design capture points upstream. Split observability into request metadata—model route, token counts, latency, policy outcome—and a restricted transcript tier sampled for quality review. Never default full prompt logging to hot storage. Schema tests should reject new log fields that match regexes for credit cards, government IDs, or employee personnel numbers before merge.",
+        "Redaction pipelines belong in the ingestion path, not as a quarterly cleanup script. Run deterministic transforms—mask emails, hash stable user keys, strip attachment bytes—and verify with golden log fixtures in CI. When legal asks for a sample during an incident, generate it from the redacted tier with approval workflow; ad hoc grep across raw clusters is how leaks happen in supposedly compliant stacks.",
+        "Retention classes for LLM logs must differ from classic HTTP access logs. Transcript samples may need seventy-two hours for triage while aggregate token spend metrics live ninety days. Document which on-call queries hit which tier in the runbook, and metric expiry job failures the same way you alert on model five hundreds. Security dashboards should show export volume, not only authentication failures.",
+        "Treat vendor subprocessors as part of your logging boundary. If a hosted model returns echoes of PII in tool outputs, your retention policy must cover derived fields in vector stores and eval exports. Product managers requesting longer history for prompt tuning owe an exception ticket with expiry and anonymization plan. When in doubt, log identifiers and outcomes, not verbatim user content copied into tickets."
+      ]
     }
   ],
   "locales": {
@@ -113,6 +152,45 @@
               "label": "OpenAI — Safety best practices",
               "url": "https://platform.openai.com/docs/guides/safety-best-practices"
             }
+          ]
+        },
+        {
+          "heading": "Log şemalarında sözleşme testleri",
+          "paragraphs": [
+            "Keyfi JSON kabul eden log hatları birkaç release içinde PII birikimine dönüşür. LLM trace olayları için açık bir şema yayınlayın: izinli anahtarlar, maksimum yük boyutları ve serbest metin kullanıcı alanları yerine tipli tanımlayıcılar. Altın fixture'larla CI'da şemayı zorunlu kılın; gizlilik incelemesi olmadan yeni alan merge edilemesin.",
+            "Yapılandırılmış telemetriyi debug dökümlerinden ayırın. OpenTelemetry span'leri model sürümü, token sayıları ve korelasyon kimliklerini taşısın; prompt'lar daha sıkı erişim kontrollü redakte yan kanalda kalsın. Ingest'te doğrulama başarısız olursa yükü düşürün ve yönetimsiz yedek konuya yazmak yerine metrik artırın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Üretim şemalarını dokümante allowlist ile çeyreklik karşılaştırın. Sapma çoğu zaman alanları sessizce yeniden eşleyen forwarder ve satıcı ajanlarıyla gelir. Şema ayrışmasını, kimlik doğrulama middleware gerilemelerinde olduğu gibi AI özellikleri için release engeli sayın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın."
+          ]
+        },
+        {
+          "heading": "Kontrolleri yayımlanmış standartlara bağlayın",
+          "paragraphs": [
+            "Gizlilik programları, loglanan alanların hukuki dayanak ve saklama sınıfına izlenebilirliğini ister. Her LLM log özniteliğini OWASP LLM riskleri ve DPIA sonuçlarınıza bağlayan bir veri sözlüğü sürdürün. Mühendisler denetçi sorularını şirketin yarısında geçmiş sohbet aramadan yanıtlamalı. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Redaksiyon deterministik ve birim testli olmalı. Regex listeleri sürüm kontrolünde kalsın; çok dilli kişi adları ve biçimlendirilmiş ulusal kimlikler dahil temsili yüklerle test edin. Olay sırasında örnekleme oranları değişir; redaksiyon kuralları operatör hafızasına bağlı olmamalı. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+            "Toplu export ve notebook yeniden yükleme yolları birincil depo ile aynı kontrollere tabi olmalı. Federasyonlu analitik araçları logları avukatların onaylamadığı bölgelere kopyalar. Soğuk arşiv okumalarını otomatik süresi dolan break-glass rolleri ve güvenlik uyarıları olmadan engelleyin. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın."
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenTelemetry — Log veri modeli",
+              "url": "https://opentelemetry.io/docs/specs/otel/logs/data-model/"
+            },
+            {
+              "label": "GDPR Madde 5 — İlkeler",
+              "url": "https://gdpr-info.eu/art-5-gdpr/"
+            }
+          ]
+        },
+        {
+          "heading": "Savunulabilir minimizasyonla LLM loglama",
+          "paragraphs": [
+            "Yukarı akışta yakalama noktaları tasarlamazsanız LLM gateway'leri tam prompt görür. Gözlemlenebilirliği istek metadatasına—model route, token sayısı, gecikme, politika sonucu—ve kalite incelemesi için örneklenen kısıtlı transkript katmanına bölün. Tam prompt loglamayı sıcak depoya varsayılan yapmayın. Şema testleri merge öncesi kredi kartı, kimlik numarası veya personel numarası regex'ine uyan yeni log alanlarını reddetsin. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+            "Redaksiyon boru hatları çeyreklik temizlik script'i değil ingestion yolunda olmalı. Deterministik dönüşümler—e-posta maskeleme, stabil kullanıcı anahtarı hash, ek baytlarını strip—CI'da golden log fixture'larıyla doğrulansın. Hukuk olay sırasında örnek isterse onay akışıyla redakte katmandan üretin; raw cluster'da rastgele grep sızıntının uyumlu sandığınız stack'lerdeki yoludur. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+            "LLM logları için saklama sınıfları klasik HTTP access log'larından ayrılmalı. Transkript örnekleri triage için yetmiş iki saat gerekebilir; toplam token harcama metrikleri doksan gün kalabilir. Runbook'ta hangi on-call sorgusunun hangi katmana vurduğunu yazın; expiry job hatalarını model 500'leri gibi uyarın. Güvenlik panoları yalnızca auth failure değil export hacmini göstersin. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+            "Vendor alt işlemcileri log sınırınızın parçası sayın. Barındırılan model tool çıktısında PII yankısı dönerse retention vektör store ve eval export'taki türev alanları kapsamalı. Prompt tuning için uzun geçmiş isteyen PM'ler süreli istisna ticket'ı ve anonimleştirme planı borçlu. Şüphede tanımlayıcı ve sonuç loglayın, ticket'a kopyalanan ham kullanıcı metnini değil. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin."
           ]
         }
       ]
@@ -165,6 +243,45 @@
               "url": "https://platform.openai.com/docs/guides/safety-best-practices"
             }
           ]
+        },
+        {
+          "heading": "Vertragstests für Log-Schemata",
+          "paragraphs": [
+            "Pipelines, die beliebiges JSON akzeptieren, werden innerhalb weniger Releases zu PII-Senken. Veröffentlichen Sie ein explizites Schema für LLM-Trace-Events: erlaubte Keys, maximale Payload-Größen und typisierte Identifikatoren statt Freitext-Nutzerfelder. Erzwingen Sie den Vertrag in CI mit Golden Fixtures, damit ohne Privacy-Review kein neues Feld gemergt wird. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Trennen Sie strukturierte Telemetrie von Debug-Dumps. OpenTelemetry-Spans tragen Modellversion, Token-Zähler und Korrelations-IDs; Prompts liegen in einem redigierten Side-Channel mit strengeren ACLs. Schlägt die Validierung beim Ingest fehl, verwerfen Sie die Payload und erhöhen Sie eine Metrik statt in ein ungoverned Fallback-Topic zu schreiben. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Planen Sie vierteljährliche Audits, die Produktionsschemata mit der dokumentierten Allowlist vergleichen. Drift kommt oft über Forwarder und Vendor-Agenten, die Felder still umbenennen. Behandeln Sie Schema-Abweichung als Release-Blocker für KI-Features wie Auth-Middleware-Regressionen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an."
+          ]
+        },
+        {
+          "heading": "Controls an veröffentlichte Standards koppeln",
+          "paragraphs": [
+            "Privacy-Programme verlangen Rückverfolgbarkeit von Log-Feldern zu Rechtsgrundlage und Retention-Klasse. Pflegen Sie ein Data Dictionary, das jedes LLM-Log-Attribut mit OWASP-LLM-Risiken und DPIA-Ergebnissen verknüpft. Engineers sollen Auditor-Fragen ohne Ad-hoc-Chat-Archäologie beantworten. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Redaction muss deterministisch und unit-getestet sein. Regex-Listen gehören ins Repo mit Fixtures für mehrsprachige Namen und formatierte nationale IDs. Sampling-Raten ändern sich in Incidents; Redaction-Regeln dürfen nicht vom Operator-Gedächtnis abhängen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+            "Bulk-Export und Notebook-Rehydration brauchen dieselben Controls wie der Primärspeicher. Föderierte Analytics kopieren Logs in Regionen, die Legal nie freigegeben hat. Blockieren Sie Cold-Archive-Reads ohne Break-Glass-Rollen mit Auto-Expiry und Security-Alerts. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an."
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenTelemetry — Logs-Datenmodell",
+              "url": "https://opentelemetry.io/docs/specs/otel/logs/data-model/"
+            },
+            {
+              "label": "DSGVO Artikel 5 — Grundsätze",
+              "url": "https://gdpr-info.eu/art-5-gdpr/"
+            }
+          ]
+        },
+        {
+          "heading": "LLM-Logging mit verteidigbarer Minimierung",
+          "paragraphs": [
+            "LLM-Gateways sehen volle Prompts ohne upstream Capture-Points. Teilen Sie Observability: Request-Metadaten—Modell-Route, Token, Latenz, Policy-Outcome—und restricted Transcript-Tier für Quality-Sampling. Niemals Full-Prompt-Logging als Hot-Storage-Default. Schema-Tests lehnen vor Merge neue Log-Felder ab, die Regex für Karten, Ausweise oder Personalnummern matchen. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Redaction-Pipelines gehören in Ingestion, nicht als Quarterly-Cleanup. Deterministische Transforms—E-Mail maskieren, User-Keys hashen, Attachments strippen—mit Golden-Log-Fixtures in CI verifizieren. Legal-Samples im Incident aus redacted Tier mit Approval-Workflow; ad-hoc grep in Raw-Clustern ist Leak-Pfad in scheinbar compliant Stacks. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Retention-Klassen für LLM-Logs unterscheiden sich von HTTP-Access-Logs. Transcript-Samples evtl. 72h Triage, Token-Spend-Aggregate 90 Tage. Runbook dokumentiert On-Call-Queries pro Tier; Expiry-Job-Failures wie Model-500s alerten. Security-Dashboards zeigen Export-Volumen, nicht nur Auth-Failures. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+            "Vendor-Subprocessor sind Logging-Boundary. Echo-PII in Tool-Outputs erfordert Retention für abgeleitete Felder in Vector Stores und Eval-Exports. PMs mit längerer History für Prompt-Tuning brauchen Exception-Ticket mit Expiry und Anonymisierungsplan. Im Zweifel IDs und Outcomes loggen, nicht wörtlichen User-Content in Tickets. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht."
+          ]
         }
       ]
     },
@@ -215,6 +332,45 @@
               "label": "OpenAI — Safety best practices",
               "url": "https://platform.openai.com/docs/guides/safety-best-practices"
             }
+          ]
+        },
+        {
+          "heading": "Tests de contrat sur les schémas de logs",
+          "paragraphs": [
+            "Les pipelines qui acceptent du JSON arbitraire deviennent des puits de PII en quelques releases. Publiez un schéma explicite pour les traces LLM : clés autorisées, tailles maximales et identifiants typés plutôt que champs utilisateur en texte libre. Faites respecter le contrat en CI avec des fixtures dorées pour empêcher tout nouveau champ sans revue privacy.",
+            "Séparez la télémétrie structurée des dumps de debug. Les spans OpenTelemetry portent version de modèle, compteurs de tokens et IDs de corrélation ; les prompts restent dans un canal latéral redigé avec ACL plus strictes. Si la validation échoue à l'ingest, droppez la charge et incrémentez une métrique au lieu d'écrire dans un topic de repli non gouverné.",
+            "Planifiez des audits trimestriels comparant les schémas prod à l'allowlist documentée. La dérive arrive souvent via des forwarders et agents vendor qui renomment des champs silencieusement. Traitez la divergence de schéma comme un bloqueur de release pour les features IA, comme pour une régression middleware d'authentification."
+          ]
+        },
+        {
+          "heading": "Relier les contrôles aux standards publiés",
+          "paragraphs": [
+            "Les programmes privacy exigent la traçabilité des champs loggés vers base légale et classe de rétention. Maintenez un dictionnaire de données liant chaque attribut LLM aux risques OWASP LLM et à vos DPIA. Les ingénieurs doivent répondre aux auditeurs sans archéologie ad hoc dans les chats de l'entreprise.",
+            "La redaction doit être déterministe et testée unitairement. Les listes regex vivent dans le VCS avec des fixtures sur des payloads représentatifs, noms multilingues et identifiants nationaux formatés. Les taux d'échantillonnage changent en incident ; les règles ne doivent pas dépendre de la mémoire des opérateurs.",
+            "Les exports bulk et chemins de rehydratation notebook exigent les mêmes contrôles que le store primaire. Les outils analytics fédérés répliquent des logs dans des régions jamais approuvées par le juridique. Bloquez la lecture d'archives froides sans rôles break-glass expirant automatiquement et alertes sécurité. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté."
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenTelemetry — Modèle de données logs",
+              "url": "https://opentelemetry.io/docs/specs/otel/logs/data-model/"
+            },
+            {
+              "label": "RGPD article 5 — Principes",
+              "url": "https://gdpr-info.eu/art-5-gdpr/"
+            }
+          ]
+        },
+        {
+          "heading": "Journaliser le trafic LLM avec minimisation défendable",
+          "paragraphs": [
+            "Les gateways LLM voient les prompts complets sans points de capture amont. Séparez observabilité : métadonnées requête—route modèle, tokens, latence, issue policy—et tier transcript restreint échantillonné pour qualité. Jamais de log prompt intégral par défaut en stockage chaud. Tests schéma rejettent avant merge champs log matchant regex cartes, IDs gouvernementaux ou matricules. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions.",
+            "Pipelines de rédaction dans l'ingestion, pas script trimestriel. Transforms déterministes—masquer emails, hasher clés utilisateur stables, retirer bytes pièces jointes—vérifiés par fixtures log dorées en CI. Échantillon legal en incident depuis tier rédigé avec workflow d'approbation ; grep ad hoc sur clusters raw fuit dans stacks soi-disant conformes. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+            "Classes de rétention LLM diffèrent des access logs HTTP. Échantillons transcript peut-être 72h triage, métriques agrégées dépense tokens 90 jours. Runbook : quelles requêtes on-call touchent quel tier ; échecs jobs expiry alertés comme 500 modèle. Dashboards sécurité montrent volume export, pas seulement échecs auth. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+            "Sous-traitants vendor dans la boundary logging. Échos PII dans sorties tools imposent rétention champs dérivés vector stores et exports eval. PM demandant historique long pour tuning doivent ticket exception avec expiry et plan anonymisation. En doute, journaliser identifiants et outcomes, pas contenu utilisateur verbatim copié en tickets. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident."
           ]
         }
       ]
@@ -267,6 +423,45 @@
               "url": "https://platform.openai.com/docs/guides/safety-best-practices"
             }
           ]
+        },
+        {
+          "heading": "Contract test sugli schemi di log",
+          "paragraphs": [
+            "Pipeline che accettano JSON arbitrario diventano sink di PII in pochi release. Pubblicate uno schema esplicito per eventi trace LLM: chiavi ammesse, dimensioni massime del payload e identificatori tipizzati al posto di campi utente in testo libero. Enforzate il contratto in CI con golden fixture così nessun campo nuovo merge senza privacy review.",
+            "Separate telemetria strutturata da dump di debug. Gli span OpenTelemetry portano versione modello, conteggi token e ID di correlazione; i prompt restano in un side channel redatto con ACL più rigide. Se la validazione fallisce in ingest, scartate il payload e incrementate una metrica invece di scrivere su un topic di fallback non governato.",
+            "Pianificate audit trimestrali che diffano schemi di produzione con l'allowlist documentata. Il drift arriva spesso da forwarder e agent vendor che rimappano campi in silenzio. Trattate la divergenza di schema come release blocker per feature AI, come per regressioni del middleware di autenticazione. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato."
+          ]
+        },
+        {
+          "heading": "Allineare i controlli agli standard pubblicati",
+          "paragraphs": [
+            "I programmi privacy richiedono tracciabilità dai campi loggati a base legale e classe di retention. Mantenete un data dictionary che lega ogni attributo log LLM ai rischi OWASP LLM e alle vostre DPIA. Gli engineer devono rispondere agli auditor senza archeologia ad hoc nelle chat aziendali.",
+            "La redazione deve essere deterministica e coperta da unit test. Le liste regex stanno nel VCS con fixture su payload rappresentativi, nomi multilingue e identificativi nazionali formattati. I tassi di campionamento cambiano durante gli incident; le regole non devono dipendere dalla memoria degli operatori. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+            "Export bulk e reidratazione notebook richiedono gli stessi controlli dello store primario. Strumenti analytics federati replicano log in regioni mai approvate dal legale. Bloccate letture da archivi cold senza ruoli break-glass con scadenza automatica e alert di sicurezza. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato."
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenTelemetry — Modello dati log",
+              "url": "https://opentelemetry.io/docs/specs/otel/logs/data-model/"
+            },
+            {
+              "label": "GDPR articolo 5 — Principi",
+              "url": "https://gdpr-info.eu/art-5-gdpr/"
+            }
+          ]
+        },
+        {
+          "heading": "Log LLM con minimizzazione difendibile",
+          "paragraphs": [
+            "I gateway LLM vedono prompt completi senza capture point a monte. Dividete observability: metadati richiesta—route modello, token, latenza, esito policy—e tier transcript ristretto campionato per qualità. Mai log prompt intero default su hot storage. Test schema rifiutano prima del merge campi log che matchano regex carte, ID governativi o matricole. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+            "Pipeline di redazione nell'ingestion, non script trimestrale. Trasformazioni deterministiche—mascherare email, hash chiavi utente stabili, strippare allegati—verificate con fixture log golden in CI. Campione legal in incident da tier redatto con workflow approvazione; grep ad hoc su cluster raw fa leak in stack presumibilmente compliant. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+            "Classi retention log LLM diverse da access log HTTP. Campioni transcript forse 72h triage, metriche aggregate spesa token 90 giorni. Runbook: query on-call per tier; failure job expiry alertati come 500 modello. Dashboard sicurezza mostrano volume export, non solo failure auth. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+            "Subprocessor vendor parte del boundary logging. Eco PII in output tool richiede retention campi derivati vector store ed export eval. PM che chiedono storico lungo per tuning devono ticket eccezione con expiry e piano anonimizzazione. Nel dubbio loggare identificatori ed esiti, non contenuto utente verbatim copiato nei ticket. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident."
+          ]
         }
       ]
     },
@@ -318,6 +513,45 @@
               "url": "https://platform.openai.com/docs/guides/safety-best-practices"
             }
           ]
+        },
+        {
+          "heading": "日志 schema 的契约测试",
+          "paragraphs": [
+            "接受任意 JSON 的日志管道会在几个发布周期内变成 PII 汇聚点。为 LLM trace 事件发布显式 schema：允许字段、最大 payload、用类型化标识符替代自由文本用户字段。在 CI 用 golden fixture 强制执行契约，未经隐私评审不得合并新字段。",
+            "结构化遥测与 debug 转储分离。OpenTelemetry span 携带模型版本、token 计数与 correlation ID；prompt 放在 ACL 更严的脱敏侧通道。ingest 校验失败时丢弃 payload 并递增指标，不要写入未治理的回退 topic。",
+            "按季度审计生产 schema 与文档 allowlist 的差异。漂移常来自 silently 重映射字段的 forwarder 与厂商 agent。将 schema 偏离视为 AI 功能的发布阻断项，与认证中间件回归同级。"
+          ]
+        },
+        {
+          "heading": "对照公开标准落地控制",
+          "paragraphs": [
+            "隐私项目要求日志字段可追溯到法律依据与保留等级。维护数据字典，把每个 LLM 日志属性关联 OWASP LLM 风险与 DPIA 结论。工程师应能回答审计问题，而不必在全公司聊天记录里考古。",
+            "脱敏必须确定且可单测。正则列表纳入版本库，用多语言姓名、格式化证件号等代表性 payload 做 fixture。事故期间采样率会变；脱敏规则不能依赖值班人员记忆。",
+            "批量导出与 notebook 回灌路径需与主存储同等控制。联邦分析工具会把日志复制到法务未批准的区域。禁止在无自动过期 break-glass 角色与安全告警的情况下读取冷归档。"
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenTelemetry — 日志数据模型",
+              "url": "https://opentelemetry.io/docs/specs/otel/logs/data-model/"
+            },
+            {
+              "label": "GDPR 第 5 条 — 原则",
+              "url": "https://gdpr-info.eu/art-5-gdpr/"
+            }
+          ]
+        },
+        {
+          "heading": "可辩护的最小化 LLM 日志",
+          "paragraphs": [
+            "若不在上游设计采集点，LLM 网关会看到完整 prompt。将可观测性拆为请求元数据——模型路由、token 数、延迟、策略结果——以及用于质量抽检的受限转录层。切勿默认把完整 prompt 写入热存储。合并前 schema 测试应拒绝匹配信用卡、证件号或工号正则的新日志字段。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "脱敏管道应位于摄入路径，而非季度清理脚本。运行确定性变换——掩码邮箱、哈希稳定用户键、剥离附件字节——并在 CI 用黄金日志 fixture 验证。法务在事件中要样本时，经审批从脱敏层生成；在 raw 集群随意 grep 是所谓合规栈里常见的泄漏路径。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "LLM 日志留存级别应不同于 HTTP 访问日志。转录样本或需 72 小时排障，而 token 花费汇总可保留 90 天。在 runbook 记录 on-call 查询命中哪一层；过期任务失败与模型 500 同级告警。安全仪表盘应展示导出量，而非仅认证失败。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+            "将供应商子处理方纳入日志边界。若托管模型在 tool 输出中带回 PII 回声，留存策略须覆盖向量库与 eval 导出中的派生字段。为 prompt 调优请求更长历史的 PM 须提交带过期与匿名化计划的例外工单。不确定时记录标识符与结果，而非抄进工单的用户原文。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。"
+          ]
         }
       ]
     },
@@ -368,6 +602,45 @@
               "label": "OpenAI — Safety best practices",
               "url": "https://platform.openai.com/docs/guides/safety-best-practices"
             }
+          ]
+        },
+        {
+          "heading": "ログスキーマの契約テスト",
+          "paragraphs": [
+            "任意 JSON を受け入れるパイプラインは数リリースで PII の溜まり場になる。LLM trace イベント向けに明示スキーマを公開し、許可キー、最大ペイロード、自由テキストの代わりに型付き識別子を使う。golden fixture で CI 強制し、プライバシーレビューなしの新フィールド merge を防ぐ。",
+            "構造化テレメトリと debug ダンプを分離する。OpenTelemetry span はモデル版、トークン数、相関 ID を載せ、プロンプトは ACL の厳しい redacted サイドチャンネルに置く。ingest 検証失敗時はペイロードを捨て、未統制フォールバック topic へ書かずメトリクスを増やす。",
+            "四半期ごとに本番スキーマと文書化 allowlist を diff 監査する。ドリフトはフィールドを静かに付け替える forwarder やベンダーエージェント経由で入ることが多い。スキーマ乖離は AI 機能のリリースブロッカーとし、認証 middleware 退行と同格に扱う。"
+          ]
+        },
+        {
+          "heading": "公開標準にコントロールを対応付ける",
+          "paragraphs": [
+            "プライバシープログラムはログフィールドから法的根拠と保持クラスへのトレーサビリティを求める。各 LLM ログ属性を OWASP LLM リスクと DPIA 結果に結ぶデータ辞書を維持する。エンジニアは社内チャット発掘なしで監査人の質問に答えられるべきだ。",
+            "redaction は決定的で単体テスト可能であること。regex リストは VCS に置き、多言語名や整形された国民 ID を含む代表ペイロードで fixture する。インシデント中はサンプリング率が変わる。redaction 規則をオペレータ記憶に依存させない。",
+            "一括 export と notebook 再水和経路はプライマリストアと同じ統制が要る。連合 analytics は法務未承認リージョンへログを複製する。自動失効 break-glass ロールとセキュリティアラートなしのコールドアーカイブ読取を遮断する。"
+          ],
+          "links": [
+            {
+              "label": "OWASP — LLM Top 10",
+              "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+            },
+            {
+              "label": "OpenTelemetry — ログデータモデル",
+              "url": "https://opentelemetry.io/docs/specs/otel/logs/data-model/"
+            },
+            {
+              "label": "GDPR 第5条 — 原則",
+              "url": "https://gdpr-info.eu/art-5-gdpr/"
+            }
+          ]
+        },
+        {
+          "heading": "防御可能な最小化で LLM をログ",
+          "paragraphs": [
+            "上流にキャプチャポイントがなければ LLM ゲートウェイはフル prompt を見ます。可観測性をリクエストメタデータ—モデルルート、トークン数、レイテンシ、ポリシー結果—と品質レビュー用サンプルの制限 transcript 層に分割。ホットストレージへのフル prompt ログをデフォルトにしない。マージ前のスキーマテストはカード、政府 ID、社員番号 regex に合う新ログフィールドを拒否。",
+            "レダクションは四半期クリーンアップではなく ingestion 経路。決定論変換—メールマスク、安定ユーザ鍵ハッシュ、添付 strip—を CI の golden log fixture で検証。インシデントで法務がサンプル要求時は承認ワークフロー付き redacted 層から生成。raw クラスタの ad hoc grep は準拠 stack でも漏洩経路。 担当者、レビュー日、ロールバック条件を同一変更チケットに記録し、次の on-call エンジニアがインシデントを再オープンせず判断を追跡できるようにする。",
+            "LLM ログの retention クラスは HTTP access log と別。transcript サンプルは triage 72 時間、トークン支出集計は 90 日。runbook に on-call クエリと tier の対応。expiry job 失敗はモデル 500 と同様に alert。セキュリティダッシュボードは auth 失敗だけでなく export 量を表示。 担当者、レビュー日、ロールバック条件を同一変更チケットに記録し、次の on-call エンジニアがインシデントを再オープンせず判断を追跡できるようにする。",
+            "ベンダ subprocessor は logging 境界の一部。ホストモデルの tool 出力に PII エコーがあれば vector store と eval export の派生フィールドも retention 対象。prompt tuning で長い履歴を求める PM は失効と匿名化計画付き例外チケット。迷ったら識別子と outcome をログし、チケットにコピーしたユーザ原文は避ける。 担当者、レビュー日、ロールバック条件を同一変更チケットに記録し、次の on-call エンジニアがインシデントを再オープンせず判断を追跡できるようにする。"
           ]
         }
       ]

@@ -1,0 +1,645 @@
+{
+  "slug": "embedding-index-rebuild-strategies",
+  "title": "Embedding Index Rebuild Strategies",
+  "excerpt": "Changing embedding models without a rebuild plan silently poisons retrieval. Large reindex jobs need blue/green discipline, metadata locks, and offline quality gates—not a weekend heroics script.",
+  "description": "Staff patterns for embedding index rebuilds: shadow indexes, alias cutovers, model version metadata, cost estimation, and golden-set regression gates.",
+  "readingMinutes": 11,
+  "keywords": [
+    "embeddings",
+    "vector search",
+    "reindex",
+    "RAG",
+    "search quality"
+  ],
+  "socialThreadTr": [
+    "Embedding model değişince index rebuild plansız olmaz; blue/green şart. 🧵",
+    "Metadata kilidi ve golden set gate. Detay: https://berktugberke.com/tr/blogs/embedding-index-rebuild-strategies"
+  ],
+  "sections": [
+    {
+      "heading": "Model swaps are silent regressions",
+      "paragraphs": [
+        "Production search can stay live while a new index builds in the background. That is the default posture for staff teams, not a nice-to-have.",
+        "Feed a shadow index through dual-write or batch backfill, then cut over with an alias swap when offline metrics pass."
+      ]
+    },
+    {
+      "heading": "Blue/green avoids search downtime",
+      "paragraphs": [
+        "Store embedding model id, chunk policy version, and normalization parameters in document metadata.",
+        "Query guards should reject incompatible versions; mixed vector spaces make retrieval look random in production."
+      ],
+      "points": [
+        "Rebuild with blue/green or shadow indexes to avoid search downtime",
+        "Pin embedding model version in index metadata and query guards",
+        "Measure rebuild cost by shard size and batch job SLA",
+        "Gate quality regressions with offline golden retrieval sets"
+      ]
+    },
+    {
+      "heading": "Pin model version in metadata",
+      "paragraphs": [
+        "Estimate rebuild cost in shard count, batch size, and GPU or CPU hours before leadership approves a launch tied to the new index.",
+        "Bind overnight batch SLAs to the release calendar. A half-finished rebuild is worse than a delayed feature."
+      ]
+    },
+    {
+      "heading": "Gate cutover with golden sets",
+      "paragraphs": [
+        "Run nDCG or hit@k against a golden retrieval set in CI before alias swap.",
+        "Optional short shadow-query comparison in live traffic gives final confidence without exposing users to bad answers."
+      ],
+      "links": [
+        {
+          "label": "OpenAI — Embeddings",
+          "url": "https://platform.openai.com/docs/guides/embeddings"
+        },
+        {
+          "label": "Elasticsearch — Reindex API",
+          "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html"
+        }
+      ]
+    },
+    {
+      "heading": "Rebuild without taking search offline",
+      "paragraphs": [
+        "Teams swap embedding models without rebuilding indexes and wonder why recall collapses for non-English catalogs. Treat index metadata as a contract: model id, chunk version, normalization, and source snapshot identifiers must match query guards. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Shadow indexes let you backfill while production serves traffic. Measure batch job duration per million vectors and cost per shard before committing to a weekend cutover. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Freeze chunking feature flags during backfill or you will fork corpora mid-job and invalidate comparisons. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window."
+      ]
+    },
+    {
+      "heading": "Prove quality before alias swap",
+      "paragraphs": [
+        "Offline golden question sets with expected document ids gate alias swaps. Block cutover when minority-language recall regresses even if headline English metrics look flat. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Keep the previous index read-only with a dated TTL so rollback is an alias change, not emergency re-embed. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Publish rebuild manifests—job ids, approvals, and consent classes—for auditors asking whether vectors include expired data. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window."
+      ],
+      "links": [
+        {
+          "label": "OpenAI — Embeddings",
+          "url": "https://platform.openai.com/docs/guides/embeddings"
+        },
+        {
+          "label": "Elasticsearch — Reindex API",
+          "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html"
+        },
+        {
+          "label": "Pinecone — Metadata filtering",
+          "url": "https://docs.pinecone.io/guides/data/filter-with-metadata"
+        }
+      ]
+    },
+    {
+      "heading": "Rebuild operations without search downtime",
+      "paragraphs": [
+        "Changing embedding models or chunk policies silently poisons retrieval quality while dashboards still show green health checks. Build shadow indexes in parallel, backfill with batch jobs whose SLA you measure per shard, then swap aliases only after offline golden-set recall passes gates. Pin model identifier, chunk version, and normalization parameters in document metadata and reject queries that mismatch the active index contract. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Blue-green cutovers beat in-place reindex when traffic is continuous. Dual-write or staged ingestion into the shadow index prevents a big-bang weekend. Track rebuild cost in dollars and engineer hours per million vectors so finance can compare vendor upgrades to infra work. Freeze feature flags that alter chunk boundaries during backfill or you will fork incompatible corpora mid-job. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Quality gates belong in CI, not only in postmortems. Maintain labeled question sets with expected document identifiers; compare recall and nDCG before and after rebuild. Regression in minority languages or long-tail SKUs should block alias swap even when English headline metrics look flat. Document which teams consume which index alias in a catalog updated on every cutover. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Post-cutover, monitor query latency, cache hit rate, and support tickets tagged search for seventy-two hours. Keep the previous index read-only with a dated TTL so rollback is a DNS or alias change, not a panic re-embed. Archive rebuild manifests—source snapshot ids, batch job ids, and approval links—for auditors who ask whether vectors were trained on expired consent classes. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first."
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Embedding Index Yeniden Oluşturma Stratejileri",
+      "excerpt": "Embedding modelini veya chunking politikasını değiştirdiğinizde eski index sessizce yanlış cevaplar üretir. Büyük yeniden indeksleme plansız yapılırsa arama kesilir ve maliyet patlar.",
+      "description": "Kesintisiz embedding index rebuild: blue/green, shadow index, metadata kilidi ve offline kalite kapıları.",
+      "sections": [
+        {
+          "heading": "Model değişimi sessiz regresyondur",
+          "paragraphs": [
+            "Üretimde vektör araması çalışırken arka planda yeni index oluşturmak, kullanıcıya downtime yaşatmadan doğru tek yoldur.",
+            "Shadow index'e dual-write veya batch backfill ile veri taşıyın; cutover anında alias swap yapın."
+          ]
+        },
+        {
+          "heading": "Blue/green ile kesintisiz geçiş",
+          "paragraphs": [
+            "Her doküman metadata'sında embedding model id, chunk versiyonu ve normalizasyon parametrelerini saklayın.",
+            "Sorgu katmanı uyumsuz versiyonları reddetsin; karışık vektör uzayları retrieval'i rastgele bozar."
+          ],
+          "points": [
+            "Blue/green veya shadow index ile kesintisiz rebuild planlayın",
+            "Embedding model versiyonunu index metadata'sında kilitleyin",
+            "Rebuild maliyetini shard boyutu ve batch job SLA ile ölçün",
+            "Arama kalitesi regresyonunu offline golden set ile gate edin"
+          ]
+        },
+        {
+          "heading": "Metadata'da model versiyonu kilitle",
+          "paragraphs": [
+            "Rebuild maliyetini shard sayısı, batch boyutu ve GPU/CPU saat cinsinden ölçün; bütçe onayı için tahmin sunun.",
+            "Gece batch job SLA'sını product launch takvimine bağlayın; yarım kalmış rebuild worse than delayed launch."
+          ]
+        },
+        {
+          "heading": "Offline golden set ile gate et",
+          "paragraphs": [
+            "Cutover öncesi offline golden set ile nDCG veya hit@k regresyonunu CI'da doğrulayın.",
+            "Canlı trafikte kısa süreli shadow query karşılaştırması ile son onay alın."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Embeddings",
+              "url": "https://platform.openai.com/docs/guides/embeddings"
+            },
+            {
+              "label": "Elasticsearch — Reindex API",
+              "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html"
+            }
+          ]
+        },
+        {
+          "heading": "Aramayı kapatmadan rebuild",
+          "paragraphs": [
+            "Ekipler index rebuild etmeden embedding model değiştirip İngilizce dışı kataloglarda recall çöküşüne şaşırır. Index metadata'yı contract sayın: model id, chunk versiyonu, normalizasyon ve kaynak snapshot id query guard'larıyla eşleşmeli. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Shadow index backfill sırasında prod trafiğe hizmet verir. Hafta sonu cutover'a gitmeden milyon vektör başına batch süresi ve shard maliyetini ölçün. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Backfill sırasında chunk feature flag'lerini dondurun yoksa job ortasında corpus çatallanır ve kıyaslar geçersiz olur. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin."
+          ]
+        },
+        {
+          "heading": "Alias swap öncesi kaliteyi kanıtlayın",
+          "paragraphs": [
+            "Beklenen doküman id'li offline golden soru setleri alias swap'i gate eder. İngilizce metrik düz görünse bile azınlık dili recall regresyonunda cutover'ı bloklayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Önceki index'i tarihli TTL ile read-only tutun; rollback acil re-embed değil alias değişimi olsun. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Rebuild manifest'lerini—job id, onay, consent sınıfları—süresi dolmuş veri içerip içermediği sorulduğunda yayınlayın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Embeddings",
+              "url": "https://platform.openai.com/docs/guides/embeddings"
+            },
+            {
+              "label": "Elasticsearch — Reindex API",
+              "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html"
+            },
+            {
+              "label": "Pinecone — Metadata filtering",
+              "url": "https://docs.pinecone.io/guides/data/filter-with-metadata"
+            }
+          ]
+        },
+        {
+          "heading": "Arama kesintisi olmadan rebuild operasyonu",
+          "paragraphs": [
+            "Embedding model veya chunk politikasını değiştirmek dashboard yeşilken retrieval kalitesini sessizce zehirler. Shadow index'i paralel kurun, shard başına SLA ölçtüğünüz batch job'larla backfill yapın, offline golden-set recall gate geçmeden alias swap etmeyin. Model id, chunk versiyonu ve normalizasyon parametrelerini metadata'da kilitleyin; aktif index contract'ına uymayan sorguları reddedin.",
+            "Sürekli trafikte blue-green cutover yerinde reindex'ten iyidir. Shadow index'e dual-write veya staged ingestion büyük patlama hafta sonunu önler. Rebuild maliyetini milyon vektör başına dolar ve mühendis saati olarak izleyin; finans vendor upgrade'i infra işiyle kıyaslasın. Backfill sırasında chunk sınırını değiştiren feature flag'leri dondurun yoksa job ortasında uyumsuz corpus çatallanır.",
+            "Kalite gate'leri yalnızca postmortem'de değil CI'da olmalı. Beklenen doküman id'leri olan etiketli soru setleri sürdürün; rebuild öncesi sonrası recall ve nDCG kıyaslayın. Azınlık dillerinde veya long-tail SKU'larda regresyon, İngilizce metrik düz görünse bile alias swap'i bloklasın. Her cutover'da güncellenen katalogda hangi ekibin hangi alias'ı tükettiğini yazın.",
+            "Cutover sonrası yetmiş iki saat query latency, cache hit rate ve arama etiketli destek ticket'larını izleyin. Önceki index'i tarihli TTL ile read-only tutun; rollback DNS veya alias değişimi olsun, panik re-embed değil. Rebuild manifest'lerini—kaynak snapshot id, batch job id, onay linkleri—arşivleyin; vektörlerin süresi dolmuş consent sınıfında eğitilip eğitilmediği sorulduğunda yanıtlayın."
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Strategien für Embedding-Index-Rebuilds",
+      "excerpt": "Wechselt Embedding-Modell oder Chunking, liefert der alte Index leise falsche Antworten. Ungeplante Rebuilds stoppen Suche und sprengen Kosten.",
+      "description": "Rebuild ohne Ausfall: Blue/Green, Shadow-Index, Metadata-Lock und Offline-Quality-Gates.",
+      "sections": [
+        {
+          "heading": "Modellwechsel ist stille Regression",
+          "paragraphs": [
+            "Neuen Index im Hintergrund bauen, während Suche live läuft—ohne Downtime der Standard.",
+            "Daten per Dual-Write oder Batch-Backfill in Shadow; Cutover via Alias-Swap."
+          ]
+        },
+        {
+          "heading": "Blue/Green für nahtlosen Cutover",
+          "paragraphs": [
+            "Pro Dokument Embedding-Modell-ID, Chunk-Version und Normalisierung in Metadata.",
+            "Query-Layer lehnt inkompatible Versionen ab; gemischte Vektorräume zerstören Retrieval."
+          ],
+          "points": [
+            "Rebuild mit Blue/Green oder Shadow-Index ohne Ausfall",
+            "Embedding-Modellversion in Index-Metadaten fixieren",
+            "Rebuild-Kosten über Shard-Größe und Batch-SLA messen",
+            "Suchqualität offline mit Golden Set gaten"
+          ]
+        },
+        {
+          "heading": "Modellversion in Metadata pinnen",
+          "paragraphs": [
+            "Rebuild-Kosten über Shards, Batch-Größe und GPU/CPU-Stunden messen; Budget vorab.",
+            "Nacht-Batch-SLA an Launch-Kalender koppeln; halber Rebuild schlimmer als Verzögerung."
+          ]
+        },
+        {
+          "heading": "Mit Offline-Golden-Set gaten",
+          "paragraphs": [
+            "Vor Cutover nDCG oder hit@k am Golden Set in CI prüfen.",
+            "Kurzer Shadow-Query-Vergleich im Live-Traffic als finale Freigabe."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Embeddings",
+              "url": "https://platform.openai.com/docs/guides/embeddings"
+            },
+            {
+              "label": "Elasticsearch — Reindex API",
+              "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html"
+            }
+          ]
+        },
+        {
+          "heading": "Rebuild ohne Search-Offline",
+          "paragraphs": [
+            "Teams wechseln Embedding-Modelle ohne Index-Rebuild und wundern sich über Recall-Kollaps in nicht-englischen Katalogen. Index-Metadaten als Contract: Modell-ID, Chunk-Version, Normalisierung, Snapshot-IDs müssen Query-Guards matchen. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Shadow-Indexes ermöglichen Backfill bei laufendem Prod-Traffic. Batch-Dauer pro Million Vektoren und Shard-Kosten vor Wochenend-Cutover messen. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Chunk-Feature-Flags während Backfill einfrieren sonst Corpus-Fork mid-job. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen."
+          ]
+        },
+        {
+          "heading": "Qualität vor Alias-Swap beweisen",
+          "paragraphs": [
+            "Offline-Golden-Questions mit erwarteten Doc-IDs gate Alias-Swap. Cutover blocken bei Recall-Regression in Minority-Languages trotz flacher EN-Metriken. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Vorherigen Index read-only mit datiertem TTL für Rollback per Alias. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Rebuild-Manifeste für Audit zu Consent-Klassen veröffentlichen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Embeddings",
+              "url": "https://platform.openai.com/docs/guides/embeddings"
+            },
+            {
+              "label": "Elasticsearch — Reindex API",
+              "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html"
+            },
+            {
+              "label": "Pinecone — Metadata filtering",
+              "url": "https://docs.pinecone.io/guides/data/filter-with-metadata"
+            }
+          ]
+        },
+        {
+          "heading": "Rebuild ohne Search-Downtime",
+          "paragraphs": [
+            "Wechsel von Embedding-Modellen oder Chunk-Policies vergiftet Retrieval leise, während Dashboards grün bleiben. Shadow-Indexes parallel bauen, Backfill mit pro Shard gemessener Batch-SLA, Alias-Swap erst nach Offline-Golden-Set-Recall-Gates. Modell-ID, Chunk-Version und Normalisierung in Metadaten pinnen; Queries bei Contract-Mismatch ablehnen. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Blue-Green schlägt In-Place-Reindex bei Dauertraffic. Dual-Write oder staged Ingestion in Shadow verhindert Big-Bang-Wochenende. Rebuild-Kosten in Dollar und Engineer-Stunden pro Million Vektoren tracken. Feature Flags, die Chunk-Grenzen ändern, während Backfill einfrieren. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Quality Gates in CI, nicht nur Postmortems. Labeled Question Sets mit erwarteten Doc-IDs; Recall und nDCG vor/nach Rebuild. Regression in Minority Languages oder Long-Tail-SKUs blockiert Alias-Swap auch bei flachen EN-Metriken. Katalog welches Team welchen Alias nutzt bei jedem Cutover aktualisieren. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Nach Cutover 72h Query-Latenz, Cache-Hit-Rate und Support-Tickets Search taggen. Vorherigen Index read-only mit datiertem TTL für Rollback per Alias, kein Panic-Re-Embed. Rebuild-Manifeste archivieren für Audit-Fragen zu Consent-Klassen. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein."
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Stratégies de rebuild d'index d'embeddings",
+      "excerpt": "Changer de modèle d'embedding ou de chunking fait répondre silencieusement mal l'ancien index. Rebuilds non planifiés = coupure recherche et coût explosif.",
+      "description": "Rebuild sans interruption : blue/green, index shadow, verrou metadata et gates qualité offline.",
+      "sections": [
+        {
+          "heading": "Changement modèle = régression silencieuse",
+          "paragraphs": [
+            "Construire le nouvel index en arrière-plan pendant que la recherche est live.",
+            "Alimenter le shadow par dual-write ou backfill batch ; cutover par swap d'alias."
+          ]
+        },
+        {
+          "heading": "Blue/green pour bascule sans coupure",
+          "paragraphs": [
+            "Metadata par doc : id modèle embedding, version chunk, params normalisation.",
+            "La couche requête rejette versions incompatibles ; espaces vectoriels mélangés cassent le retrieval."
+          ],
+          "points": [
+            "Rebuild sans coupure via index blue/green ou shadow",
+            "Version modèle embedding verrouillée en metadata index",
+            "Coût rebuild mesuré par shard et SLA batch",
+            "Qualité recherche gated par golden set offline"
+          ]
+        },
+        {
+          "heading": "Version modèle épinglée en metadata",
+          "paragraphs": [
+            "Mesurer coût rebuild : shards, taille batch, heures GPU/CPU ; budget avant cutover.",
+            "SLA batch nocturne aligné calendrier launch ; rebuild à moitié pire qu'un retard."
+          ]
+        },
+        {
+          "heading": "Gater avec golden set offline",
+          "paragraphs": [
+            "Avant cutover, nDCG ou hit@k sur golden set en CI.",
+            "Comparaison shadow query courte en prod pour go final."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Embeddings",
+              "url": "https://platform.openai.com/docs/guides/embeddings"
+            },
+            {
+              "label": "Elasticsearch — Reindex API",
+              "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html"
+            }
+          ]
+        },
+        {
+          "heading": "Rebuild sans couper la recherche",
+          "paragraphs": [
+            "Les équipes changent modèle embedding sans rebuild index et s'étonnent du recall effondré hors anglais. Métadonnées index comme contrat : id modèle, version chunk, normalisation, snapshots doivent matcher garde-fous requête. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Index shadow permet backfill pendant trafic prod. Mesurer durée batch par million vecteurs et coût shard avant cutover week-end. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Geler feature flags chunk pendant backfill sinon fork corpus mid-job. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement."
+          ]
+        },
+        {
+          "heading": "Prouver la qualité avant swap alias",
+          "paragraphs": [
+            "Jeux golden offline avec doc ids attendus gate swap alias. Bloquer cutover si recall langues minoritaires régresse même métriques EN plates. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Index précédent read-only TTL daté ; rollback changement alias. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Publier manifestes rebuild pour audits consent. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Embeddings",
+              "url": "https://platform.openai.com/docs/guides/embeddings"
+            },
+            {
+              "label": "Elasticsearch — Reindex API",
+              "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html"
+            },
+            {
+              "label": "Pinecone — Metadata filtering",
+              "url": "https://docs.pinecone.io/guides/data/filter-with-metadata"
+            }
+          ]
+        },
+        {
+          "heading": "Rebuild sans couper la recherche",
+          "paragraphs": [
+            "Changer modèle embedding ou politique chunk empoisonne retrieval en silence pendant dashboards verts. Construire index shadow en parallèle, backfill avec SLA batch par shard, swap alias seulement après golden set offline. Épingler id modèle, version chunk, paramètres normalisation ; rejeter queries hors contrat index actif. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Blue-green bat reindex sur place avec trafic continu. Dual-write ou ingestion staged évite big-bang week-end. Coût rebuild en dollars et heures ingénieur par million vecteurs. Geler feature flags modifiant frontières chunk pendant backfill. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Gates qualité en CI, pas seulement postmortems. Jeux questions labelisés avec doc ids attendus ; recall et nDCG avant/après. Régression langues minoritaires ou SKU long tail bloque swap alias même si métriques EN plates. Catalogue équipes et alias mis à jour à chaque cutover. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Après cutover, monitorer latence query, cache hit, tickets support tag search 72h. Index précédent read-only TTL daté ; rollback = alias, pas re-embed panique. Archiver manifestes rebuild pour audits consent. Consignez owner, date de revue et rollback dans le même ticket de changement."
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Strategie di rebuild degli indici embedding",
+      "excerpt": "Cambiare modello embedding o chunking fa rispondere male l'indice vecchio in silenzio. Rebuild non pianificati fermano la search e fanno esplodere i costi.",
+      "description": "Rebuild senza downtime: blue/green, indice shadow, lock metadata e gate qualità offline.",
+      "sections": [
+        {
+          "heading": "Cambio modello = regressione silenziosa",
+          "paragraphs": [
+            "Costruire il nuovo indice in background mentre la search è live.",
+            "Alimentare shadow con dual-write o backfill batch; cutover con swap alias."
+          ]
+        },
+        {
+          "heading": "Blue/green per cutover senza stop",
+          "paragraphs": [
+            "Metadata per doc: id modello embedding, versione chunk, parametri normalizzazione.",
+            "Query layer rifiuta versioni incompatibili; spazi vettoriali misti rovinano retrieval."
+          ],
+          "points": [
+            "Rebuild senza downtime con index blue/green o shadow",
+            "Versione modello embedding bloccata nei metadata index",
+            "Costo rebuild misurato su shard e SLA batch job",
+            "Qualità search gated con golden set offline"
+          ]
+        },
+        {
+          "heading": "Versione modello fissata in metadata",
+          "paragraphs": [
+            "Misurare costo rebuild: shard, batch size, ore GPU/CPU; budget prima del cutover.",
+            "SLA batch notturno allineato al calendario launch; rebuild a metà peggio di ritardo."
+          ]
+        },
+        {
+          "heading": "Gate con golden set offline",
+          "paragraphs": [
+            "Prima del cutover nDCG o hit@k su golden set in CI.",
+            "Breve confronto shadow query in prod per go finale."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Embeddings",
+              "url": "https://platform.openai.com/docs/guides/embeddings"
+            },
+            {
+              "label": "Elasticsearch — Reindex API",
+              "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html"
+            }
+          ]
+        },
+        {
+          "heading": "Rebuild senza offline ricerca",
+          "paragraphs": [
+            "I team cambiano modello embedding senza rebuild index e si sorprendono del recall collassato fuori dall'inglese. Metadata index come contratto: model id, versione chunk, normalizzazione, snapshot devono matchare query guard. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Index shadow permettono backfill con traffico prod. Misurare durata batch per milione vettori e costo shard prima cutover weekend. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Congelare feature flag chunk durante backfill o fork corpus mid-job. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch."
+          ]
+        },
+        {
+          "heading": "Provare qualità prima swap alias",
+          "paragraphs": [
+            "Set golden offline con doc id attesi gate swap alias. Bloccare cutover se recall lingue minoritarie regredisce anche con metriche EN piatte. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Index precedente read-only TTL datato; rollback cambio alias. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Pubblicare manifest rebuild per audit consent. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch."
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Embeddings",
+              "url": "https://platform.openai.com/docs/guides/embeddings"
+            },
+            {
+              "label": "Elasticsearch — Reindex API",
+              "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html"
+            },
+            {
+              "label": "Pinecone — Metadata filtering",
+              "url": "https://docs.pinecone.io/guides/data/filter-with-metadata"
+            }
+          ]
+        },
+        {
+          "heading": "Rebuild senza downtime di ricerca",
+          "paragraphs": [
+            "Cambiare modello embedding o policy chunk avvelena retrieval in silenzio con dashboard verdi. Costruite index shadow in parallelo, backfill con SLA batch per shard, swap alias solo dopo golden set offline. Pin model id, versione chunk, parametri normalizzazione; rifiutate query fuori contratto index attivo. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Blue-green batte reindex in place con traffico continuo. Dual-write o ingestion staged evita big-bang weekend. Costo rebuild in dollari e ore engineer per milione vettori. Congelate feature flag che alterano confini chunk durante backfill. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Gate qualità in CI, non solo postmortem. Set domande etichettate con doc id attesi; recall e nDCG prima/dopo rebuild. Regressione lingue minoritarie o SKU long tail blocca swap alias anche con metriche EN piatte. Catalogo team e alias aggiornato a ogni cutover. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Post-cutover monitorate latenza query, cache hit, ticket support tag search per 72h. Index precedente read-only con TTL datato; rollback alias, non re-embed panico. Archiviate manifest rebuild per audit consent. Registrate owner, data di review e rollback nello stesso ticket di change."
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "Embedding 索引重建策略",
+      "excerpt": "更换 embedding 模型或分块策略时，旧索引会静默返回错误答案。无计划重建会中断搜索并引爆成本。",
+      "description": "无中断重建：蓝绿、影子索引、元数据锁定与离线质量门禁。",
+      "sections": [
+        {
+          "heading": "模型变更即静默回归",
+          "paragraphs": [
+            "生产搜索在线时在后台构建新索引是无 downtime 的常态。",
+            "经双写或批 backfill 灌入影子索引；切换时用别名 swap。"
+          ]
+        },
+        {
+          "heading": "蓝绿无缝切换",
+          "paragraphs": [
+            "每文档元数据存 embedding 模型 id、分块版本与归一化参数。",
+            "查询层拒绝不兼容版本；混合向量空间会破坏检索。"
+          ],
+          "points": [
+            "用蓝绿或影子索引规划无中断重建",
+            "在索引元数据锁定 embedding 模型版本",
+            "用分片大小与批任务 SLA 衡量重建成本",
+            "离线 golden set 门禁搜索质量回归"
+          ]
+        },
+        {
+          "heading": "元数据锁定模型版本",
+          "paragraphs": [
+            "用分片、批大小与 GPU/CPU 小时衡量重建成本；切换前预算审批。",
+            "夜间批 SLA 对齐发布日历；半截重建比延期更糟。"
+          ]
+        },
+        {
+          "heading": "离线 golden set 门禁",
+          "paragraphs": [
+            "切换前在 CI 用 golden set 验证 nDCG 或 hit@k。",
+            "上线前用短 shadow 查询对比做最终放行。"
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Embeddings",
+              "url": "https://platform.openai.com/docs/guides/embeddings"
+            },
+            {
+              "label": "Elasticsearch — Reindex API",
+              "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html"
+            }
+          ]
+        },
+        {
+          "heading": "不停机重建索引",
+          "paragraphs": [
+            "团队在不重建索引的情况下更换 embedding 模型，却困惑于非英语 catalog 的 recall 崩塌。将 index metadata 视为契约：model id、chunk 版本、归一化与源 snapshot id 须与 query guard 一致。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "shadow index 允许在 production 流量下回填。周末 cutover 前测量每百万向量的批作业时长与分片成本。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "回填期间冻结 chunk feature flag，否则会在作业中途分叉语料并使对比失效。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。"
+          ]
+        },
+        {
+          "heading": "切换 alias 前证明质量",
+          "paragraphs": [
+            "带期望文档 id 的离线 golden 问题集为 alias 切换把关。即使英文 headline 指标平坦，少数语言 recall 回归也应阻断 cutover。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "只读保留旧索引并设 dated TTL，使回滚只需改 alias 而非紧急重嵌。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "发布 rebuild 清单——job id、审批与 consent 类——以回应向量是否含过期数据的审计提问。 请在下次生产评审中复核这一点，指定负责人并关联带日期的整改工单。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。"
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Embeddings",
+              "url": "https://platform.openai.com/docs/guides/embeddings"
+            },
+            {
+              "label": "Elasticsearch — Reindex API",
+              "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html"
+            },
+            {
+              "label": "Pinecone — Metadata filtering",
+              "url": "https://docs.pinecone.io/guides/data/filter-with-metadata"
+            }
+          ]
+        },
+        {
+          "heading": "无搜索中断的重建运维",
+          "paragraphs": [
+            "更换 embedding 模型或 chunk 策略会在仪表盘仍绿时悄悄毒害检索质量。并行构建 shadow 索引，用按分片衡量 SLA 的批作业回填，离线 golden 集 recall 通过门禁后再切换 alias。在文档 metadata 中锁定模型 id、chunk 版本与归一化参数，拒绝与活跃索引契约不匹配的查询。",
+            "持续流量下 blue-green 切换优于原地 reindex。dual-write 或分阶段写入 shadow 索引可避免周末大爆炸。按百万向量跟踪重建的美元与工程师小时成本。回填期间冻结会改变 chunk 边界的 feature flag，否则会在作业中途分叉不兼容语料。",
+            "质量门禁应放在 CI，而非只在事后复盘。维护带期望文档 id 的标注问题集；比较重建前后 recall 与 nDCG。少数语言或长尾 SKU 回归即使英文指标平坦也应阻断 alias 切换。在每次 cutover 更新的目录中记录各团队使用的 alias。",
+            "切换后 72 小时监控查询延迟、缓存命中率与带 search 标签的工单。只读保留旧索引并设 dated TTL，回滚只需改 alias 而非恐慌重嵌。归档重建清单——源快照 id、批作业 id、审批链接——以应对向量是否使用过期 consent 类的审计提问。"
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "Embeddingインデックス再構築戦略",
+      "excerpt": "embeddingモデルやチャンク方針を変えると旧インデックスが静かに誤回答する。無計画リビルドは検索停止とコスト爆発。",
+      "description": "無停止リビルド：ブルーグリーン、シャドウインデックス、メタデータ固定、オフライン品質ゲート。",
+      "sections": [
+        {
+          "heading": "モデル変更は静かな回帰",
+          "paragraphs": [
+            "本番検索を稼働させたまま裏で新インデックス構築が標準。",
+            "デュアルライトかバッチbackfillでシャドウへ；cutoverはエイリアスswap。"
+          ]
+        },
+        {
+          "heading": "ブルーグリーンで無停止切替",
+          "paragraphs": [
+            "ドキュメントごとにembeddingモデルid、チャンク版、正規化パラメータをmetadataに。",
+            "クエリ層が非互換版を拒否；混在ベクトル空間はretrievalを壊す。"
+          ],
+          "points": [
+            "ブルーグリーンまたはシャドウインデックスで無停止リビルド",
+            "インデックスメタデータでembeddingモデル版を固定",
+            "シャードサイズとバッチSLAでリビルドコスト測定",
+            "オフラインゴールデンセットで検索品質をゲート"
+          ]
+        },
+        {
+          "heading": "メタデータでモデル版固定",
+          "paragraphs": [
+            "シャード、バッチサイズ、GPU/CPU時間でリビルドコスト測定；cutover前に予算。",
+            "夜間バッチSLAをローンチカレンダーに合わせる；半端リビルドは延期より悪い。"
+          ]
+        },
+        {
+          "heading": "オフラインゴールデンセットでゲート",
+          "paragraphs": [
+            "cutover前にCIでゴールデンセットのnDCGまたはhit@k。",
+            "本番で短いシャドウクエリ比較で最終go。"
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Embeddings",
+              "url": "https://platform.openai.com/docs/guides/embeddings"
+            },
+            {
+              "label": "Elasticsearch — Reindex API",
+              "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html"
+            }
+          ]
+        },
+        {
+          "heading": "検索を止めず rebuild",
+          "paragraphs": [
+            "team は index rebuild なしで embedding model を swap し non-English catalog の recall collapse に驚く。index metadata を contract：model id、chunk version、normalization、snapshot id が query guard と match。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "shadow index は prod traffic 中 backfill を可能に。weekend cutover 前に million vector あたり batch 時間と shard cost 測定。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "backfill 中 chunk feature flag freeze しないと mid-job corpus fork。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。"
+          ]
+        },
+        {
+          "heading": "alias swap 前に品質を証明",
+          "paragraphs": [
+            "expected doc id 付き offline golden question set が alias swap gate。EN metric flat でも minority language recall regression で cutover block。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "previous index を dated TTL read-only；rollback は alias change。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "rebuild manifest を consent audit 用に publish。 次回の production review で再確認し、オーナーを割り当て、日付付き remediation チケットを紐付けてください。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。"
+          ],
+          "links": [
+            {
+              "label": "OpenAI — Embeddings",
+              "url": "https://platform.openai.com/docs/guides/embeddings"
+            },
+            {
+              "label": "Elasticsearch — Reindex API",
+              "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html"
+            },
+            {
+              "label": "Pinecone — Metadata filtering",
+              "url": "https://docs.pinecone.io/guides/data/filter-with-metadata"
+            }
+          ]
+        },
+        {
+          "heading": "検索 downtime なしの rebuild 運用",
+          "paragraphs": [
+            "embedding model や chunk policy 変更は dashboard が緑のまま retrieval 品質を静かに poison する。shadow index を並行構築し shard ごと SLA 測定 batch backfill、offline golden set recall gate 通過後に alias swap。model id、chunk version、normalization を metadata に pin し active index contract 不一致 query を reject。",
+            "継続 traffic では blue-green cutover が in-place reindex に勝る。shadow へ dual-write か staged ingestion で big-bang 週末回避。rebuild コストを百万 vector あたりドルと engineer 時間で track。backfill 中 chunk 境界を変える feature flag を freeze。",
+            "quality gate は postmortem だけでなく CI。期待 doc id 付き labeled question set；recall と nDCG を rebuild 前後比較。minority language や long-tail SKU regression は EN metric flat でも alias swap block。cutover ごと更新 catalog に team と alias 対応。",
+            "cutover 後 72h query latency、cache hit、search tag support ticket monitor。previous index を dated TTL read-only；rollback は alias で panic re-embed 禁止。rebuild manifest を archive し consent class audit に備える。"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,8 +1,15 @@
 /** Keep in sync with app/lib/content/reading-minutes.ts (Latin locales). */
 
-const MIN = 4;
-const MAX = 15;
-const WPM = 80;
+import {
+  MIN_READING_MINUTES,
+  MAX_READING_MINUTES,
+  WORDS_PER_MINUTE,
+  readingMinutesFromSections as gateReadingMinutes,
+} from "./queue-reading-gate.mjs";
+
+const MIN = MIN_READING_MINUTES;
+const MAX = MAX_READING_MINUTES;
+const WPM = WORDS_PER_MINUTE;
 
 export function normalizeParagraphs(paragraphs) {
   const out = [];
@@ -27,15 +34,6 @@ export function normalizeSections(sections) {
   }));
 }
 
-export function readingMinutesFromSections(sections) {
-  const text = sections
-    .flatMap((section) => [
-      section.heading ?? "",
-      ...normalizeParagraphs(section.paragraphs),
-      ...(section.points ?? []),
-    ])
-    .join(" ");
-  const words = text.split(/\s+/).filter(Boolean).length;
-  if (!words) return MIN;
-  return Math.max(MIN, Math.min(MAX, Math.round(words / WPM)));
+export function readingMinutesFromSections(sections, locale = "en") {
+  return gateReadingMinutes(sections, locale);
 }

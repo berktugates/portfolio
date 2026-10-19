@@ -1,0 +1,645 @@
+{
+  "slug": "frontend-error-budgets-with-rum",
+  "title": "Frontend Error Budgets with RUM",
+  "excerpt": "Lab scores can improve while real users hit JavaScript exceptions and long tasks. Error budgets defined only for backend 5xx let the frontend degrade in silence.",
+  "description": "Staff patterns for RUM-backed frontend error budgets: route-level SLOs, release train gates, JS exception targets, and source map access treated as a security event.",
+  "readingMinutes": 10,
+  "keywords": [
+    "error budget",
+    "RUM",
+    "Core Web Vitals",
+    "frontend reliability",
+    "SLO"
+  ],
+  "socialThreadTr": [
+    "Frontend error budget RUM olmadan lab skoru yanıltır. 🧵",
+    "Route SLO ve JS exception hedefi. Detay: https://berktugberke.com/tr/blogs/frontend-error-budgets-with-rum"
+  ],
+  "sections": [
+    {
+      "heading": "Plot RUM beside lab on one dashboard",
+      "paragraphs": [
+        "Sample real user sessions for exception rate alongside LCP and INP. Lab-only dashboards lie politely during launches.",
+        "Break cohorts by device, country, and feature flag so regressions do not hide in averages."
+      ]
+    },
+    {
+      "heading": "Tie budgets to routes and trains",
+      "paragraphs": [
+        "Define weekly error budgets per major route and document release-train stop rules when budgets burn.",
+        "Tag feature-flag rollouts with budget consumption so product sees which experiment spent reliability."
+      ],
+      "points": [
+        "Compare RUM and lab metrics on one product dashboard",
+        "Tie frontend error budgets to routes and release trains",
+        "Define JS exception SLOs separately from INP budgets",
+        "Audit source map access like a security event"
+      ]
+    },
+    {
+      "heading": "JS SLOs separate from INP",
+      "paragraphs": [
+        "Unhandled rejections and chunk load failures deserve their own SLO. INP can look fine while checkout is broken.",
+        "Attribute third-party script errors with owner labels instead of blaming generic 'frontend'."
+      ]
+    },
+    {
+      "heading": "Audit source map access",
+      "paragraphs": [
+        "Send source map upload and download events to security monitoring. Maps can expose secrets and PII paths.",
+        "Restrict production map access to break-glass workflows with audit trails."
+      ],
+      "links": [
+        {
+          "label": "web.dev — Core Web Vitals",
+          "url": "https://web.dev/articles/vitals"
+        },
+        {
+          "label": "Sentry — Frontend error monitoring",
+          "url": "https://docs.sentry.io/platforms/javascript/"
+        }
+      ]
+    },
+    {
+      "heading": "Budgets per route, not one global score",
+      "paragraphs": [
+        "A single Lighthouse score hides checkout pain on mid-tier Android in specific regions. Budget marketing heroes, authenticated shells, and conversion routes separately with owners and allowed third-party scripts. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Sample RUM by route, release, and experiment cohort while honoring privacy tags on events. JavaScript exception budgets should differ from interaction latency budgets. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "When a route exhausts budget, block merges that add scripts until a named mitigation ships. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window."
+      ]
+    },
+    {
+      "heading": "Govern scripts like production config",
+      "paragraphs": [
+        "Show RUM and lab metrics on one dashboard so leadership cannot cherry-pick the greener chart. Source map downloads should trigger security audits like credential access. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Sentry or equivalent projects need residency settings aligned with counsel before breadcrumbs carry PII-adjacent fields. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window.",
+        "Post-release reviews compare budget burn to campaigns that upload heavy CMS assets outside the main train. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket. Track the change in your service catalog, review thresholds quarterly, and attach a dated rollback ticket before the next launch window."
+      ],
+      "links": [
+        {
+          "label": "web.dev — Core Web Vitals",
+          "url": "https://web.dev/articles/vitals"
+        },
+        {
+          "label": "Sentry — Frontend error monitoring",
+          "url": "https://docs.sentry.io/platforms/javascript/"
+        },
+        {
+          "label": "OpenTelemetry — Browser RUM",
+          "url": "https://opentelemetry.io/docs/specs/semconv/general/browser/"
+        }
+      ]
+    },
+    {
+      "heading": "RUM-backed budgets product can defend",
+      "paragraphs": [
+        "Lab Lighthouse scores alone cannot explain checkout failures on mid-tier Android devices in specific regions. Pair synthetic budgets with real-user monitoring sampled by route, release version, and experiment cohort while respecting privacy tags on events. Define JavaScript exception budgets separately from interaction latency budgets so teams know whether to fix handlers or defer third-party scripts. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Error budgets should attach to release trains and feature flags, not only quarterly OKRs. When a route exhausts its budget, block merges that add scripts to that route until a named mitigation lands—pagination, lazy hydration, or vendor contract renegotiation. Dashboards must show RUM and lab metrics side by side so leadership cannot cherry-pick the greener chart. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Source maps are production secrets. Audit every download of map files like a credential access event; restrict storage to break-glass roles with automatic expiry. Sentry or equivalent projects need data residency settings aligned with counsel before PII-adjacent breadcrumbs ship. On-call runbooks should list which routes are budget-critical and which analytics scripts are allowed during incidents. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first.",
+        "Post-release reviews compare budget burn against deploy cadence and marketing campaigns that add heavy assets. Celebrate teams that remove scripts instead of only teams that optimize images. Frontend reliability is a revenue feature when conversion routes stay inside budget during peak traffic; publish trends where product and growth leads actually meet, not only in performance guild channels. Schedule quarterly budget reviews on the release calendar. Publish dashboards beside error budgets, run game days before major releases, and record owner sign-off in the same change ticket the on-call engineer will read first."
+      ]
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "RUM ile Frontend Error Budget",
+      "excerpt": "Lab Lighthouse skorları iyileşirken gerçek kullanıcılar JS exception ve long task yaşıyor olabilir. Error budget yalnızca backend 5xx için tanımlanırsa frontend sessizce bozulur.",
+      "description": "RUM destekli frontend error budget: route bazlı SLO, release train bağlantısı, JS exception hedefleri ve source map güvenliği.",
+      "sections": [
+        {
+          "heading": "Lab ile RUM aynı grafikte",
+          "paragraphs": [
+            "RUM session sampling ile exception rate ve LCP/INP'yi birlikte görün; lab-only dashboard yanıltır.",
+            "Cohort kırılımı: cihaz, ülke, feature flag."
+          ]
+        },
+        {
+          "heading": "Error budget route'a bağlı",
+          "paragraphs": [
+            "Her major route için haftalık error budget tanımlayın; budget tükendiğinde release train durdurma kuralı yazın.",
+            "Feature flag rollout'ları budget tüketimini etiketleyin."
+          ],
+          "points": [
+            "RUM ile lab metriklerini aynı dashboard'da karşılaştırın",
+            "Error budget'i route ve release train'e bağlayın",
+            "JS exception SLO'sunu INP bütçesinden ayrı tanımlayın",
+            "Source map erişimini güvenlik olayı gibi audit edin"
+          ]
+        },
+        {
+          "heading": "JS SLO INP'den ayrı",
+          "paragraphs": [
+            "Unhandled rejection ve chunk load failure için ayrı SLO; INP iyiyken checkout kırılabilir.",
+            "Third-party script hatalarını sahip etiketiyle ayırın."
+          ]
+        },
+        {
+          "heading": "Source map erişimi audit",
+          "paragraphs": [
+            "Source map upload ve indirme olaylarını güvenlik SIEM'ine gönderin; PII sızıntısı riski vardır.",
+            "Production map erişimi break-glass ile sınırlı olsun."
+          ],
+          "links": [
+            {
+              "label": "web.dev — Core Web Vitals",
+              "url": "https://web.dev/articles/vitals"
+            },
+            {
+              "label": "Sentry — Frontend error monitoring",
+              "url": "https://docs.sentry.io/platforms/javascript/"
+            }
+          ]
+        },
+        {
+          "heading": "Tek global skor değil route başına bütçe",
+          "paragraphs": [
+            "Tek Lighthouse skoru belirli bölgelerde orta segment Android checkout acısını gizler. Pazarlama hero, auth shell ve conversion route'ları owner ve izinli script ile ayrı bütçeleyin. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "RUM'u route, release ve deney kohortu ile örnekleyin; privacy etiketlerine uyun. JS exception bütçesi interaction latency bütçesinden ayrı olsun. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Route bütçeyi tüketince adlı mitigasyon ship olana kadar script ekleyen merge'leri bloklayın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin."
+          ]
+        },
+        {
+          "heading": "Script'leri prod config gibi yönetin",
+          "paragraphs": [
+            "RUM ve lab metriklerini tek dashboard'da gösterin; liderlik yeşil grafiği cherry-pick edemesin. Source map indirmesi credential erişimi gibi security audit tetiklesin. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Sentry projelerinde breadcrumb PII-adjacent taşımadan önce residency counsel ile hizalı olsun. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin.",
+            "Release sonrası review bütçe yanmasını ana tren dışında ağır CMS varlığı yükleyen kampanyalarla kıyaslasın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın. Servis kataloğunda değişikliği izleyin, eşikleri çeyreklik gözden geçirin ve bir sonraki launch penceresinden önce tarihli rollback ticket ekleyin."
+          ],
+          "links": [
+            {
+              "label": "web.dev — Core Web Vitals",
+              "url": "https://web.dev/articles/vitals"
+            },
+            {
+              "label": "Sentry — Frontend error monitoring",
+              "url": "https://docs.sentry.io/platforms/javascript/"
+            },
+            {
+              "label": "OpenTelemetry — Browser RUM",
+              "url": "https://opentelemetry.io/docs/specs/semconv/general/browser/"
+            }
+          ]
+        },
+        {
+          "heading": "Ürünün savunabileceği RUM destekli bütçeler",
+          "paragraphs": [
+            "Lab Lighthouse skorları belirli bölgelerde orta segment Android'de checkout failure'larını açıklayamaz. Sentetik bütçeleri route, release versiyonu ve deney kohortu ile örneklenen RUM ile eşleyin; olaylardaki privacy etiketlerine uyun. JS exception bütçelerini interaction latency bütçelerinden ayırın; ekipler handler mı üçüncü parti script mi erteleyeceğini bilsin.",
+            "Error budget release train ve feature flag'lere bağlansın, yalnızca çeyreklik OKR'lara değil. Route bütçesini tüketince adlı mitigasyon—sayfalama, lazy hydration, vendor sözleşmesi—gelene kadar o route'a script ekleyen merge'leri bloklayın. Dashboard RUM ve lab metriklerini yan yana göstersin; liderlik yeşil grafiği cherry-pick edemesin.",
+            "Source map production secret'tır. Map indirmelerini credential erişimi gibi audit edin; depolamayı otomatik süre dolan break-glass rollerle sınırlayın. Sentry projelerinde PII-adjacent breadcrumb ship etmeden önce data residency counsel ile hizalı olsun. Runbook budget-kritik route'ları ve olay sırasında izinli analytics script'lerini listelesin.",
+            "Release sonrası review bütçe yanmasını deploy cadence ve ağır varlık ekleyen kampanyalarla kıyaslasın. Yalnızca görsel optimize eden değil script kaldıran ekipleri de öne çıkarın. Peak trafikte conversion route'ları bütçede kalınca frontend güvenilirliği gelir özelliğidir; trendleri product ve growth liderlerinin buluştuğu yerde yayınlayın."
+          ]
+        }
+      ]
+    },
+    "de": {
+      "title": "Frontend Error Budget mit RUM",
+      "excerpt": "Lab-Lighthouse verbessert sich, während Nutzer JS-Exceptions und Long Tasks sehen. Error Budget nur für Backend-5xx lässt Frontend leise sterben.",
+      "description": "RUM-gestütztes Frontend-Error-Budget: route-basierte SLOs, Release-Train-Kopplung, JS-Exception-Ziele, Source-Map-Sicherheit.",
+      "sections": [
+        {
+          "heading": "RUM und Lab in einem Graph",
+          "paragraphs": [
+            "Exception-Rate und LCP/INP mit RUM-Sampling zusammen; reines Lab täuscht.",
+            "Kohorten: Gerät, Land, Feature-Flag."
+          ]
+        },
+        {
+          "heading": "Error Budget pro Route",
+          "paragraphs": [
+            "Wöchentliches Error Budget pro Major-Route; Release-Train-Stopp bei Verbrauch.",
+            "Flag-Rollouts Budget-Verbrauch taggen."
+          ],
+          "points": [
+            "RUM und Lab-Metriken im selben Dashboard",
+            "Error Budget an Route und Release Train koppeln",
+            "JS-Exception-SLO getrennt vom INP-Budget",
+            "Source-Map-Zugriff wie Security-Event auditieren"
+          ]
+        },
+        {
+          "heading": "JS-SLO getrennt von INP",
+          "paragraphs": [
+            "Eigene SLO für Unhandled Rejection und Chunk-Load; INP ok, Checkout kaputt.",
+            "Third-Party-Fehler mit Owner-Label trennen."
+          ]
+        },
+        {
+          "heading": "Source-Map-Zugriff auditieren",
+          "paragraphs": [
+            "Source-Map Upload/Download ans Security-SIEM; PII-Leak-Risiko.",
+            "Prod-Map-Zugriff nur Break-Glass."
+          ],
+          "links": [
+            {
+              "label": "web.dev — Core Web Vitals",
+              "url": "https://web.dev/articles/vitals"
+            },
+            {
+              "label": "Sentry — Frontend error monitoring",
+              "url": "https://docs.sentry.io/platforms/javascript/"
+            }
+          ]
+        },
+        {
+          "heading": "Budgets pro Route, kein Global-Score",
+          "paragraphs": [
+            "Ein Lighthouse-Score versteckt Checkout-Schmerz auf Mid-Tier-Android. Marketing-Hero, Auth-Shell und Conversion-Routes separat budgetieren. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "RUM pro Route, Release, Kohorte sampeln; Privacy-Tags respektieren. JS-Exception-Budgets getrennt von Latenz. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Budget erschöpft: Script-Merges blocken bis Mitigation. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen."
+          ]
+        },
+        {
+          "heading": "Scripts wie Prod-Config governen",
+          "paragraphs": [
+            "RUM und Lab auf einem Dashboard. Source-Map-Downloads wie Credential-Zugriff auditieren. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Sentry-Residency vor PII-adjacent Breadcrumbs. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen.",
+            "Post-Release Budget-Burn vs schwere CMS-Kampagnen vergleichen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Änderung im Service-Katalog tracken, Schwellen vierteljährlich reviewen und datiertes Rollback-Ticket vor dem nächsten Launch-Fenster anhängen."
+          ],
+          "links": [
+            {
+              "label": "web.dev — Core Web Vitals",
+              "url": "https://web.dev/articles/vitals"
+            },
+            {
+              "label": "Sentry — Frontend error monitoring",
+              "url": "https://docs.sentry.io/platforms/javascript/"
+            },
+            {
+              "label": "OpenTelemetry — Browser RUM",
+              "url": "https://opentelemetry.io/docs/specs/semconv/general/browser/"
+            }
+          ]
+        },
+        {
+          "heading": "RUM-gestützte Budgets fürs Product",
+          "paragraphs": [
+            "Lab-Lighthouse erklärt keine Checkout-Failures auf Mid-Tier-Android in bestimmten Regionen. Synthetische Budgets mit RUM pro Route, Release und Experiment-Kohorte paaren; Privacy-Tags respektieren. JS-Exception-Budgets getrennt von Interaktions-Latenz-Budgets. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Error Budgets an Release Trains und Feature Flags, nicht nur OKRs. Route erschöpft Budget: Merges mit Scripts blocken bis named Mitigation. Dashboards RUM und Lab nebeneinander. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Source Maps sind Production-Secrets; Downloads wie Credential-Zugriff auditieren. Sentry-Residency vor PII-adjacent Breadcrumbs. Runbook listet budget-kritische Routes und erlaubte Analytics-Scripts im Incident. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein.",
+            "Post-Release-Reviews vergleichen Budget-Burn mit Deploy-Cadence und Marketing-Assets. Teams feiern die Scripts entfernen. Frontend-Reliability ist Revenue-Feature wenn Conversion-Routes im Budget bleiben. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein."
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "title": "Error budget frontend avec RUM",
+      "excerpt": "Le lab Lighthouse s'améliore pendant que les utilisateurs voient exceptions JS et long tasks. Budget d'erreur backend seul laisse le frontend mourir en silence.",
+      "description": "Error budget frontend RUM : SLO par route, lien release train, cibles exceptions JS, sécurité source maps.",
+      "sections": [
+        {
+          "heading": "RUM et lab sur un graphique",
+          "paragraphs": [
+            "Taux d'exception et LCP/INP ensemble via échantillonnage RUM ; lab seul trompe.",
+            "Cohortes : appareil, pays, feature flag."
+          ]
+        },
+        {
+          "heading": "Budget lié à la route",
+          "paragraphs": [
+            "Budget hebdo par route majeure ; arrêt release train si épuisé.",
+            "Taguer consommation budget sur rollouts flag."
+          ],
+          "points": [
+            "Comparer RUM et métriques lab sur un dashboard",
+            "Lier error budget à route et release train",
+            "SLO exceptions JS séparé du budget INP",
+            "Auditer accès source maps comme événement sécurité"
+          ]
+        },
+        {
+          "heading": "SLO JS séparé de l'INP",
+          "paragraphs": [
+            "SLO distinct pour unhandled rejection et chunk load ; INP bon, checkout cassé.",
+            "Erreurs third-party avec label owner."
+          ]
+        },
+        {
+          "heading": "Auditer accès source maps",
+          "paragraphs": [
+            "Upload/téléchargement source maps vers SIEM sécurité ; risque fuite PII.",
+            "Accès maps prod en break-glass seulement."
+          ],
+          "links": [
+            {
+              "label": "web.dev — Core Web Vitals",
+              "url": "https://web.dev/articles/vitals"
+            },
+            {
+              "label": "Sentry — Frontend error monitoring",
+              "url": "https://docs.sentry.io/platforms/javascript/"
+            }
+          ]
+        },
+        {
+          "heading": "Budgets par route, pas score global",
+          "paragraphs": [
+            "Un score Lighthouse masque douleur checkout sur Android milieu de gamme. Budgéter hero marketing, shell auth et routes conversion séparément. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "RUM échantillonné par route, release, cohorte ; tags privacy. Budgets exceptions JS séparés latence. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Budget épuisé : bloquer merges scripts jusqu'à mitigation. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement."
+          ]
+        },
+        {
+          "heading": "Gouverner scripts comme config prod",
+          "paragraphs": [
+            "RUM et lab sur un dashboard. Téléchargements source map audités comme accès credentials. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Résidence Sentry avant breadcrumbs PII-adjacent. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement.",
+            "Revues post-release comparent burn budget aux campagnes CMS lourdes. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté. Suivez le changement dans le catalogue service, revoyez les seuils trimestriellement et rattachez un ticket rollback daté avant la prochaine fenêtre de lancement."
+          ],
+          "links": [
+            {
+              "label": "web.dev — Core Web Vitals",
+              "url": "https://web.dev/articles/vitals"
+            },
+            {
+              "label": "Sentry — Frontend error monitoring",
+              "url": "https://docs.sentry.io/platforms/javascript/"
+            },
+            {
+              "label": "OpenTelemetry — Browser RUM",
+              "url": "https://opentelemetry.io/docs/specs/semconv/general/browser/"
+            }
+          ]
+        },
+        {
+          "heading": "Budgets appuyés RUM défendables produit",
+          "paragraphs": [
+            "Lighthouse lab n'explique pas échecs checkout sur Android milieu de gamme par région. Coupler budgets synthétiques et RUM échantillonné par route, release et cohorte expérience ; respect tags privacy. Budgets exceptions JS séparés des budgets latence interaction. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Budgets erreur liés trains release et feature flags, pas seulement OKR trimestriels. Route épuisée : bloquer merges scripts jusqu'à mitigation nommée. Dashboards RUM et lab côte à côte. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Source maps secrets prod ; auditer téléchargements comme accès credentials. Résidence données Sentry avant breadcrumbs PII-adjacent. Runbook routes budget-critiques et scripts analytics autorisés en incident. Consignez owner, date de revue et rollback dans le même ticket de changement.",
+            "Revues post-release comparent burn budget à cadence deploy et campagnes assets lourds. Célébrer équipes retirant scripts. Fiabilité frontend feature revenu si routes conversion restent dans budget en pic. Consignez owner, date de revue et rollback dans le même ticket de changement."
+          ]
+        }
+      ]
+    },
+    "it": {
+      "title": "Error budget frontend con RUM",
+      "excerpt": "Il lab Lighthouse migliora mentre gli utenti vedono eccezioni JS e long task. Error budget solo backend lascia morire il frontend in silenzio.",
+      "description": "Error budget frontend RUM: SLO per route, legame release train, target eccezioni JS, sicurezza source map.",
+      "sections": [
+        {
+          "heading": "RUM e lab stesso grafico",
+          "paragraphs": [
+            "Exception rate e LCP/INP insieme con sampling RUM; solo lab inganna.",
+            "Cohort: device, paese, feature flag."
+          ]
+        },
+        {
+          "heading": "Budget legato alla route",
+          "paragraphs": [
+            "Budget settimanale per route major; stop release train se esaurito.",
+            "Tag consumo budget su rollout flag."
+          ],
+          "points": [
+            "Confrontare RUM e metriche lab nello stesso dashboard",
+            "Legare error budget a route e release train",
+            "SLO eccezioni JS separato dal budget INP",
+            "Audit accesso source map come evento sicurezza"
+          ]
+        },
+        {
+          "heading": "SLO JS separato da INP",
+          "paragraphs": [
+            "SLO separato per unhandled rejection e chunk load; INP ok, checkout rotto.",
+            "Errori third-party con label owner."
+          ]
+        },
+        {
+          "heading": "Audit accesso source map",
+          "paragraphs": [
+            "Upload/download source map al SIEM security; rischio leak PII.",
+            "Accesso map prod solo break-glass."
+          ],
+          "links": [
+            {
+              "label": "web.dev — Core Web Vitals",
+              "url": "https://web.dev/articles/vitals"
+            },
+            {
+              "label": "Sentry — Frontend error monitoring",
+              "url": "https://docs.sentry.io/platforms/javascript/"
+            }
+          ]
+        },
+        {
+          "heading": "Budget per route, non score globale",
+          "paragraphs": [
+            "Un Lighthouse nasconde pain checkout su Android mid-tier. Budget separati per hero marketing, shell auth e route conversion. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "RUM campionato per route, release, cohort; tag privacy. Budget eccezioni JS separati da latenza. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Budget esaurito: bloccare merge script fino a mitigazione. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch."
+          ]
+        },
+        {
+          "heading": "Governare script come config prod",
+          "paragraphs": [
+            "RUM e lab su un dashboard. Download source map auditati come accesso credential. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Residency Sentry prima breadcrumb PII-adjacent. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch.",
+            "Review post-release confrontano burn budget con campagne CMS pesanti. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato. Tracciate la modifica nel catalogo servizi, rivedete le soglie trimestralmente e collegate un ticket rollback datato prima della prossima finestra di launch."
+          ],
+          "links": [
+            {
+              "label": "web.dev — Core Web Vitals",
+              "url": "https://web.dev/articles/vitals"
+            },
+            {
+              "label": "Sentry — Frontend error monitoring",
+              "url": "https://docs.sentry.io/platforms/javascript/"
+            },
+            {
+              "label": "OpenTelemetry — Browser RUM",
+              "url": "https://opentelemetry.io/docs/specs/semconv/general/browser/"
+            }
+          ]
+        },
+        {
+          "heading": "Budget supportati da RUM difendibili dal product",
+          "paragraphs": [
+            "Lighthouse da lab non spiega failure checkout su Android mid-tier per regione. Accoppiate budget sintetici con RUM campionato per route, release e cohort experiment; rispettate tag privacy. Budget eccezioni JS separati da budget latenza interazione. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Error budget legati a release train e feature flag, non solo OKR trimestrali. Route esaurita: bloccare merge script fino a mitigazione nominata. Dashboard RUM e lab affiancati. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Source map segreti production; audit download come accesso credential. Residency Sentry prima breadcrumb PII-adjacent. Runbook elenca route budget-critical e script analytics ammessi in incident. Registrate owner, data di review e rollback nello stesso ticket di change.",
+            "Review post-release confrontano burn budget con cadence deploy e campagne asset pesanti. Celebrare team che rimuovono script. Affidabilità frontend feature revenue se route conversion restano in budget ai picchi. Registrate owner, data di review e rollback nello stesso ticket di change."
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "title": "结合 RUM 的前端错误预算",
+      "excerpt": "实验室 Lighthouse 变好时，真实用户仍可能遭遇 JS 异常与 long task。错误预算只覆盖后端 5xx 会让前端静默劣化。",
+      "description": "RUM 驱动的前端错误预算：按路由 SLO、发布列车联动、JS 异常目标与源码映射安全。",
+      "sections": [
+        {
+          "heading": "RUM 与 lab 同图",
+          "paragraphs": [
+            "RUM 采样同时看异常率与 LCP/INP；仅 lab 会误导。",
+            " cohort：设备、国家、feature flag。"
+          ]
+        },
+        {
+          "heading": "预算绑定路由",
+          "paragraphs": [
+            "主要路由设每周错误预算；耗尽则停发布列车。",
+            "flag  rollout 标记预算消耗。"
+          ],
+          "points": [
+            "同一看板对比 RUM 与实验室指标",
+            "错误预算绑定路由与发布列车",
+            "JS 异常 SLO 与 INP 预算分开定义",
+            "源码映射访问按安全事件审计"
+          ]
+        },
+        {
+          "heading": "JS SLO 与 INP 分离",
+          "paragraphs": [
+            "未处理 rejection 与 chunk 加载失败单独 SLO；INP 好但结账可坏。",
+            "第三方脚本错误带 owner 标签。"
+          ]
+        },
+        {
+          "heading": "审计 source map 访问",
+          "paragraphs": [
+            "source map 上传下载进安全 SIEM；有 PII 泄漏风险。",
+            "生产 map 访问仅 break-glass。"
+          ],
+          "links": [
+            {
+              "label": "web.dev — Core Web Vitals",
+              "url": "https://web.dev/articles/vitals"
+            },
+            {
+              "label": "Sentry — Frontend error monitoring",
+              "url": "https://docs.sentry.io/platforms/javascript/"
+            }
+          ]
+        },
+        {
+          "heading": "按路由预算，而非单一全局分",
+          "paragraphs": [
+            "单一 Lighthouse 分数掩盖特定地区中端 Android 的 checkout 痛点。分别为营销 hero、认证壳层与 conversion 路由设预算并指定 owner 与允许脚本。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "按路由、发布与实验 cohort 采样 RUM 并遵守隐私标签。JS 异常预算应与交互延迟预算分开。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "路由耗尽预算时，在指名缓解上线前阻止添加脚本的合并。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。"
+          ]
+        },
+        {
+          "heading": "像生产配置一样治理脚本",
+          "paragraphs": [
+            "在同一仪表盘并排展示 RUM 与 lab，避免领导只挑更绿的图。Source map 下载应像凭证访问一样触发安全审计。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "Sentry 等项目在 breadcrumb 携带 PII 邻近字段前须与法务对齐 residency。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。",
+            "发布后评审将 budget burn 与在主发布列车外上传重 CMS 资源的营销活动对照。 请在下次生产评审中复核这一点，指定负责人并关联带日期的整改工单。 在服务目录中跟踪变更，每季度评审阈值，并在下一发布窗口前关联带日期的回滚工单。"
+          ],
+          "links": [
+            {
+              "label": "web.dev — Core Web Vitals",
+              "url": "https://web.dev/articles/vitals"
+            },
+            {
+              "label": "Sentry — Frontend error monitoring",
+              "url": "https://docs.sentry.io/platforms/javascript/"
+            },
+            {
+              "label": "OpenTelemetry — Browser RUM",
+              "url": "https://opentelemetry.io/docs/specs/semconv/general/browser/"
+            }
+          ]
+        },
+        {
+          "heading": "产品可辩护的 RUM 支撑预算",
+          "paragraphs": [
+            "实验室 Lighthouse 无法解释特定地区中端 Android 上的 checkout 失败。将合成预算与按路由、发布版本与实验 cohort 采样且遵守隐私标签的 RUM 配对。JS 异常预算应与交互延迟预算分开，让团队知道该修 handler 还是推迟第三方脚本。",
+            "错误预算应绑定发布列车与 feature flag，而非仅季度 OKR。路由耗尽预算时，在指名缓解——分页、lazy hydration、供应商重谈——落地前阻止向该路由加脚本的合并。仪表盘须并排展示 RUM 与 lab，避免领导只挑更绿的图。",
+            "Source map 是生产机密。像审计凭证访问一样审计每次 map 下载；存储限制于自动过期的 break-glass 角色。Sentry 等项目在发送 PII 邻近 breadcrumb 前须与法务对齐数据 residency。Runbook 应列出 budget-critical 路由与事件中允许的 analytics 脚本。",
+            "发布后评审将 budget burn 与发布节奏及添加重资源的营销活动对照。表彰移除脚本的团队，而非仅优化图片者。峰值流量下 conversion 路由保持预算内时，前端可靠性即收入能力；趋势应发布到 product 与 growth 负责人实际开会之处。"
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "title": "RUM付きフロントエンドエラーバジェット",
+      "excerpt": "ラボLighthouseが改善しても実ユーザーはJS例外とlong taskを見る。エラーバジェットがバックエンド5xxだけだとフロントは静かに劣化。",
+      "description": "RUMベースのFEエラーバジェット：ルートSLO、リリーストレイン連動、JS例外目標、ソースマップセキュリティ。",
+      "sections": [
+        {
+          "heading": "RUMとラボ同一グラフ",
+          "paragraphs": [
+            "RUMサンプリングで例外率とLCP/INPを同時表示；ラボのみは誤解。",
+            "コホート：デバイス、国、feature flag。"
+          ]
+        },
+        {
+          "heading": "予算をルートに紐付け",
+          "paragraphs": [
+            "主要ルートに週次エラーバジェット；使い切りでリリーストレイン停止。",
+            "フラグロールアウトに予算消費タグ。"
+          ],
+          "points": [
+            "同一ダッシュボードでRUMとラボ指標を比較",
+            "エラーバジェットをルートとリリーストレインに紐付け",
+            "JS例外SLOをINP予算と分離定義",
+            "ソースマップアクセスをセキュリティイベントとして監査"
+          ]
+        },
+        {
+          "heading": "JS SLOはINPと分離",
+          "paragraphs": [
+            "unhandled rejectionとchunk load用に別SLO；INP良好でもcheckout破損。",
+            "サードパーティエラーはownerラベルで分離。"
+          ]
+        },
+        {
+          "heading": "ソースマップアクセス監査",
+          "paragraphs": [
+            "ソースマップupload/downloadをセキュリティSIEMへ；PII漏洩リスク。",
+            "本番mapアクセスはbreak-glassのみ。"
+          ],
+          "links": [
+            {
+              "label": "web.dev — Core Web Vitals",
+              "url": "https://web.dev/articles/vitals"
+            },
+            {
+              "label": "Sentry — Frontend error monitoring",
+              "url": "https://docs.sentry.io/platforms/javascript/"
+            }
+          ]
+        },
+        {
+          "heading": "global score ではなく route 別 budget",
+          "paragraphs": [
+            "single Lighthouse score は mid-tier Android checkout pain を隠す。marketing hero、auth shell、conversion route を別 budget。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "RUM sample by route、release、cohort；privacy tag 尊重。JS exception budget と latency budget 分離。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "budget 枯渇時は mitigation ship まで script merge block。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。"
+          ]
+        },
+        {
+          "heading": "script を prod config として govern",
+          "paragraphs": [
+            "RUM と lab を同一 dashboard。source map download は credential access 監査。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "Sentry residency を PII-adjacent breadcrumb 前に counsel align。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。",
+            "post-release で budget burn と heavy CMS campaign 比較。 次回の production review で再確認し、オーナーを割り当て、日付付き remediation チケットを紐付けてください。 サービスカタログで変更を追跡し、四半期ごとに閾値をレビューし、次の launch ウィンドウ前に日付付き rollback チケットを紐付けてください。"
+          ],
+          "links": [
+            {
+              "label": "web.dev — Core Web Vitals",
+              "url": "https://web.dev/articles/vitals"
+            },
+            {
+              "label": "Sentry — Frontend error monitoring",
+              "url": "https://docs.sentry.io/platforms/javascript/"
+            },
+            {
+              "label": "OpenTelemetry — Browser RUM",
+              "url": "https://opentelemetry.io/docs/specs/semconv/general/browser/"
+            }
+          ]
+        },
+        {
+          "heading": "product が defend できる RUM バジェット",
+          "paragraphs": [
+            "lab Lighthouse は特定地域 mid-tier Android の checkout failure を説明できない。synthetic budget を route、release、experiment cohort で sample し privacy tag を尊重する RUM と pair。JS exception budget を interaction latency budget と分離。",
+            "error budget は release train と feature flag に attach、四半期 OKR だけでない。route budget 枯渇時は named mitigation まで script 追加 merge block。dashboard は RUM と lab を並列表示。",
+            "source map は production secret；download を credential access として audit。Sentry residency を PII-adjacent breadcrumb 前に counsel と align。runbook に budget-critical route と incident 許可 analytics script。",
+            "post-release review で budget burn を deploy cadence と heavy asset campaign と比較。script 削除チームを称賛。peak で conversion route が budget 内なら frontend reliability は revenue feature。"
+          ]
+        }
+      ]
+    }
+  }
+}

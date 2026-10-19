@@ -1,6 +1,100 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"data-retention-policies-that-enable-product-analytics": {
+    title: "Datenaufbewahrung die Produktanalytik ermöglicht",
+    excerpt: "Aufbewahrung ist Compliance; Analytik ist Produkt. Nicht alles in eine TTL.",
+    description: "Schichten, Rollups, Rechtsgrundlage und beobachtbare Löschung statt Alles-oder-Nichts.",
+    sections: [
+      {
+        heading: "Retention ist Produktfläche",
+        paragraphs: [
+          "Alles für immer skaliert und riskiert Recht.",
+          "Alles löschen macht blind.",
+        ],
+      },
+      {
+        heading: "Gestufte Event-Tiers",
+        paragraphs: [
+          "Analytics, Audit, Training getrennte TTLs.",
+          "PII von anonymen Metriken trennen.",
+        ],
+        points: [
+          "Event-Tiers definieren: Produkt-Analytics, Audit, Modell-Training",
+          "Aggregierte Rollups vor Löschung roher Events",
+          "Rechtsgrundlage und Lösch-SLA pro Tier dokumentieren",
+          "Retention-Config wie Schema-Migration reviewen",
+        ],
+      },
+      {
+        heading: "Rollups vor Löschung",
+        paragraphs: [
+          "Rollups vor Rohdaten-Löschung.",
+          "Funnels auf Aggregaten.",
+        ],
+      },
+      {
+        heading: "Operative Disziplin",
+        paragraphs: [
+          "Retention wie Schema reviewen.",
+          "Deletion jobs metrieren.",
+        ],
+        links: [
+          {
+            label: "GDPR — Storage limitation",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+          {
+            label: "Snowplow — Data retention",
+            url: "https://docs.snowplow.io/docs/understanding-your-pipeline/retention/",
+          },
+          {
+            label: "Amplitude — Data governance",
+            url: "https://amplitude.com/docs/data/data-governance",
+          },
+        ],
+      },
+      {
+        heading: "Events klassifizieren vor Instrumentierung",
+        paragraphs: [
+          "Produktanalytics ohne Retention-Design wird zum versehentlichen Warehouse sensiblen Verhaltens. Definieren Sie Event-Klassen vorab: strikt operative Telemetrie, pseudonyme Produktmetriken und Identifikatoren mit vertraglicher Basis vor Collection. KI-Features fügen prompt-abgeleitete Attribute hinzu, die in restriktive Tiers gehören, auch wenn Text redigiert ist. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+          "Engineering und Legal co-signen eine Matrix: Event-Typ zu Speicherdauer, Verschlüsselung und Downstream-Consumern. Wenn Marketing einen neuen Funnel-Step will, lautet Review-Frage Retention-Impact, nicht nur Schema-Feasibility. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+          "Löschung muss nachweisbar sein. Batch-Jobs, die still failen, lassen Sie auf Papier compliant und praktisch exposed. Emittieren Sie Metriken zu gelöschten Rows, Backlog-Alter und Retries wie bei Payment-Reconciliation. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+        ],
+      },
+      {
+        heading: "Analytics von Security-Logging trennen",
+        paragraphs: [
+          "Geteilte Schemata verlocken Teams, Security-Logs für Funnel-Analyse zu reuse—Retention-Klassen verwischen, die GDPR Storage Limitation beschreibt. California-CPRA-Zusammenfassungen erinnern: Retention nicht länger als vernünftig nötig—Notwendigkeit pro Feld dokumentieren, nicht pro DB. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+          "Aggregate-Tabellen können Trends nach Raw-Expiry erhalten, wenn Rollups dieselben Klassifikationslabels tragen. Produktanalysten behalten Kohortenviews; Privacy-Reviewer kürzere Raw-TTL ohne Verlust wöchentlicher KPIs. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+          "Access Controls folgen Datenklasse, nicht Org-Chart-Popularität. Break-Glass für Incidents muss auto-expiren und Audit-Trails getrennt von Analytics-Self-Service hinterlassen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+        ],
+        links: [
+          {
+            label: "DSGVO Artikel 5 — Speicherbegrenzung",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+          {
+            label: "California CPRA — Retention",
+            url: "https://oag.ca.gov/privacy/ccpa",
+          },
+          {
+            label: "OpenTelemetry — Logs-Datenmodell",
+            url: "https://opentelemetry.io/docs/specs/otel/logs/data-model/",
+          },
+        ],
+      },
+      {
+        heading: "Retention operativ, Analytics intakt",
+        paragraphs: [
+          "Produktteams behandeln Retention-Policies als Legal-Papier, während Analytics-Pipelines weiter Identifikatoren einsaugen. Brechen Sie den Kreislauf: Event-Katalog im selben Repo wie das Tracking-SDK, mit TTL, Rechtsgrund und Rollup-Ziel pro Zeile. PRs mit neuen Properties scheitern ohne Katalog-Update. Kohorten-Funnels überleben abgelaufenes Raw-PII, weil Wochenaggregate dieselben Klassifikations-Tags tragen. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+          "Rollups halten Dashboards ehrlich, nachdem Löschfenster schließen. Materialized Views ohne User-Keys, aber mit Experiment-Assignment-Hashes für Readouts; dokumentieren Sie Raw- versus Aggregat-Charts. CSV-Exports für Board-Decks loggen Principal und Datenklasse. Exporte ohne Audit-Trail scheitern schneller in Privacy-Reviews als fehlende Metriken. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+          "Cross-Border-Replikation bricht naive Retention-Versprechen. Landen Events in Regionen mit anderen Erasure-SLAs, taggen Sie Replikas im Katalog; Deletion-Orchestrierung folgt der strengsten Policy. Staging ohne Auto-Expiry für Prod-TTL-Ausnahmen vermeiden; Debug mit echten User-Rows ist wiederkehrender Audit-Befund. Synthetische Fixtures imitieren Schema, keine Prod-Dumps. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+          "Retention vierteljährlich wie Capacity Planning reviewen. Warehouse-Wachstum gegen gelöschte Rows, Ausnahmen, Legal Holds messen. Analytics-Leads signieren neue KI- oder Payment-Flows und bestätigen unveränderte Defaults. One-Pager fürs Engineering-All-Hands: was diesen Monat expiret, welche Rollups History backfillen, wer noch veraltete Felder abfragt. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+        ],
+      },
+    ],
+  },
 "reducing-flaky-e2e-tests-in-expo-apps": {
     title: "Flaky E2E-Tests in Expo-Apps reduzieren",
     excerpt: "Flaky E2E tötet Vertrauen; Retries sind kein Setup.",

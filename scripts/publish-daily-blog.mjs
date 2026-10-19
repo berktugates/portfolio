@@ -7,7 +7,7 @@
  */
 import { readdir, readFile, writeFile, unlink } from "node:fs/promises";
 import { resolve } from "node:path";
-import { normalizeSections, readingMinutesFromSections } from "./lib/reading-minutes.mjs";
+import { assertQueueReadingPost, normalizeSections, readingMinutesFromSections } from "./lib/queue-reading-gate.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const queueDir = resolve(root, "content/blog-queue");
@@ -154,14 +154,7 @@ function assertPost(value) {
   for (const locale of Object.keys(localeFiles)) {
     if (!value.locales[locale]) throw new Error(`Queue post missing locales.${locale}`);
   }
-  const normalized = normalizeSections(value.sections);
-  const text = normalized
-    .flatMap((section) => [section.heading ?? "", ...section.paragraphs, ...(section.points ?? [])])
-    .join(" ");
-  const words = text.split(/\s+/).filter(Boolean).length;
-  if (words < 320) {
-    throw new Error(`Queue post ${value.slug} EN body too short (${words} words); extend sections.`);
-  }
+  assertQueueReadingPost(value, "Queue post");
 }
 
 function toTs(value, indent = 0) {
