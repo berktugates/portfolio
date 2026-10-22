@@ -1,6 +1,96 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"logging-llm-interactions-without-hoarding-pii": {
+    title: "PII Biriktirmeden LLM Etkileşimlerini Loglama",
+    excerpt: "Üretim copilot'larını traces olmadan debug edemezsiniz; ama her sohbeti kalıcı veri ambarı yakıtı sayamazsınız. Log tasarımı gizlilik ve maliyet kararıdır.",
+    description: "LLM etkileşim logları için staff kalıpları: redaksiyon katmanları, örnekleme, saklama sınıfları ve uyum incelemesinden geçen observability.",
+    sections: [
+      {
+        heading: "Loglar ücretsiz arşiv değildir",
+        paragraphs: [
+          "Varsayılan olarak tam prompt loglayan ekipler, bunları analitik araçları, destek export'ları ve geniş erişim rolleriyle zamanla sızdırır.",
+          "LLM transkriptlerini kimlik bilgisine yakın veri gibi ele alın: minimize edin, redakte edin, erişimi döndürün ve programlı süre sonunda silin.",
+        ],
+      },
+      {
+        heading: "Transkriptleri hassasiyete göre katmanla",
+        paragraphs: [
+          "Olay debug için sıcak, örneklem eval için ılık, ürün trendleri için soğuk aggregate saklama tanımlayın.",
+          "Pazarlama ambarlarının ham sohbet çekmesine, belgelenmiş hukuki dayanak ve silme job'u olmadan izin vermeyin.",
+        ],
+        points: [
+          "Varsayılan ham dump yerine redaksiyon katmanlı prompt/çıktı loglayın",
+          "PII taşıyan transkriptleri aggregate kalite metriklerinden ayırın",
+          "Katman bazlı saklamayı hukuk ve ürün onayıyla tanımlayın",
+          "Export hacmi sıçramalarını veri sızıntısı yolu gibi alarm layın",
+        ],
+      },
+      {
+        heading: "Kalite için örnekle, trend için aggregate et",
+        paragraphs: [
+          "Kalite ekiplerinin tam geçmişe değil, temsili örneklere ihtiyacı var. Sonuç, gecikme ve red türüne göre tabakalı örnekleme kullanın.",
+          "Mümkün olduğunda kullanıcı metni saklamadan token kullanımı ve hata kodlarını aggregate edin.",
+        ],
+      },
+      {
+        heading: "Export'ları güvenlik olayı gibi işlet",
+        paragraphs: [
+          "Toplu export uçları ve notebook indirmeleri, veritabanı dump'larıyla aynı alarmları tetiklemeli.",
+          "İyi loglama, Mart'ta KVKK/GDPR talebi açıklamak zorunda kalmadan Salı günü debug etmenizi sağlar.",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenAI — Safety best practices",
+            url: "https://platform.openai.com/docs/guides/safety-best-practices",
+          },
+        ],
+      },
+      {
+        heading: "Log şemalarında sözleşme testleri",
+        paragraphs: [
+          "Keyfi JSON kabul eden log hatları birkaç release içinde PII birikimine dönüşür. LLM trace olayları için açık bir şema yayınlayın: izinli anahtarlar, maksimum yük boyutları ve serbest metin kullanıcı alanları yerine tipli tanımlayıcılar. Altın fixture'larla CI'da şemayı zorunlu kılın; gizlilik incelemesi olmadan yeni alan merge edilemesin.",
+          "Yapılandırılmış telemetriyi debug dökümlerinden ayırın. OpenTelemetry span'leri model sürümü, token sayıları ve korelasyon kimliklerini taşısın; prompt'lar daha sıkı erişim kontrollü redakte yan kanalda kalsın. Ingest'te doğrulama başarısız olursa yükü düşürün ve yönetimsiz yedek konuya yazmak yerine metrik artırın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "Üretim şemalarını dokümante allowlist ile çeyreklik karşılaştırın. Sapma çoğu zaman alanları sessizce yeniden eşleyen forwarder ve satıcı ajanlarıyla gelir. Şema ayrışmasını, kimlik doğrulama middleware gerilemelerinde olduğu gibi AI özellikleri için release engeli sayın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+        ],
+      },
+      {
+        heading: "Kontrolleri yayımlanmış standartlara bağlayın",
+        paragraphs: [
+          "Gizlilik programları, loglanan alanların hukuki dayanak ve saklama sınıfına izlenebilirliğini ister. Her LLM log özniteliğini OWASP LLM riskleri ve DPIA sonuçlarınıza bağlayan bir veri sözlüğü sürdürün. Mühendisler denetçi sorularını şirketin yarısında geçmiş sohbet aramadan yanıtlamalı. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "Redaksiyon deterministik ve birim testli olmalı. Regex listeleri sürüm kontrolünde kalsın; çok dilli kişi adları ve biçimlendirilmiş ulusal kimlikler dahil temsili yüklerle test edin. Olay sırasında örnekleme oranları değişir; redaksiyon kuralları operatör hafızasına bağlı olmamalı. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "Toplu export ve notebook yeniden yükleme yolları birincil depo ile aynı kontrollere tabi olmalı. Federasyonlu analitik araçları logları avukatların onaylamadığı bölgelere kopyalar. Soğuk arşiv okumalarını otomatik süresi dolan break-glass rolleri ve güvenlik uyarıları olmadan engelleyin. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenTelemetry — Log veri modeli",
+            url: "https://opentelemetry.io/docs/specs/otel/logs/data-model/",
+          },
+          {
+            label: "GDPR Madde 5 — İlkeler",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+        ],
+      },
+      {
+        heading: "Savunulabilir minimizasyonla LLM loglama",
+        paragraphs: [
+          "Yukarı akışta yakalama noktaları tasarlamazsanız LLM gateway'leri tam prompt görür. Gözlemlenebilirliği istek metadatasına—model route, token sayısı, gecikme, politika sonucu—ve kalite incelemesi için örneklenen kısıtlı transkript katmanına bölün. Tam prompt loglamayı sıcak depoya varsayılan yapmayın. Şema testleri merge öncesi kredi kartı, kimlik numarası veya personel numarası regex'ine uyan yeni log alanlarını reddetsin. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+          "Redaksiyon boru hatları çeyreklik temizlik script'i değil ingestion yolunda olmalı. Deterministik dönüşümler—e-posta maskeleme, stabil kullanıcı anahtarı hash, ek baytlarını strip—CI'da golden log fixture'larıyla doğrulansın. Hukuk olay sırasında örnek isterse onay akışıyla redakte katmandan üretin; raw cluster'da rastgele grep sızıntının uyumlu sandığınız stack'lerdeki yoludur. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+          "LLM logları için saklama sınıfları klasik HTTP access log'larından ayrılmalı. Transkript örnekleri triage için yetmiş iki saat gerekebilir; toplam token harcama metrikleri doksan gün kalabilir. Runbook'ta hangi on-call sorgusunun hangi katmana vurduğunu yazın; expiry job hatalarını model 500'leri gibi uyarın. Güvenlik panoları yalnızca auth failure değil export hacmini göstersin. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+          "Vendor alt işlemcileri log sınırınızın parçası sayın. Barındırılan model tool çıktısında PII yankısı dönerse retention vektör store ve eval export'taki türev alanları kapsamalı. Prompt tuning için uzun geçmiş isteyen PM'ler süreli istisna ticket'ı ve anonimleştirme planı borçlu. Şüphede tanımlayıcı ve sonuç loglayın, ticket'a kopyalanan ham kullanıcı metnini değil. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+        ],
+      },
+    ],
+  },
 "data-retention-policies-that-enable-product-analytics": {
     title: "Ürün Analitiğini Mümkün Kılan Veri Saklama Politikaları",
     excerpt: "Saklama yasal zorunluluk; analitik ise ürün kararı. İkisini aynı çöp kutusuna atmayın.",

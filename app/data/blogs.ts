@@ -23,6 +23,114 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "logging-llm-interactions-without-hoarding-pii",
+    title: "Logging LLM Interactions Without Hoarding PII",
+    excerpt: "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
+    description: "Staff patterns for LLM interaction logging: redaction tiers, sampling, retention classes, and observability that survives compliance review.",
+    publishedAt: "2026-10-22",
+    readingMinutes: 10,
+    keywords: [
+      "LLM logging",
+      "PII",
+      "privacy engineering",
+      "observability",
+      "compliance",
+    ],
+    socialThreadTr: [
+      "Copilot logları PII biriktirmeden tutulabilir; ham sohbet varsayılan olmamalı. 🧵",
+      "Katmanlı saklama ve redaksiyon. Detay: https://berktugberke.com/tr/blogs/logging-llm-interactions-without-hoarding-pii",
+    ],
+    sections: [
+      {
+        heading: "Logs are not a free archive",
+        paragraphs: [
+          "Teams that log full prompts by default eventually leak them through analytics tools, support exports, and over-broad access roles.",
+          "Treat LLM transcripts like credentials-adjacent data: minimize, redact, rotate access, and expire on schedule.",
+          "Document which fields are never logged—government IDs, payment instruments, raw audio—and enforce via schema tests on your logging pipeline.",
+        ],
+      },
+      {
+        heading: "Tier transcripts by sensitivity",
+        paragraphs: [
+          "Define hot storage for incident debugging, warm storage for sampled eval, and cold aggregates for product trends.",
+          "Never let marketing warehouses ingest raw chats without a documented lawful basis and deletion job.",
+          "Pair retention with deletion jobs that are tested in staging; expiry without verification is a compliance placebo.",
+        ],
+        points: [
+          "Log prompts and outputs with redaction tiers, not raw dumps by default",
+          "Separate PII-bearing transcripts from aggregate quality metrics",
+          "Define retention per tier with legal and product sign-off",
+          "Alert on export volume spikes like any other data exfil path",
+        ],
+      },
+      {
+        heading: "Sample for quality, aggregate for trends",
+        paragraphs: [
+          "Quality teams need representative samples, not complete history. Use stratified sampling by outcome, latency, and refusal type.",
+          "Aggregate token usage and error codes without storing user text when possible.",
+          "Give security and legal dashboards on export volume, not only on authentication failures.",
+        ],
+      },
+      {
+        heading: "Operate exports as security events",
+        paragraphs: [
+          "Bulk export endpoints and notebook downloads should trigger the same alerts as database dumps.",
+          "Logging done well lets you debug Tuesday without explaining a GDPR request failure in March.",
+          "When in doubt, log identifiers and outcomes, not verbatim user content.",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenAI — Safety best practices",
+            url: "https://platform.openai.com/docs/guides/safety-best-practices",
+          },
+        ],
+      },
+      {
+        heading: "Contract tests on log schemas",
+        paragraphs: [
+          "Log pipelines that accept arbitrary JSON become PII sinks within a few releases. Publish an explicit schema for LLM trace events: allowed keys, maximum payload sizes, and typed identifiers instead of free-text user fields. Enforce the contract in continuous integration with golden fixtures so a new field cannot merge without privacy review.",
+          "Keep structured telemetry separate from debug dumps. OpenTelemetry spans should carry model version, token counts, and correlation identifiers while prompts live in a redacted side channel with stricter access controls. When validation fails at ingest, drop the payload and increment a metric rather than writing to an ungoverned fallback topic.",
+          "Schedule quarterly audits that diff production schemas against the documented allowlist. Drift often arrives through log forwarders and vendor agents that remap fields silently. Treat schema divergence as a release blocker for AI features, the same way you would for authentication middleware regressions. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        ],
+      },
+      {
+        heading: "Map controls to published standards",
+        paragraphs: [
+          "Privacy programs require traceability from logged fields to legal basis and retention class. Maintain a data dictionary that links each LLM log attribute to OWASP LLM risks and your DPIA outcomes. Engineers should answer auditor questions without ad hoc chat archaeology across half the company.",
+          "Redaction must be deterministic and unit tested. Regular-expression lists belong in version control with fixtures on representative payloads, including multilingual personal names and formatted national identifiers. Sampling rates change during incidents; redaction rules should not depend on operator memory. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+          "Bulk export and notebook rehydration paths need the same controls as the primary store. Federated analytics tools replicate logs into regions counsel never approved. Block cold-archive reads without break-glass roles that expire automatically and emit security alerts. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        ],
+        links: [
+          {
+            label: "OWASP LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenTelemetry — Logs data model",
+            url: "https://opentelemetry.io/docs/specs/otel/logs/data-model/",
+          },
+          {
+            label: "GDPR Article 5 — Principles",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+        ],
+      },
+      {
+        heading: "Logging LLM traffic with defensible minimization",
+        paragraphs: [
+          "LLM gateways see full prompts unless you design capture points upstream. Split observability into request metadata—model route, token counts, latency, policy outcome—and a restricted transcript tier sampled for quality review. Never default full prompt logging to hot storage. Schema tests should reject new log fields that match regexes for credit cards, government IDs, or employee personnel numbers before merge.",
+          "Redaction pipelines belong in the ingestion path, not as a quarterly cleanup script. Run deterministic transforms—mask emails, hash stable user keys, strip attachment bytes—and verify with golden log fixtures in CI. When legal asks for a sample during an incident, generate it from the redacted tier with approval workflow; ad hoc grep across raw clusters is how leaks happen in supposedly compliant stacks.",
+          "Retention classes for LLM logs must differ from classic HTTP access logs. Transcript samples may need seventy-two hours for triage while aggregate token spend metrics live ninety days. Document which on-call queries hit which tier in the runbook, and metric expiry job failures the same way you alert on model five hundreds. Security dashboards should show export volume, not only authentication failures.",
+          "Treat vendor subprocessors as part of your logging boundary. If a hosted model returns echoes of PII in tool outputs, your retention policy must cover derived fields in vector stores and eval exports. Product managers requesting longer history for prompt tuning owe an exception ticket with expiry and anonymization plan. When in doubt, log identifiers and outcomes, not verbatim user content copied into tickets.",
+        ],
+      },
+    ],
+  },
+    {
     slug: "data-retention-policies-that-enable-product-analytics",
     title: "Data Retention Policies That Enable Product Analytics",
     excerpt: "Keeping everything forever is a compliance and cost trap. Deleting everything is a product blindfold. Good retention design preserves the questions product still needs to ask.",

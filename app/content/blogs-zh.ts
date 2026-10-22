@@ -1,6 +1,96 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"logging-llm-interactions-without-hoarding-pii": {
+    title: "记录 LLM 交互而不囤积 PII",
+    excerpt: "没有追踪无法调试生产 copilot；也不能把每次聊天当永久仓库存料。",
+    description: "LLM 交互日志的 staff 模式：脱敏层级、抽样、保留类别与合规可过的可观测性。",
+    sections: [
+      {
+        heading: "日志不是免费档案",
+        paragraphs: [
+          "默认记录完整 prompt 的团队终会通过分析、支持导出和过宽角色泄露。",
+          "把转录当近凭证数据处理：最小化、脱敏、轮换访问、按期删除。",
+        ],
+      },
+      {
+        heading: "按敏感度分层转录",
+        paragraphs: [
+          "热存事件调试、温存评测样本、冷存产品趋势聚合。",
+          "营销仓不得无合法依据与删除任务 ingest 原始聊天。",
+        ],
+        points: [
+          "默认按脱敏分层记录 prompt/输出，而非原始 dump",
+          "将含 PII 的 transcript 与聚合质量指标分离",
+          "按层定义保留策略并获法务与产品签批",
+          "导出量激增按数据外泄路径告警",
+        ],
+      },
+      {
+        heading: "质量抽样、趋势聚合",
+        paragraphs: [
+          "质量团队要代表性样本而非全历史；按结果、延迟与拒绝类型分层抽样。",
+          "尽可能聚合 token 与错误码而不存用户文本。",
+        ],
+      },
+      {
+        heading: "把导出当安全事件运营",
+        paragraphs: [
+          "批量导出与 notebook 下载应像数据库 dump 一样告警。",
+          "好的日志让你周二能排障，三月不必解释 GDPR 请求。",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenAI — Safety best practices",
+            url: "https://platform.openai.com/docs/guides/safety-best-practices",
+          },
+        ],
+      },
+      {
+        heading: "日志 schema 的契约测试",
+        paragraphs: [
+          "接受任意 JSON 的日志管道会在几个发布周期内变成 PII 汇聚点。为 LLM trace 事件发布显式 schema：允许字段、最大 payload、用类型化标识符替代自由文本用户字段。在 CI 用 golden fixture 强制执行契约，未经隐私评审不得合并新字段。",
+          "结构化遥测与 debug 转储分离。OpenTelemetry span 携带模型版本、token 计数与 correlation ID；prompt 放在 ACL 更严的脱敏侧通道。ingest 校验失败时丢弃 payload 并递增指标，不要写入未治理的回退 topic。",
+          "按季度审计生产 schema 与文档 allowlist 的差异。漂移常来自 silently 重映射字段的 forwarder 与厂商 agent。将 schema 偏离视为 AI 功能的发布阻断项，与认证中间件回归同级。",
+        ],
+      },
+      {
+        heading: "对照公开标准落地控制",
+        paragraphs: [
+          "隐私项目要求日志字段可追溯到法律依据与保留等级。维护数据字典，把每个 LLM 日志属性关联 OWASP LLM 风险与 DPIA 结论。工程师应能回答审计问题，而不必在全公司聊天记录里考古。",
+          "脱敏必须确定且可单测。正则列表纳入版本库，用多语言姓名、格式化证件号等代表性 payload 做 fixture。事故期间采样率会变；脱敏规则不能依赖值班人员记忆。",
+          "批量导出与 notebook 回灌路径需与主存储同等控制。联邦分析工具会把日志复制到法务未批准的区域。禁止在无自动过期 break-glass 角色与安全告警的情况下读取冷归档。",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenTelemetry — 日志数据模型",
+            url: "https://opentelemetry.io/docs/specs/otel/logs/data-model/",
+          },
+          {
+            label: "GDPR 第 5 条 — 原则",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+        ],
+      },
+      {
+        heading: "可辩护的最小化 LLM 日志",
+        paragraphs: [
+          "若不在上游设计采集点，LLM 网关会看到完整 prompt。将可观测性拆为请求元数据——模型路由、token 数、延迟、策略结果——以及用于质量抽检的受限转录层。切勿默认把完整 prompt 写入热存储。合并前 schema 测试应拒绝匹配信用卡、证件号或工号正则的新日志字段。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+          "脱敏管道应位于摄入路径，而非季度清理脚本。运行确定性变换——掩码邮箱、哈希稳定用户键、剥离附件字节——并在 CI 用黄金日志 fixture 验证。法务在事件中要样本时，经审批从脱敏层生成；在 raw 集群随意 grep 是所谓合规栈里常见的泄漏路径。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+          "LLM 日志留存级别应不同于 HTTP 访问日志。转录样本或需 72 小时排障，而 token 花费汇总可保留 90 天。在 runbook 记录 on-call 查询命中哪一层；过期任务失败与模型 500 同级告警。安全仪表盘应展示导出量，而非仅认证失败。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+          "将供应商子处理方纳入日志边界。若托管模型在 tool 输出中带回 PII 回声，留存策略须覆盖向量库与 eval 导出中的派生字段。为 prompt 调优请求更长历史的 PM 须提交带过期与匿名化计划的例外工单。不确定时记录标识符与结果，而非抄进工单的用户原文。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+        ],
+      },
+    ],
+  },
 "data-retention-policies-that-enable-product-analytics": {
     title: "在合规前提下支撑产品分析的数据保留",
     excerpt: "保留是合规，分析是产品，不能同一 TTL。",

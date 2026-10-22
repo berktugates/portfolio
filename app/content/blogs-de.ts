@@ -1,6 +1,96 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"logging-llm-interactions-without-hoarding-pii": {
+    title: "LLM-Interaktionen loggen ohne PII-Hortung",
+    excerpt: "Copilots lassen sich ohne Traces nicht debuggen; jeder Chat darf kein dauerhafter Warehouse-Tank sein.",
+    description: "Staff-Muster für LLM-Logging: Redaktionsstufen, Sampling, Retention-Klassen und Observability für Compliance.",
+    sections: [
+      {
+        heading: "Logs sind kein Gratisarchiv",
+        paragraphs: [
+          "Teams mit Voll-Prompt-Logging leaken früher oder später über Analytics, Support-Exporte und zu breite Rollen.",
+          "Behandeln Sie Transkripte wie credentials-nahe Daten: minimieren, redigieren, Zugriff rotieren, planmäßig löschen.",
+        ],
+      },
+      {
+        heading: "Transkripte nach Sensibilität stufen",
+        paragraphs: [
+          "Heiße Speicher für Incidents, warme für Eval-Samples, kalte Aggregate für Produkt-Trends.",
+          "Rohe Chats ohne Rechtsgrundlage und Löschjobs nicht ins Marketing-Warehouse.",
+        ],
+        points: [
+          "Prompts/Ausgaben mit Redaktionsstufen loggen, nicht rohe Dumps default",
+          "PII-Transkripte von aggregierten Qualitätsmetriken trennen",
+          "Retention pro Tier mit Legal- und Produktfreigabe definieren",
+          "Export-Spikes wie Exfil-Pfade alarmieren",
+        ],
+      },
+      {
+        heading: "Für Qualität sampeln, für Trends aggregieren",
+        paragraphs: [
+          "Qualität braucht repräsentative Stichproben, nicht die komplette Historie. Stratifiziert nach Outcome, Latenz und Refusal.",
+          "Token-Nutzung und Fehlercodes aggregieren, ohne Nutzertext wenn möglich.",
+        ],
+      },
+      {
+        heading: "Exporte wie Sicherheitsereignisse behandeln",
+        paragraphs: [
+          "Bulk-Exporte und Notebook-Downloads wie DB-Dumps alarmieren.",
+          "Gutes Logging debuggt Dienstag, ohne GDPR-Erklärung im März.",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenAI — Safety best practices",
+            url: "https://platform.openai.com/docs/guides/safety-best-practices",
+          },
+        ],
+      },
+      {
+        heading: "Vertragstests für Log-Schemata",
+        paragraphs: [
+          "Pipelines, die beliebiges JSON akzeptieren, werden innerhalb weniger Releases zu PII-Senken. Veröffentlichen Sie ein explizites Schema für LLM-Trace-Events: erlaubte Keys, maximale Payload-Größen und typisierte Identifikatoren statt Freitext-Nutzerfelder. Erzwingen Sie den Vertrag in CI mit Golden Fixtures, damit ohne Privacy-Review kein neues Feld gemergt wird. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+          "Trennen Sie strukturierte Telemetrie von Debug-Dumps. OpenTelemetry-Spans tragen Modellversion, Token-Zähler und Korrelations-IDs; Prompts liegen in einem redigierten Side-Channel mit strengeren ACLs. Schlägt die Validierung beim Ingest fehl, verwerfen Sie die Payload und erhöhen Sie eine Metrik statt in ein ungoverned Fallback-Topic zu schreiben. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+          "Planen Sie vierteljährliche Audits, die Produktionsschemata mit der dokumentierten Allowlist vergleichen. Drift kommt oft über Forwarder und Vendor-Agenten, die Felder still umbenennen. Behandeln Sie Schema-Abweichung als Release-Blocker für KI-Features wie Auth-Middleware-Regressionen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+        ],
+      },
+      {
+        heading: "Controls an veröffentlichte Standards koppeln",
+        paragraphs: [
+          "Privacy-Programme verlangen Rückverfolgbarkeit von Log-Feldern zu Rechtsgrundlage und Retention-Klasse. Pflegen Sie ein Data Dictionary, das jedes LLM-Log-Attribut mit OWASP-LLM-Risiken und DPIA-Ergebnissen verknüpft. Engineers sollen Auditor-Fragen ohne Ad-hoc-Chat-Archäologie beantworten. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+          "Redaction muss deterministisch und unit-getestet sein. Regex-Listen gehören ins Repo mit Fixtures für mehrsprachige Namen und formatierte nationale IDs. Sampling-Raten ändern sich in Incidents; Redaction-Regeln dürfen nicht vom Operator-Gedächtnis abhängen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+          "Bulk-Export und Notebook-Rehydration brauchen dieselben Controls wie der Primärspeicher. Föderierte Analytics kopieren Logs in Regionen, die Legal nie freigegeben hat. Blockieren Sie Cold-Archive-Reads ohne Break-Glass-Rollen mit Auto-Expiry und Security-Alerts. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenTelemetry — Logs-Datenmodell",
+            url: "https://opentelemetry.io/docs/specs/otel/logs/data-model/",
+          },
+          {
+            label: "DSGVO Artikel 5 — Grundsätze",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+        ],
+      },
+      {
+        heading: "LLM-Logging mit verteidigbarer Minimierung",
+        paragraphs: [
+          "LLM-Gateways sehen volle Prompts ohne upstream Capture-Points. Teilen Sie Observability: Request-Metadaten—Modell-Route, Token, Latenz, Policy-Outcome—und restricted Transcript-Tier für Quality-Sampling. Niemals Full-Prompt-Logging als Hot-Storage-Default. Schema-Tests lehnen vor Merge neue Log-Felder ab, die Regex für Karten, Ausweise oder Personalnummern matchen. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+          "Redaction-Pipelines gehören in Ingestion, nicht als Quarterly-Cleanup. Deterministische Transforms—E-Mail maskieren, User-Keys hashen, Attachments strippen—mit Golden-Log-Fixtures in CI verifizieren. Legal-Samples im Incident aus redacted Tier mit Approval-Workflow; ad-hoc grep in Raw-Clustern ist Leak-Pfad in scheinbar compliant Stacks. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+          "Retention-Klassen für LLM-Logs unterscheiden sich von HTTP-Access-Logs. Transcript-Samples evtl. 72h Triage, Token-Spend-Aggregate 90 Tage. Runbook dokumentiert On-Call-Queries pro Tier; Expiry-Job-Failures wie Model-500s alerten. Security-Dashboards zeigen Export-Volumen, nicht nur Auth-Failures. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+          "Vendor-Subprocessor sind Logging-Boundary. Echo-PII in Tool-Outputs erfordert Retention für abgeleitete Felder in Vector Stores und Eval-Exports. PMs mit längerer History für Prompt-Tuning brauchen Exception-Ticket mit Expiry und Anonymisierungsplan. Im Zweifel IDs und Outcomes loggen, nicht wörtlichen User-Content in Tickets. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+        ],
+      },
+    ],
+  },
 "data-retention-policies-that-enable-product-analytics": {
     title: "Datenaufbewahrung die Produktanalytik ermöglicht",
     excerpt: "Aufbewahrung ist Compliance; Analytik ist Produkt. Nicht alles in eine TTL.",

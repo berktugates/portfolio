@@ -1,6 +1,96 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"logging-llm-interactions-without-hoarding-pii": {
+    title: "PIIを溜め込まずLLM対話をログする",
+    excerpt: "トレースなしでは本番コパイロットをデバッグできない。全チャットを永久ウェアハウス燃料にしてはいけない。",
+    description: "LLM対話ログのスタッフパターン：編集階層、サンプリング、保持クラス、コンプライアンスを通る可観測性。",
+    sections: [
+      {
+        heading: "ログは無料アーカイブではない",
+        paragraphs: [
+          "デフォルトで全文プロンプトをログするチームは分析、サポートエクスポート、広いロールから漏らす。",
+          "トランスクリプトをクレデンシャル近傍データとして最小化・編集・期限削除。",
+        ],
+      },
+      {
+        heading: "機密度でトランスクリプトを階層化",
+        paragraphs: [
+          "インシデントはホット、評価サンプルはウォーム、プロダクトトレンドはコールド集計。",
+          "法的根拠と削除ジョブなしにマーケ倉庫へ生チャットを入れない。",
+        ],
+        points: [
+          "デフォルトは生dumpではなく redaction tier で prompt/出力をログ",
+          "PII transcript を集約品質メトリクスから分離",
+          "層ごとの保持を法務・プロダクト承認で定義",
+          "エクスポート急増を exfil 経路としてアラート",
+        ],
+      },
+      {
+        heading: "品質はサンプル、トレンドは集計",
+        paragraphs: [
+          "品質は全履歴ではなく代表サンプル。結果・レイテンシ・拒否で層化サンプル。",
+          "可能ならユーザーテキストなしでトークンとエラーコードを集計。",
+        ],
+      },
+      {
+        heading: "エクスポートをセキュリティイベントとして運用",
+        paragraphs: [
+          "一括エクスポートとノートブックDLはDBダンプと同様にアラート。",
+          "良いログは火曜にデバッグし、3月にGDPR説明を不要にする。",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenAI — Safety best practices",
+            url: "https://platform.openai.com/docs/guides/safety-best-practices",
+          },
+        ],
+      },
+      {
+        heading: "ログスキーマの契約テスト",
+        paragraphs: [
+          "任意 JSON を受け入れるパイプラインは数リリースで PII の溜まり場になる。LLM trace イベント向けに明示スキーマを公開し、許可キー、最大ペイロード、自由テキストの代わりに型付き識別子を使う。golden fixture で CI 強制し、プライバシーレビューなしの新フィールド merge を防ぐ。",
+          "構造化テレメトリと debug ダンプを分離する。OpenTelemetry span はモデル版、トークン数、相関 ID を載せ、プロンプトは ACL の厳しい redacted サイドチャンネルに置く。ingest 検証失敗時はペイロードを捨て、未統制フォールバック topic へ書かずメトリクスを増やす。",
+          "四半期ごとに本番スキーマと文書化 allowlist を diff 監査する。ドリフトはフィールドを静かに付け替える forwarder やベンダーエージェント経由で入ることが多い。スキーマ乖離は AI 機能のリリースブロッカーとし、認証 middleware 退行と同格に扱う。",
+        ],
+      },
+      {
+        heading: "公開標準にコントロールを対応付ける",
+        paragraphs: [
+          "プライバシープログラムはログフィールドから法的根拠と保持クラスへのトレーサビリティを求める。各 LLM ログ属性を OWASP LLM リスクと DPIA 結果に結ぶデータ辞書を維持する。エンジニアは社内チャット発掘なしで監査人の質問に答えられるべきだ。",
+          "redaction は決定的で単体テスト可能であること。regex リストは VCS に置き、多言語名や整形された国民 ID を含む代表ペイロードで fixture する。インシデント中はサンプリング率が変わる。redaction 規則をオペレータ記憶に依存させない。",
+          "一括 export と notebook 再水和経路はプライマリストアと同じ統制が要る。連合 analytics は法務未承認リージョンへログを複製する。自動失効 break-glass ロールとセキュリティアラートなしのコールドアーカイブ読取を遮断する。",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenTelemetry — ログデータモデル",
+            url: "https://opentelemetry.io/docs/specs/otel/logs/data-model/",
+          },
+          {
+            label: "GDPR 第5条 — 原則",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+        ],
+      },
+      {
+        heading: "防御可能な最小化で LLM をログ",
+        paragraphs: [
+          "上流にキャプチャポイントがなければ LLM ゲートウェイはフル prompt を見ます。可観測性をリクエストメタデータ—モデルルート、トークン数、レイテンシ、ポリシー結果—と品質レビュー用サンプルの制限 transcript 層に分割。ホットストレージへのフル prompt ログをデフォルトにしない。マージ前のスキーマテストはカード、政府 ID、社員番号 regex に合う新ログフィールドを拒否。",
+          "レダクションは四半期クリーンアップではなく ingestion 経路。決定論変換—メールマスク、安定ユーザ鍵ハッシュ、添付 strip—を CI の golden log fixture で検証。インシデントで法務がサンプル要求時は承認ワークフロー付き redacted 層から生成。raw クラスタの ad hoc grep は準拠 stack でも漏洩経路。 担当者、レビュー日、ロールバック条件を同一変更チケットに記録し、次の on-call エンジニアがインシデントを再オープンせず判断を追跡できるようにする。",
+          "LLM ログの retention クラスは HTTP access log と別。transcript サンプルは triage 72 時間、トークン支出集計は 90 日。runbook に on-call クエリと tier の対応。expiry job 失敗はモデル 500 と同様に alert。セキュリティダッシュボードは auth 失敗だけでなく export 量を表示。 担当者、レビュー日、ロールバック条件を同一変更チケットに記録し、次の on-call エンジニアがインシデントを再オープンせず判断を追跡できるようにする。",
+          "ベンダ subprocessor は logging 境界の一部。ホストモデルの tool 出力に PII エコーがあれば vector store と eval export の派生フィールドも retention 対象。prompt tuning で長い履歴を求める PM は失効と匿名化計画付き例外チケット。迷ったら識別子と outcome をログし、チケットにコピーしたユーザ原文は避ける。 担当者、レビュー日、ロールバック条件を同一変更チケットに記録し、次の on-call エンジニアがインシデントを再オープンせず判断を追跡できるようにする。",
+        ],
+      },
+    ],
+  },
 "data-retention-policies-that-enable-product-analytics": {
     title: "プロダクト分析を可能にするデータ保持ポリシー",
     excerpt: "保持はコンプライアンス、分析はプロダクト。",

@@ -1,6 +1,96 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"logging-llm-interactions-without-hoarding-pii": {
+    title: "Journaliser les interactions LLM sans accumuler de PII",
+    excerpt: "Impossible de déboguer un copilote sans traces; chaque chat ne doit pas alimenter un entrepôt permanent.",
+    description: "Patterns staff : niveaux de rédaction, échantillonnage, classes de rétention et observabilité validée compliance.",
+    sections: [
+      {
+        heading: "Les logs ne sont pas une archive gratuite",
+        paragraphs: [
+          "Logger les prompts complets par défaut finit par fuiter via analytics, exports support et rôles trop larges.",
+          "Traitez les transcriptions comme des données proches des identifiants : minimiser, rédiger, faire expirer.",
+        ],
+      },
+      {
+        heading: "Stratifier les transcriptions par sensibilité",
+        paragraphs: [
+          "Stockage chaud pour incidents, tiède pour eval échantillonnée, froid pour tendances produit.",
+          "Pas de chats bruts en warehouse marketing sans base légale et job de suppression.",
+        ],
+        points: [
+          "Logger prompts/sorties par niveaux de rédaction, pas dumps bruts par défaut",
+          "Séparer transcriptions PII des métriques qualité agrégées",
+          "Définir rétention par tier avec sign-off juridique et produit",
+          "Alerter sur pics d'export comme voies d'exfiltration",
+        ],
+      },
+      {
+        heading: "Échantillonner pour la qualité, agréger pour les tendances",
+        paragraphs: [
+          "La qualité a besoin d'échantillons représentatifs, pas de l'historique complet. Échantillonnage stratifié par résultat et refus.",
+          "Agréger tokens et codes d'erreur sans texte utilisateur quand c'est possible.",
+        ],
+      },
+      {
+        heading: "Traiter les exports comme des événements sécurité",
+        paragraphs: [
+          "Exports massifs et notebooks : mêmes alertes que les dumps base de données.",
+          "Un bon logging permet de déboguer mardi sans expliquer une demande RGPD en mars.",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenAI — Safety best practices",
+            url: "https://platform.openai.com/docs/guides/safety-best-practices",
+          },
+        ],
+      },
+      {
+        heading: "Tests de contrat sur les schémas de logs",
+        paragraphs: [
+          "Les pipelines qui acceptent du JSON arbitraire deviennent des puits de PII en quelques releases. Publiez un schéma explicite pour les traces LLM : clés autorisées, tailles maximales et identifiants typés plutôt que champs utilisateur en texte libre. Faites respecter le contrat en CI avec des fixtures dorées pour empêcher tout nouveau champ sans revue privacy.",
+          "Séparez la télémétrie structurée des dumps de debug. Les spans OpenTelemetry portent version de modèle, compteurs de tokens et IDs de corrélation ; les prompts restent dans un canal latéral redigé avec ACL plus strictes. Si la validation échoue à l'ingest, droppez la charge et incrémentez une métrique au lieu d'écrire dans un topic de repli non gouverné.",
+          "Planifiez des audits trimestriels comparant les schémas prod à l'allowlist documentée. La dérive arrive souvent via des forwarders et agents vendor qui renomment des champs silencieusement. Traitez la divergence de schéma comme un bloqueur de release pour les features IA, comme pour une régression middleware d'authentification.",
+        ],
+      },
+      {
+        heading: "Relier les contrôles aux standards publiés",
+        paragraphs: [
+          "Les programmes privacy exigent la traçabilité des champs loggés vers base légale et classe de rétention. Maintenez un dictionnaire de données liant chaque attribut LLM aux risques OWASP LLM et à vos DPIA. Les ingénieurs doivent répondre aux auditeurs sans archéologie ad hoc dans les chats de l'entreprise.",
+          "La redaction doit être déterministe et testée unitairement. Les listes regex vivent dans le VCS avec des fixtures sur des payloads représentatifs, noms multilingues et identifiants nationaux formatés. Les taux d'échantillonnage changent en incident ; les règles ne doivent pas dépendre de la mémoire des opérateurs.",
+          "Les exports bulk et chemins de rehydratation notebook exigent les mêmes contrôles que le store primaire. Les outils analytics fédérés répliquent des logs dans des régions jamais approuvées par le juridique. Bloquez la lecture d'archives froides sans rôles break-glass expirant automatiquement et alertes sécurité. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+        ],
+        links: [
+          {
+            label: "OWASP — LLM Top 10",
+            url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+          },
+          {
+            label: "OpenTelemetry — Modèle de données logs",
+            url: "https://opentelemetry.io/docs/specs/otel/logs/data-model/",
+          },
+          {
+            label: "RGPD article 5 — Principes",
+            url: "https://gdpr-info.eu/art-5-gdpr/",
+          },
+        ],
+      },
+      {
+        heading: "Journaliser le trafic LLM avec minimisation défendable",
+        paragraphs: [
+          "Les gateways LLM voient les prompts complets sans points de capture amont. Séparez observabilité : métadonnées requête—route modèle, tokens, latence, issue policy—et tier transcript restreint échantillonné pour qualité. Jamais de log prompt intégral par défaut en stockage chaud. Tests schéma rejettent avant merge champs log matchant regex cartes, IDs gouvernementaux ou matricules. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions.",
+          "Pipelines de rédaction dans l'ingestion, pas script trimestriel. Transforms déterministes—masquer emails, hasher clés utilisateur stables, retirer bytes pièces jointes—vérifiés par fixtures log dorées en CI. Échantillon legal en incident depuis tier rédigé avec workflow d'approbation ; grep ad hoc sur clusters raw fuit dans stacks soi-disant conformes. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+          "Classes de rétention LLM diffèrent des access logs HTTP. Échantillons transcript peut-être 72h triage, métriques agrégées dépense tokens 90 jours. Runbook : quelles requêtes on-call touchent quel tier ; échecs jobs expiry alertés comme 500 modèle. Dashboards sécurité montrent volume export, pas seulement échecs auth. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+          "Sous-traitants vendor dans la boundary logging. Échos PII dans sorties tools imposent rétention champs dérivés vector stores et exports eval. PM demandant historique long pour tuning doivent ticket exception avec expiry et plan anonymisation. En doute, journaliser identifiants et outcomes, pas contenu utilisateur verbatim copié en tickets. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+        ],
+      },
+    ],
+  },
 "data-retention-policies-that-enable-product-analytics": {
     title: "Politiques de rétention compatibles analytics produit",
     excerpt: "La rétention est compliance; l'analytics est produit.",
