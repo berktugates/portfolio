@@ -2,7 +2,9 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { countExternalHttpsLinks, runGrowthDailyGates } from "./growthdaily-gates";
 
-const LONG_HTML = `<h2>Intro</h2><p>${"Backend API reliability matters for staff engineers building production systems. ".repeat(40)}</p>
+// 10 words x 90 = 900 words; MIN_READING_MINUTES * WORDS_PER_MINUTE = 800, so the body clears the
+// gate even after the link paragraphs are stripped (premium-band test).
+const LONG_HTML = `<h2>Intro</h2><p>${"Backend API reliability matters for staff engineers building production systems. ".repeat(90)}</p>
 <p><a href="https://developers.cloudflare.com/workers/">Cloudflare Workers</a></p>
 <p><a href="https://nextjs.org/docs">Next.js docs</a></p>
 <p><a href="https://owasp.org/www-project-top-ten/">OWASP</a></p>`;

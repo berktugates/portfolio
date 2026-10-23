@@ -30,8 +30,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
+  // Expire immediately (not "max" = stale-while-revalidate). With SWR the paths revalidated below
+  // (e.g. /sitemap.xml) regenerate from the stale tagged R2 index.json and miss the new slug.
   for (const tag of body.tags ?? []) {
-    revalidateTag(tag, "max");
+    revalidateTag(tag, { expire: 0 });
   }
   for (const path of body.paths ?? []) {
     if (!path.startsWith("/")) continue;
