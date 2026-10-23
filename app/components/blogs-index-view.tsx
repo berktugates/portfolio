@@ -31,7 +31,7 @@ export async function createBlogsIndexMetadata(
       ? formatMessage(content.ui.blogsMetaTitlePaged, { page })
       : content.ui.blogsMetaTitle;
 
-  const siblings = blogIndexHreflangLocales(locale, page);
+  const siblings = await blogIndexHreflangLocales(locale, page);
   const languages: Record<string, string> = {
     "x-default": absoluteUrl(blogsIndexPath(siblings.includes("en") ? "en" : locale, page)),
   };
@@ -63,15 +63,15 @@ export async function createBlogsIndexMetadata(
   };
 }
 
-export function blogPagedStaticParams(locale: Locale) {
-  const totalPages = blogIndexPageCount(locale);
+export async function blogPagedStaticParams(locale: Locale) {
+  const totalPages = await blogIndexPageCount(locale);
   return Array.from({ length: Math.max(0, totalPages - 1) }, (_, index) => ({
     page: String(index + 2),
   }));
 }
 
-export function isBlogIndexPage(locale: Locale, page: number) {
-  return Number.isInteger(page) && page >= 2 && page <= blogIndexPageCount(locale);
+export async function isBlogIndexPage(locale: Locale, page: number) {
+  return Number.isInteger(page) && page >= 2 && page <= (await blogIndexPageCount(locale));
 }
 
 export async function BlogsIndexView({

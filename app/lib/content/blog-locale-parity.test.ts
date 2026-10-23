@@ -3,7 +3,7 @@ import test from "node:test";
 import { blogPosts } from "../../data/blogs";
 import { LOCALES, type Locale } from "../i18n/config";
 import { getLocalizedBlogPost } from "./get-content";
-import { hasBlogLocaleOverlay, blogHreflangLocalesForSlug } from "./blog-locale-overlay";
+import { hasBlogLocaleOverlay, blogHreflangLocalesForSlugGit } from "./blog-locale-overlay";
 
 /** Queue posts published with full multi-locale depth (EN_EXTRA + LOCALE_EXTRA). */
 function strictParagraphParity(slug: string): boolean {
@@ -13,7 +13,7 @@ function strictParagraphParity(slug: string): boolean {
 test("every published blog has seven hreflang locales with matching section structure", async () => {
   for (const en of blogPosts) {
     assert.equal(
-      blogHreflangLocalesForSlug(en.slug).length,
+      blogHreflangLocalesForSlugGit(en.slug).length,
       7,
       `${en.slug}: expected 7 locales in hreflang`,
     );

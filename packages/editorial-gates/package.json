@@ -24,6 +24,8 @@
     "./gundem/news-quality": "./src/gundem/news-quality.ts",
     "./gundem/trends": "./src/gundem/trends.ts",
     "./blog/schema": "./src/blog/schema.ts",
+    "./blog/reading-html": "./src/blog/reading-html.ts",
+    "./blog/growthdaily-gates": "./src/blog/growthdaily-gates.ts",
     "./publish/gates": "./src/publish/gates.ts"
   }
 }

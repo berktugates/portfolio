@@ -1,4 +1,4 @@
-import { BLOGS_PER_PAGE, sortedBlogPosts } from "../../data/blogs";
+import { BLOGS_PER_PAGE } from "../../data/blogs";
 import { LOCALES, type Locale } from "../i18n/config";
 import blogsDe from "../../content/blogs-de";
 import blogsFr from "../../content/blogs-fr";
@@ -6,6 +6,8 @@ import blogsIt from "../../content/blogs-it";
 import blogsJa from "../../content/blogs-ja";
 import blogsTr from "../../content/blogs-tr";
 import blogsZh from "../../content/blogs-zh";
+import { getCatalogBlogPosts } from "./blog-catalog";
+import { r2BlogHasLocale, r2HreflangLocalesForSlug } from "./blog-locale-r2";
 
 const OVERLAY_MAP: Partial<Record<Locale, Record<string, unknown>>> = {
   tr: blogsTr,
@@ -16,13 +18,14 @@ const OVERLAY_MAP: Partial<Record<Locale, Record<string, unknown>>> = {
   ja: blogsJa,
 };
 
+/** Git-only overlay check (sync, for parity tests). */
 export function hasBlogLocaleOverlay(locale: Locale, slug: string): boolean {
   if (locale === "en") return true;
   const map = OVERLAY_MAP[locale];
   return Boolean(map && Object.prototype.hasOwnProperty.call(map, slug));
 }
 
-export function blogHreflangLocalesForSlug(slug: string): Locale[] {
+export function blogHreflangLocalesForSlugGit(slug: string): Locale[] {
   const locales: Locale[] = ["en"];
   for (const locale of Object.keys(OVERLAY_MAP) as Locale[]) {
     if (hasBlogLocaleOverlay(locale, slug)) locales.push(locale);
@@ -30,23 +33,54 @@ export function blogHreflangLocalesForSlug(slug: string): Locale[] {
   return locales;
 }
 
-function postsForLocale(locale: Locale) {
-  return sortedBlogPosts.filter((post) => locale === "en" || hasBlogLocaleOverlay(locale, post.slug));
+export async function hasBlogLocale(locale: Locale, slug: string): Promise<boolean> {
+  if (locale === "en") return true;
+  if (hasBlogLocaleOverlay(locale, slug)) return true;
+  return r2BlogHasLocale(slug, locale);
 }
 
-export function blogIndexPageCount(locale: Locale) {
-  return Math.max(1, Math.ceil(postsForLocale(locale).length / BLOGS_PER_PAGE));
+export async function blogHreflangLocalesForSlug(slug: string): Promise<Locale[]> {
+  const r2 = await r2HreflangLocalesForSlug(slug);
+  if (r2.length > 0) {
+    const merged = new Set<Locale>(["en", ...r2]);
+    for (const locale of Object.keys(OVERLAY_MAP) as Locale[]) {
+      if (hasBlogLocaleOverlay(locale, slug)) merged.add(locale);
+    }
+    return [...merged];
+  }
+  return blogHreflangLocalesForSlugGit(slug);
 }
 
-export function blogIndexPageSlugs(locale: Locale, page: number) {
+async function postsForLocale(locale: Locale) {
+  const posts = await getCatalogBlogPosts();
+  const filtered = [];
+  for (const post of posts) {
+    if (locale === "en" || (await hasBlogLocale(locale, post.slug))) {
+      filtered.push(post);
+    }
+  }
+  return filtered;
+}
+
+export async function blogIndexPageCount(locale: Locale) {
+  const list = await postsForLocale(locale);
+  return Math.max(1, Math.ceil(list.length / BLOGS_PER_PAGE));
+}
+
+export async function blogIndexPageSlugs(locale: Locale, page: number) {
+  const list = await postsForLocale(locale);
   const start = (page - 1) * BLOGS_PER_PAGE;
-  return postsForLocale(locale).slice(start, start + BLOGS_PER_PAGE).map((post) => post.slug);
+  return list.slice(start, start + BLOGS_PER_PAGE).map((post) => post.slug);
 }
 
 /** Locales whose index page lists the same posts, in the same order. */
-export function blogIndexHreflangLocales(locale: Locale, page: number): Locale[] {
-  const mine = blogIndexPageSlugs(locale, page).join("\n");
-  return LOCALES.filter(
-    (other) => blogIndexPageCount(other) >= page && blogIndexPageSlugs(other, page).join("\n") === mine,
-  );
+export async function blogIndexHreflangLocales(locale: Locale, page: number): Promise<Locale[]> {
+  const mine = (await blogIndexPageSlugs(locale, page)).join("\n");
+  const out: Locale[] = [];
+  for (const other of LOCALES) {
+    if ((await blogIndexPageCount(other)) >= page && (await blogIndexPageSlugs(other, page)).join("\n") === mine) {
+      out.push(other);
+    }
+  }
+  return out;
 }

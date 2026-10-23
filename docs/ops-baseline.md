@@ -56,7 +56,7 @@ git log --since=90.days --oneline -- app/data/blogs.ts content/posts | wc -l
 
 ## Faz 4 (gündem + blog içerik)
 
-- **Yayın:** Cloudflare Worker `workers/content-publisher` — haber `7,22,37,52 * * * *` UTC. Blog **günlük** GitHub `Daily SEO blog` workflow `0 4 * * *` UTC (~07:00 TR), 7 dil kuyruk → git.
+- **Yayın:** Cloudflare Worker `workers/content-publisher` — haber `7,22,37,52 * * * *` UTC. Blog **GrowthDailySEO** webhook + `0 */2 * * *` reconcile → R2 + 7 dil (TR/DE GDS, fr/it/zh/ja Workers AI). Eski git kuyruk workflow yalnız `workflow_dispatch`.
 - **Depo:** R2 `portfolio-content` → Vercel `CONTENT_PUBLIC_BASE_URL`.
 - **Manuel seed:** `pnpm gundem:seed-r2` / doğrulama `pnpm gundem:verify-r2` (GitHub: Seed gundem R2 workflow).
 - GitHub zamanlı `publish-gundem` **kapalı** (`workflow_dispatch`). Blog: `weekly-seo-blog.yml` günlük cron + manuel dispatch.

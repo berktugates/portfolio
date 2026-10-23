@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { projects } from "./data/projects";
-import { blogPosts } from "./data/blogs";
+import { getCatalogBlogPosts } from "./lib/content/blog-catalog";
 import { blogHreflangLocalesForSlug, blogIndexHreflangLocales } from "./lib/content/blog-locale-overlay";
 import {
   blogPostPath,
@@ -19,7 +19,8 @@ import { SERVICE_SLUGS } from "./lib/services";
 export const dynamic = "force-static";
 export const revalidate = 3600;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const blogPosts = await getCatalogBlogPosts();
   const homeLanguages = hreflangLanguages();
 
   // Home and hire lastmod used a single hand-edited stamp, not a per-template change time.
@@ -82,8 +83,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       : [],
   );
 
-  const blogIndexEntries = LOCALES.map((locale) => {
-    const siblings = blogIndexHreflangLocales(locale, 1);
+  const blogIndexEntries = await Promise.all(
+    LOCALES.map(async (locale) => {
+    const siblings = await blogIndexHreflangLocales(locale, 1);
     return {
       url: absoluteUrl(blogsIndexPath(locale, 1)),
       alternates: {
@@ -96,24 +98,29 @@ export default function sitemap(): MetadataRoute.Sitemap {
         ]),
       },
     };
-  });
+  }),
+  );
 
-  const blogPostEntries = blogPosts.flatMap((post) => {
-    const locales = blogHreflangLocalesForSlug(post.slug);
-    return locales.map((locale) => ({
-      url: absoluteUrl(blogPostPath(locale, post.slug)),
-      lastModified: post.dateModified ?? post.publishedAt,
-      alternates: {
-        languages: Object.fromEntries([
-          ["x-default", absoluteUrl(blogPostPath("en", post.slug))],
-          ...locales.map((targetLocale) => [
-            localeMeta[targetLocale].hreflang,
-            absoluteUrl(blogPostPath(targetLocale, post.slug)),
-          ]),
-        ]),
-      },
-    }));
-  });
+  const blogPostEntries = (
+    await Promise.all(
+      blogPosts.map(async (post) => {
+        const locales = await blogHreflangLocalesForSlug(post.slug);
+        return locales.map((locale) => ({
+          url: absoluteUrl(blogPostPath(locale, post.slug)),
+          lastModified: post.dateModified ?? post.publishedAt,
+          alternates: {
+            languages: Object.fromEntries([
+              ["x-default", absoluteUrl(blogPostPath("en", post.slug))],
+              ...locales.map((targetLocale) => [
+                localeMeta[targetLocale].hreflang,
+                absoluteUrl(blogPostPath(targetLocale, post.slug)),
+              ]),
+            ]),
+          },
+        }));
+      }),
+    )
+  ).flat();
 
   return [
     ...localeContacts,

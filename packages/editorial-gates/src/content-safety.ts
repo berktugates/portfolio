@@ -13,7 +13,7 @@ export type ContentSafetyInput = {
   mode?: "publish" | "assistant";
   /** Haberler brifingleri daha kısa; şablon dolgusu yasak. */
   channel?: "blog" | "gundem";
-  editorialSource?: "headlines" | "curated" | "catalog";
+  editorialSource?: "headlines" | "curated" | "catalog" | "growthdaily";
   /** RSS description parçaları — gövdeye kopya kontrolü. */
   referenceSnippets?: readonly string[];
 };
@@ -207,13 +207,15 @@ export function assessContentSafety(input: ContentSafetyInput): ContentSafetyRes
     }
   }
 
-  const quotes = quotedBlocks(input.body);
-  if (quotes.length > 2) {
-    return { ok: false, code: "excessive-quoting", hits: quotes.slice(0, 3) };
-  }
-  for (const quote of quotes) {
-    if (wordCount(quote) > 40) {
-      return { ok: false, code: "long-quote", hits: [`${wordCount(quote)} words`] };
+  if (input.editorialSource !== "growthdaily") {
+    const quotes = quotedBlocks(input.body);
+    if (quotes.length > 2) {
+      return { ok: false, code: "excessive-quoting", hits: quotes.slice(0, 3) };
+    }
+    for (const quote of quotes) {
+      if (wordCount(quote) > 40) {
+        return { ok: false, code: "long-quote", hits: [`${wordCount(quote)} words`] };
+      }
     }
   }
 

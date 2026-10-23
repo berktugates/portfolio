@@ -1,6 +1,17 @@
 # content-publisher Worker
 
-Cloudflare cron: haber taraması (`7,22,37,52 * * * *` UTC), haftalık blog (`0 6 * * 1` UTC).
+Cloudflare cron: haber taraması (`7,22,37,52 * * * *` UTC), GrowthDailySEO reconcile (`0 */2 * * *` UTC), GrowthDailySEO günlük seçim (`15 4 * * *` UTC ≈ 07:15 Europe/Istanbul).
+
+GrowthDailySEO: `POST /webhooks/growthdaily` (HMAC), secret'lar `GROWTHDAILY_WEBHOOK_SECRET`, `GROWTHDAILY_API_KEY`, `GROWTHDAILY_SITE_ID`.
+
+UI: Entegrasyonlar → `/app/{orgSlug}/{siteSlug}/integrations` (webhook). API → `/app/{orgSlug}/{siteSlug}/api` (site UUID + `fig_live_` key). Worker yalnızca GDS'de **yayınlanmış / onaylı** (`status=published` veya `reviewStatus=approved`) EN yazılarını berktugberke.com'a alır; 2 saatlik reconcile onayı kaçırmaz.
+
+### GrowthDailySEO günlük yayın kotası
+
+- `GROWTHDAILY_DAILY_PUBLISH_CAP` (wrangler `[vars]`, varsayılan **1**; `0` = yayın duraklatılır; geçersiz değer → 1). Gün = `Europe/Istanbul` takvim günü; sayaç D1 `growthdaily_daily_publish` (migration `0021_growthdaily_daily_cap.sql`: `wrangler d1 migrations apply content-meta --remote`).
+- Kota doluyken yeni yazı R2'ye yazılmaz: ingest `{ ok: true, skipped: true, reason: "daily-publish-cap" }` döner (webhook yanıtında da `reason`). Zaten yayınlanmış yazının güncellemesi (`updated`) kotayı tüketmez.
+- Webhook (`article.ready|published|updated`), 2 saatlik reconcile ve sabah cron aynı cap fonksiyonundan geçer. Reconcile adayları `qualityBand` (premium > standard > review), eşitlikte en yeni `updatedAt` sırasıyla işler; kota dolunca kalanlar ertesi güne kalır (sync cursor ertelenen yazının önüne ilerlemez).
+- Webhook ilk gelen onaylı yazıyı basar; "en iyi" seçimi cron/reconcile'da yapılır.
 
 ## İlk kurulum
 
@@ -21,4 +32,11 @@ R2 public URL veya Worker proxy → Vercel `CONTENT_PUBLIC_BASE_URL`. Bir kereli
 
 ## Manuel tetik (opsiyonel)
 
-`MANUAL_CRON_SECRET` secret + `POST /cron/haber` veya `/cron/blog` with `Authorization: Bearer …`.
+`MANUAL_CRON_SECRET` secret + `POST /cron/haber`, `/cron/blog`, veya `/cron/growthdaily` with `Authorization: Bearer …`.
+
+`POST /cron/growthdaily` aynı cap-aware reconcile'ı çalıştırır (2 saatlik / sabah cron ile aynı kod); yanıt: `{ "processed": n, "deferredByCap": m }`.
+
+```bash
+curl -X POST https://berktug-content-publisher.<account>.workers.dev/cron/growthdaily \
+  -H "Authorization: Bearer $MANUAL_CRON_SECRET"
+```

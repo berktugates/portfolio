@@ -1,6 +1,6 @@
 # Daily SEO blog queue
 
-Queued posts are published by `pnpm blog:publish` / `.github/workflows/weekly-seo-blog.yml` (cron `0 4 * * *` UTC, no manual step).
+Queued posts were published by `pnpm blog:publish` / `.github/workflows/weekly-seo-blog.yml`. **New posts come from GrowthDailySEO → Cloudflare Worker**; this folder is archived inventory only. The workflow remains available via `workflow_dispatch` for emergencies.
 
 ## File naming
 

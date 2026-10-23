@@ -5,18 +5,18 @@ type BlogPagedProps = {
   params: Promise<{ page: string }>;
 };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   return blogPagedStaticParams("zh");
 }
 
 export async function generateMetadata({ params }: BlogPagedProps) {
   const page = Number((await params).page);
-  if (!isBlogIndexPage("zh", page)) return {};
+  if (!(await isBlogIndexPage("zh", page))) return {};
   return createBlogsIndexMetadata("zh", page);
 }
 
 export default async function BlogPagedPage({ params }: BlogPagedProps) {
   const page = Number((await params).page);
-  if (!isBlogIndexPage("zh", page)) notFound();
+  if (!(await isBlogIndexPage("zh", page))) notFound();
   return <BlogsIndexView locale="zh" page={page} />;
 }

@@ -2,7 +2,9 @@ import type { Locale } from "../i18n/config";
 import type { BlogPost } from "../../data/blogs";
 import { BLOGS_PER_PAGE } from "../../data/blogs";
 import { getCatalogBlogPost, getCatalogBlogPosts } from "./blog-catalog";
-import { hasBlogLocaleOverlay } from "./blog-locale-overlay";
+import { hasBlogLocale } from "./blog-locale-overlay";
+import { loadR2BlogLocalePost } from "./blog-locale-r2";
+import { estimateReadingMinutesFromHtml } from "@berktug/editorial-gates/blog/reading-html";
 import type { Project } from "../../data/projects";
 import { getProject, projects } from "../../data/projects";
 import { getLocaleContent } from "./load-locale";
@@ -32,9 +34,12 @@ export async function getLocalizedProject(
 export async function getLocalizedBlogPosts(locale: Locale): Promise<readonly LocalizedBlogPost[]> {
   const content = await getLocaleContent(locale);
   const posts = await getCatalogBlogPosts();
-  return posts
-    .filter((post) => locale === "en" || hasBlogLocaleOverlay(locale, post.slug))
-    .map((post) => mergeBlog(post, content.blogs[post.slug], locale));
+  const out: LocalizedBlogPost[] = [];
+  for (const post of posts) {
+    if (locale !== "en" && !(await hasBlogLocale(locale, post.slug))) continue;
+    out.push(await mergeBlog(post, content.blogs[post.slug], locale));
+  }
+  return out;
 }
 
 export async function getLocalizedBlogPost(
@@ -73,11 +78,23 @@ function mergeProject(
   };
 }
 
-function mergeBlog(
+async function mergeBlog(
   post: BlogPost,
   copy: LocaleContentModule["blogs"][string] | undefined,
   locale: Locale,
-): LocalizedBlogPost {
+): Promise<LocalizedBlogPost> {
+  const r2Locale = await loadR2BlogLocalePost(post.slug, locale);
+  if (r2Locale?.contentHtml) {
+    return {
+      ...post,
+      ...r2Locale,
+      sections: [],
+      readingMinutes:
+        r2Locale.readingMinutes ||
+        estimateReadingMinutesFromHtml(r2Locale.contentHtml, locale),
+    };
+  }
+
   const baseSections = normalizeBlogSections(post.sections);
   if (!copy) {
     return {

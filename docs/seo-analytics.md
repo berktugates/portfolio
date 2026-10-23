@@ -25,8 +25,12 @@ Prefer **one** client-side tag path to avoid double-counting:
 2. **GTM** — container already created (`GTM-K2PXS8ZC`). Add tag **Google Analytics: GA4 Configuration** → Measurement ID → Trigger **All Pages** → **Submit** / Publish.
 3. **Search Console** — Domain property is preferred (DNS). Optional HTML-tag token → `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`.
 4. GSC → Sitemaps → submit `https://berktugberke.com/sitemap.xml` ve `https://haberler.berktugberke.com/sitemap-gundem.xml` (veya ana sitemap üzerinden gündem URL’leri).
-5. GTM → GA4 event: `page_context` ile `content_group` = `gundem` (haberler host ve `/gundem` yolları).
+5. GTM → GA4 event: `page_context` (`ContentGroupBeacon`, GTM-only; ikinci GA env yok) — `content_group` = `blog` (`/blogs…`) | `gundem` (haberler host, `/gundem…`) | `hire` (`/hire…`) | `other`; ayrıca `page_locale`, `page_path`. Locale önekleri (`/tr/blogs`) dikkate alınmaz. GTM’de Custom Event `page_context` trigger + Data Layer Variable `content_group`, GA4 event parametresi olarak ekle.
 6. After env changes on Vercel → Redeploy Production.
+
+## Structured data dates
+
+`BlogPosting` `datePublished` / `dateModified` must be full ISO-8601 UTC datetimes (e.g. `2026-10-20T12:00:00.000Z`), not bare `YYYY-MM-DD` (GSC invalid-date / ProfilePage drilldown). `app/lib/schema-dates.ts` normalizes legacy date-only values (noon UTC); GrowthDaily/blog-cron R2 records are written in full ISO. `ProfilePage` on the home page intentionally has no `dateModified`.
 
 ## Daily SEO blogs
 

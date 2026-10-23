@@ -3,12 +3,13 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getCatalogBlogSlugs } from "../lib/content/blog-catalog";
-import { blogHreflangLocalesForSlug, hasBlogLocaleOverlay } from "../lib/content/blog-locale-overlay";
+import { blogHreflangLocalesForSlug, hasBlogLocale } from "../lib/content/blog-locale-overlay";
 import { getLocaleContent, getLocalizedBlogPost } from "../lib/content/get-content";
 import { blogPostPath, blogsIndexPath, contactPath } from "../lib/content/paths";
 import type { Locale } from "../lib/i18n";
 import { getDictionary, localeMeta, localePath } from "../lib/i18n";
 import { formatMessage } from "../lib/i18n/format";
+import { toSchemaDateTime } from "../lib/schema-dates";
 import { shareImageMeta, shareImagePath } from "../lib/share-image";
 import {
   AUTHOR_ID,
@@ -36,12 +37,12 @@ export async function createBlogMetadata(
   { params }: BlogPageProps,
 ): Promise<Metadata> {
   const slug = (await params).slug;
-  if (locale !== "en" && !hasBlogLocaleOverlay(locale, slug)) return {};
+  if (locale !== "en" && !(await hasBlogLocale(locale, slug))) return {};
   const [post, dict] = await Promise.all([getLocalizedBlogPost(locale, slug), getDictionary(locale)]);
   if (!post) return {};
 
   const path = blogPostPath(locale, post.slug);
-  const availableLocales = blogHreflangLocalesForSlug(post.slug);
+  const availableLocales = await blogHreflangLocalesForSlug(post.slug);
   const languages: Record<string, string> = {
     "x-default": absoluteUrl(`/blogs/${post.slug}`),
   };
@@ -49,7 +50,8 @@ export async function createBlogMetadata(
     languages[localeMeta[loc].hreflang] = absoluteUrl(blogPostPath(loc, post.slug));
   }
 
-  const modified = post.dateModified ?? post.publishedAt;
+  const published = toSchemaDateTime(post.publishedAt);
+  const modified = toSchemaDateTime(post.dateModified, post.publishedAt);
   const image = shareImageMeta(locale, post.title);
 
   return {
@@ -70,7 +72,7 @@ export async function createBlogMetadata(
       title: post.title,
       description: post.description,
       url: absoluteUrl(path),
-      publishedTime: post.publishedAt,
+      publishedTime: published,
       modifiedTime: modified,
       authors: [dict.headerName],
       images: image.openGraph,
@@ -92,7 +94,7 @@ export async function BlogDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const slug = (await params).slug;
-  if (locale !== "en" && !hasBlogLocaleOverlay(locale, slug)) {
+  if (locale !== "en" && !(await hasBlogLocale(locale, slug))) {
     permanentRedirect(`/blogs/${slug}`);
   }
   const [post, content, dict] = await Promise.all([
@@ -145,8 +147,8 @@ export async function BlogDetailPage({
         headline: post.title,
         description: post.description,
         image: absoluteUrl(shareImagePath(locale)),
-        datePublished: post.publishedAt,
-        dateModified: post.dateModified ?? post.publishedAt,
+        datePublished: toSchemaDateTime(post.publishedAt),
+        dateModified: toSchemaDateTime(post.dateModified, post.publishedAt),
         mainEntityOfPage: { "@type": "WebPage", "@id": absoluteUrl(path) },
         isPartOf: { "@id": WEBSITE_ID },
         inLanguage: meta.htmlLang,
@@ -154,6 +156,7 @@ export async function BlogDetailPage({
         author: { "@id": AUTHOR_ID, "@type": "Person", name: dict.headerName },
         publisher: { "@id": AUTHOR_ID, "@type": "Person", name: dict.headerName },
       },
+      ...(post.faqJsonLd ? [post.faqJsonLd as Record<string, unknown>] : []),
     ],
   };
 
@@ -205,30 +208,36 @@ export async function BlogDetailPage({
               whatsAppAriaLabel={content.ui.shareOnWhatsApp}
             />
           </header>
-          {post.sections.map((section) => (
-            <section key={section.heading}>
-              <h2>{section.heading}</h2>
-              {section.paragraphs.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-              {section.points ? (
-                <ul>
-                  {section.points.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
-              ) : null}
-              {section.links ? (
-                <ul>
-                  {section.links.map((link) => (
-                    <li key={link.url}>
-                      <a href={link.url} target="_blank" rel="noreferrer noopener">{link.label}</a>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </section>
-          ))}
+          {post.contentHtml ? (
+            <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
+          ) : (
+            post.sections.map((section) => (
+              <section key={section.heading}>
+                <h2>{section.heading}</h2>
+                {section.paragraphs.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+                {section.points ? (
+                  <ul>
+                    {section.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                ) : null}
+                {section.links ? (
+                  <ul>
+                    {section.links.map((link) => (
+                      <li key={link.url}>
+                        <a href={link.url} target="_blank" rel="noreferrer noopener">
+                          {link.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+              </section>
+            ))
+          )}
           <hr />
           <p>
             <em>{formatMessage(content.ui.publishedBy, { date: formattedDate })}</em>

@@ -107,8 +107,8 @@ export async function runBlogCron(env: Env): Promise<{ published: boolean; reaso
   const post: BlogPostRecord = {
     ...parsed,
     slug,
-    publishedAt: today,
-    dateModified: today,
+    publishedAt: `${today}T12:00:00.000Z`,
+    dateModified: `${today}T12:00:00.000Z`,
     readingMinutes: estimateReadingMinutes(body),
   };
 

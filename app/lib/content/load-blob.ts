@@ -34,6 +34,12 @@ export async function getBlobBlogPost(slug: string): Promise<BlogPost | null> {
   return fetchJson<BlogPost>(`${base}/${BLOG_PREFIX}${slug}.json`, "blogs");
 }
 
+export async function getBlobBlogLocalePost(slug: string, locale: string): Promise<BlogPost | null> {
+  const base = blobBaseUrl();
+  if (!base) return null;
+  return fetchJson<BlogPost>(`${base}/${BLOG_PREFIX}${locale}/${slug}.json`, "blogs");
+}
+
 export async function listGundemBriefings(): Promise<readonly GundemBriefing[]> {
   const base = blobBaseUrl();
   if (!base) return [];

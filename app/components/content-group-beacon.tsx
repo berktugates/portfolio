@@ -2,19 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { stripLocalePrefix } from "../lib/content/paths";
-
-function contentGroupForPath(pathname: string, hostname: string): string {
-  if (hostname === "haberler.berktugberke.com" || hostname === "haberler.localhost") {
-    return "gundem";
-  }
-  const normalized = stripLocalePrefix(pathname.replace(/\/$/, "") || "/");
-  if (normalized === "/gundem" || normalized.startsWith("/gundem/")) return "gundem";
-  if (normalized === "/blogs" || normalized.startsWith("/blogs/")) return "blog";
-  if (normalized === "/hire" || normalized.startsWith("/hire/")) return "hire";
-  if (normalized === "/projects" || normalized.startsWith("/projects/")) return "project";
-  return "home";
-}
+import { contentGroupForPath } from "../lib/content-group";
 
 declare global {
   interface Window {

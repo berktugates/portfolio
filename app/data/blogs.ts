@@ -17,6 +17,13 @@ export type BlogPost = {
   keywords: readonly string[];
   sections: readonly BlogSection[];
   socialThreadTr?: readonly [string, string];
+  /** Sanitized HTML body (GrowthDailySEO / Worker pipeline). */
+  contentHtml?: string;
+  faqJsonLd?: unknown;
+  source?: "git" | "growthdaily";
+  /** Locales with a published overlay (R2 or git). */
+  locales?: readonly string[];
+  growthDailyPostId?: string;
 };
 
 export const BLOGS_PER_PAGE = 10;
