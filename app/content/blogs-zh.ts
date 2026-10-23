@@ -1,6 +1,96 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"performance-budgets-for-marketing-and-app-routes": {
+    title: "营销与应用路由的性能预算",
+    excerpt: "营销页与认证应用壳失败原因不同；无预算则每次发布增重，搜索与转化悄然受损。",
+    description: "按路由设性能预算、接入 CI，并用可测 LCP/INP 护栏约束营销与产品面。",
+    sections: [
+      {
+        heading: "模板需要独立预算",
+        paragraphs: [
+          "落地页争首屏，仪表盘争交互就绪；单一全局 bundle 预算掩盖谁回归。",
+          "按路由类型与第三方标签归属拆分预算。",
+        ],
+      },
+      {
+        heading: "与发布列车一起交付性能",
+        paragraphs: [
+          "高流量模板预览部署挂预算检查；LCP 爆表 merge 无明确豁免则阻断。",
+          "金丝雀 INP 越阈即回滚 feature flag。",
+        ],
+        points: [
+          "按模板而非仅全局预算 LCP/INP",
+          "将性能回归绑定发布列车与回滚规则",
+          "CI 冒烟在真机与慢网上测量",
+          "与错误率并列向产品展示性能看板",
+        ],
+      },
+      {
+        heading: "刻意测试慢网络",
+        paragraphs: [
+          "快笔记本实验室测试会撒谎；在代表移动配置与缓存态跑冒烟性能。",
+          "Hero 字节、字体策略与水合成本为一等指标。",
+        ],
+      },
+      {
+        heading: "让产品看见性能",
+        paragraphs: [
+          "产品经理应在转化旁看到性能趋势。",
+          "预算避免 SEO 与 UX 成为复盘主题。",
+        ],
+        links: [
+          {
+            label: "Google Search Central — Core Web Vitals",
+            url: "https://developers.google.com/search/docs/appearance/core-web-vitals",
+          },
+          {
+            label: "web.dev — Performance",
+            url: "https://web.dev/performance/",
+          },
+        ],
+      },
+      {
+        heading: "按流量类型拆分预算",
+        paragraphs: [
+          "营销落地页与已登录应用壳层很少共享同一关键路径。为静态 hero 路由、登录仪表盘与 API 小组件分别设定性能预算，避免一个团队的实验耗尽另一团队的延迟额度。在与 on-call 路由相同的服务目录条目中记录负责人。",
+          "预算应写明指标、分位数与地域。p75 LCP 目标在法兰克福成立，不代表圣保罗无需 CDN 证据。将回归关联部署元数据，以区分 bundle 膨胀、上游饱和与切换期 DNS 误配。",
+          "在产品评审而非仅前端例会中查看预算消耗。PM 在功能速度与周趋势并列时，会在再上加 carousel 或第三方 tag manager 前协商范围。性能成为规划输入，而非发布后救火。",
+        ],
+      },
+      {
+        heading: "对照文档化基线做观测",
+        paragraphs: [
+          "当认证、特性开关或同意横幅与生产不一致时，合成监控与实验室 Lighthouse 会分歧。探针应对齐营销栈实际发送的客户端头、Cookie 策略与边缘缓存规则。否则预算会为真实用户条件下失败的合并开绿灯。",
+          "营销资源 deliberate 使用 HTTP 缓存语义，同时保持哈希文件名不可变。HTML 壳层 Cache-Control 误用会导致活动文案过期；静态 chunk TTL 过短则徒增源站负载。RFC 指引帮助工程师与 ad-tech 厂商用共同词汇讨论。",
+          "公开哪些预算阻断合并、哪些仅 paging 负责人。硬门禁应放在收入或注册完成路径；告知性预算可在编辑页告警而不阻断发布列车。清晰边界减少告警疲劳，使回滚讨论聚焦用户可见回归。",
+        ],
+        links: [
+          {
+            label: "web.dev — Core Web Vitals",
+            url: "https://web.dev/articles/vitals",
+          },
+          {
+            label: "Chrome Developers — Lighthouse 评分",
+            url: "https://developer.chrome.com/docs/lighthouse/performance/performance-scoring",
+          },
+          {
+            label: "RFC 9111 — HTTP 缓存",
+            url: "https://www.rfc-editor.org/rfc/rfc9111.html",
+          },
+        ],
+      },
+      {
+        heading: "共享性能预算而不互相甩锅",
+        paragraphs: [
+          "营销落地页与已登录应用壳层很少共用瓶颈，团队却为一个全局 Lighthouse 分数争执。为静态 hero、本地化活动与登录仪表盘分别发布预算，各有负责人与允许的第三方脚本。回归与错误率尖峰纳入同一回滚讨论，产品经理不能把性能当作前端爱好。预算仪表盘应每周展示趋势，而非仅在发布日告警。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+          "真实用户监控填补合成监测盲区——登录、付费墙与区域 CDN——采样率须遵守事件隐私标签。结合三地区合成检查以发现实验室 Wi-Fi 掩盖的 DNS 与边缘配置错误。超预算须指名缓解措施：推迟非关键 A/B 脚本、缩小 hero 视频或分页重表，而非无日期的技术债工单。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+          "资产在主发布列车之外上线时预算易失效。创意团队向 CMS 上传五兆 PNG 会在无上传钩子强制压缩时绕过 CI。阻止在营销路由添加阻塞渲染标签且未经性能评审的合并。例外须注明过期并衡量转化是否真提升，否则活动结束后回滚重资源。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+          "Staff 工程师应每季度与营销、增长与移动端负责人联合评审预算。对比头部活动的 p75 INP 与核心任务完成路径。表彰重新谈判供应商以获得更轻嵌入的团队。性能是产品能力；趋势应发布到领导可见处，而非仅工程师频道。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+        ],
+      },
+    ],
+  },
 "logging-llm-interactions-without-hoarding-pii": {
     title: "记录 LLM 交互而不囤积 PII",
     excerpt: "没有追踪无法调试生产 copilot；也不能把每次聊天当永久仓库存料。",

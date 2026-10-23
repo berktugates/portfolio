@@ -1,6 +1,96 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"performance-budgets-for-marketing-and-app-routes": {
+    title: "Pazarlama ve Uygulama Rotaları için Performans Bütçeleri",
+    excerpt: "Pazarlama sayfaları ve kimlik doğrulamalı app shell'ler farklı nedenlerle çöker; ortak kural: bütçe yoksa her lansman ağırlık ekler, arama ve dönüşüm sessizce zarar görür.",
+    description: "Staff mühendislerin rota bazlı performans bütçesi, CI bağlantısı ve pazarlama ile ürün yüzeylerini ölçülebilir LCP/INP sınırlarında tutma yöntemi.",
+    sections: [
+      {
+        heading: "Şablonların kendi bütçesi olmalı",
+        paragraphs: [
+          "Landing sayfaları ilk boyamada yarışır; dashboard'lar etkileşim hazırlığında. Tek global bundle bütçesi hangi ekibin hangi yüzeyi bozduğunu gizler.",
+          "Rota sınıfı ve üçüncü taraf etiket sahipliğine göre bütçe ayırın; pazarlama deneyleri mühendislik varsayılanını miras almasın.",
+        ],
+      },
+      {
+        heading: "Performansı release train ile birlikte gönder",
+        paragraphs: [
+          "Yoğun trafikli şablonlar için preview deploy'lara bütçe kontrolü ekleyin. LCP'yi patlatan merge'leri sahibi olan açık waiver olmadan bloklayın.",
+          "INP eşiği canary'de aşıldığında bir haftalık şikayetten önce feature flag geri alın.",
+        ],
+        points: [
+          "LCP ve INP'yi yalnızca global değil şablon bazında bütçele",
+          "Perf regresyonlarını release train ve rollback kurallarına bağla",
+          "CI smoke'ta gerçek cihaz ve yavaş ağ ölç",
+          "Hata oranının yanında perf panolarını ürüne aç",
+        ],
+      },
+      {
+        heading: "Yavaş ağları kasıtlı test et",
+        paragraphs: [
+          "Hızlı laptop lab testleri yalan söyler. Temsili mobil profil ve önbellek durumlarında smoke perf çalıştırın.",
+          "Hero görsel baytları, font yükleme stratejisi ve hydration maliyetini birinci sınıf metrik sayın.",
+        ],
+      },
+      {
+        heading: "Performansı ürüne görünür kıl",
+        paragraphs: [
+          "Ürün yöneticileri dönüşümün yanında perf trendini görmeli, yıllık infra review'da değil.",
+          "Bütçeler, SEO ve UX'in postmortem teması olmasını engeller.",
+        ],
+        links: [
+          {
+            label: "Google Search Central — Core Web Vitals",
+            url: "https://developers.google.com/search/docs/appearance/core-web-vitals",
+          },
+          {
+            label: "web.dev — Performance",
+            url: "https://web.dev/performance/",
+          },
+        ],
+      },
+      {
+        heading: "Trafik sınıfına göre bütçe ayırın",
+        paragraphs: [
+          "Pazarlama landing sayfaları ile kimliği doğrulanmış uygulama kabukları nadiren aynı kritik yolu paylaşır. Statik hero rotalar, giriş yapılmış panolar ve API destekli widget'lar için ayrı performans bütçeleri tanımlayın; bir ekibin deneyi diğerinin gecikme payını tüketmesin. Sahipleri on-call yönlendirmesinde kullandığınız servis kataloğu kaydında belgeleyin. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "Bütçeler metrik, yüzdelik dilim ve coğrafya adını taşımalı. Frankfurt'ta p75 LCP hedefi CDN kanıtı olmadan São Paulo'ya taşınmaz. Gerilemeleri deployment metadata'ya bağlayın; bundle büyümesi ile cutover sırasındaki upstream doygunluğu veya DNS yanlış yapılandırmasını ayırın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "Bütçe tüketimini yalnızca frontend topluluk toplantılarında değil ürün forumlarında gözden geçirin. Ürün yöneticileri haftalık trendleri feature hızının yanında görünce, bir carousel veya üçüncü taraf tag manager eklemeden kapsam pazarlığı yapar. Performans release sonrası yangın tatbikatı değil planlama girdisi olur. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+        ],
+      },
+      {
+        heading: "Dokümante edilmiş baz çizgilere göre enstrümante edin",
+        paragraphs: [
+          "Sentetik monitörler ile lab Lighthouse, kimlik doğrulama, feature flag veya onay banner'ları üretimden farklıysa ayrışır. Probeleri pazarlama yığınının gerçekten gönderdiği istemci başlıkları, çerez politikaları ve edge önbellek kurallarıyla hizalayın. Aksi halde bütçeler gerçek kullanıcı koşullarında çöken merge'lere yeşil ışık yakar. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "Pazarlama varlıklarında HTTP önbellekleme semantiğini bilinçli kullanın; hash'lenmiş dosya adları değişmez kalsın. HTML kabuklarında yanlış Cache-Control bayat kampanya mesajı üretir; statik parçalarda aşırı kısa TTL gereksiz origin yükü yaratır. RFC rehberi mühendislerin ad-tech satıcılarıyla ortak sözcük dağarcığıyla tartışmasını sağlar. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "Hangi bütçelerin merge'i durdurduğunu, hangilerinin yalnızca sahipleri uyardığını yayınlayın. Sert kapılar gelir veya kayıt tamamlamayı taşıyan rotalarda olmalı; bilgilendirici bütçeler editoryal sayfalarda treni durdurmadan uyarabilir. Netlik uyarı yorgunluğunu azaltır, rollback konuşmalarını kullanıcıya görünen gerilemelere odaklar. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+        ],
+        links: [
+          {
+            label: "web.dev — Core Web Vitals",
+            url: "https://web.dev/articles/vitals",
+          },
+          {
+            label: "Chrome Developers — Lighthouse skorlama",
+            url: "https://developer.chrome.com/docs/lighthouse/performance/performance-scoring",
+          },
+          {
+            label: "RFC 9111 — HTTP önbellekleme",
+            url: "https://www.rfc-editor.org/rfc/rfc9111.html",
+          },
+        ],
+      },
+      {
+        heading: "Suçu başkasına atmadan ortak bütçeler",
+        paragraphs: [
+          "Pazarlama landing route'ları ile oturum açmış app shell'leri nadiren aynı darboğazı paylaşır ama ekipler tek global Lighthouse skoru için kavga eder. Statik hero, lokal kampanya ve giriş yapılmış dashboard için ayrı bütçe yayınlayın; her birinde owner ve izinli üçüncü parti script olsun. Regresyonlar error-rate spike ile aynı rollback konuşmasına bağlansın; PM'ler perf'i frontend hobi sayamasın. Bütçe panoları haftalık trend göstersin, yalnızca deploy günü alarm vermesin.",
+          "RUM sentetiğin kaçırdığı login, paywall ve bölgesel CDN yollarını doldurur; örnekleme oranları olaylardaki privacy etiketlerine uymalı. Virginia, Frankfurt ve Singapur sentetiği DNS ve edge yanlış yapılandırmalarını yakalasın. Bütçe aşımında adlı mitigasyon şart: kritik olmayan A/B script erteleme, hero video küçültme veya ağır tablo sayfalama; tarihsiz tech debt ticket değil. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+          "Varlıklar ana release treninin dışında ship olunca bütçeler çöker. CMS'e beş megabayt PNG yükleyen kreatif ekipler upload hook sıkıştırma ve format kuralı olmadan CI'ı bypass eder. Pazarlama route'larına render-blocking tag ekleyen merge'leri perf review olmadan bloklayın. İstisnaları süreli belgeleyin; dönüşüm gerçekten artmadıysa kampanya bitince ağır varlığı geri alın. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+          "Staff mühendisler pazarlama, growth ve mobil liderlerle çeyreklik bütçe review'u kolaylaştırsın. En iyi kampanyalarda p75 INP'yi çekirdek görev tamamlama route'larıyla karşılaştırın. Daha hafif embed için vendor sözleşmesi yenileyen ekipleri öne çıkarın. Performans ürün özelliğidir; trendleri yalnızca mühendis Slack'inde değil liderliğin gördüğü yerde yayınlayın. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+        ],
+      },
+    ],
+  },
 "logging-llm-interactions-without-hoarding-pii": {
     title: "PII Biriktirmeden LLM Etkileşimlerini Loglama",
     excerpt: "Üretim copilot'larını traces olmadan debug edemezsiniz; ama her sohbeti kalıcı veri ambarı yakıtı sayamazsınız. Log tasarımı gizlilik ve maliyet kararıdır.",

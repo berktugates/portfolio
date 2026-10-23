@@ -1,6 +1,96 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"performance-budgets-for-marketing-and-app-routes": {
+    title: "マーケティングとアプリルートのパフォーマンス予算",
+    excerpt: "マーケページと認証アプリシェルは別理由で失敗する。予算なしではローンチのたびに重くなり検索とコンバージョンが静かに損なわれる。",
+    description: "ルート別予算、CI連携、測定可能なLCP/INPガードレールでマーケとプロダクト面を守る。",
+    sections: [
+      {
+        heading: "テンプレートごとに予算",
+        paragraphs: [
+          "LPはファーストペイント、ダッシュボードは操作の準備。単一グローバルbundle予算は誰が悪化したか隠す。",
+          "ルートクラスとタグ所有者で予算を分割。",
+        ],
+      },
+      {
+        heading: "リリース列車と一緒にperfを出荷",
+        paragraphs: [
+          "高トラフィックテンプレのプレビューに予算チェック。LCP破壊mergeはオーナー付き免除なしでブロック。",
+          "カナリアでINP閾値超えならフラグをロールバック。",
+        ],
+        points: [
+          "LCP/INPをグローバルだけでなくテンプレート単位で予算化",
+          "Perf回帰をリリーストレインとロールバックに結び付け",
+          "CIスモークで実機と遅いネットワークを計測",
+          "エラー率の横にプロダクト向けPerfダッシュボード",
+        ],
+      },
+      {
+        heading: "遅いネットを意図的に試す",
+        paragraphs: [
+          "速いノートPCのラボは嘘をつく。代表モバイルプロファイルとキャッシュでスモークperf。",
+          "ヒーロー画像、フォント、ハイドレーションコストを第一級指標に。",
+        ],
+      },
+      {
+        heading: "プロダクトにperfを見える化",
+        paragraphs: [
+          "PMはコンバージョン横にperfトレンドを見るべき。",
+          "予算はSEO/UXがポストモーテム題材になるのを防ぐ。",
+        ],
+        links: [
+          {
+            label: "Google Search Central — Core Web Vitals",
+            url: "https://developers.google.com/search/docs/appearance/core-web-vitals",
+          },
+          {
+            label: "web.dev — Performance",
+            url: "https://web.dev/performance/",
+          },
+        ],
+      },
+      {
+        heading: "トラフィッククラスごとに予算を分割",
+        paragraphs: [
+          "マーケ LP と認証済みアプリシェルは同じクリティカルパスを共有しにくい。静的 hero ルート、ログイン後ダッシュボード、API ウィジェットで性能予算を分け、一チームの実験が他チームのレイテンシ枠を食い尽くさないようにする。on-call ルーティングと同じサービスカタログ項目にオーナーを記載する。",
+          "予算は指標、パーセンタイル、地域を明示する。フランクフルトの p75 LCP 目標は CDN 根拠なしにサンパウロへは移植できない。回帰はデプロイメタデータに結び、バンドル増大とカットオーバー時の upstream 飽和や DNS 誤設定を切り分ける。",
+          "予算消費はフロントエンドギルドだけでなくプロダクトフォーラムでレビューする。PM が機能速度の横に週次トレンドを見れば、追加カルーセルや tag manager スニペット前にスコープ交渉が起きる。性能は計画入力となり、リリース後の火消しではなくなる。",
+        ],
+      },
+      {
+        heading: "文書化ベースラインに沿って計測",
+        paragraphs: [
+          "認証、feature flag、同意バナーが本番と異なると合成監視と lab Lighthouse は乖離する。プローブをマーケスタックが実際に出すクライアントヘッダ、Cookie 方針、エッジキャッシュ規則に合わせる。さもなければ予算が実ユーザー条件で失敗する merge を通してしまう。",
+          "マーケアセットでは HTTP キャッシュ意味論を意図的に使い、ハッシュファイル名は不変に保つ。HTML シェルの Cache-Control 誤りは古いキャンペーン文言を固定し、静的 chunk の短 TTL は origin 負荷を増やすだけだ。RFC ガイドは ad-tech ベンダーとの共通語彙議論に役立つ。",
+          "どの予算が merge を止め、どれが owner ページングのみかを公開する。ハードゲートは収益や signup 完了ルートに置く。情報的予算は編集ページで警告しつつトレインは止められる。明確さがアラート疲労を減らし、ロールバック議論をユーザー可視回帰に集中させる。",
+        ],
+        links: [
+          {
+            label: "web.dev — Core Web Vitals",
+            url: "https://web.dev/articles/vitals",
+          },
+          {
+            label: "Chrome Developers — Lighthouse スコア",
+            url: "https://developer.chrome.com/docs/lighthouse/performance/performance-scoring",
+          },
+          {
+            label: "RFC 9111 — HTTP キャッシュ",
+            url: "https://www.rfc-editor.org/rfc/rfc9111.html",
+          },
+        ],
+      },
+      {
+        heading: "責任押し付けなしの共有バジェット",
+        paragraphs: [
+          "マーケ landing と認証済み app shell はボトルネックを共有しにくいのに、単一 Lighthouse スコアで争います。静的 hero、ローカルキャンペーン、ログインダッシュボードで別バジェットを公開し、各 owner と許可 third-party script を明記。回帰は error spike と同じ rollback 会話に載せ、PM が perf を frontend 趣味扱いしない。バジェットダッシュボードは deploy 日だけでなく週次トレンド。",
+          "RUM は login、ペイウォール、地域 CDN など synthetic の穴を埋めますが、サンプル率は privacy タグを尊重。三地域 synthetic と RUM で lab Wi-Fi が隠す DNS・edge 誤設定を捕捉。超過時は named mitigation：非クリティカル A/B 延期、hero 動画縮小、重い表のページング—日付なし tech debt チケット禁止。 担当者、レビュー日、ロールバック条件を同一変更チケットに記録し、次の on-call エンジニアがインシデントを再オープンせず判断を追跡できるようにする。",
+          "release train 外で asset が ship するとバジェットは破綻。CMS に 5MB PNG を上げるクリエイティブは圧縮 hook なしで CI  bypass。マーケ route に render-blocking タグを足す merge を perf review なしで block。例外は失効付きで文書化し、コンバージョン改善がなければキャンペーン後に重 asset を revert。 担当者、レビュー日、ロールバック条件を同一変更チケットに記録し、次の on-call エンジニアがインシデントを再オープンせず判断を追跡できるようにする。",
+          "Staff engineer がマーケ・growth・モバイルリードと四半期バジェット review を進行。トップキャンペーンの p75 INP をコアタスク完了 route と比較。軽い embed の vendor 再交渉を称賛。パフォーマンスはプロダクト機能；トレンドは guild Slack だけでなくリーダーシップが見る場所へ。 担当者、レビュー日、ロールバック条件を同一変更チケットに記録し、次の on-call エンジニアがインシデントを再オープンせず判断を追跡できるようにする。",
+        ],
+      },
+    ],
+  },
 "logging-llm-interactions-without-hoarding-pii": {
     title: "PIIを溜め込まずLLM対話をログする",
     excerpt: "トレースなしでは本番コパイロットをデバッグできない。全チャットを永久ウェアハウス燃料にしてはいけない。",

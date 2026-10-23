@@ -1,6 +1,96 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"performance-budgets-for-marketing-and-app-routes": {
+    title: "Budgets performance pour routes marketing et app",
+    excerpt: "Les pages marketing et les shells app échouent pour des raisons différentes ; sans budgets, chaque lancement alourdit jusqu'à nuire SEO et conversion.",
+    description: "Budgets par route, CI, et garde-fous LCP/INP mesurables pour surfaces marketing et produit.",
+    sections: [
+      {
+        heading: "Chaque template a son budget",
+        paragraphs: [
+          "Les landings visent le first paint ; les dashboards la réactivité. Un budget bundle global cache qui a régressé.",
+          "Séparer budgets par classe de route et ownership des tags tiers.",
+        ],
+      },
+      {
+        heading: "Shipper la perf avec le train de release",
+        paragraphs: [
+          "Contrôles budget sur previews des templates à fort trafic. Bloquer merges qui explosent LCP sans waiver nommé.",
+          "Rollback des feature flags quand l'INP dépasse le seuil en canary.",
+        ],
+        points: [
+          "Budgéter LCP/INP par template, pas seulement global",
+          "Lier régressions perf au release train et rollback",
+          "Smoke sur vrais appareils et réseaux lents en CI",
+          "Tableaux perf visibles produit à côté du taux d'erreur",
+        ],
+      },
+      {
+        heading: "Tester délibérément les réseaux lents",
+        paragraphs: [
+          "Les tests lab sur laptops rapides mentent. Smoke perf sur profils mobile et états de cache.",
+          "Bytes hero, chargement de fonts et coût d'hydratation en métriques de premier plan.",
+        ],
+      },
+      {
+        heading: "Rendre la perf visible au produit",
+        paragraphs: [
+          "Le produit voit les tendances perf à côté de la conversion.",
+          "Les budgets évitent que SEO et UX deviennent le thème du postmortem.",
+        ],
+        links: [
+          {
+            label: "Google Search Central — Core Web Vitals",
+            url: "https://developers.google.com/search/docs/appearance/core-web-vitals",
+          },
+          {
+            label: "web.dev — Performance",
+            url: "https://web.dev/performance/",
+          },
+        ],
+      },
+      {
+        heading: "Scinder les budgets par classe de trafic",
+        paragraphs: [
+          "Les landing marketing et les shells applicatives authentifiées partagent rarement le même chemin critique. Attribuez des budgets performance séparés aux routes hero statiques, tableaux de bord connectés et widgets API pour qu'une expérience d'équipe ne consomme pas l'enveloppe de latence d'une autre. Documentez les owners dans la même fiche catalogue de service que le routage on-call.",
+          "Les budgets nomment métrique, percentile et géographie. Un objectif LCP p75 à Francfort ne se transpose pas à São Paulo sans preuve CDN. Liez les régressions aux métadonnées de déploiement pour distinguer croissance de bundle, saturation amont ou mauvaise config DNS lors des bascules. Revoyez ceci au prochain production review, nommez un owner et rattachez un ticket de remédiation daté.",
+          "Revoyez la consommation de budget en forums produit, pas seulement en guilde frontend. Quand les PM voient des tendances hebdo à côté de la vélocité feature, ils négocient le scope avant un carrousel ou un snippet tag manager. La perf devient une entrée de planification, pas une drill post-release.",
+        ],
+      },
+      {
+        heading: "Instrumenter selon des baselines documentées",
+        paragraphs: [
+          "Moniteurs synthétiques et Lighthouse lab divergent si auth, feature flags ou bandeaux consentement diffèrent de la prod. Alignez les sondes sur les en-têtes client, politiques cookies et règles edge cache réellement émis par votre stack marketing. Sinon les budgets valident des merges qui échouent en conditions utilisateur réelles.",
+          "Employez la sémantique HTTP cache délibérément sur les assets marketing tout en gardant des noms hashés immuables. Un Cache-Control mal appliqué sur les coques HTML fige des messages campagne ; un TTL trop court sur chunks statiques recharge l'origine inutilement. Le RFC aide à discuter avec les vendors ad-tech dans un vocabulaire partagé.",
+          "Publiez quels budgets bloquent les merges versus lesquels paginent seulement les owners. Les gates durs appartiennent aux routes revenu ou inscription ; les budgets informatifs peuvent avertir sur pages éditoriales sans stopper le train. La clarté réduit la fatigue d'alerte et centre les rollbacks sur régressions visibles.",
+        ],
+        links: [
+          {
+            label: "web.dev — Core Web Vitals",
+            url: "https://web.dev/articles/vitals",
+          },
+          {
+            label: "Chrome Developers — Score Lighthouse",
+            url: "https://developer.chrome.com/docs/lighthouse/performance/performance-scoring",
+          },
+          {
+            label: "RFC 9111 — Cache HTTP",
+            url: "https://www.rfc-editor.org/rfc/rfc9111.html",
+          },
+        ],
+      },
+      {
+        heading: "Budgets partagés sans renvoi de faute",
+        paragraphs: [
+          "Landing marketing et coques app authentifiées partagent rarement les goulots, pourtant les équipes se battent pour un score Lighthouse global. Budgets séparés pour hero statique, campagnes localisées et dashboards connectés, chacun avec owner et scripts tiers autorisés. Régressions dans la même conversation rollback que pics d'erreurs ; les PM ne traitent pas perf comme hobby frontend. Dashboards budget en tendance hebdo, pas seulement alarme deploy.",
+          "RUM comble login, paywalls, chemins CDN géo—taux d'échantillon respectant tags privacy. RUM plus synthetics trois régions pour DNS et edge que le lab Wi-Fi cache. Dépassement budget exige mitigation nommée : différer scripts A/B, réduire vidéo hero, paginer tables lourdes—pas tickets dette technique sans date. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+          "Budgets échouent quand assets shippent hors train release. Créatif upload 5 Mo PNG en CMS bypass CI sans hooks compression. Bloquer merges ajoutant tags render-blocking sur routes marketing sans revue perf. Exceptions datées ; sans gain conversion, revert asset lourd après campagne. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+          "Staff engineers facilitent revues trimestrielles avec marketing, growth, mobile. Comparer p75 INP campagnes top vs routes complétion tâche cœur. Célébrer renégociations vendor pour embeds plus légers. Perf est feature produit ; publier tendances où leadership regarde, pas seulement Slack guilde. Consignez owner, date de revue et déclencheur rollback dans le même ticket de changement afin que le prochain engineer on-call retrace les décisions sans rouvrir l'incident.",
+        ],
+      },
+    ],
+  },
 "logging-llm-interactions-without-hoarding-pii": {
     title: "Journaliser les interactions LLM sans accumuler de PII",
     excerpt: "Impossible de déboguer un copilote sans traces; chaque chat ne doit pas alimenter un entrepôt permanent.",

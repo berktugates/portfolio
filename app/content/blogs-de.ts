@@ -1,6 +1,96 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"performance-budgets-for-marketing-and-app-routes": {
+    title: "Performance-Budgets für Marketing- und App-Routen",
+    excerpt: "Marketing und App-Shell scheitern aus anderen Gründen; ohne Budgets wird jeder Launch schwerer, bis Suche und Conversion leiden.",
+    description: "Staff-Muster: Budgets pro Route, CI-Anbindung und messbare LCP/INP-Grenzen für Marketing und Produkt.",
+    sections: [
+      {
+        heading: "Templates brauchen eigene Budgets",
+        paragraphs: [
+          "Landings konkurrieren auf First Paint, Dashboards auf Interaktionsbereitschaft. Ein globales Bundle-Budget versteckt Regressionen.",
+          "Budgets nach Routenklasse und Tag-Ownership splitten.",
+        ],
+      },
+      {
+        heading: "Performance mit dem Release-Zug shippen",
+        paragraphs: [
+          "Budget-Checks an Preview-Deploys für High-Traffic-Templates. LCP-Regressionen ohne Waiver blocken.",
+          "Feature-Flags zurückrollen, wenn INP im Canary die Schwelle überschreitet.",
+        ],
+        points: [
+          "LCP/INP pro Template budgetieren, nicht nur global",
+          "Perf-Regressionen an Release Train und Rollback koppeln",
+          "Smoke auf echten Geräten und langsamen Netzen in CI",
+          "Perf-Dashboards neben Fehlerrate für Produkt sichtbar",
+        ],
+      },
+      {
+        heading: "Langsame Netze gezielt testen",
+        paragraphs: [
+          "Lab-Tests auf schnellen Laptops lügen. Smoke-Perf auf mobilen Profilen und Cache-Zuständen.",
+          "Hero-Bytes, Font-Strategie und Hydration als First-Class-Metriken.",
+        ],
+      },
+      {
+        heading: "Performance für Produkt sichtbar machen",
+        paragraphs: [
+          "Product sieht Perf-Trends neben Conversion, nicht nur im Infra-Review.",
+          "Budgets verhindern, dass SEO und UX zum Postmortem-Thema werden.",
+        ],
+        links: [
+          {
+            label: "Google Search Central — Core Web Vitals",
+            url: "https://developers.google.com/search/docs/appearance/core-web-vitals",
+          },
+          {
+            label: "web.dev — Performance",
+            url: "https://web.dev/performance/",
+          },
+        ],
+      },
+      {
+        heading: "Budgets nach Traffic-Klasse trennen",
+        paragraphs: [
+          "Marketing-Landingpages und authentifizierte App-Shells teilen selten denselben Critical Path. Weisen Sie getrennte Performance-Budgets für statische Hero-Routen, eingeloggte Dashboards und API-Widgets zu, damit ein Team-Experiment nicht das Latenz-Budget eines anderen verbraucht. Dokumentieren Sie Owner im selben Service-Katalogeintrag wie für On-Call-Routing. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+          "Budgets benennen Metrik, Perzentil und Geografie. Ein p75-LCP-Ziel in Frankfurt gilt ohne CDN-Evidenz nicht in São Paulo. Koppeln Sie Regressionen an Deployment-Metadaten, um Bundle-Wachstum von Upstream-Sättigung oder DNS-Fehlkonfiguration bei Cutovers zu trennen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+          "Reviewen Sie Budget-Verbrauch in Produktforen, nicht nur im Frontend-Guild. Wenn Product Manager wöchentliche Trends neben Feature-Velocity sehen, verhandeln sie Scope, bevor ein weiteres Karussell oder Tag-Manager-Snippet shipped wird. Performance wird Planungsinput statt Post-Release-Feuerwehr. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+        ],
+      },
+      {
+        heading: "Gegen dokumentierte Baselines instrumentieren",
+        paragraphs: [
+          "Synthetische Monitore und Lab-Lighthouse divergieren, wenn Auth, Feature Flags oder Consent-Banner von Prod abweichen. Richten Sie Probes auf echte Client-Header, Cookie-Policies und Edge-Caching-Regeln Ihres Marketing-Stacks aus. Sonst grünen Budgets Merges, die unter Real-User-Bedingungen scheitern. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+          "Nutzen Sie HTTP-Caching bewusst für Marketing-Assets, während gehashte Dateinamen immutable bleiben. Falsch gesetztes Cache-Control auf HTML-Shells erzeugt veraltete Kampagnen; zu kurze TTL auf statischen Chunks erzeugt unnötige Origin-Last. RFC-Leitfaden hilft Engineers, mit Ad-Tech-Vendors in gemeinsamer Terminologie zu diskutieren. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+          "Veröffentlichen Sie, welche Budgets Merges blockieren versus nur Owner paginieren. Harte Gates gehören auf Umsatz- oder Signup-Routen; informative Budgets können redaktionelle Seiten warnen ohne den Train zu stoppen. Klarheit verhindert Alert-Müdigkeit und fokussiert Rollbacks auf sichtbare Regressionen. Prüfen Sie dies im nächsten Produktionsreview, setzen Sie einen Owner und hängen Sie ein datiertes Remediation-Ticket an.",
+        ],
+        links: [
+          {
+            label: "web.dev — Core Web Vitals",
+            url: "https://web.dev/articles/vitals",
+          },
+          {
+            label: "Chrome Developers — Lighthouse-Bewertung",
+            url: "https://developer.chrome.com/docs/lighthouse/performance/performance-scoring",
+          },
+          {
+            label: "RFC 9111 — HTTP-Caching",
+            url: "https://www.rfc-editor.org/rfc/rfc9111.html",
+          },
+        ],
+      },
+      {
+        heading: "Geteilte Budgets ohne Schuldzuweisung",
+        paragraphs: [
+          "Marketing-Landing und authentifizierte App-Shells teilen selten Engpässe, doch Teams streiten um einen globalen Lighthouse-Score. Separate Budgets für Hero-Seiten, lokale Kampagnen und eingeloggte Dashboards mit Owner und erlaubten Third-Party-Scripts. Regressionen in derselben Rollback-Diskussion wie Error-Spikes; PMs dürfen Perf nicht als Frontend-Hobby behandeln. Budget-Dashboards wöchentlich trenden, nicht nur Deploy-Alarm. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+          "RUM füllt Lücken—Login, Paywalls, geo-spezifische CDN-Pfade—Sample-Rates müssen Privacy-Tags respektieren. RUM plus Synthetics aus drei Regionen für DNS- und Edge-Fehler, die Lab-Wi-Fi versteckt. Bei Budget-Bruch benannte Mitigation: A/B-Scripts verschieben, Hero-Video verkleinern, schwere Tabellen paginieren—keine Tech-Debt-Tickets ohne Datum. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+          "Budgets scheitern wenn Assets außerhalb des Release-Trains shippen. Kreativ-Teams mit 5-MB-PNGs in CMS umgehen CI ohne Upload-Hooks für Kompression. Merges mit render-blocking Tags auf Marketing-Routes ohne Perf-Review blocken. Ausnahmen mit Expiry dokumentieren; ohne Conversion-Gewinn schwere Assets nach Kampagne revertieren. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+          "Staff Engineers facilitieren vierteljährliche Budget-Reviews mit Marketing, Growth, Mobile. p75 INP Top-Kampagnen vs Core-Task-Routes vergleichen. Teams feiern, die Vendor-Verträge für leichtere Embeds neu verhandeln. Performance ist Produktfeature; Trends dort publizieren, wo Leadership hinschaut, nicht nur Guild-Slack. Tragen Sie Owner, Review-Datum und Rollback-Trigger im selben Change-Ticket ein, damit der nächste On-Call-Engineer Entscheidungen ohne Reopen des Incidents nachvollzieht.",
+        ],
+      },
+    ],
+  },
 "logging-llm-interactions-without-hoarding-pii": {
     title: "LLM-Interaktionen loggen ohne PII-Hortung",
     excerpt: "Copilots lassen sich ohne Traces nicht debuggen; jeder Chat darf kein dauerhafter Warehouse-Tank sein.",

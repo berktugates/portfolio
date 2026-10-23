@@ -23,6 +23,114 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "performance-budgets-for-marketing-and-app-routes",
+    title: "Performance Budgets for Marketing and App Routes",
+    excerpt: "Marketing pages and authenticated app shells fail for different reasons, but they share one rule: without budgets, every launch adds weight until search and conversion quietly suffer.",
+    description: "How staff engineers set per-route performance budgets, wire them to CI, and keep marketing and product surfaces inside measurable LCP and INP guardrails.",
+    publishedAt: "2026-10-23",
+    readingMinutes: 11,
+    keywords: [
+      "Core Web Vitals",
+      "performance budgets",
+      "LCP",
+      "INP",
+      "frontend performance",
+    ],
+    socialThreadTr: [
+      "Pazarlama ve uygulama rotaları için ayrı performans bütçesi şart; global ortalama yeterli değil. 🧵",
+      "LCP/INP bütçeleri ve CI. Detay: https://berktugberke.com/tr/blogs/performance-budgets-for-marketing-and-app-routes",
+    ],
+    sections: [
+      {
+        heading: "Templates need their own budgets",
+        paragraphs: [
+          "Landing pages compete on first paint; dashboards compete on interaction readiness. A single global bundle budget hides which team regressed which surface.",
+          "Split budgets by route class and third-party tag ownership so marketing experiments do not inherit engineering defaults.",
+          "Marketing hero assets and authenticated dashboards rarely share the same bottleneck—split budgets so one team cannot spend another's latency.",
+        ],
+      },
+      {
+        heading: "Ship perf with the release train",
+        paragraphs: [
+          "Attach budget checks to preview deployments for high-traffic templates. Block merges that blow LCP without an explicit waiver tied to an owner.",
+          "Roll back feature flags when INP crosses thresholds in canary, not after a week of complaints.",
+          "Attach budget regressions to the same rollback conversation as error-rate spikes.",
+        ],
+        points: [
+          "Budget LCP and INP per template, not only globally",
+          "Tie perf regressions to release trains and rollback rules",
+          "Measure real devices and slow networks in CI smoke",
+          "Publish perf dashboards beside error rate for product",
+        ],
+      },
+      {
+        heading: "Test slow networks deliberately",
+        paragraphs: [
+          "Lab tests on fast laptops lie. Run smoke perf on representative mobile profiles and cache states.",
+          "Track hero image bytes, font loading strategy, and hydration cost as first-class metrics.",
+          "Synthetic checks from three regions catch CDN and DNS issues that lab Wi-Fi hides.",
+        ],
+      },
+      {
+        heading: "Make perf visible to product",
+        paragraphs: [
+          "Product managers should see perf trends next to conversion, not in a quarterly infra review.",
+          "Budgets are how you keep SEO and UX from becoming a postmortem theme.",
+          "Perf is a feature: publish weekly trends to product leads, not only to frontend guild channels.",
+        ],
+        links: [
+          {
+            label: "Google Search Central — Core Web Vitals",
+            url: "https://developers.google.com/search/docs/appearance/core-web-vitals",
+          },
+          {
+            label: "web.dev — Performance",
+            url: "https://web.dev/performance/",
+          },
+        ],
+      },
+      {
+        heading: "Split budgets by traffic class",
+        paragraphs: [
+          "Marketing landing pages and authenticated application shells rarely share the same critical path. Assign separate performance budgets for static hero routes, logged-in dashboards, and API-backed widgets so one team's experiment cannot consume another team's latency envelope. Document owners in the same service catalog entry you use for on-call routing.",
+          "Budgets should name the metric, the percentile, and the geography. A p75 Largest Contentful Paint target in Frankfurt does not transfer to São Paulo without CDN evidence. Tie regressions to deployment metadata so you can distinguish bundle growth from upstream saturation or DNS misconfiguration during cutovers.",
+          "Review budget burn in product forums, not only frontend guild meetings. When product managers see weekly trend lines beside feature velocity, they negotiate scope before shipping another carousel or third-party tag manager snippet. Performance becomes a planning input instead of a post-release fire drill. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        ],
+      },
+      {
+        heading: "Instrument against documented baselines",
+        paragraphs: [
+          "Synthetic monitors and lab Lighthouse runs disagree when authentication, feature flags, or consent banners differ from production. Align probes with real client headers, cookie policies, and edge caching rules your marketing stack actually emits. Otherwise budgets green-light merges that fail under real user conditions. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+          "Use HTTP caching semantics deliberately on marketing assets while keeping hashed filenames immutable. Misapplied Cache-Control on HTML shells creates stale campaign messaging; overly short TTL on static chunks recreates unnecessary origin load. RFC guidance helps engineers argue with ad-tech vendors using shared vocabulary. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+          "Publish which budgets gate merges versus which only page owners. Hard gates belong on routes that drive revenue or signup completion; informational budgets can warn on editorial pages without blocking the train. Clarity prevents alert fatigue and keeps rollback conversations focused on user-visible regressions. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        ],
+        links: [
+          {
+            label: "web.dev — Core Web Vitals",
+            url: "https://web.dev/articles/vitals",
+          },
+          {
+            label: "Chrome Developers — Lighthouse performance scoring",
+            url: "https://developer.chrome.com/docs/lighthouse/performance/performance-scoring",
+          },
+          {
+            label: "RFC 9111 — HTTP caching",
+            url: "https://www.rfc-editor.org/rfc/rfc9111.html",
+          },
+        ],
+      },
+      {
+        heading: "Shared budgets without blame shifting",
+        paragraphs: [
+          "Marketing landing routes and authenticated app shells rarely share bottlenecks, yet teams fight over one global Lighthouse score. Publish separate budgets for static hero pages, localized campaigns, and logged-in dashboards, each with owner and allowed third-party scripts. Regressions attach to the same rollback conversation as error-rate spikes, so product managers cannot treat perf as a frontend hobby. Budget dashboards should trend weekly, not only alarm on deploy day.",
+          "Real-user monitoring fills gaps synthetics miss—login flows, paywalls, and geo-specific CDN paths—but sample rates must respect privacy tags on events. Pair RUM with synthetic checks from three regions to catch DNS and edge misconfigurations lab Wi-Fi hides. When budgets breach, require a named mitigation: defer noncritical A/B scripts, shrink hero video, or paginate heavy tables, not vague tech debt tickets without dates.",
+          "Budgets fail when assets ship outside the main release train. Creative teams uploading five megabyte PNGs into CMS bypass CI unless upload hooks enforce compression and format rules. Block merges that add render-blocking tags without performance review on marketing routes. Document exceptions with expiry and measure whether conversions actually improved, otherwise revert the heavy asset after the campaign ends.",
+          "Staff engineers should facilitate quarterly budget reviews with marketing, growth, and mobile leads together. Compare p75 interaction to next paint on top campaigns against core task completion routes. Celebrate teams that renegotiate vendor contracts for lighter embeds. Performance is a product feature; publish trends where leadership sees them, not only in guild Slack channels engineers already inhabit.",
+        ],
+      },
+    ],
+  },
+    {
     slug: "logging-llm-interactions-without-hoarding-pii",
     title: "Logging LLM Interactions Without Hoarding PII",
     excerpt: "You cannot debug production copilots without traces, but you also cannot treat every chat as permanent warehouse fuel. Logging design is a privacy and cost decision.",
