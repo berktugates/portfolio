@@ -19,9 +19,14 @@ export async function sha256Hex(value: unknown): Promise<string> {
   return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
+const PUBLIC_JSON_CACHE_CONTROL = "public, max-age=600, s-maxage=600, stale-while-revalidate=86400";
+
 export async function putJson(bucket: R2Bucket, key: string, value: unknown): Promise<void> {
   await bucket.put(key, JSON.stringify(value), {
-    httpMetadata: { contentType: "application/json" },
+    httpMetadata: {
+      contentType: "application/json",
+      cacheControl: PUBLIC_JSON_CACHE_CONTROL,
+    },
   });
 }
 
