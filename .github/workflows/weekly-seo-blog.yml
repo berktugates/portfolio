@@ -1,8 +1,10 @@
 name: Daily SEO blog
 
-# Git kuyruk → app/data/blogs.ts (7 dil). Zamanlanmış yayın KAPALI: günlük site blogu GrowthDailySEO → Worker → R2.
-# Acil geri dönüş veya kuyruk tüketimi için yalnızca manuel workflow_dispatch.
+# Kanonik günlük blog: GrowthDailySEO → Worker → R2 (otomatik; bkz. gds-daily-automation.yml + Worker cron).
+# Git kuyruk → app/data/blogs.ts yalnız yedek: schedule ile GDS bugün yayınlamadıysa; workflow_dispatch her zaman çalışır.
 on:
+  schedule:
+    - cron: "0 8 * * *"
   workflow_dispatch:
     inputs:
       publish_date:
@@ -43,10 +45,33 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Git fallback gate (skip if GDS already published today)
+        id: gate
+        env:
+          MANUAL_CRON_SECRET: ${{ secrets.MANUAL_CRON_SECRET }}
+        run: |
+          set +e
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            pnpm exec tsx scripts/gds-git-fallback-gate.ts --force
+            exit 0
+          fi
+          pnpm exec tsx scripts/gds-git-fallback-gate.ts
+          code=$?
+          if [ "$code" -eq 2 ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "GDS kanonik yayın mevcut — git kuyruk atlandı."
+            exit 0
+          fi
+          if [ "$code" -ne 0 ]; then exit "$code"; fi
+          echo "run=true" >> "$GITHUB_OUTPUT"
+
       - name: Sync blog queue (7 locales, long-form depth)
+        if: steps.gate.outputs.run == 'true'
         run: python3 scripts/_write_sept_blog_queue.py
 
       - name: Validate queues and assistant
+        if: steps.gate.outputs.run == 'true'
         run: |
           set -euo pipefail
           pnpm typecheck
@@ -55,6 +80,7 @@ jobs:
           node scripts/assert-no-gundem-links.mjs
 
       - name: Inventory check
+        if: steps.gate.outputs.run == 'true'
         run: |
           set -euo pipefail
           COUNT=$(find content/blog-queue -maxdepth 1 -name '*.json' 2>/dev/null | wc -l | tr -d ' ')
@@ -68,6 +94,7 @@ jobs:
           fi
 
       - name: Publish next blog from queue
+        if: steps.gate.outputs.run == 'true'
         id: publish
         run: |
           set -euo pipefail

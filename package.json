@@ -16,6 +16,8 @@
     "check:queues": "node --import tsx scripts/check-queue-safety.ts",
     "check:ops": "node --import tsx scripts/check-ops-phase0.ts",
     "check:gds-ops": "node --import tsx scripts/check-gds-ops.ts",
+    "gds:reconcile": "node --import tsx scripts/gds-reconcile.ts",
+    "gds:git-fallback-gate": "node --import tsx scripts/gds-git-fallback-gate.ts",
     "gds:sync-fixtures": "node --import tsx scripts/sync-gds-prod-fixtures.ts",
     "check:measurement": "node --import tsx scripts/check-measurement-phase5.ts",
     "check:schema-gsc": "node --import tsx scripts/check-schema-gsc.ts",

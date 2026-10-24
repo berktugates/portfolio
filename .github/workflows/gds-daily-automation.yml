@@ -1,0 +1,55 @@
+name: GDS daily automation
+
+# GrowthDailySEO → Worker → R2 (kanonik). Worker cron zaten var; bu workflow ücretsiz yedek reconcile + teyit.
+on:
+  schedule:
+    - cron: "45 4 * * *"
+    - cron: "0 10 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: gds-daily-automation
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    name: Reconcile GDS → site
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.8.1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: POST Worker /cron/growthdaily
+        env:
+          MANUAL_CRON_SECRET: ${{ secrets.MANUAL_CRON_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -z "${MANUAL_CRON_SECRET:-}" ]; then
+            echo "::warning::MANUAL_CRON_SECRET not set; skip reconcile"
+            exit 0
+          fi
+          pnpm exec tsx scripts/gds-reconcile.ts
+
+      - name: Ops snapshot (non-blocking)
+        env:
+          MANUAL_CRON_SECRET: ${{ secrets.MANUAL_CRON_SECRET }}
+        run: |
+          set +e
+          if [ -z "${MANUAL_CRON_SECRET:-}" ]; then exit 0; fi
+          pnpm check:gds-ops
+          exit 0
