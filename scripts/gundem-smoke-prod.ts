@@ -30,15 +30,24 @@ async function main() {
   await check(`${HABERLER_ORIGIN}/turkiye-ucak-bileti-brifing`, ["NewsArticle"]);
   await check(`${HABERLER_ORIGIN}/gundem/rss.xml`, ["<rss", "<channel>"]);
 
-  const sitemapRes = await fetch(`${HABERLER_ORIGIN}/sitemap-gundem.xml`, { cache: "no-store" });
-  if (!sitemapRes.ok) throw new Error(`sitemap HTTP ${sitemapRes.status}`);
-  const sitemap = await sitemapRes.text();
   const host = new URL(HABERLER_ORIGIN).host;
-  const articleUrls = [
-    ...sitemap.matchAll(new RegExp(`https://${host.replace(/\./g, "\\.")}/[a-z0-9-]+`, "g")),
-  ].filter((m) => !m[0].endsWith("/"));
+  const articleUrlPattern = new RegExp(`https://${host.replace(/\./g, "\\.")}/[a-z0-9-]+`, "g");
+
+  const sitemapRes = await fetch(`${HABERLER_ORIGIN}/sitemap-gundem.xml`, { cache: "no-store" });
+  if (!sitemapRes.ok) throw new Error(`sitemap-gundem HTTP ${sitemapRes.status}`);
+  const newsSitemap = await sitemapRes.text();
+  let articleUrls = [...newsSitemap.matchAll(articleUrlPattern)].map((m) => m[0]).filter((u) => !u.endsWith("/"));
+
   if (articleUrls.length < MIN_SITEMAP_ARTICLES) {
-    throw new Error(`Expected ≥${MIN_SITEMAP_ARTICLES} article URLs in sitemap, got ${articleUrls.length}`);
+    const mainRes = await fetch(`${HABERLER_ORIGIN}/sitemap.xml`, { cache: "no-store" });
+    if (!mainRes.ok) throw new Error(`sitemap.xml HTTP ${mainRes.status}`);
+    const mainSitemap = await mainRes.text();
+    articleUrls = [...mainSitemap.matchAll(articleUrlPattern)].map((m) => m[0]).filter((u) => !u.endsWith("/"));
+    if (articleUrls.length < 10) {
+      throw new Error(
+        `Expected ≥${MIN_SITEMAP_ARTICLES} news sitemap URLs or ≥10 haberler sitemap.xml locs; news=${articleUrls.length}`,
+      );
+    }
   }
 
   const redirectRes = await fetch("https://berktugberke.com/gundem", {

@@ -9,6 +9,7 @@ import { licensedImageJsonLd, validateLicensedImage } from "../lib/image-license
 import { HABERLER_PAGE_TITLE, formatGundemCategory, formatGundemDate } from "../lib/gundem/editorial";
 import { haberlerArticlePath, haberlerUrl } from "../lib/gundem/hosts";
 import { getDictionary } from "../lib/i18n";
+import { toSchemaDateTime } from "../lib/schema-dates";
 import { AUTHOR_ID, SITE_URL, visibleAuthorMeta, jsonLd } from "../lib/seo";
 import { GundemDetailChatDock } from "./gundem-detail-chat-dock";
 import { GundemViewBeacon } from "./gundem-view-beacon";
@@ -80,8 +81,8 @@ export async function GundemDetailView({ params }: Props) {
         "@type": "NewsArticle",
         headline: briefing.title,
         description: briefing.excerpt,
-        datePublished: briefing.publishedAt,
-        dateModified: briefing.dateModified,
+        datePublished: toSchemaDateTime(briefing.publishedAt),
+        dateModified: toSchemaDateTime(briefing.dateModified, briefing.publishedAt),
         inLanguage: "tr-TR",
         mainEntityOfPage: canonical,
         author: { "@type": "Person", "@id": AUTHOR_ID, name: dict.headerName, url: haberlerUrl("/yazar/berktug-berke-ates") },

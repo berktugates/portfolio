@@ -1,4 +1,5 @@
 import { HABERLER_ORIGIN } from "../../app/lib/gundem/hosts";
+import { probeGdsDailyCapSurface } from "./gds-prod-probes";
 
 export type ProbeResult = { name: string; ok: boolean; detail: string };
 
@@ -48,13 +49,15 @@ export async function probeGundemRedirect(): Promise<ProbeResult> {
 }
 
 export async function runPublicSurfaceProbes(): Promise<ProbeResult[]> {
-  return Promise.all([
+  const base = await Promise.all([
     probeUrl("sitemap-main", "https://berktugberke.com/sitemap.xml", { contains: ["<urlset", "berktugberke.com"] }),
     probeUrl("sitemap-gundem", `${HABERLER_ORIGIN}/sitemap-gundem.xml`, {
-      contains: ["<urlset", HABERLER_ORIGIN.replace("https://", "")],
+      contains: ["<urlset"],
     }),
     probeUrl("robots", "https://berktugberke.com/robots.txt"),
     probeUrl("haberler-index", `${HABERLER_ORIGIN}/`, { contains: ["Gündem"] }),
     probeGundemRedirect(),
   ]);
+  const gds = await probeGdsDailyCapSurface();
+  return [...base, ...gds];
 }

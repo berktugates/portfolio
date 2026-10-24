@@ -1,6 +1,10 @@
 import type { BlogPost } from "../../data/blogs";
-import type { Locale } from "../i18n/config";
+import { LOCALES, type Locale } from "../i18n/config";
 import { getBlobBlogLocalePost, getBlobBlogPost } from "./load-blob";
+
+function localeFromTag(tag: string): Locale | null {
+  return (LOCALES as readonly string[]).includes(tag) ? (tag as Locale) : null;
+}
 
 export async function r2BlogHasLocale(slug: string, locale: Locale): Promise<boolean> {
   if (locale === "en") {
@@ -18,8 +22,18 @@ export async function loadR2BlogLocalePost(slug: string, locale: Locale): Promis
 
 export async function r2HreflangLocalesForSlug(slug: string): Promise<Locale[]> {
   const en = await getBlobBlogPost(slug);
-  if (!en?.locales?.length) return en?.contentHtml ? (["en"] as Locale[]) : [];
-  return en.locales.filter((l): l is Locale =>
-    ["en", "tr", "de", "fr", "it", "zh", "ja"].includes(l),
-  ) as Locale[];
+  if (!en?.contentHtml && !en?.locales?.length) return [];
+
+  const out = new Set<Locale>(["en"]);
+  for (const tag of en?.locales ?? []) {
+    const loc = localeFromTag(tag);
+    if (loc) out.add(loc);
+  }
+  await Promise.all(
+    LOCALES.filter((locale) => locale !== "en").map(async (locale) => {
+      const post = await getBlobBlogLocalePost(slug, locale);
+      if (post) out.add(locale);
+    }),
+  );
+  return [...out];
 }

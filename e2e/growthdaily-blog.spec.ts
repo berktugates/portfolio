@@ -1,14 +1,14 @@
 import { test, expect } from "@playwright/test";
+import { GDS_PROD_PUBLISHED_SLUG } from "../app/lib/gds-prod-fixtures";
 import { localeMeta } from "../app/lib/i18n/config";
 
-const fixtureSlug = process.env.GROWTHDAILY_E2E_SLUG;
+const fixtureSlug = process.env.GROWTHDAILY_E2E_SLUG?.trim() || GDS_PROD_PUBLISHED_SLUG;
 const LOCALES = ["tr", "de", "fr", "it", "zh", "ja"] as const;
 
 test.describe("GrowthDailySEO R2 blog", () => {
-  test.skip(!fixtureSlug, "Set GROWTHDAILY_E2E_SLUG after first live publish");
 
   test("EN is published; locale pages exist only for hreflang-advertised locales", async ({ page }) => {
-    const slug = fixtureSlug!;
+    const slug = fixtureSlug;
     const response = await page.goto(`/blogs/${slug}`);
     expect(response?.status()).toBe(200);
     await expect(page.locator("article h1")).toBeVisible();
@@ -33,5 +33,16 @@ test.describe("GrowthDailySEO R2 blog", () => {
         expect(new URL(page.url()).pathname).toBe(`/blogs/${slug}`);
       }
     }
+  });
+
+  test("GTM content_group beacon on GDS blog", async ({ page }) => {
+    await page.addInitScript(() => {
+      window.dataLayer = [];
+    });
+    await page.goto(`/blogs/${fixtureSlug}`);
+    await page.waitForFunction(() => {
+      const events = (window as unknown as { dataLayer?: { content_group?: string }[] }).dataLayer ?? [];
+      return events.some((e) => e.content_group === "blog");
+    });
   });
 });
