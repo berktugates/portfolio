@@ -18,6 +18,7 @@
     "check:gds-ops": "node --import tsx scripts/check-gds-ops.ts",
     "gds:sync-fixtures": "node --import tsx scripts/sync-gds-prod-fixtures.ts",
     "check:measurement": "node --import tsx scripts/check-measurement-phase5.ts",
+    "check:schema-gsc": "node --import tsx scripts/check-schema-gsc.ts",
     "ops:collect": "node --import tsx scripts/collect-ops-baseline.ts",
     "ops:fetch-gsc": "node --import tsx scripts/fetch-gsc-performance-export.ts",
     "ops:merge-gsc-demand": "node --import tsx scripts/merge-gsc-demand-signals.ts",

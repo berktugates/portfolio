@@ -1,0 +1,31 @@
+{
+  "exportedAt": "2026-10-24",
+  "property": "sc-domain:berktugberke.com",
+  "note": "Staff URL Inspection / canlı test kaydı. GSC arayüzündeki tarihsel Profil dateModified uyarıları ISO düzeltmesinden sonra gecikmeli kaybolabilir; prod HTML probeleri kanonik doğrulama.",
+  "urls": [
+    {
+      "url": "https://berktugberke.com/",
+      "purpose": "ProfilePage rich result — dateModified olmamalı",
+      "indexing": "Google'da",
+      "richResultsNote": "Profil sayfası geçerli; JSON-LD'de dateModified yok (schema-home-profile probe)"
+    },
+    {
+      "url": "https://berktugberke.com/blogs/reducing-flaky-e2e-tests-in-expo-apps",
+      "purpose": "Git BlogPosting — date-only legacy normalize",
+      "indexing": "Google'da",
+      "richResultsNote": "BlogPosting dateModified tam ISO UTC (schema-git-blog-iso probe)"
+    },
+    {
+      "url": "https://berktugberke.com/blogs/single-tenant-vs-multi-tenant-examples-operator-focused-trade-offs",
+      "purpose": "GDS/R2 BlogPosting — Worker isoDate",
+      "indexing": "Google'da",
+      "richResultsNote": "BlogPosting dateModified tam ISO UTC (schema-gds-blog-iso probe)"
+    },
+    {
+      "url": "https://berktugberke.com/hire",
+      "purpose": "Hire — structured data'da dateModified yok",
+      "indexing": "Google'da",
+      "richResultsNote": "schema-hire-no-dm probe"
+    }
+  ]
+}

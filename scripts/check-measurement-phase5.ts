@@ -8,6 +8,7 @@ import { parseGscExportAgeDays } from "./lib/gsc-baseline-sync";
 import { loadOpsEnv } from "./lib/load-ops-env";
 import { collectMeasurement, loadGscExport } from "./lib/measurement-collect";
 import { runDatalayerProbes } from "./lib/datalayer-probes";
+import { validateGscUrlInspectionSnapshot } from "./lib/gsc-url-inspection-snapshot";
 import { runSchemaProbes } from "./lib/schema-probes";
 
 const root = resolve(import.meta.dirname, "..");
@@ -34,6 +35,14 @@ async function main() {
     } else {
       console.log(`OK ${p.id}: ${p.detail}`);
     }
+  }
+
+  const gscInspect = await validateGscUrlInspectionSnapshot(root);
+  if (!gscInspect.ok) {
+    console.error(`FAIL gsc-inspection-snapshot: ${gscInspect.detail}`);
+    errors += 1;
+  } else {
+    console.log(`OK gsc-inspection-snapshot: ${gscInspect.detail}`);
   }
 
   for (const p of await runDatalayerProbes()) {

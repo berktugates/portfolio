@@ -141,3 +141,14 @@ GitHub secrets (2026-10-24): **`MANUAL_CRON_SECRET`** ✓, **`VERCEL_*`** ✓ (F
 | **daily-cap** | `GROWTHDAILY_DAILY_PUBLISH_CAP=1`, D1 `growthdaily_daily_publish` + `growthdaily_deferred`, webhook + `0 */2` reconcile + `15 4 * * *` (Istanbul). |
 | **ship-renderer** | `blog-detail` → `contentHtml` (R2); git overlay ayrı. Prod: `pnpm check:gds-ops` (yayın 200, cap slug 404). |
 | **Index hreflang** | Blog liste sayfaları yalnız EN+TR kardeşi olan yazıları listeler (`shouldListOnBlogIndex`); R2 kısmi dil indeks kaymasını önler. |
+
+## Faz D — schema / GSC (2026-10-24 teyit)
+
+| Madde | DoD |
+|-------|-----|
+| **ISO BlogPosting** | `toSchemaDateTime` (Next) + Worker `isoDate()`; prod git + GDS slug probeleri. |
+| **ProfilePage** | Apex `ProfilePage` **dateModified yok** (`schema-home-profile`). |
+| **GSC URL denetimi** | `docs/gsc-url-inspection.snapshot.json` — apex, hire, git + GDS blog; canlı HTML probeleri kanonik. |
+| **Otomasyon** | `pnpm check:schema-gsc` veya `pnpm check:measurement` (schema + snapshot dahil). |
+
+GSC İletiler’deki tarihsel Profil `dateModified` uyarısı prod HTML temiz olsa da **gecikmeli** kaybolabilir; yeni sorun için URL denetimi → canlı test + probeleri yenile.

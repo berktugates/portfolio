@@ -43,8 +43,13 @@ export async function probeHomeProfilePageNoDateModified(): Promise<SchemaProbe>
   }
 }
 
-export async function probeBlogPostingIsoDates(slug: string): Promise<SchemaProbe> {
-  const id = "schema-blog-iso";
+/** Stable git-queue post (7-locale overlay); prod schema regression anchor. */
+export const GIT_BLOG_SCHEMA_PROBE_SLUG = "reducing-flaky-e2e-tests-in-expo-apps";
+
+export async function probeBlogPostingIsoDates(
+  slug: string,
+  id = "schema-blog-iso",
+): Promise<SchemaProbe> {
   const url = `https://berktugberke.com/blogs/${slug}`;
   try {
     const html = await fetchHtml(url);
@@ -94,7 +99,8 @@ export async function probeGtmSinglePath(): Promise<SchemaProbe> {
 export async function runSchemaProbes(gdsBlogSlug: string): Promise<SchemaProbe[]> {
   return Promise.all([
     probeHomeProfilePageNoDateModified(),
-    probeBlogPostingIsoDates(gdsBlogSlug),
+    probeBlogPostingIsoDates(gdsBlogSlug, "schema-gds-blog-iso"),
+    probeBlogPostingIsoDates(GIT_BLOG_SCHEMA_PROBE_SLUG, "schema-git-blog-iso"),
     probeHireNoDateModified(),
     probeGtmSinglePath(),
   ]);

@@ -32,6 +32,8 @@ Prefer **one** client-side tag path to avoid double-counting:
 
 `BlogPosting` `datePublished` / `dateModified` must be full ISO-8601 UTC datetimes (e.g. `2026-10-20T12:00:00.000Z`), not bare `YYYY-MM-DD` (GSC invalid-date / ProfilePage drilldown). `app/lib/schema-dates.ts` normalizes legacy date-only values (noon UTC); GrowthDaily/blog-cron R2 records are written in full ISO. `ProfilePage` on the home page intentionally has no `dateModified`.
 
+**GSC URL Inspection (staff):** After schema changes, run live test on URLs in `docs/gsc-url-inspection.snapshot.json` (Search Console → URL denetimi). CI/prod gate: `pnpm check:schema-gsc` (HTML probes + snapshot URL list).
+
 ## Daily SEO blogs
 
 - Queue: `content/blog-queue/YYYY-MM-DD-slug.json`
