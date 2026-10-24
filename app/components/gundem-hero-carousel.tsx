@@ -59,14 +59,7 @@ export function GundemHeroCarousel({ posts, intervalMs = 5500 }: GundemHeroCarou
                       <GundemCover post={post} priority={i === 0} fill />
                     </span>
                     <span className="flex min-w-0 flex-1 flex-col justify-center px-4 py-4 md:px-6 md:py-5 lg:py-6">
-                      <span className="flex flex-wrap items-center gap-2 text-xs font-medium text-zinc-500">
-                        <span>{formatGundemCategory(post.category)}</span>
-                        {post.trendQuery ? (
-                          <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] text-zinc-600 dark:bg-zinc-900 dark:text-zinc-300">
-                            #{post.trendQuery}
-                          </span>
-                        ) : null}
-                      </span>
+                      <span className="text-xs font-medium text-zinc-500">{formatGundemCategory(post.category)}</span>
                       <span className="mt-2 line-clamp-3 text-xl font-semibold leading-snug text-zinc-950 dark:text-zinc-50 sm:text-2xl lg:line-clamp-2">
                         {post.title}
                       </span>

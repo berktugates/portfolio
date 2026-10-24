@@ -7,6 +7,7 @@ import { getGundemBySlug, getGundemSlugs } from "../lib/gundem/catalog";
 import { briefingHighlights } from "../lib/gundem/briefing-highlights";
 import { licensedImageJsonLd, validateLicensedImage } from "../lib/image-license";
 import { HABERLER_PAGE_TITLE, formatGundemCategory, formatGundemDate } from "../lib/gundem/editorial";
+import { categoryToLane } from "../lib/gundem/lanes";
 import { haberlerArticlePath, haberlerUrl } from "../lib/gundem/hosts";
 import { getDictionary } from "../lib/i18n";
 import { toSchemaDateTime } from "../lib/schema-dates";
@@ -16,6 +17,7 @@ import { GundemViewBeacon } from "./gundem-view-beacon";
 import { SiteFooter } from "./site-footer";
 import { newsPublisherJsonLd } from "../lib/gundem/publication";
 import { BlogShare } from "./blog-share";
+import { AdsenseDisplay } from "./adsense-display";
 
 export const revalidate = 1800;
 
@@ -106,7 +108,7 @@ export async function GundemDetailView({ params }: Props) {
   };
 
   return (
-    <HaberlerShell activeCategory={briefing.category ?? null} enableAds>
+    <HaberlerShell activeLane={categoryToLane(briefing.category)} enableAds>
       <GundemViewBeacon slug={briefing.slug} />
       <main className="blog-prose mx-auto max-w-3xl pb-12">
         <article>
@@ -135,14 +137,10 @@ export async function GundemDetailView({ params }: Props) {
           </header>
 
           <figure className="mb-10 overflow-hidden rounded-xl">
-            <GundemCover post={briefing} priority forcePhoto />
-            <figcaption className="bg-zinc-100 px-3 py-2 text-xs text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400">
-              Fotoğraf: {" "}
-              <a href={briefing.image.creditUrl} rel="noreferrer noopener" target="_blank" className="underline">
-                {briefing.image.creditName}
-              </a>
-            </figcaption>
+            <GundemCover post={briefing} priority />
           </figure>
+
+          <AdsenseDisplay slotKind="haberler" />
 
           <div className="max-w-none">
             {briefing.status === "RETRACTED" ? (
@@ -158,6 +156,7 @@ export async function GundemDetailView({ params }: Props) {
             {paragraphs.map((paragraph) => (
               <p key={paragraph.slice(0, 40)}>{paragraph}</p>
             ))}
+            <AdsenseDisplay slotKind="haberler" />
             <h2 className="text-base font-medium">Kaynaklar</h2>
             <ul className="text-sm text-zinc-600 dark:text-zinc-400">
               {briefing.sources.map((source) => (

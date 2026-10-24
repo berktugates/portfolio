@@ -21,6 +21,8 @@
     "./gundem/feed-ingest": "./src/gundem/feed-ingest.ts",
     "./gundem/story-cluster": "./src/gundem/story-cluster.ts",
     "./gundem/feed-compose": "./src/gundem/feed-compose.ts",
+    "./gundem/haberler-lanes": "./src/gundem/haberler-lanes.ts",
+    "./gundem/story-cover": "./src/gundem/story-cover.ts",
     "./gundem/news-quality": "./src/gundem/news-quality.ts",
     "./gundem/trends": "./src/gundem/trends.ts",
     "./blog/schema": "./src/blog/schema.ts",

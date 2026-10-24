@@ -233,6 +233,39 @@ export async function addDailyNewsUsage(
   ).bind(date, values.newPublished ?? 0, values.updatesPublished ?? 0, values.aiNeuronsEstimated ?? 0).run();
 }
 
+export async function getPublishedLanesForDay(env: Env, istanbulDay: string): Promise<Set<string>> {
+  const rows = await env.META.prepare(
+    "SELECT lane FROM news_daily_lane_publish WHERE istanbul_day = ?",
+  )
+    .bind(istanbulDay)
+    .all<{ lane: string }>();
+  return new Set((rows.results ?? []).map((row) => row.lane));
+}
+
+export async function recordLanePublish(
+  env: Env,
+  istanbulDay: string,
+  lane: string,
+  slug: string,
+  publishedAt: string,
+): Promise<void> {
+  await env.META.prepare(
+    `INSERT OR IGNORE INTO news_daily_lane_publish (istanbul_day, lane, slug, published_at)
+     VALUES (?, ?, ?, ?)`,
+  )
+    .bind(istanbulDay, lane, slug, publishedAt)
+    .run();
+}
+
+export async function countLanePublishesForDay(env: Env, istanbulDay: string): Promise<number> {
+  const row = await env.META.prepare(
+    "SELECT COUNT(*) AS n FROM news_daily_lane_publish WHERE istanbul_day = ?",
+  )
+    .bind(istanbulDay)
+    .first<{ n: number }>();
+  return row?.n ?? 0;
+}
+
 export async function upsertNewsStory(
   env: Env,
   input: {

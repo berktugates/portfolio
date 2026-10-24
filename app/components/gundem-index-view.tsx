@@ -4,6 +4,7 @@ import { GundemCover } from "./gundem-cover";
 import { GundemHeroCarousel } from "./gundem-hero-carousel";
 import { HaberlerShell } from "./haberler-shell";
 import { SiteFooter } from "./site-footer";
+import { AdsenseDisplay } from "./adsense-display";
 import { getAllGundemBriefings } from "../lib/gundem/catalog";
 import {
   GUNDEM_INDEX_LEDE,
@@ -11,8 +12,12 @@ import {
   HABERLER_PAGE_TITLE,
   formatGundemCategory,
   formatGundemDate,
-  type GundemCategory,
 } from "../lib/gundem/editorial";
+import {
+  briefingMatchesLane,
+  formatHaberlerLane,
+  type HaberlerLane,
+} from "../lib/gundem/lanes";
 import { haberlerArticlePath, haberlerUrl } from "../lib/gundem/hosts";
 import { formatGundemViewCount, getGundemViewCountsForPosts } from "../lib/gundem/view-counts";
 import { getDictionary } from "../lib/i18n";
@@ -21,14 +26,14 @@ import type { GundemBriefing } from "../lib/gundem/types";
 
 export const revalidate = 1800;
 
-export async function createGundemIndexMetadata(activeCategory?: GundemCategory | null): Promise<Metadata> {
+export async function createGundemIndexMetadata(activeLane?: HaberlerLane | null): Promise<Metadata> {
   const [dict, allPosts] = await Promise.all([getDictionary("tr"), getAllGundemBriefings()]);
-  const categoryLabel = activeCategory ? formatGundemCategory(activeCategory) : null;
-  const title = categoryLabel ? `${categoryLabel} — ${HABERLER_PAGE_TITLE}` : HABERLER_PAGE_TITLE;
-  const description = categoryLabel
-    ? `${categoryLabel} gündemi: ${GUNDEM_META_DESCRIPTION}`
+  const laneLabel = activeLane ? formatHaberlerLane(activeLane) : null;
+  const title = laneLabel ? `${laneLabel} — ${HABERLER_PAGE_TITLE}` : HABERLER_PAGE_TITLE;
+  const description = laneLabel
+    ? `${laneLabel} gündemi: ${GUNDEM_META_DESCRIPTION}`
     : GUNDEM_META_DESCRIPTION;
-  const canonicalPath = activeCategory ? `/kategori/${activeCategory}` : "/";
+  const canonicalPath = activeLane ? `/kategori/${activeLane}` : "/";
   return {
     title,
     description,
@@ -36,7 +41,9 @@ export async function createGundemIndexMetadata(activeCategory?: GundemCategory 
     alternates: { canonical: haberlerUrl(canonicalPath) },
     metadataBase: new URL(haberlerUrl("/")),
     robots: {
-      index: !activeCategory || allPosts.filter((post) => (post.category ?? "diger") === activeCategory).length >= 3,
+      index:
+        !activeLane ||
+        allPosts.filter((post) => briefingMatchesLane(post.category, activeLane)).length >= 3,
       follow: true,
     },
     openGraph: {
@@ -73,14 +80,7 @@ function HaberGridCard({
           <GundemCover post={post} priority={priority} fill />
         </span>
         <span className="flex min-w-0 flex-1 flex-col p-4 sm:py-3.5">
-          <span className="flex flex-wrap items-center gap-2 text-xs font-medium text-zinc-500">
-            <span>{formatGundemCategory(post.category)}</span>
-            {post.trendQuery ? (
-              <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] text-zinc-600 dark:bg-zinc-900 dark:text-zinc-300">
-                #{post.trendQuery}
-              </span>
-            ) : null}
-          </span>
+          <span className="text-xs font-medium text-zinc-500">{formatGundemCategory(post.category)}</span>
           <span className="mt-2 line-clamp-2 block text-base font-semibold leading-snug text-zinc-950 dark:text-zinc-50">
             {post.title}
           </span>
@@ -100,13 +100,13 @@ function HaberGridCard({
 }
 
 type GundemIndexViewProps = {
-  activeCategory?: GundemCategory | null;
+  activeLane?: HaberlerLane | null;
 };
 
-export async function GundemIndexView({ activeCategory = null }: GundemIndexViewProps) {
+export async function GundemIndexView({ activeLane = null }: GundemIndexViewProps) {
   const [allPosts, dict] = await Promise.all([getAllGundemBriefings(), getDictionary("tr")]);
-  const posts = activeCategory
-    ? allPosts.filter((p) => (p.category ?? "diger") === activeCategory)
+  const posts = activeLane
+    ? allPosts.filter((p) => briefingMatchesLane(p.category, activeLane))
     : allPosts;
   const viewCounts = await getGundemViewCountsForPosts(posts);
   const carouselPosts = [...posts].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)).slice(0, 5);
@@ -114,10 +114,10 @@ export async function GundemIndexView({ activeCategory = null }: GundemIndexView
     (a, b) => (viewCounts[b.slug] ?? 0) - (viewCounts[a.slug] ?? 0),
   );
   const todayLabel = formatGundemDate(todayIstanbulIsoDate());
-  const categoryTitle = activeCategory ? formatGundemCategory(activeCategory) : null;
+  const categoryTitle = activeLane ? formatHaberlerLane(activeLane) : null;
 
   return (
-    <HaberlerShell activeCategory={activeCategory} enableAds={activeCategory !== null}>
+    <HaberlerShell activeLane={activeLane} enableAds>
       <div className="mb-8 border-b border-zinc-200 pb-8 dark:border-zinc-800">
         <p className="text-xs font-medium uppercase tracking-widest text-zinc-500">{todayLabel}</p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-4xl">
@@ -130,6 +130,8 @@ export async function GundemIndexView({ activeCategory = null }: GundemIndexView
         {carouselPosts.length > 0 ? (
           <GundemHeroCarousel posts={carouselPosts} />
         ) : null}
+
+        <AdsenseDisplay slotKind="haberler" />
 
         {popularPosts.length > 0 ? (
           <section aria-labelledby="gundem-grid-heading">

@@ -5,13 +5,13 @@ import { Menu, X } from "lucide-react";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { bbaWordmarkFont } from "../lib/bba-wordmark-font";
-import { formatGundemCategory, type GundemCategory } from "../lib/gundem/editorial";
-import { HABERLER_NAV_CATEGORIES, haberlerCategoryPath } from "../lib/gundem/nav-categories";
+import { formatHaberlerLane, type HaberlerLane } from "../lib/gundem/lanes";
+import { HABERLER_NAV_LANES, haberlerCategoryPath } from "../lib/gundem/nav-categories";
 import { haberlerUrl } from "../lib/gundem/hosts";
 import { HABERLER_CONTAINER_CLASS } from "../lib/gundem/haberler-container";
 
 type HaberlerNavProps = {
-  activeCategory?: GundemCategory | null;
+  activeLane?: HaberlerLane | null;
 };
 
 function desktopPillClass(active: boolean): string {
@@ -108,9 +108,9 @@ function HaberlerMobileCategorySheet({
   );
 }
 
-export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
+export function HaberlerNav({ activeLane = null }: HaberlerNavProps) {
   const home = haberlerUrl("/");
-  const allActive = activeCategory == null;
+  const allActive = activeLane == null;
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -145,8 +145,8 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
           Tümü
         </Link>
       </li>
-      {HABERLER_NAV_CATEGORIES.map((category) => {
-        const active = activeCategory === category;
+      {HABERLER_NAV_LANES.map((category) => {
+        const active = activeLane === category;
         return (
           <li key={category}>
             <Link
@@ -154,7 +154,7 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
               data-haberler-nav-link={active ? "active" : category}
               className={desktopPillClass(active)}
             >
-              {formatGundemCategory(category)}
+              {formatHaberlerLane(category)}
             </Link>
           </li>
         );
@@ -174,8 +174,8 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
           Tümü
         </Link>
       </li>
-      {HABERLER_NAV_CATEGORIES.map((category) => {
-        const active = activeCategory === category;
+      {HABERLER_NAV_LANES.map((category) => {
+        const active = activeLane === category;
         return (
           <li key={category}>
             <Link
@@ -184,7 +184,7 @@ export function HaberlerNav({ activeCategory = null }: HaberlerNavProps) {
               className={mobileSheetRowClass(active)}
               onClick={closeMenu}
             >
-              {formatGundemCategory(category)}
+              {formatHaberlerLane(category)}
             </Link>
           </li>
         );

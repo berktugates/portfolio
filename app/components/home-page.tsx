@@ -17,6 +17,8 @@ import {
 import { formatMessage } from "../lib/i18n/format";
 import { shareImageMeta } from "../lib/share-image";
 import { AUTHOR_ID, WEBSITE_ID, jsonLd, pageSchemaId, visibleAuthorMeta } from "../lib/seo";
+import { AdsenseDisplay } from "./adsense-display";
+import { AdsenseScript } from "./adsense-script";
 
 export async function createHomeMetadata(locale: Locale): Promise<Metadata> {
   const dict = await getDictionary(locale);
@@ -89,6 +91,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
           : undefined
       }
     >
+      <AdsenseScript />
       <div className="relative mx-auto w-full max-w-screen-sm flex-1 px-4 pt-20">
         <SiteHeader
           homeHref={homeHref}
@@ -100,6 +103,8 @@ export async function HomePage({ locale }: { locale: Locale }) {
         />
         <main className="space-y-24">
           <h1 className="sr-only">{dict.h1}</h1>
+
+          <AdsenseDisplay slotKind="home" />
 
           <section aria-labelledby="blog-heading">
             <div className="mb-3 flex items-center justify-between">

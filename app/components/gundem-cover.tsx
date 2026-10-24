@@ -4,9 +4,7 @@ import { formatGundemCategory } from "../lib/gundem/editorial";
 import type { GundemBriefing } from "../lib/gundem/types";
 
 export function gundemShowsPhoto(post: GundemBriefing): boolean {
-  if (post.cover === "type") return false;
-  if (post.cover === "photo") return true;
-  return gundemImageMatchesStory(post);
+  return Boolean(post.image?.src?.startsWith("https://"));
 }
 
 export function GundemCover({

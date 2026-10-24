@@ -3,7 +3,7 @@ import type { GundemCategory } from "./categories";
 import type { FeedStoryCluster } from "./story-cluster";
 import type { GundemBriefing } from "./types";
 import type { TrendItem } from "./trends";
-import { gundemImageMatchesStory } from "./cover";
+import { coverModeForStory, pickStoryCoverImage } from "./story-cover";
 import type { ParaphraseStrength } from "./paraphrase-tr";
 import { polishHeadlinesBriefing } from "./polish";
 import type { TrMediaFeedItem } from "./feed-ingest";
@@ -27,18 +27,28 @@ export function slugifyNewsQuery(query: string): string {
 
 export function classifyNewsQuery(query: string): GundemCategory {
   const q = query.toLocaleLowerCase("tr");
-  if (/altın|dolar|euro|enflasyon|faiz|borsa|kira|maaş|ücret|zam|vergi|market|benzin/.test(q)) {
+  if (/altın|dolar|euro|enflasyon|faiz|borsa|kira|maaş|ücret|zam|vergi|market|benzin|tcmb|bütçe|ihracat|ithalat|emekli|asgari|konut|kredi|enflasyon|petrol|enerji fiyat/.test(q)) {
     return "ekonomi";
   }
-  if (/seçim|meclis|bakan|cumhur|milletvekili|parti|tbmm/.test(q)) return "siyaset";
-  if (/maç|futbol|basket|şampiyon|transfer|süper lig|beşiktaş|besiktas|fenerbah|galatasaray/.test(q)) {
+  if (/maç|futbol|basket|şampiyon|transfer|süper lig|beşiktaş|besiktas|fenerbah|galatasaray|trabzon|basketbol|voleybol|milli takım|uefa|fifa/.test(q)) {
     return "spor";
   }
-  if (/deprem|yangın|trafik|güvenlik|polis|afet/.test(q)) return "toplum";
-  if (/hastane|sağlık|grip|virüs|aşı|ilaç/.test(q)) return "saglik";
-  if (/film|dizi|konser|festival/.test(q)) return "kultur";
+  if (/hastane|sağlık|grip|virüs|aşı|ilaç|salgin|epidemi|doktor|hemşire|sgk|tıp|kanser|ameliyat/.test(q)) {
+    return "saglik";
+  }
+  if (/film|dizi|konser|festival|tiyatro|müze|kitap|sanat|netflix|sinema|oscar|festivali/.test(q)) {
+    return "kultur";
+  }
+  if (/yazılım|iphone|android|siber|internet|btk|yapay zeka|ai |chatgpt|apple|google|microsoft|samsung|5g|veri ihlali|siber saldır|teknoloji|chip|yarı iletken/.test(q)) {
+    return "bilisim";
+  }
+  if (/uzay|nasa|bilim|iklim|deprem bilim|araştırma|üniversite|nobel|keşif/.test(q)) return "bilim";
+  if (/seçim|meclis|bakan|cumhur|milletvekili|parti|tbmm|hükümet|kabine|anayasa|yargı|diplomasi|nato|bm |abd başkan|ukrayna|israil|filistin|suriye|irak|iran/.test(q)) {
+    return "siyaset";
+  }
+  if (/deprem|yangın|trafik|güvenlik|polis|afet|sel|heyelan|kaza|göç|göçmen/.test(q)) return "toplum";
   if (/uçak|havayolu|tatil|otel|turizm|bilet/.test(q)) return "ekonomi";
-  if (/yazılım|iphone|android|siber|internet|btk/.test(q)) return "bilisim";
+  if (/dünya|yurtdış|avrupa|abd |rusya|çin |japonya|almanya|fransa|ingiltere/.test(q)) return "dunya";
   return "diger";
 }
 
@@ -90,7 +100,12 @@ export function composeBriefingFromFeedCluster(
   });
   if (!copy) return null;
 
-  const image = licensedIllustrativeImage(category);
+  const image = pickStoryCoverImage({
+    category,
+    title: copy.title,
+    excerpt: copy.excerpt,
+    seed: cluster.clusterId,
+  });
   let briefing: GundemBriefing = {
     storyId: cluster.clusterId,
     slug: slugifyNewsQuery(`${trend.query}-${cluster.clusterId}`),
@@ -112,7 +127,7 @@ export function composeBriefingFromFeedCluster(
         publishedAt: item.pubDate,
       })),
     image,
-    trendQuery: `feed:${cluster.clusterId}`,
+    trendQuery: trend.query.slice(0, 80).trim(),
     angle: copy.title,
     lang: "tr",
     editorialSource: "headlines",
@@ -133,14 +148,7 @@ export function composeBriefingFromFeedCluster(
         pubDate: i.pubDate,
       })),
     },
-    cover: gundemImageMatchesStory({
-      title: copy.title,
-      excerpt: copy.excerpt,
-      trendQuery: trend.query,
-      image,
-    })
-      ? "photo"
-      : "type",
+    cover: coverModeForStory(),
   };
 
   briefing = polishHeadlinesBriefing(briefing, {

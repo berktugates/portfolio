@@ -33,6 +33,11 @@ test.describe("Gündem surface", () => {
     await expect(page.getByRole("heading", { name: "Türkiye Gündemi", level: 1 })).toBeVisible();
     await expect(page.locator("[data-haberler-nav]")).toBeVisible();
     await expect(page.getByRole("link", { name: "BBA ana sayfa" })).toBeVisible();
+    const html = await page.content();
+    expect(html).not.toMatch(/#feed:/i);
+    await expect(page.locator("[data-gundem-card]").getByText(/^#feed:/)).toHaveCount(0);
+    expect(html).toContain("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
+    expect(html).toContain("ca-pub-2056987543720599");
   });
 
   test("GUN-5 mobile category sheet anchors to viewport bottom", async ({ page }) => {
@@ -57,11 +62,12 @@ test.describe("Gündem surface", () => {
     expect(rect.bottom).toBeLessThanOrEqual(viewport!.height + 2);
     const scrollEl = sheet.locator("[data-haberler-mobile-sheet-scroll]");
     const scrollable = await scrollEl.evaluate((el) => el.scrollHeight > el.clientHeight + 8);
-    expect(scrollable).toBe(true);
-    await scrollEl.evaluate((el) => {
-      el.scrollTop = el.scrollHeight;
-    });
-    await expect(sheet.getByRole("link", { name: "Dünya" })).toBeVisible();
+    if (scrollable) {
+      await scrollEl.evaluate((el) => {
+        el.scrollTop = el.scrollHeight;
+      });
+    }
+    await expect(sheet.getByRole("link", { name: "Kültür" })).toBeVisible();
     await sheet.getByRole("button", { name: "Kapat" }).click();
     await expect(overlay).toHaveAttribute("data-state", "closed");
     await expect(overlay).toHaveAttribute("aria-hidden", "true");
@@ -81,6 +87,8 @@ test.describe("Gündem surface", () => {
     await expect(page.locator('a[href="https://berktugberke.com"]')).toHaveCount(1);
     await expect(page.getByText(/haber ajansı servisi değildir/i)).toHaveCount(0);
     await expect(page.getByText(/Pexels \(pexels\)/i)).toHaveCount(0);
+    expect(html).not.toMatch(/<figcaption[^>]*>Fotoğraf:/i);
+    expect(html).toContain("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
   });
 
   test("GUN-4 index is a pictured grid", async ({ page }) => {

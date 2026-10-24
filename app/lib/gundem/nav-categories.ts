@@ -1,18 +1,11 @@
-import type { GundemCategory } from "./editorial";
+import type { HaberlerLane } from "./lanes";
+import { HABERLER_NAV_LANES, haberlerLanePath } from "./lanes";
 
-/** Navbar sırası — haberler yüzeyinde yatay menü. */
-export const HABERLER_NAV_CATEGORIES: readonly GundemCategory[] = [
-  "ekonomi",
-  "siyaset",
-  "toplum",
-  "saglik",
-  "spor",
-  "kultur",
-  "bilim",
-  "bilisim",
-  "dunya",
-] as const;
+/** @deprecated Use HABERLER_NAV_LANES */
+export const HABERLER_NAV_CATEGORIES = HABERLER_NAV_LANES;
 
-export function haberlerCategoryPath(category: GundemCategory): string {
-  return `/kategori/${category}`;
+export { HABERLER_NAV_LANES };
+
+export function haberlerCategoryPath(lane: HaberlerLane): string {
+  return haberlerLanePath(lane);
 }

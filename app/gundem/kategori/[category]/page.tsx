@@ -1,24 +1,35 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { GundemIndexView, createGundemIndexMetadata } from "../../../components/gundem-index-view";
-import { isGundemCategory } from "../../../lib/gundem/editorial";
-import { HABERLER_NAV_CATEGORIES } from "../../../lib/gundem/nav-categories";
+import { haberlerUrl } from "../../../lib/gundem/hosts";
+import {
+  HABERLER_NAV_LANES,
+  LEGACY_CATEGORY_TO_LANE,
+  isHaberlerLane,
+  type HaberlerLane,
+} from "../../../lib/gundem/lanes";
 
 export const revalidate = 1800;
 
 export async function generateStaticParams() {
-  return HABERLER_NAV_CATEGORIES.map((category) => ({ category }));
+  return HABERLER_NAV_LANES.map((category) => ({ category }));
 }
 
 type PageProps = { params: Promise<{ category: string }> };
 
 export async function generateMetadata(props: PageProps) {
   const { category } = await props.params;
-  if (!isGundemCategory(category)) return {};
-  return createGundemIndexMetadata(category);
+  const legacy = LEGACY_CATEGORY_TO_LANE[category];
+  const lane = isHaberlerLane(category) ? category : legacy;
+  if (!lane) return {};
+  return createGundemIndexMetadata(lane);
 }
 
 export default async function GundemCategoryPage(props: PageProps) {
   const { category } = await props.params;
-  if (!isGundemCategory(category)) notFound();
-  return <GundemIndexView activeCategory={category} />;
+  const legacy = LEGACY_CATEGORY_TO_LANE[category];
+  if (legacy && category !== legacy) {
+    redirect(haberlerUrl(`/kategori/${legacy}`));
+  }
+  if (!isHaberlerLane(category)) notFound();
+  return <GundemIndexView activeLane={category as HaberlerLane} />;
 }

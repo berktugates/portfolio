@@ -24,6 +24,8 @@ import { CopyUrl } from "./copy-url";
 import { LanguageSwitcher } from "./language-switcher";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
+import { AdsenseDisplay } from "./adsense-display";
+import { AdsenseScript } from "./adsense-script";
 
 export async function blogStaticParams() {
   const slugs = await getCatalogBlogSlugs();
@@ -162,6 +164,7 @@ export async function BlogDetailPage({
 
   return (
     <div lang={meta.htmlLang} dir={meta.dir} className="mx-auto min-h-screen w-full max-w-screen-sm px-4 pt-20">
+      <AdsenseScript />
       <SiteHeader
         homeHref={homeHref}
         name={dict.headerName}
@@ -208,6 +211,7 @@ export async function BlogDetailPage({
               whatsAppAriaLabel={content.ui.shareOnWhatsApp}
             />
           </header>
+          <AdsenseDisplay slotKind="blog" />
           {post.contentHtml ? (
             <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
           ) : (

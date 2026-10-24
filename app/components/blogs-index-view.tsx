@@ -19,6 +19,8 @@ import { BlogTransitionLink } from "./blog-transition-link";
 import { LanguageSwitcher } from "./language-switcher";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
+import { AdsenseDisplay } from "./adsense-display";
+import { AdsenseScript } from "./adsense-script";
 
 export async function createBlogsIndexMetadata(
   locale: Locale,
@@ -101,6 +103,7 @@ export async function BlogsIndexView({
       dir={meta.dir}
       className="mx-auto flex min-h-screen w-full max-w-screen-sm flex-col px-4 pt-20"
     >
+      <AdsenseScript />
       <SiteHeader
         homeHref={homeHref}
         name={dict.headerName}
@@ -112,6 +115,7 @@ export async function BlogsIndexView({
       <main className="flex flex-1 flex-col">
         <h1 className="mb-3 text-xl font-medium">{content.ui.blogs}</h1>
         <p className="mb-8 max-w-xl text-zinc-500 dark:text-zinc-400">{content.ui.blogsIntro}</p>
+        <AdsenseDisplay slotKind="blog" />
         <div className="space-y-1">
           {posts.map((post) => (
             <BlogTransitionLink
