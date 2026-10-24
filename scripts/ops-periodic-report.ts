@@ -4,7 +4,6 @@
 import { execSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { readFile } from "node:fs/promises";
 import { contentPublicBaseUrl } from "./lib/content-public-base";
 import { parseGscExportAgeDays } from "./lib/gsc-baseline-sync";
 import { probeGundemSitemapIndex } from "./lib/gundem-sitemap-probe";
