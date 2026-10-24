@@ -4,6 +4,7 @@ import type { ReadingLocale } from "@berktug/editorial-gates/blog/reading-html";
 import { GrowthDailyClient } from "./client";
 import {
   getGrowthDailyIngestState,
+  recordGrowthDailyDefer,
   recordGrowthDailyIngest,
   recordPublishedSlug,
   slugPublishedInChannel,
@@ -13,6 +14,7 @@ import { translateHtmlToLocale, WORKER_TRANSLATED_LOCALES } from "./translate";
 import { isGdsApprovedForSitePublish } from "./gds-approval";
 import {
   DAILY_CAP_REASON,
+  istanbulCalendarDay,
   isDailyCapReached,
   rankDailyCandidates,
   releaseDailySlot,
@@ -143,6 +145,12 @@ export async function ingestGrowthDailyPost(env: Env, slug: string): Promise<Ing
   const isUpdate = prior !== null;
   if (await isDailyCapReached(env, { postId: post.id, isUpdate })) {
     console.log(`growthdaily: daily publish cap reached, deferring slug=${post.slug}`);
+    await recordGrowthDailyDefer(env, {
+      istanbulDay: istanbulCalendarDay(),
+      postId: post.id,
+      slug: post.slug,
+      reason: DAILY_CAP_REASON,
+    });
     return { ok: true, slug: post.slug, locales: [], skipped: true, reason: DAILY_CAP_REASON };
   }
 
@@ -253,10 +261,23 @@ export async function ingestGrowthDailyPost(env: Env, slug: string): Promise<Ing
   });
   if (!slot) {
     console.log(`growthdaily: daily publish cap reached (race), deferring slug=${post.slug}`);
+    await recordGrowthDailyDefer(env, {
+      istanbulDay: istanbulCalendarDay(),
+      postId: post.id,
+      slug: post.slug,
+      reason: DAILY_CAP_REASON,
+    });
     return { ok: true, slug: post.slug, locales: [], skipped: true, reason: DAILY_CAP_REASON };
   }
   try {
     await publishLocales(publishedLocales);
+    await recordGrowthDailyIngest(env, {
+      postId: post.id,
+      slug: post.slug,
+      updatedAt,
+      language: "en",
+    });
+    await recordPublishedSlug(env, post.slug, "growthdaily", publishedAt);
   } catch (e) {
     await releaseDailySlot(env, slot);
     throw e;

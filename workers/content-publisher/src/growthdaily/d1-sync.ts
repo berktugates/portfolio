@@ -55,6 +55,20 @@ export async function recordPublishedSlug(env: Env, slug: string, channel: strin
     .run();
 }
 
+export async function recordGrowthDailyDefer(
+  env: Env,
+  input: { istanbulDay: string; postId: string; slug: string; reason: string; at?: string },
+): Promise<void> {
+  const at = input.at ?? new Date().toISOString();
+  await env.META.prepare(
+    `INSERT INTO growthdaily_deferred (istanbul_day, post_id, slug, reason, deferred_at)
+     VALUES (?, ?, ?, ?, ?)
+     ON CONFLICT(istanbul_day, post_id, reason) DO UPDATE SET deferred_at = excluded.deferred_at, slug = excluded.slug`,
+  )
+    .bind(input.istanbulDay, input.postId, input.slug, input.reason, at)
+    .run();
+}
+
 export async function countDailyPublishes(env: Env, istanbulDay: string): Promise<number> {
   const row = await env.META.prepare(
     "SELECT COUNT(*) AS n FROM growthdaily_daily_publish WHERE istanbul_day = ?",

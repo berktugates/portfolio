@@ -82,11 +82,14 @@ export async function probeSitemapInventory(): Promise<MeasurementProbe[]> {
     });
   }
   try {
-    const gundem = await countSitemapLocs(`${HABERLER_ORIGIN}/sitemap-gundem.xml`);
+    const news48h = await countSitemapLocs(`${HABERLER_ORIGIN}/sitemap-gundem.xml`);
+    const haberMain = await countSitemapLocs(`${HABERLER_ORIGIN}/sitemap.xml`);
+    // News sitemap only lists posts from the last 48h; haberler sitemap.xml is the durable index.
+    const ok = news48h >= 1 || haberMain >= 10;
     probes.push({
       id: "sitemap-gundem-count",
-      ok: gundem >= 4,
-      detail: `haberler sitemap locs: ${gundem}`,
+      ok,
+      detail: `sitemap-gundem.xml (48h news): ${news48h}; haberler sitemap.xml: ${haberMain} locs`,
     });
   } catch (error) {
     probes.push({

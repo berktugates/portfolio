@@ -6,6 +6,7 @@ function xml(value: string): string {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
 }
 
+/** Google News-style feed: only last 48h. Older briefings stay on haberler /sitemap.xml. */
 export async function renderNewsSitemap(now = new Date()): Promise<string> {
   const posts = await getAllGundemBriefings();
   const cutoff = now.getTime() - 48 * 60 * 60 * 1000;

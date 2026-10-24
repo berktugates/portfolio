@@ -38,6 +38,13 @@ Otomasyon: `pnpm check:ops`, `pnpm ops:collect`, `pnpm ops:prune-deployments`.
 - Hedef: **≥7** `content/blog-queue/*.json` ( `pnpm check:queues` geçmeli)
 - Git blog kuyruk (manuel): `.github/workflows/weekly-seo-blog.yml` — zamanlanmış cron yok; GDS → R2 günlük
 
+## GrowthDailySEO (site yayını)
+
+- **Kanonik sayaç:** D1 `growthdaily_daily_publish` (Istanbul günü) + prod URL **200** — GDS Faturalama “Bugün yayınlanan” ayrı ürün sayacı olabilir.
+- **Audit:** `growthdaily_ingest`, `published_slugs`, cap erteleme `growthdaily_deferred` (reason `daily-publish-cap`).
+- **Webhook:** `article.ready` / `published` / `updated` → Worker; GDS **Yayınla** her zaman webhook göndermeyebilir → yedek: cron `0 */2 * * *` reconcile + `15 4 * * *`.
+- **Gündem news sitemap:** `sitemap-gundem.xml` yalnız **son 48 saat**; kalıcı indeks `https://haberler.berktugberke.com/sitemap.xml`.
+
 ## Doğrulama
 
 ```bash
