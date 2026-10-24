@@ -110,3 +110,39 @@ export async function releaseDailyPublishSlot(env: Env, istanbulDay: string, pos
     .bind(istanbulDay, postId)
     .run();
 }
+
+export type DailyPublishRow = {
+  postId: string;
+  slug: string;
+  qualityBand: string | null;
+  reservedAt: string;
+};
+
+export async function listDailyPublishes(env: Env, istanbulDay: string): Promise<DailyPublishRow[]> {
+  const { results } = await env.META.prepare(
+    `SELECT post_id AS postId, slug, quality_band AS qualityBand, reserved_at AS reservedAt
+     FROM growthdaily_daily_publish WHERE istanbul_day = ? ORDER BY reserved_at ASC`,
+  )
+    .bind(istanbulDay)
+    .all<DailyPublishRow>();
+  return results ?? [];
+}
+
+export type DeferredRow = { postId: string; slug: string; reason: string; deferredAt: string };
+
+export async function listDeferredForDay(
+  env: Env,
+  istanbulDay: string,
+  reason?: string,
+): Promise<DeferredRow[]> {
+  const sql = reason
+    ? `SELECT post_id AS postId, slug, reason, deferred_at AS deferredAt FROM growthdaily_deferred
+       WHERE istanbul_day = ? AND reason = ? ORDER BY deferred_at ASC`
+    : `SELECT post_id AS postId, slug, reason, deferred_at AS deferredAt FROM growthdaily_deferred
+       WHERE istanbul_day = ? ORDER BY deferred_at ASC`;
+  const stmt = reason
+    ? env.META.prepare(sql).bind(istanbulDay, reason)
+    : env.META.prepare(sql).bind(istanbulDay);
+  const { results } = await stmt.all<DeferredRow>();
+  return results ?? [];
+}

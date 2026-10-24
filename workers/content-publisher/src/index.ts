@@ -6,6 +6,7 @@ import { handleCorrectionRequest } from "./corrections";
 import { handleContactIngest } from "./contact-ingest";
 import { handleGrowthDailyWebhook } from "./growthdaily/webhook";
 import { reconcileGrowthDaily } from "./growthdaily/ingest";
+import { growthDailyOpsSnapshot } from "./growthdaily/ops";
 
 const HABER_CRON = "7,22,37,52 * * * *";
 const GROWTHDAILY_CRON = "0 */2 * * *";
@@ -78,6 +79,15 @@ export default {
       }
       const result = await reconcileGrowthDaily(env);
       return Response.json(result);
+    }
+
+    if (url.pathname === "/ops/growthdaily" && request.method === "GET") {
+      const auth = request.headers.get("Authorization") ?? "";
+      if (!env.MANUAL_CRON_SECRET || auth !== `Bearer ${env.MANUAL_CRON_SECRET}`) {
+        return new Response("forbidden", { status: 403 });
+      }
+      const snapshot = await growthDailyOpsSnapshot(env);
+      return Response.json(snapshot, { headers: { "Cache-Control": "no-store" } });
     }
 
     return new Response("not found", { status: 404 });

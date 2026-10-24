@@ -9,7 +9,7 @@
 | Kontrol | Otomasyon |
 |---------|-----------|
 | Prod sitemap / robots / haberler / gündem redirect | `scripts/lib/ops-probes.ts` |
-| IndexNow public key | `public/bberke2026indexnowkey.txt` |
+| IndexNow public key | `data/indexnow-public.json` → `public/{key}.txt` |
 | Gündem prod smoke | `pnpm gundem:smoke-prod` |
 | Portfolio’da gündem sızıntısı yok | `scripts/assert-no-gundem-links.mjs` |
 | Gereksiz Vercel build azaltma | `scripts/vercel-ignore-build.sh` |
@@ -70,8 +70,8 @@ GSC Performance export → `data/gsc-performance-export.json` (örnek: `.example
 
 ## IndexNow
 
-- Key: `public/bberke2026indexnowkey.txt`
-- Env: `INDEXNOW_KEY=bberke2026indexnowkey`
+- Manifest: `data/indexnow-public.json` (hex key, IndexNow spec)
+- Env: `INDEXNOW_KEY` = manifest `key`; Worker + Vercel + GitHub secrets aligned
 
 ## Vercel env
 

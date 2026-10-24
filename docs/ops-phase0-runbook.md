@@ -44,7 +44,10 @@ Otomasyon: `pnpm check:ops`, `pnpm ops:collect`, `pnpm ops:prune-deployments`.
 - **Audit:** `growthdaily_ingest`, `published_slugs`, cap erteleme `growthdaily_deferred` (reason `daily-publish-cap`).
 - **Webhook:** `article.ready` / `published` / `updated` → Worker; GDS **Yayınla** her zaman webhook göndermeyebilir → yedek: cron `0 */2 * * *` reconcile + `15 4 * * *`.
 - **Gündem news sitemap:** `sitemap-gundem.xml` yalnız **son 48 saat**; kalıcı indeks `https://haberler.berktugberke.com/sitemap.xml`.
-- **Prod regression slug’ları:** `app/lib/gds-prod-fixtures.ts` — cap döndüğünde published/deferred slug’ları güncelle; `pnpm check:ops` ve `E2E_BASE_URL=https://berktugberke.com pnpm test:e2e e2e/growthdaily-blog.spec.ts` ile teyit.
+- **Prod regression slug’ları:** `pnpm gds:sync-fixtures` (D1 → `app/lib/gds-prod-fixtures.ts`) veya `pnpm check:gds-ops`.
+- **Ops API:** `GET https://berktug-content-publisher.berktugates.workers.dev/ops/growthdaily` + `Authorization: Bearer $MANUAL_CRON_SECRET`.
+- **Reconcile (manuel):** `POST …/cron/growthdaily` aynı bearer; veya `GDS_RECONCILE=1 pnpm check:gds-ops`.
+- **IndexNow (GDS Entegrasyonlar):** `data/indexnow-public.json` — **hex** anahtar; host `berktugberke.com` (www değil); doğrulama `https://berktugberke.com/{key}.txt`. Eski `bberke2026indexnowkey` geçersizdi (IndexNow hex kuralı). Worker/Vercel/GitHub `INDEXNOW_KEY` secret’ını yeni key ile güncelle.
 
 ## Doğrulama
 

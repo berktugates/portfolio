@@ -30,17 +30,19 @@ async function main() {
     }
   }
 
-  const indexNowPath = resolve(root, "public/bberke2026indexnowkey.txt");
   try {
-    const key = (await readFile(indexNowPath, "utf8")).trim();
-    if (key.length < 8) {
-      log("error", "indexnow-key", "public key file empty");
+    const manifest = JSON.parse(
+      await readFile(resolve(root, "data/indexnow-public.json"), "utf8"),
+    ) as { key: string; keyFile: string };
+    const key = (await readFile(resolve(root, "public", manifest.keyFile), "utf8")).trim();
+    if (!/^[0-9a-fA-F]{8,128}$/.test(manifest.key) || key !== manifest.key) {
+      log("error", "indexnow-key", "invalid hex key or public file mismatch");
       errors += 1;
     } else {
-      console.log("OK indexnow-key: present");
+      console.log(`OK indexnow-key: ${manifest.keyFile}`);
     }
   } catch {
-    log("error", "indexnow-key", "missing public/bberke2026indexnowkey.txt");
+    log("error", "indexnow-key", "missing data/indexnow-public.json or public key file");
     errors += 1;
   }
 
@@ -115,6 +117,16 @@ async function main() {
         console.log(`OK vercel-retention: preview=${previewDays}d prod=${prodDays}d`);
       }
     }
+  }
+
+  try {
+    execSync("pnpm exec node --import tsx scripts/check-gds-ops.ts", {
+      cwd: root,
+      stdio: "inherit",
+      env: process.env,
+    });
+  } catch {
+    errors += 1;
   }
 
   console.log(`\nFaz 0 check: ${errors} error(s), ${warns} warning(s).`);

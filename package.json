@@ -15,6 +15,8 @@
     "test:worker": "pnpm --filter content-publisher test:integration",
     "check:queues": "node --import tsx scripts/check-queue-safety.ts",
     "check:ops": "node --import tsx scripts/check-ops-phase0.ts",
+    "check:gds-ops": "node --import tsx scripts/check-gds-ops.ts",
+    "gds:sync-fixtures": "node --import tsx scripts/sync-gds-prod-fixtures.ts",
     "check:measurement": "node --import tsx scripts/check-measurement-phase5.ts",
     "ops:collect": "node --import tsx scripts/collect-ops-baseline.ts",
     "ops:fetch-gsc": "node --import tsx scripts/fetch-gsc-performance-export.ts",
