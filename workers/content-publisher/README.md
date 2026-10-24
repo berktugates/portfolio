@@ -30,6 +30,15 @@ R2 public URL veya Worker proxy → Vercel `CONTENT_PUBLIC_BASE_URL`. Bir kereli
 
 `NEWS_AUTO_PUBLISH` ve `PUBLICATION_LEGAL_READY` varsayılan olarak `false` kalır. Cloudflare Access üzerinde `editor.haberler.berktugberke.com` için yalnız izinli e-posta politikası tanımlanır; `ACCESS_TEAM_DOMAIN`, `ACCESS_AUD` ve `EDITOR_EMAIL` secret/var değerleri daha sonra eklenir. Künye alanları ve hukuk kontrolü tamamlanmadan iki anahtar da açılmaz.
 
+## Otomasyon (GitHub)
+
+- `deploy-content-publisher.yml` — push `workers/content-publisher/**` → `wrangler deploy` (secret: `CLOUDFLARE_API_TOKEN`).
+- Worker `GITHUB_DISPATCH_TOKEN` (fine-grained PAT: Actions + Contents) + `[vars] GITHUB_REPOSITORY` → `repository_dispatch` `blog-published` → `blog-post-publish.yml` (Buttondown + slug smoke).
+
+```bash
+pnpm wrangler secret put GITHUB_DISPATCH_TOKEN
+```
+
 ## Manuel tetik (opsiyonel)
 
 `MANUAL_CRON_SECRET` secret + `POST /cron/haber`, `/cron/blog`, veya `/cron/growthdaily` with `Authorization: Bearer …`.
