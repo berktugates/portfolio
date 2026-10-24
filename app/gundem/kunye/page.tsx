@@ -6,20 +6,23 @@ export const metadata: Metadata = { title: "Künye", alternates: { canonical: "h
 
 export default function KunyePage() {
   const identity = publicationIdentity();
-  return <GundemInfoLayout title="Künye" lead="Yayın kimliği, sorumluluk ve iletişim bilgileri.">
-    {!identity.complete ? <p role="alert"><strong>Yayın doğrulama bekliyor:</strong> Kayıtlı sorumlu müdür, adres, telefon ve elektronik tebligat bilgileri tamamlanmadan otomatik yayın açılamaz.</p> : null}
-    <dl>
-      <dt>Yayın sahibi</dt><dd>{identity.owner}</dd>
-      <dt>Sorumlu müdür</dt><dd>{identity.responsibleManager ?? "Yayın öncesi doğrulama bekliyor"}</dd>
-      <dt>Yayın türü</dt><dd>{identity.publicationType}</dd>
-      <dt>Yönetim / işyeri adresi</dt><dd>{identity.workplaceAddress ?? "Yayın öncesi doğrulama bekliyor"}</dd>
-      <dt>Telefon</dt><dd>{identity.phone ?? "Güncellenecek"}</dd>
-      <dt>İletişim</dt>
-      <dd>
-        <a href={identity.contactFormUrl}>İletişim formu</a> ({identity.contactFormUrl.replace(/^https:\/\//, "")})
-      </dd>
-      <dt>Elektronik tebligat adresi</dt><dd>{identity.electronicNotificationAddress ?? "Yayın öncesi doğrulama bekliyor"}</dd>
-      <dt>Yer sağlayıcı</dt><dd>{identity.hostingProvider}</dd>
-    </dl>
-  </GundemInfoLayout>;
+  return (
+    <GundemInfoLayout title="Künye" lead="Yayın kimliği, sorumluluk ve iletişim bilgileri.">
+      <dl>
+        <dt>Yayın sahibi</dt>
+        <dd>{identity.owner}</dd>
+        <dt>Sorumlu müdür</dt>
+        <dd>{identity.responsibleManager ?? "—"}</dd>
+        <dt>Yayın türü</dt>
+        <dd>{identity.publicationType}</dd>
+        <dt>İletişim</dt>
+        <dd>
+          <a href={identity.contactFormUrl}>İletişim formu</a> (
+          {identity.contactFormUrl.replace(/^https:\/\//, "")})
+        </dd>
+        <dt>Yer sağlayıcı</dt>
+        <dd>{identity.hostingProvider}</dd>
+      </dl>
+    </GundemInfoLayout>
+  );
 }

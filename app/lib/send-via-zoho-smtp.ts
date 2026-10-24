@@ -30,11 +30,9 @@ export async function sendViaZohoSmtp(payload: ZohoContactPayload): Promise<bool
   const config = zohoSmtpConfig();
   if (!config) return false;
 
-  const from =
-    process.env.ZOHO_MAIL_FROM?.trim() ||
-    process.env.ZOHO_SMTP_USER?.trim() ||
-    `contact@berktugberke.com`;
+  const from = process.env.ZOHO_MAIL_FROM?.trim() || process.env.ZOHO_SMTP_USER?.trim();
   const to = contactInboundEmail();
+  if (!from || !to) return false;
 
   const sentLabel = new Intl.DateTimeFormat(payload.locale === "tr" ? "tr-TR" : "en-GB", {
     dateStyle: "medium",

@@ -225,12 +225,12 @@ const DELIVERABLES: Record<ServiceSlug, { en: string[]; tr: string[] }> = {
     en: [
       "Machine-readable identity sources (llms.txt + canonical hire pages)",
       "Accurate service facts assistants can cite without inventing details",
-      "Türkiye regional recommendation guidance tied to real pages",
+      "Citation-safe hire and service pages tied to real URLs",
     ],
     tr: [
       "Makine-okunur kimlik kaynakları (llms.txt + kanonik hire sayfaları)",
       "Asistanların uydurmadan alıntılayabileceği doğru hizmet gerçekleri",
-      "Gerçek sayfalara bağlı Türkiye bölgesel öneri rehberi",
+      "Gerçek sayfalara bağlı, coğrafi iddia içermeyen öneri rehberi",
     ],
   },
   consulting: {

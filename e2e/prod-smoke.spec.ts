@@ -23,4 +23,14 @@ test.describe("Prod smoke @prod", () => {
     expect((await request.get(`${PROD_APEX}/sitemap.xml`)).ok()).toBeTruthy();
     expect((await request.get(`${PROD_APEX}/robots.txt`)).ok()).toBeTruthy();
   });
+
+  test("portfolio pages omit contact@ and personal geo (not project legal)", async ({ request }) => {
+    const paths = ["/", "/contact", "/hire", "/hire/geo", "/llms.txt"];
+    const forbidden =
+      /contact@berktugberke\.com|Marmaris|Muğla|Mugla|Ege Bölgesi|Kenan Evren|Covina,\s*CA/;
+    for (const path of paths) {
+      const html = await (await request.get(`${PROD_APEX}${path}`)).text();
+      expect(html, path).not.toMatch(forbidden);
+    }
+  });
 });

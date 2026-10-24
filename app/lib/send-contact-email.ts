@@ -76,7 +76,8 @@ async function sendViaEmailJs(payload: ContactEmailPayload): Promise<boolean> {
   const serviceId = process.env.EMAILJS_SERVICE_ID?.trim();
   const templateId = process.env.EMAILJS_TEMPLATE_ID?.trim();
   const publicKey = process.env.EMAILJS_PUBLIC_KEY?.trim();
-  if (!serviceId || !templateId || !publicKey) return false;
+  const inbound = contactInboundEmail();
+  if (!serviceId || !templateId || !publicKey || !inbound) return false;
 
   const privateKey = process.env.EMAILJS_PRIVATE_KEY?.trim();
   const emailResponse = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
@@ -88,7 +89,7 @@ async function sendViaEmailJs(payload: ContactEmailPayload): Promise<boolean> {
       user_id: publicKey,
       ...(privateKey ? { accessToken: privateKey } : {}),
       template_params: {
-        to_email: contactInboundEmail(),
+        to_email: inbound,
         from_name: payload.name,
         reply_to: payload.email,
         project_type: payload.projectTypeLabel,

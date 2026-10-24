@@ -113,6 +113,13 @@ test.describe("Gündem surface", () => {
     await expect(page.getByText(/\d[\d.]* okuma/).first()).toBeVisible();
   });
 
+  test("GUN-PRIV künye exposes no contact@ or personal geo", async ({ request }) => {
+    const html = await (await request.get("https://haberler.berktugberke.com/kunye")).text();
+    expect(html).not.toContain("contact@berktugberke.com");
+    expect(html).not.toMatch(/Marmaris|Muğla|Mugla|Ege Bölgesi|Kenan Evren|Covina,\s*CA/);
+    expect(html).not.toMatch(/Yönetim \/ işyeri adresi|Elektronik tebligat adresi/);
+  });
+
   test("GUN-3 gundem sitemap lists seed slug (48h or haberler fallback)", async ({ request }) => {
     const seed = "turkiye-gram-altin-brifing";
     const needle = `haberler.berktugberke.com/${seed}`;

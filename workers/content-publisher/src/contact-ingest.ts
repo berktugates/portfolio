@@ -36,7 +36,8 @@ export async function handleContactIngest(request: Request, env: Env): Promise<R
     return Response.json({ error: "not-configured" }, { status: 503 });
   }
 
-  const from = env.CONTACT_FROM_EMAIL?.trim() ?? "contact@berktugberke.com";
+  const from = env.CONTACT_FROM_EMAIL?.trim();
+  if (!from) return new Response("Contact mail not configured", { status: 503 });
   const subject = `[${locale}] İletişim formu — ${name}`;
   const text = [
     `Ad: ${name}`,
