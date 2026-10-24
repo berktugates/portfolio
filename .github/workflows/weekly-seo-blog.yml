@@ -1,9 +1,8 @@
 name: Daily SEO blog
 
-# Günlük blog: 7 dil kuyruk → git (publish-daily-blog.mjs). Worker blog cron kapalı (EN-only R2).
+# Git kuyruk → app/data/blogs.ts (7 dil). Zamanlanmış yayın KAPALI: günlük site blogu GrowthDailySEO → Worker → R2.
+# Acil geri dönüş veya kuyruk tüketimi için yalnızca manuel workflow_dispatch.
 on:
-  schedule:
-    - cron: "0 4 * * *"
   workflow_dispatch:
     inputs:
       publish_date:

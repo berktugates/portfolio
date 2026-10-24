@@ -36,7 +36,7 @@ Otomasyon: `pnpm check:ops`, `pnpm ops:collect`, `pnpm ops:prune-deployments`.
 ## Blog kuyruğu
 
 - Hedef: **≥7** `content/blog-queue/*.json` ( `pnpm check:queues` geçmeli)
-- Haftalık yayın: `.github/workflows/weekly-seo-blog.yml`
+- Git blog kuyruk (manuel): `.github/workflows/weekly-seo-blog.yml` — zamanlanmış cron yok; GDS → R2 günlük
 
 ## Doğrulama
 

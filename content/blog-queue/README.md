@@ -22,7 +22,7 @@ pnpm blog:publish:dry
 pnpm blog:publish
 ```
 
-Keep at least 7–14 days of inventory in this folder so the weekly cron never goes empty.
+Keep inventory if you use manual `workflow_dispatch`; scheduled git publish is disabled (GDS → R2 is canonical).
 
 ```bash
 pnpm blog-queue:sync
