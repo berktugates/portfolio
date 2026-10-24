@@ -471,3 +471,13 @@ body.has-site-assistant-dock #main-content { padding-bottom: 4.5rem; }
   }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } ::view-transition-old(*), ::view-transition-new(*), ::view-transition-group(*) { animation-duration: 0s !important; animation-delay: 0s !important; } }
+
+@media print {
+  html,
+  body {
+    background: #000 !important;
+  }
+  body * {
+    visibility: hidden !important;
+  }
+}

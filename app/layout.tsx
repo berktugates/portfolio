@@ -24,6 +24,7 @@ import { shareImageMeta } from "./lib/share-image";
 import { THEME_INLINE_BOOTSTRAP_SCRIPT } from "./lib/theme";
 import { CleanUrlBar } from "./components/clean-url-bar";
 import { ThemeSync } from "./components/theme-sync";
+import { ScreenshotGuard } from "./components/screenshot-guard";
 const geistMono = Geist_Mono({ subsets: ["latin"], display: "swap" });
 const structuredData = {
   "@context": "https://schema.org",
@@ -122,6 +123,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
       </head>
       <body className={`${geistMono.className} tracking-tight`}>
+        <ScreenshotGuard />
         <ThemeSync />
         <CleanUrlBar />
         <GoogleTagManager />
