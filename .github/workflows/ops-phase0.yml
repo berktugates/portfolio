@@ -86,6 +86,16 @@ jobs:
           CONTENT_PUBLIC_BASE_URL: ${{ secrets.CONTENT_PUBLIC_BASE_URL }}
         run: pnpm gundem:verify-r2
 
+      - name: Blog queue R2 parity (CDN)
+        env:
+          CONTENT_PUBLIC_BASE_URL: ${{ secrets.CONTENT_PUBLIC_BASE_URL }}
+        run: pnpm check:blog-queue-r2
+
+      - name: Content ops API (Worker queue + revalidate)
+        env:
+          MANUAL_CRON_SECRET: ${{ secrets.MANUAL_CRON_SECRET }}
+        run: pnpm check:content-ops
+
       - name: Vercel prune (dry-run)
         if: github.event_name != 'workflow_dispatch' || github.event.inputs.prune_apply != 'true'
         env:

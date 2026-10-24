@@ -23,6 +23,7 @@ import {
 import type { GrowthDailyBlogRecord, GrowthDailyPost } from "./types";
 import { mergeBlogIndex, putJson } from "../r2";
 import { revalidateOrQueue } from "../revalidate";
+import { dispatchBlogPublished } from "../github-dispatch";
 import { submitIndexNow } from "../indexnow";
 
 const GDS_LOCALES = ["en", "tr", "de"] as const;
@@ -250,6 +251,9 @@ export async function ingestGrowthDailyPost(env: Env, slug: string): Promise<Ing
       loc === "en" ? `${SITE_ORIGIN}/blogs/${post.slug}` : `${SITE_ORIGIN}/${loc}/blogs/${post.slug}`,
     );
     await submitIndexNow(env, indexUrls);
+    if (!isUpdate) {
+      await dispatchBlogPublished(env, { slug: post.slug, source: "growthdaily" });
+    }
   }
 
   // Atomic claim right before the first R2 write (webhook + cron may race).

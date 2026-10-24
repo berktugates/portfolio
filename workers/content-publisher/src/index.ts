@@ -7,14 +7,15 @@ import { handleCorrectionRequest } from "./corrections";
 import { handleContactIngest } from "./contact-ingest";
 import { handleGrowthDailyWebhook } from "./growthdaily/webhook";
 import { reconcileGrowthDaily } from "./growthdaily/ingest";
+import { contentOpsSnapshot } from "./content-ops";
 import { growthDailyOpsSnapshot } from "./growthdaily/ops";
 
 const HABER_CRON = "7,22,37,52 * * * *";
 const GROWTHDAILY_CRON = "0 */2 * * *";
 /** ≈ 07:15 Europe/Istanbul: once-daily cap-aware best-post pick. */
 const GROWTHDAILY_DAILY_CRON = "15 4 * * *";
-/** ≈ 08:30 Europe/Istanbul: git blog-queue → R2 (GDS’ten bağımsız). */
-const BLOG_QUEUE_CRON = "30 5 * * *";
+/** ≈ 12:00 Europe/Istanbul — GH sync (04:15 UTC) gecikmelerinden sonra kuyruk yayını. */
+const BLOG_QUEUE_CRON = "0 9 * * *";
 
 export default {
   async scheduled(event: ScheduledEvent, env: Env): Promise<void> {
@@ -102,6 +103,15 @@ export default {
         return new Response("forbidden", { status: 403 });
       }
       const snapshot = await growthDailyOpsSnapshot(env);
+      return Response.json(snapshot, { headers: { "Cache-Control": "no-store" } });
+    }
+
+    if (url.pathname === "/ops/content" && request.method === "GET") {
+      const auth = request.headers.get("Authorization") ?? "";
+      if (!env.MANUAL_CRON_SECRET || auth !== `Bearer ${env.MANUAL_CRON_SECRET}`) {
+        return new Response("forbidden", { status: 403 });
+      }
+      const snapshot = await contentOpsSnapshot(env);
       return Response.json(snapshot, { headers: { "Cache-Control": "no-store" } });
     }
 

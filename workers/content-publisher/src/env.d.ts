@@ -6,7 +6,12 @@ interface Env {
   REVALIDATE_URL: string;
   HABERLER_HOST?: string;
   INDEXNOW_KEY?: string;
+  INDEXNOW_HOST?: string;
   MANUAL_CRON_SECRET?: string;
+  /** Fine-grained PAT: Actions + Contents read (repository_dispatch). */
+  GITHUB_DISPATCH_TOKEN?: string;
+  /** e.g. berktugates/portfolio */
+  GITHUB_REPOSITORY?: string;
   NEWS_AUTO_PUBLISH?: string;
   PUBLICATION_LEGAL_READY?: string;
   TURNSTILE_SECRET?: string;

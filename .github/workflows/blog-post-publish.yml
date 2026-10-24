@@ -1,0 +1,71 @@
+# Worker repository_dispatch (blog-published) → Buttondown + prod slug smoke.
+name: Blog post publish hooks
+
+on:
+  repository_dispatch:
+    types: [blog-published]
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: Blog slug (R2 kanonik)
+        required: true
+        type: string
+      source:
+        description: Publish source label
+        required: false
+        default: manual
+        type: string
+
+concurrency:
+  group: blog-post-publish-${{ github.event.client_payload.slug || github.event.inputs.slug }}
+  cancel-in-progress: false
+
+jobs:
+  hooks:
+    name: Newsletter + smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      E2E_BASE_URL: https://berktugberke.com
+      CONTENT_PUBLIC_BASE_URL: ${{ secrets.CONTENT_PUBLIC_BASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.8.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Resolve slug
+        id: meta
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "slug=${{ github.event.inputs.slug }}" >> "$GITHUB_OUTPUT"
+            echo "source=${{ github.event.inputs.source }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "slug=${{ github.event.client_payload.slug }}" >> "$GITHUB_OUTPUT"
+            echo "source=${{ github.event.client_payload.source }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Buttondown newsletter (R2 kanonik)
+        env:
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+        run: pnpm newsletter:send "${{ steps.meta.outputs.slug }}"
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Prod blog slug HTTP smoke
+        run: |
+          set -euo pipefail
+          SLUG="${{ steps.meta.outputs.slug }}"
+          curl -sfS --retry 5 --retry-delay 10 --retry-all-errors \
+            "https://berktugberke.com/blogs/${SLUG}" -o /dev/null
+          echo "OK prod blog 200: /blogs/${SLUG}"

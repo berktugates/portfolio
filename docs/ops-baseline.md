@@ -75,10 +75,10 @@ git log --since=90.days --oneline -- app/data/blogs.ts content/posts | wc -l
 
 ## Faz 4 (gündem + blog içerik)
 
-- **Yayın:** Cloudflare Worker `workers/content-publisher` — haber `7,22,37,52 * * * *` UTC. Blog GDS webhook + `0 */2 * * *` reconcile → R2. Git kuyruk `30 5 * * *` → R2 (`source: queue`, 7 dil). GH workflow deploy etmez; R2 sync only.
+- **Yayın:** Cloudflare Worker `workers/content-publisher` — haber `7,22,37,52 * * * *` UTC. Blog GDS webhook + `0 */2 * * *` reconcile → R2. Git kuyruk GH `15 4 * * *` → R2 sync; Worker `0 9 * * *` UTC ≈ 12:00 TR yayın (`source: queue`, 7 dil). GH deploy etmez; `pnpm check:blog-queue-r2` CDN parity.
 - **Depo:** R2 `portfolio-content` → Vercel `CONTENT_PUBLIC_BASE_URL`.
 - **Manuel seed:** `pnpm gundem:seed-r2` / doğrulama `pnpm gundem:verify-r2` (GitHub: Seed gundem R2 workflow).
-- GitHub zamanlı `publish-gundem` **kapalı** (`workflow_dispatch`). Blog **iki ayrı hat:** (1) **GDS → Worker → R2** webhook/cron; (2) **git kuyruk** → `weekly-seo-blog.yml` yalnız R2 sync (deploy yok) → Worker cron **`30 5 * * *` UTC** `blog-queue-cron`.
+- GitHub zamanlı `publish-gundem` **kapalı** (`workflow_dispatch`). Blog **iki ayrı hat:** (1) **GDS → Worker → R2** webhook/cron; (2) **git kuyruk** → `weekly-seo-blog.yml` R2 sync + CDN verify → Worker cron **`0 9 * * *` UTC** `blog-queue-cron`.
 - Detay: `docs/gundem-editorial.md`.
 
 ## Faz 5 (ölçüm) — GTM / GSC / GA4
@@ -101,7 +101,9 @@ GSC Performance export → `data/gsc-performance-export.json` (örnek: `.example
 | `REVALIDATE_URL` | `https://berktugberke.com/api/revalidate` |
 | `R2_*` | Yerel/CI seed (Worker’da bucket binding) |
 | `VERCEL_TOKEN` | Ops prune + deployment metrics (GitHub secret) |
-| `MANUAL_CRON_SECRET` | Worker cron/ops (`check:gds-ops` → `/ops/growthdaily`) |
+| `MANUAL_CRON_SECRET` | Worker cron/ops (`check:gds-ops` → `/ops/growthdaily`, `check:content-ops` → `/ops/content`) |
+| `GITHUB_DISPATCH_TOKEN` | Worker secret → `repository_dispatch` `blog-published` → `blog-post-publish.yml` |
+| `CLOUDFLARE_API_TOKEN` | GitHub → `deploy-content-publisher.yml` (Workers deploy) |
 | `GSC_SERVICE_ACCOUNT_JSON` | `pnpm ops:gsc-sync` (yoksa baseline export + merge) |
 
 ## Periyodik / yerel ops

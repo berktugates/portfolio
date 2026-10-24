@@ -1,8 +1,12 @@
 import { assessContentSafety } from "@berktug/editorial-gates/content-safety";
 import { mergeBlogIndex, putJson, type BlogPostRecord } from "./r2";
 import { blogSlugPublished, recordBlogPublish } from "./d1";
-import { revalidateOrQueue } from "./revalidate";
+import { dispatchBlogPublished } from "./github-dispatch";
 import { istanbulCalendarDay } from "./growthdaily/daily-cap";
+import { submitIndexNow } from "./indexnow";
+import { revalidateOrQueue } from "./revalidate";
+
+const SITE_ORIGIN = "https://berktugberke.com";
 
 const QUEUE_PREFIX = "queue/blog/";
 const LOCALE_CODES = ["tr", "de", "fr", "it", "zh", "ja"] as const;
@@ -160,6 +164,13 @@ export async function runBlogQueueCron(env: Env): Promise<{ published: boolean; 
   ];
 
   await revalidateOrQueue(env, paths, ["blogs"]);
+
+  const indexUrls = [
+    `${SITE_ORIGIN}/blogs/${slug}`,
+    ...LOCALE_CODES.map((loc) => `${SITE_ORIGIN}/${loc}/blogs/${slug}`),
+  ];
+  await submitIndexNow(env, indexUrls);
+  await dispatchBlogPublished(env, { slug, source: "queue" });
 
   console.log(`blog-queue-cron: published slug=${slug} from ${key}`);
   return { published: true, slug };

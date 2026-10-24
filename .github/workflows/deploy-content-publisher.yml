@@ -1,0 +1,46 @@
+name: Deploy content-publisher Worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "workers/content-publisher/**"
+      - "packages/editorial-gates/**"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-content-publisher
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: wrangler deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: workers/content-publisher
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.8.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install (monorepo)
+        run: pnpm install --frozen-lockfile
+        working-directory: .
+
+      - name: Worker unit tests
+        run: pnpm test:integration
+        working-directory: workers/content-publisher
+
+      - name: Deploy to Cloudflare
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: pnpm exec wrangler deploy

@@ -16,7 +16,7 @@ migrations_dir = "migrations"
 binding = "AI"
 
 [triggers]
-crons = ["7,22,37,52 * * * *", "0 */2 * * *", "15 4 * * *", "30 5 * * *"]
+crons = ["7,22,37,52 * * * *", "0 */2 * * *", "15 4 * * *", "0 9 * * *"]
 
 [[send_email]]
 name = "ALERT_EMAIL"
@@ -30,6 +30,8 @@ PUBLICATION_LEGAL_READY = "true"
 GROWTHDAILY_DAILY_PUBLISH_CAP = "1"
 CONTACT_FROM_EMAIL = "newsroom@berktugberke.com"
 CONTACT_INBOUND_EMAIL = "berktugates@gmail.com"
+GITHUB_REPOSITORY = "berktugates/portfolio"
 
 # wrangler secret put REVALIDATE_SECRET
+# wrangler secret put GITHUB_DISPATCH_TOKEN  # repo dispatch → blog-post-publish.yml
 # wrangler secret put INDEXNOW_KEY

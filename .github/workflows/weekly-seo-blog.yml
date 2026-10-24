@@ -1,6 +1,6 @@
 name: Blog queue → R2 sync
 
-# Git kuyruk (content/blog-queue) → R2 queue/blog/. Yayın: Worker cron 30 5 * * * UTC (GDS’ten bağımsız, deploy yok).
+# Git kuyruk (content/blog-queue) → R2 queue/blog/. Yayın: Worker cron 0 9 * * * UTC ≈ 12:00 TR (GDS’ten bağımsız, deploy yok).
 on:
   schedule:
     - cron: "15 4 * * *"
@@ -55,3 +55,8 @@ jobs:
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
         run: pnpm exec tsx scripts/sync-blog-queue-r2.ts
+
+      - name: Verify queue on CDN
+        env:
+          CONTENT_PUBLIC_BASE_URL: ${{ secrets.CONTENT_PUBLIC_BASE_URL }}
+        run: pnpm check:blog-queue-r2

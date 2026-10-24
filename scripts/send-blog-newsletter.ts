@@ -1,6 +1,9 @@
 import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { getBlogPost, type BlogPost } from "../app/data/blogs";
+import { fetchBlogPostFromR2 } from "./lib/blog-post-from-r2";
+import { loadOpsEnv } from "./lib/load-ops-env";
+import { resolve } from "node:path";
 
 const API_BASE = "https://api.buttondown.com/v1";
 const ZERO_SHA = "0000000000000000000000000000000000000000";
@@ -24,6 +27,8 @@ function loadEnvFile(path: string) {
 
 loadEnvFile(".env.local");
 loadEnvFile(".env");
+loadEnvFile(".env.vercel.local");
+loadOpsEnv(resolve(import.meta.dirname, ".."));
 
 function siteUrl() {
   return (process.env.NEXT_PUBLIC_SITE_URL ?? "https://berktugberke.com").replace(/\/$/, "");
@@ -170,11 +175,16 @@ async function waitUntilLive(url: string) {
   console.warn(`Continuing without confirmed live URL after ${attempts} attempts: ${url}`);
 }
 
+async function resolveBlogPost(slug: string): Promise<BlogPost> {
+  const fromR2 = await fetchBlogPostFromR2(slug);
+  if (fromR2) return fromR2;
+  const fromGit = getBlogPost(slug);
+  if (fromGit) return fromGit;
+  throw new Error(`Unknown blog slug (R2 + git): ${slug}`);
+}
+
 async function sendBlogNewsletter(slug: string, options: { dryRun?: boolean; draftOnly?: boolean; skipLiveWait?: boolean; existingDraftId?: string } = {}) {
-  const post = getBlogPost(slug);
-  if (!post) {
-    throw new Error(`Unknown blog slug: ${slug}`);
-  }
+  const post = await resolveBlogPost(slug);
 
   const subject = buildNewsletterSubject(post);
   const body = buildNewsletterBody(post);
