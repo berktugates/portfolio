@@ -28,19 +28,36 @@ GSC/GA4 **rakamları** dashboard’dan; snapshot’ta property ID’leri referan
 
 **Konsol hedefi (API ile PATCH desteklenmiyor):** preview `expirationDays` 1, production `expirationDaysProduction` 5–10.
 
+**Dashboard teyit (2026-10-24, Vercel → portfolio → Settings → Build and Deployment → Deployment Retention):**
+
+| Tür | Süre | Not |
+|-----|------|-----|
+| Pre-Production | **1 day** | Kaydedildi |
+| Production | **1 week** (~7 gün; 5–10 hedef aralığında) | Kaydedildi |
+| Canceled / Errored | 30 days | Varsayılan; isteğe bağlı 1 güne indirilebilir |
+
+`docs/ops-baseline.snapshot.json` içindeki `vercel.retention` hâlâ eski (30/30); güncellemek için `VERCEL_TOKEN` ile `pnpm ops:collect`.
+
+## Cloudflare (zone — repo dışı)
+
+**2026-10-24 mimari teyit:** `berktugberke.com` ve `haberler.berktugberke.com` HTML yanıtları **`server: Vercel`**; apex yanıtında `cf-ray` yok → ana site HTML **turuncu bulut / zone cache kuralları / Early Hints** ile Vercel origin’i önünde proxy edilmiyor. Cloudflare rolü: **Turnstile**, **Workers** (yayıncı, GDS), **R2/D1**, DNS. Zone Speed / cache optimizasyonu R2 public URL veya ileride proxy değişirse anlamlı; Turnstile zaten aktif.
+
 ## Google Search Console (son 28 gün)
 
 - Property: `sc-domain:berktugberke.com`
 - Snapshot: `docs/gsc-performance-baseline.snapshot.json` (`pnpm ops:import-gsc-baseline` → merge)
-- **2026-09-22:** tıklama **7**, gösterim **329**, ort. TO **%2,1**, konum **44,2** (46 sorgu satırı)
+- **2026-09-22 (export):** tıklama **7**, gösterim **329**, ort. TO **%2,1**, konum **44,2** (46 sorgu satırı) — `pnpm check:measurement` → `gsc-export` aynı export’u doğrular
+- **2026-10-24 (UI genel bakış):** web arama tıklaması export’tan yüksek görünebilir (tarih aralığı / gecikme); otomasyon export’a bağlı kalır
 - Haberler sitemap: `https://haberler.berktugberke.com/sitemap-gundem.xml`
+
+**GSC İletiler + URL denetimi (2026-10-24):** İletiler çoğunlukla tarihsel (dizin, görsel meta, Ağu 2026 Profil “düzeltildi/doğrulanıyor”). `https://berktugberke.com/` URL denetimi: **Google’da**, dizine eklendi, HTTPS OK; zengin sonuç **Profil sayfası 1 geçerli öğe**. Prod schema probeleri temiz (`dateModified` apex Profil’de yok; blog ISO) → kalan Profil uyarıları büyük olasılıkla **gecikme / eski kayıt**.
 
 ## GA4 — manuel dashboard + otomasyon
 
-- **Otomasyon (prod):** `pnpm check:measurement` → `dl-*` probeleri (`page_context`, `content_group` home/blog/hire/gundem; çift `gtag config` yok).
-- Sayfa görüntüleme (28g): _ (GA4 UI)
-- `/blogs` landing oturumları: _ (GA4 UI)
-- `content_group` custom dimension: GA4 Admin’de kayıtlı; event parametresi GTM v3 `page_context`
+- **Otomasyon (prod):** `pnpm check:measurement` → `dl-*` probeleri (`page_context`, `content_group` home/blog/hire/gundem; çift `gtag config` yok). **2026-10-24:** 0 error.
+- Sayfa görüntüleme (28g, GA4 UI **2026-10-24**): **558** görüntüleme, **96** etkin kullanıcı
+- Blog listesi (28g): **`/tr/blogs`** **22** görüntüleme, **4** etkin kullanıcı; EN `/blogs` ayrı path (locale ayrımı)
+- `content_group` custom dimension: GA4 Admin’de kayıtlı (**2026-10-24**); event parametresi GTM v3 `page_context`
 
 ## Git içerik ritmi
 

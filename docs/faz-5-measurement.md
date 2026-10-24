@@ -29,7 +29,7 @@
 | M5-3 | Ana sitemap ≥50 URL; haberler sitemap ≥4 | `check:measurement` |
 | M5-4 | GSC export (opsiyonel uyarı) | `data/gsc-performance-export.json` |
 | M5-5 | `page_context` / `content_group` (home, blog, hire, haberler) | `check:measurement` → `scripts/lib/datalayer-probes.ts` |
-| M5-6 | E2E GTM `content_group` (yerel / isteğe bağlı prod) | `E2E_BASE_URL=https://berktugberke.com pnpm test:e2e e2e/plan-seo-gundem.spec.ts -g GTM-1` |
+| M5-6 | E2E GTM `content_group` + prod smoke | `pnpm test:e2e:prod` (CI: `e2e-prod-smoke.yml`); yerel GTM: `pnpm test:e2e -- e2e/plan-seo-gundem.spec.ts -g GTM-1` |
 
 ## CI
 

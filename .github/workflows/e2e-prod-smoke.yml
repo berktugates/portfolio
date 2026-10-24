@@ -1,0 +1,38 @@
+# Playwright prod smoke — HTTP invariants + gündem redirect (complements weekly check:measurement).
+name: E2E prod smoke
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-prod-smoke
+  cancel-in-progress: true
+
+jobs:
+  playwright-prod:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CI: "true"
+      E2E_BASE_URL: https://berktugberke.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.8.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Prod Playwright smoke
+        run: pnpm test:e2e:prod

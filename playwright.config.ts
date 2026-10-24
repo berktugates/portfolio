@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 // E2E_BASE_URL=https://berktugberke.com runs against a deployed site (no local dev server).
+// Prod CI: pnpm test:e2e:prod (see e2e/README.md).
 const remoteBaseURL = process.env.E2E_BASE_URL?.replace(/\/$/, "");
 
 export default defineConfig({

@@ -43,6 +43,8 @@
     "blog:publish": "node scripts/publish-daily-blog.mjs",
     "blog:publish:dry": "node scripts/publish-daily-blog.mjs --dry-run",
     "test:e2e": "playwright test",
+    "test:e2e:local": "playwright test --grep-invert @prod",
+    "test:e2e:prod": "E2E_BASE_URL=https://berktugberke.com playwright test e2e/prod-smoke.spec.ts e2e/plan-seo-gundem.spec.ts e2e/seo-program.spec.ts --grep-invert @local --project=chromium",
     "test:e2e:webkit": "playwright test --project=webkit"
   },
   "dependencies": {

@@ -21,10 +21,7 @@ test.describe("NAV gundem leak", () => {
 });
 
 test.describe("Gündem surface", () => {
-  test("GUN-0 prod redirect /gundem to subdomain", async ({ request }) => {
-    if (!process.env.CI) {
-      test.skip();
-    }
+  test("GUN-0 prod redirect /gundem to subdomain @prod", async ({ request }) => {
     const res = await request.get("https://berktugberke.com/gundem", { maxRedirects: 0 });
     expect([301, 308]).toContain(res.status());
     expect(res.headers().location).toMatch(/^https:\/\/haberler\.berktugberke\.com/);

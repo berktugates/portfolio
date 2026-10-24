@@ -118,6 +118,19 @@
     "retentionTarget": {
       "productionDays": "5-10",
       "previewDays": 1
+    },
+    "retentionDashboard20261024": {
+      "preProduction": "1 day",
+      "production": "1 week",
+      "canceledErrored": "30 days",
+      "source": "Vercel UI Build and Deployment"
+    },
+    "ga4Dashboard20261024": {
+      "period": "28d",
+      "pageViews": 558,
+      "activeUsers": 96,
+      "trBlogsPageViews": 22,
+      "trBlogsActiveUsers": 4
     }
   }
 }

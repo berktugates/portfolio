@@ -1,15 +1,19 @@
 # E2E matrisi
 
 ```bash
-pnpm test:e2e
-pnpm test:e2e -- e2e/plan-seo-gundem.spec.ts
+pnpm test:e2e:local    # localhost dev server; @prod suite hariç
+pnpm test:e2e:prod     # berktugberke.com; @local client-locale testleri hariç
+pnpm test:e2e          # tüm spec'ler (yerel sunucu + prod URL probeleri)
 ```
 
 | Spec | Kapsam |
 |------|--------|
+| `prod-smoke.spec.ts` | **@prod** — GUN-0 redirect, haberler 200, sitemap/robots |
 | `plan-seo-gundem.spec.ts` | Gündem sızıntısı, haberler yüzeyi, RSS/sitemap, GTM `content_group` |
-| `seo-program.spec.ts` | RFC-2 dil, RFC-3 iki hizmet sayfası, RFC-4 şema, RFC-5 sitemap, www 308 |
+| `seo-program.spec.ts` | RFC dil/şema/sitemap; `@local` = apex client locale bootstrap |
 
-Prod-only: `GUN-0` (`berktugberke.com/gundem` → haberler) yalnızca `CI=true`.
+**GUN-0:** `plan-seo-gundem` + `prod-smoke` — her zaman `https://berktugberke.com/gundem` (CI/local simetrisi). `check:ops` ile aynı invariant.
 
-Faz 5: GTM-1 beacon `dataLayer` `content_group=gundem` on `/gundem`.
+**CI:** `.github/workflows/e2e-prod-smoke.yml` — haftalık `pnpm test:e2e:prod` (Pazartesi 06:00 UTC). `ops-phase0.yml` içinde `check:measurement` ayrıca koşar.
+
+Faz 5: GTM-1 beacon `dataLayer` `content_group=gundem` on `/gundem` (local) veya haberler redirect (prod base URL).
