@@ -6,7 +6,7 @@
 
 | Komut | Ne yapar |
 |--------|-----------|
-| `pnpm check:measurement` | Prod GTM (çift tag yok), llms haberler, sitemap sayıları |
+| `pnpm check:measurement` | Prod GTM (çift tag yok), llms, sitemap, JSON-LD probeleri, **Playwright `page_context`** |
 | `pnpm ops:fetch-gsc` | Search Console API → `data/gsc-performance-export.json` (`GSC_SERVICE_ACCOUNT_JSON`) |
 | `pnpm ops:merge-gsc-demand` | `data/gsc-performance-export.json` → `gundem-demand-signals.json` |
 | `pnpm ops:gsc-sync` | fetch + merge |
@@ -28,7 +28,8 @@
 | M5-2 | `llms.txt` haberler gündemini cite eder | `check:measurement` |
 | M5-3 | Ana sitemap ≥50 URL; haberler sitemap ≥4 | `check:measurement` |
 | M5-4 | GSC export (opsiyonel uyarı) | `data/gsc-performance-export.json` |
-| M5-5 | E2E GTM `content_group` | `e2e/plan-seo-gundem.spec.ts` GTM-1 |
+| M5-5 | `page_context` / `content_group` (home, blog, hire, haberler) | `check:measurement` → `scripts/lib/datalayer-probes.ts` |
+| M5-6 | E2E GTM `content_group` (yerel / isteğe bağlı prod) | `E2E_BASE_URL=https://berktugberke.com pnpm test:e2e e2e/plan-seo-gundem.spec.ts -g GTM-1` |
 
 ## CI
 

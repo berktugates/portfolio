@@ -35,11 +35,12 @@ GSC/GA4 **rakamları** dashboard’dan; snapshot’ta property ID’leri referan
 - **2026-09-22:** tıklama **7**, gösterim **329**, ort. TO **%2,1**, konum **44,2** (46 sorgu satırı)
 - Haberler sitemap: `https://haberler.berktugberke.com/sitemap-gundem.xml`
 
-## GA4 — manuel
+## GA4 — manuel dashboard + otomasyon
 
-- Sayfa görüntüleme (28g): _
-- `/blogs` landing oturumları: _
-- `content_group=gundem` (GTM): haberler host
+- **Otomasyon (prod):** `pnpm check:measurement` → `dl-*` probeleri (`page_context`, `content_group` home/blog/hire/gundem; çift `gtag config` yok).
+- Sayfa görüntüleme (28g): _ (GA4 UI)
+- `/blogs` landing oturumları: _ (GA4 UI)
+- `content_group` custom dimension: GA4 Admin’de kayıtlı; event parametresi GTM v3 `page_context`
 
 ## Git içerik ritmi
 
