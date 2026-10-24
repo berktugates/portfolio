@@ -73,6 +73,9 @@ jobs:
           MANUAL_CRON_SECRET: ${{ secrets.MANUAL_CRON_SECRET }}
         run: pnpm check:ops
 
+      - name: Playwright (measurement dataLayer probes)
+        run: pnpm exec playwright install chromium --with-deps
+
       - name: Faz 5 measurement checks
         env:
           GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
