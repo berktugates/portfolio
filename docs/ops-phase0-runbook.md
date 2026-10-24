@@ -2,7 +2,9 @@
 
 Otomasyon: `pnpm check:ops`, `pnpm ops:collect`, `pnpm ops:prune-deployments`, `pnpm ops:gsc-sync`, `pnpm ops:periodic-report`.
 
-Yerel env: `.env.local` (`VERCEL_TOKEN`, `MANUAL_CRON_SECRET`, `CONTENT_PUBLIC_BASE_URL`, `GSC_SERVICE_ACCOUNT_JSON`). Özet: `pnpm ops:periodic-report`.
+Yerel env: `pnpm ops:env-pull` → `.env.vercel.local` + `.env.local` (`VERCEL_TOKEN`, `MANUAL_CRON_SECRET`, `GSC_SERVICE_ACCOUNT_JSON`). Özet: `pnpm ops:periodic-report` / `pnpm check:ops-secrets`.
+
+GitHub secrets (ops-phase0): `VERCEL_TOKEN`, `VERCEL_PROJECT_ID`, `VERCEL_TEAM_ID`, `CONTENT_PUBLIC_BASE_URL` zorunlu; `MANUAL_CRON_SECRET` (Worker ile aynı), `GSC_SERVICE_ACCOUNT_JSON` önerilir (`gh secret set …`).
 
 ## Vercel (Deployment Storage)
 

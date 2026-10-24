@@ -114,7 +114,15 @@ GSC Performance export → `data/gsc-performance-export.json` (örnek: `.example
 | `pnpm check:gds-ops` | Günlük cap / GDS | `MANUAL_CRON_SECRET` yoksa ops API atlanır (WARN) |
 | `pnpm verify:prod` | Release öncesi | `gundem:verify-r2` index adımı `CONTENT_PUBLIC_BASE_URL` yoksa **skip (OK)** |
 
-Yerel secret’lar: `.env.local` (gitignore); `scripts/lib/load-dotenv-local.ts` → `check:ops`, `check:gds-ops`, `ops:gsc-sync`, `ops:collect`.
+Yerel ops env: `scripts/lib/load-ops-env.ts` — `.env.local` + opsiyonel **`pnpm ops:env-pull`** → `.env.vercel.local` (`CONTENT_PUBLIC_BASE_URL`); `.vercel/project.json` → `VERCEL_PROJECT_*`. Tam yerel kapasite: `VERCEL_TOKEN`, `MANUAL_CRON_SECRET` (Worker ile aynı), `GSC_SERVICE_ACCOUNT_JSON` → `.env.local` veya GitHub secrets.
+
+| Komut | Amaç |
+|-------|------|
+| `pnpm check:ops-secrets` | Secret env özeti; CI’da `VERCEL_TOKEN` + `CONTENT_PUBLIC_BASE_URL` zorunlu |
+| `pnpm ops:verify-local` | env-pull + `verify:prod` (R2 index dahil) |
+| `pnpm ops:gsc-sync` | Canlı GSC fetch veya baseline import + demand merge |
+
+GitHub’da henüz yoksa ekle: **`MANUAL_CRON_SECRET`**, **`GSC_SERVICE_ACCOUNT_JSON`** (`gh secret set …`; Worker’da `wrangler secret list` ile isim teyidi).
 
 ## Ürün sürekliliği (beklenen davranış)
 

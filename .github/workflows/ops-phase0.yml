@@ -47,12 +47,7 @@ jobs:
           GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
         run: |
           set -euo pipefail
-          pnpm ops:fetch-gsc
-          if [ ! -f data/gsc-performance-export.json ]; then
-            pnpm ops:import-gsc-baseline
-          else
-            pnpm ops:merge-gsc-demand
-          fi
+          pnpm ops:gsc-sync
 
       - name: Collect ops snapshot
         env:
@@ -61,11 +56,32 @@ jobs:
           VERCEL_TEAM_ID: ${{ secrets.VERCEL_TEAM_ID }}
         run: pnpm ops:collect
 
+      - name: Ops secrets (CI required)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          CONTENT_PUBLIC_BASE_URL: ${{ secrets.CONTENT_PUBLIC_BASE_URL }}
+          MANUAL_CRON_SECRET: ${{ secrets.MANUAL_CRON_SECRET }}
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+        run: pnpm check:ops-secrets
+
       - name: Faz 0 checks (fail-closed)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_TEAM_ID: ${{ secrets.VERCEL_TEAM_ID }}
+          CONTENT_PUBLIC_BASE_URL: ${{ secrets.CONTENT_PUBLIC_BASE_URL }}
+          MANUAL_CRON_SECRET: ${{ secrets.MANUAL_CRON_SECRET }}
         run: pnpm check:ops
 
       - name: Faz 5 measurement checks
+        env:
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
         run: pnpm check:measurement
+
+      - name: Gundem R2 verify (prod index)
+        env:
+          CONTENT_PUBLIC_BASE_URL: ${{ secrets.CONTENT_PUBLIC_BASE_URL }}
+        run: pnpm gundem:verify-r2
 
       - name: Vercel prune (dry-run)
         if: github.event_name != 'workflow_dispatch' || github.event.inputs.prune_apply != 'true'

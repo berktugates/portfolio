@@ -1,7 +1,11 @@
 /**
  * Prod haberler yüzeyi smoke (Faz 4 DoD) — secrets gerekmez.
  */
+import { resolve } from "node:path";
 import { HABERLER_ORIGIN } from "../app/lib/gundem/hosts";
+import { loadOpsEnv } from "./lib/load-ops-env";
+
+loadOpsEnv(resolve(import.meta.dirname, ".."));
 import { probeGundemSitemapIndex } from "./lib/gundem-sitemap-probe";
 
 async function check(url: string, contains?: string[]): Promise<void> {

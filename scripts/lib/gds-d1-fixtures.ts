@@ -1,5 +1,9 @@
 import { execSync } from "node:child_process";
 import { resolve } from "node:path";
+import {
+  GDS_PROD_CAP_DEFERRED_SLUG,
+  GDS_PROD_PUBLISHED_SLUG,
+} from "../../app/lib/gds-prod-fixtures";
 import { istanbulCalendarDay } from "./istanbul-calendar-day";
 
 const workerRoot = resolve(import.meta.dirname, "../../workers/content-publisher");
@@ -17,6 +21,21 @@ function d1Query<T>(sql: string): T[] {
   );
   const parsed = JSON.parse(out) as { results?: T[] }[];
   return parsed[0]?.results ?? [];
+}
+
+/** D1 yoksa (CI, wrangler auth) committed `gds-prod-fixtures.ts` ile devam. */
+export function resolveGdsFixturesSafe(day = istanbulCalendarDay()): GdsD1Fixtures {
+  try {
+    return resolveGdsFixturesFromD1(day);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    console.log(`WARN gds-d1: remote D1 skipped (${detail.split("\n")[0]}); using gds-prod-fixtures.ts`);
+    return {
+      istanbulDay: day,
+      publishedSlug: GDS_PROD_PUBLISHED_SLUG,
+      deferredSlug: GDS_PROD_CAP_DEFERRED_SLUG,
+    };
+  }
 }
 
 /** Resolve today's cap winner / deferred slug from remote D1 (requires wrangler auth). */

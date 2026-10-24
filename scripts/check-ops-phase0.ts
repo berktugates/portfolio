@@ -4,7 +4,7 @@
 import { execSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { loadDotenvLocal } from "./lib/load-dotenv-local";
+import { loadOpsEnv } from "./lib/load-ops-env";
 import { runPublicSurfaceProbes } from "./lib/ops-probes";
 import { fetchDeploymentExpiration, loadVercelProjectIds } from "./lib/vercel-project";
 
@@ -18,7 +18,7 @@ function log(severity: Severity, code: string, message: string) {
 }
 
 async function main() {
-  loadDotenvLocal(root);
+  loadOpsEnv(root);
   let errors = 0;
   let warns = 0;
 

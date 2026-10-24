@@ -4,7 +4,7 @@
 import { execSync } from "node:child_process";
 import { readFile, readdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { loadDotenvLocal } from "./lib/load-dotenv-local";
+import { loadOpsEnv } from "./lib/load-ops-env";
 import { collectMeasurement } from "./lib/measurement-collect";
 import { runPublicSurfaceProbes } from "./lib/ops-probes";
 import { fetchDeploymentExpiration, loadVercelProjectIds } from "./lib/vercel-project";
@@ -83,7 +83,7 @@ async function loadGscBaselineTotals(): Promise<Record<string, unknown> | null> 
 }
 
 async function main() {
-  loadDotenvLocal(root);
+  loadOpsEnv(root);
   const [probes, measurement, gscBaseline] = await Promise.all([
     runPublicSurfaceProbes(),
     collectMeasurement(root),

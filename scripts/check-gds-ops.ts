@@ -4,9 +4,9 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { gdsProdBlogUrl } from "../app/lib/gds-prod-fixtures";
-import { resolveGdsFixturesFromD1 } from "./lib/gds-d1-fixtures";
+import { resolveGdsFixturesSafe } from "./lib/gds-d1-fixtures";
 import { istanbulCalendarDay } from "./lib/istanbul-calendar-day";
-import { loadDotenvLocal } from "./lib/load-dotenv-local";
+import { loadOpsEnv } from "./lib/load-ops-env";
 import { probeGdsDailyCapSurface } from "./lib/gds-prod-probes";
 
 const root = resolve(import.meta.dirname, "..");
@@ -91,7 +91,7 @@ async function maybeReconcile(secret: string): Promise<void> {
 }
 
 async function main() {
-  loadDotenvLocal(root);
+  loadOpsEnv(root);
   let errors = 0;
 
   for (const msg of await checkIndexNowPublic()) {
@@ -101,7 +101,7 @@ async function main() {
   if (errors === 0) console.log("OK indexnow-public: hex key file on prod");
 
   try {
-    const fixtures = resolveGdsFixturesFromD1();
+    const fixtures = resolveGdsFixturesSafe();
     console.log(
       `OK gds-d1: day=${fixtures.istanbulDay} published=${fixtures.publishedSlug ?? "—"} deferred=${fixtures.deferredSlug ?? "—"}`,
     );

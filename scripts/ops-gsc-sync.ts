@@ -5,7 +5,7 @@
 import { access } from "node:fs/promises";
 import { execSync } from "node:child_process";
 import { resolve } from "node:path";
-import { loadDotenvLocal } from "./lib/load-dotenv-local";
+import { loadOpsEnv } from "./lib/load-ops-env";
 
 const root = resolve(import.meta.dirname, "..");
 const exportPath = resolve(root, "data/gsc-performance-export.json");
@@ -30,7 +30,7 @@ function hasGscCredentials(): boolean {
 }
 
 async function main() {
-  loadDotenvLocal(root);
+  loadOpsEnv(root);
 
   if (hasGscCredentials()) {
     run("node --import tsx scripts/fetch-gsc-performance-export.ts");

@@ -4,6 +4,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { GDS_PROD_PUBLISHED_SLUG } from "../app/lib/gds-prod-fixtures";
+import { loadOpsEnv } from "./lib/load-ops-env";
 import { collectMeasurement, loadGscExport } from "./lib/measurement-collect";
 import { runDatalayerProbes } from "./lib/datalayer-probes";
 import { runSchemaProbes } from "./lib/schema-probes";
@@ -11,6 +12,7 @@ import { runSchemaProbes } from "./lib/schema-probes";
 const root = resolve(import.meta.dirname, "..");
 
 async function main() {
+  loadOpsEnv(root);
   const data = await collectMeasurement(root);
   let errors = 0;
   let warns = 0;

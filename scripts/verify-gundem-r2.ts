@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { promisify } from "node:util";
 import { contentPublicBaseUrl } from "./lib/content-public-base";
-import { loadDotenvLocal } from "./lib/load-dotenv-local";
+import { loadOpsEnv } from "./lib/load-ops-env";
 import { createR2Client } from "./lib/r2-s3-client";
 
 const execFileAsync = promisify(execFile);
@@ -32,7 +32,7 @@ async function fetchJson(url: string): Promise<unknown> {
 
 async function main() {
   const root = resolve(import.meta.dirname, "..");
-  loadDotenvLocal(root);
+  loadOpsEnv(root);
 
   const base = contentPublicBaseUrl();
   if (!base) {

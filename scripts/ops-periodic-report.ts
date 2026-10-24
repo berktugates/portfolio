@@ -6,7 +6,7 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { contentPublicBaseUrl } from "./lib/content-public-base";
 import { probeGundemSitemapIndex } from "./lib/gundem-sitemap-probe";
-import { loadDotenvLocal } from "./lib/load-dotenv-local";
+import { loadOpsEnv } from "./lib/load-ops-env";
 import { istanbulCalendarDay } from "./lib/istanbul-calendar-day";
 
 const root = resolve(import.meta.dirname, "..");
@@ -18,7 +18,7 @@ function flag(label: string, ok: boolean, detail: string) {
 }
 
 async function main() {
-  loadDotenvLocal(root);
+  loadOpsEnv(root);
 
   flag(
     "vercel-token",
