@@ -26,7 +26,7 @@ const dictionary: HomeDictionary = {
   emailMe: "Contact form",
   emailAria: "Open contact form",
   socialNav: "Social profiles",
-  latestBlog: "Posts",
+  latestBlog: "Latest Blogs",
   viewAll: "View all",
   engineer: "Full-stack Software Engineer",
   engineerAria: "Full-stack Software Engineer at bradi.tech",

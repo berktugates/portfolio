@@ -53,14 +53,12 @@ test("GDS R2 post lists on EN index without TR sibling", async () => {
   try {
     const { shouldListOnBlogIndex, postsForBlogIndex } = await import("./blog-locale-overlay");
     assert.equal(await shouldListOnBlogIndex("en", slug), true);
-    assert.equal(await shouldListOnBlogIndex("tr", slug), false);
+    assert.equal(await shouldListOnBlogIndex("tr", slug), true);
+    assert.equal(await shouldListOnBlogIndex("de", slug), true);
     const enIndex = await postsForBlogIndex("en");
     assert.ok(enIndex.some((p) => p.slug === slug));
     const trIndex = await postsForBlogIndex("tr");
-    assert.equal(
-      trIndex.some((p) => p.slug === slug),
-      false,
-    );
+    assert.ok(trIndex.some((p) => p.slug === slug));
   } finally {
     globalThis.fetch = originalFetch;
     delete process.env.CONTENT_PUBLIC_BASE_URL;

@@ -43,8 +43,13 @@ export async function hasBlogLocale(locale: Locale, slug: string): Promise<boole
   return r2BlogHasLocale(slug, locale);
 }
 
-/** Git queue: EN+TR parity. Worker R2 (GDS / git-queue): list per locale when EN exists. */
+/** Git queue: EN+TR parity. GDS: always on home + /blogs (any locale, any language depth). */
 export async function shouldListOnBlogIndex(locale: Locale, slug: string): Promise<boolean> {
+  const r2En = await getBlobBlogPost(slug);
+  if (r2En?.source === "growthdaily") {
+    return true;
+  }
+
   if (!(await hasBlogLocale(locale, slug))) return false;
   const hreflang = await blogHreflangLocalesForSlug(slug);
   if (!hreflang.includes("en")) return false;
@@ -54,9 +59,7 @@ export async function shouldListOnBlogIndex(locale: Locale, slug: string): Promi
     return hreflang.includes("tr");
   }
 
-  const r2En = await getBlobBlogPost(slug);
-  const source = r2En?.source;
-  if (source === "growthdaily" || source === "queue") {
+  if (r2En?.source === "queue") {
     if (locale === "en") return true;
     return hreflang.includes(locale);
   }
