@@ -122,7 +122,7 @@ Yerel ops env: `scripts/lib/load-ops-env.ts` — `.env.local` + opsiyonel **`pnp
 | `pnpm ops:verify-local` | env-pull + `verify:prod` (R2 index dahil) |
 | `pnpm ops:gsc-sync` | Canlı GSC fetch veya baseline import + demand merge |
 
-GitHub’da henüz yoksa ekle: **`MANUAL_CRON_SECRET`**, **`GSC_SERVICE_ACCOUNT_JSON`** (`gh secret set …`; Worker’da `wrangler secret list` ile isim teyidi).
+GitHub secrets (2026-10-24): **`MANUAL_CRON_SECRET`** ✓ (Worker ile senkron), **`VERCEL_PROJECT_ID` / `VERCEL_TEAM_ID`** ✓ (`.vercel/project.json`). **`GSC_SERVICE_ACCOUNT_JSON`**: yok → `ops:gsc-sync` baseline import. **`VERCEL_TOKEN`**: geçersizse snapshot `403`; Vercel → yeni team-scoped token → `gh secret set VERCEL_TOKEN`.
 
 ## Ürün sürekliliği (beklenen davranış)
 

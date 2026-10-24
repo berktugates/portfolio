@@ -110,17 +110,26 @@ async function main() {
     const ids = await loadVercelProjectIds(root);
     if (ids) {
       const retention = await fetchDeploymentExpiration(vercelToken, ids.projectId, ids.teamId);
-      const previewDays = retention?.expirationDays ?? 0;
-      const prodDays = retention?.expirationDaysProduction ?? 0;
-      if (previewDays > 1 || prodDays > 10) {
+      if (!retention) {
         log(
           "warn",
-          "vercel-retention",
-          `preview=${previewDays}d prod=${prodDays}d (hedef preview≤1, prod≤10); konsol Build and Deployment → Retention`,
+          "vercel-api",
+          "Vercel project API failed (often expired VERCEL_TOKEN or wrong team scope); yeni token → GitHub secret",
         );
         warns += 1;
       } else {
-        console.log(`OK vercel-retention: preview=${previewDays}d prod=${prodDays}d`);
+        const previewDays = retention.expirationDays ?? 0;
+        const prodDays = retention.expirationDaysProduction ?? 0;
+        if (previewDays > 1 || prodDays > 10) {
+          log(
+            "warn",
+            "vercel-retention",
+            `preview=${previewDays}d prod=${prodDays}d (hedef preview≤1, prod≤10); konsol Build and Deployment → Retention`,
+          );
+          warns += 1;
+        } else {
+          console.log(`OK vercel-retention: preview=${previewDays}d prod=${prodDays}d`);
+        }
       }
     }
   }
