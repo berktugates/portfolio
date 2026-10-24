@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-24T13:29:58.992Z",
+  "generatedAt": "2026-10-24T13:33:59.469Z",
   "faz": [
     0,
     5
@@ -90,15 +90,15 @@
       ]
     },
     "gscExport": {
-      "exportedAt": "2026-09-22",
+      "exportedAt": "2026-10-24",
       "period": "28d",
       "totals": {
         "clicks": 7,
-        "impressions": 329,
-        "ctr": 0.021,
-        "position": 44.2
+        "impressions": 183,
+        "ctr": 0.038,
+        "position": 11.3
       },
-      "queryCount": 46
+      "queryCount": 62
     }
   },
   "queues": {
@@ -107,7 +107,7 @@
     "blogMinRecommended": 9
   },
   "git": {
-    "blogRelatedCommits90d": 1
+    "blogRelatedCommits90d": 30
   },
   "vercel": {
     "ok": true,
@@ -122,14 +122,14 @@
     "note": "Son 100 deployment listelendi (limit 100)."
   },
   "gscBaseline": {
-    "exportedAt": "2026-09-22",
+    "exportedAt": "2026-10-24",
     "totals": {
       "clicks": 7,
-      "impressions": 329,
-      "ctr": 0.021,
-      "position": 44.2
+      "impressions": 183,
+      "ctr": 0.038,
+      "position": 11.3
     },
-    "queryCount": 46
+    "queryCount": 62
   },
   "manualDashboard": {
     "gscProperty": "sc-domain:berktugberke.com",

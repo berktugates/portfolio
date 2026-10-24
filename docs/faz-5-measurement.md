@@ -10,6 +10,7 @@
 | `pnpm ops:fetch-gsc` | Search Console API → `data/gsc-performance-export.json` (`GSC_SERVICE_ACCOUNT_JSON`) |
 | `pnpm ops:merge-gsc-demand` | `data/gsc-performance-export.json` → `gundem-demand-signals.json` |
 | `pnpm ops:gsc-sync` | fetch + merge |
+| `pnpm ops:sync-gsc-baseline` | `data/gsc-performance-export.json` → committed baseline snapshot |
 | `pnpm ops:import-gsc-baseline` | `docs/gsc-performance-baseline.snapshot.json` → export + merge |
 | `pnpm verify:prod` | ops + measurement + queues + gundem smoke |
 | `pnpm ops:collect` | Snapshot’a `measurement` bloğu ekler |

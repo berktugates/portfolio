@@ -27,6 +27,7 @@
     "check:ops-secrets": "node --import tsx scripts/check-ops-secrets.ts",
     "ops:verify-local": "pnpm ops:env-pull && pnpm check:ops-secrets && pnpm verify:prod",
     "ops:import-gsc-baseline": "node --import tsx scripts/import-gsc-baseline-snapshot.ts",
+    "ops:sync-gsc-baseline": "node --import tsx scripts/sync-gsc-baseline-snapshot.ts",
     "verify:prod": "pnpm check:ops && pnpm check:measurement && pnpm check:queues && pnpm gundem:smoke-prod && pnpm gundem:verify-r2",
     "ops:prune-deployments": "node --import tsx scripts/vercel-prune-deployments.ts",
     "blog-queue:sync": "python3 scripts/_write_sept_blog_queue.py",

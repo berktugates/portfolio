@@ -46,8 +46,9 @@ GSC/GA4 **rakamları** dashboard’dan; snapshot’ta property ID’leri referan
 
 - Property: `sc-domain:berktugberke.com`
 - Snapshot: `docs/gsc-performance-baseline.snapshot.json` (`pnpm ops:import-gsc-baseline` → merge)
-- **2026-09-22 (export):** tıklama **7**, gösterim **329**, ort. TO **%2,1**, konum **44,2** (46 sorgu satırı) — `pnpm check:measurement` → `gsc-export` aynı export’u doğrular
-- **2026-10-24 (UI genel bakış):** web arama tıklaması export’tan yüksek görünebilir (tarih aralığı / gecikme); otomasyon export’a bağlı kalır
+- **2026-10-24 (28g UI export → baseline):** tıklama **7**, gösterim **183**, ort. TO **%3,8**, konum **11,3** (62 sorgu) — `docs/gsc-performance-baseline.snapshot.json`; `pnpm ops:import-gsc-baseline` / `pnpm ops:merge-gsc-demand`
+- **API (opsiyonel):** GCP service account + Search Console kullanıcısı → `GSC_SERVICE_ACCOUNT_JSON` → `pnpm ops:fetch-gsc` (baseline otomatik güncellenir). GCP Console `gstatic` engeli varsa UI export + `pnpm ops:sync-gsc-baseline` yeterli.
+- **3 ay UI genel bakış** export’tan farklı olabilir (17 tıklama / 553 gösterim); otomasyon **28g** export’a bağlı kalır.
 - Haberler sitemap: `https://haberler.berktugberke.com/sitemap-gundem.xml`
 
 **GSC İletiler + URL denetimi (2026-10-24):** İletiler çoğunlukla tarihsel (dizin, görsel meta, Ağu 2026 Profil “düzeltildi/doğrulanıyor”). `https://berktugberke.com/` URL denetimi: **Google’da**, dizine eklendi, HTTPS OK; zengin sonuç **Profil sayfası 1 geçerli öğe**. Prod schema probeleri temiz (`dateModified` apex Profil’de yok; blog ISO) → kalan Profil uyarıları büyük olasılıkla **gecikme / eski kayıt**.
@@ -122,7 +123,7 @@ Yerel ops env: `scripts/lib/load-ops-env.ts` — `.env.local` + opsiyonel **`pnp
 | `pnpm ops:verify-local` | env-pull + `verify:prod` (R2 index dahil) |
 | `pnpm ops:gsc-sync` | Canlı GSC fetch veya baseline import + demand merge |
 
-GitHub secrets (2026-10-24): **`MANUAL_CRON_SECRET`** ✓ (Worker ile senkron), **`VERCEL_PROJECT_ID` / `VERCEL_TEAM_ID`** ✓ (`.vercel/project.json`). **`GSC_SERVICE_ACCOUNT_JSON`**: yok → `ops:gsc-sync` baseline import. **`VERCEL_TOKEN`**: Account → Tokens → scope **Full Account** (yalnızca team scope REST’te `403`); `portfolio-ops-rest` → GitHub secret + `.env.local`.
+GitHub secrets (2026-10-24): **`MANUAL_CRON_SECRET`** ✓, **`VERCEL_*`** ✓ (Full Account token). **`GSC_SERVICE_ACCOUNT_JSON`**: henüz yok (GCP Console `gstatic` / SA kurulumu); haftalık CI **`docs/gsc-performance-baseline.snapshot.json`** + demand merge ile devam. Canlı API: SA → GSC kullanıcı → `gh secret set GSC_SERVICE_ACCOUNT_JSON`.
 
 ## Ürün sürekliliği (beklenen davranış)
 

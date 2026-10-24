@@ -4,7 +4,9 @@
 import { execSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { readFile } from "node:fs/promises";
 import { contentPublicBaseUrl } from "./lib/content-public-base";
+import { parseGscExportAgeDays } from "./lib/gsc-baseline-sync";
 import { probeGundemSitemapIndex } from "./lib/gundem-sitemap-probe";
 import { loadOpsEnv } from "./lib/load-ops-env";
 import { istanbulCalendarDay } from "./lib/istanbul-calendar-day";
@@ -46,6 +48,22 @@ async function main() {
     gsc,
     gsc ? "set → pnpm ops:gsc-sync live fetch" : "unset → ops:gsc-sync merges export or baseline snapshot",
   );
+
+  try {
+    const raw = await readFile(resolve(root, "docs/gsc-performance-baseline.snapshot.json"), "utf8");
+    const j = JSON.parse(raw) as { exportedAt?: string; totals?: { clicks?: number } };
+    const age = parseGscExportAgeDays(j.exportedAt);
+    const fresh = age != null && age <= 21;
+    flag(
+      "gsc-baseline-freshness",
+      fresh,
+      fresh
+        ? `baseline ${j.exportedAt} (${age}d) clicks=${j.totals?.clicks ?? "?"}`
+        : `baseline ${j.exportedAt} (${age ?? "?"}d); UI export veya ops:fetch-gsc → ops:sync-gsc-baseline`,
+    );
+  } catch {
+    flag("gsc-baseline-freshness", false, "docs/gsc-performance-baseline.snapshot.json missing");
+  }
 
   let blogCount = 0;
   try {

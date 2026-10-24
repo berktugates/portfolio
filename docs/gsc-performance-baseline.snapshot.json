@@ -1,13 +1,12 @@
 {
-  "exportedAt": "2026-09-22",
+  "exportedAt": "2026-10-24",
   "period": "28d",
   "site": "sc-domain:berktugberke.com",
-  "source": "Search Console UI scrape 2026-09-22",
   "totals": {
     "clicks": 7,
-    "impressions": 329,
-    "ctr": 0.021,
-    "position": 44.2
+    "impressions": 183,
+    "ctr": 0.038,
+    "position": 11.3
   },
   "queries": [
     {
@@ -18,7 +17,12 @@
     {
       "query": "migrazione del database senza downtime",
       "clicks": 0,
-      "impressions": 19
+      "impressions": 2
+    },
+    {
+      "query": "ゼロダウンタイムデータベース移行",
+      "clicks": 0,
+      "impressions": 4
     },
     {
       "query": "api design",
@@ -26,9 +30,9 @@
       "impressions": 16
     },
     {
-      "query": "ゼロダウンタイムデータベース移行",
+      "query": "strumai",
       "clicks": 0,
-      "impressions": 14
+      "impressions": 7
     },
     {
       "query": "medula eczane",
@@ -41,6 +45,31 @@
       "impressions": 14
     },
     {
+      "query": "celestial insights",
+      "clicks": 0,
+      "impressions": 7
+    },
+    {
+      "query": "berke ates",
+      "clicks": 0,
+      "impressions": 4
+    },
+    {
+      "query": "berke ateş",
+      "clicks": 0,
+      "impressions": 8
+    },
+    {
+      "query": "ai キルスイッチ",
+      "clicks": 0,
+      "impressions": 11
+    },
+    {
+      "query": "エージェントコントロールプレーン",
+      "clicks": 0,
+      "impressions": 11
+    },
+    {
       "query": "feature flag",
       "clicks": 0,
       "impressions": 11
@@ -51,24 +80,29 @@
       "impressions": 9
     },
     {
-      "query": "berke ates",
-      "clicks": 0,
-      "impressions": 8
-    },
-    {
-      "query": "strumai",
-      "clicks": 0,
-      "impressions": 7
-    },
-    {
       "query": "context engineering en ia",
       "clicks": 0,
       "impressions": 7
     },
     {
-      "query": "エージェントコントロールプレーン",
+      "query": "ai kill switch ne",
       "clicks": 0,
       "impressions": 6
+    },
+    {
+      "query": "enterprise devops dönüşümü hizmetleri",
+      "clicks": 0,
+      "impressions": 3
+    },
+    {
+      "query": "berktug",
+      "clicks": 0,
+      "impressions": 2
+    },
+    {
+      "query": "what is full-stack resilience?",
+      "clicks": 0,
+      "impressions": 4
     },
     {
       "query": "eczane medula",
@@ -96,12 +130,12 @@
       "impressions": 4
     },
     {
-      "query": "berke ateş",
+      "query": "reconcilen",
       "clicks": 0,
       "impressions": 3
     },
     {
-      "query": "celestial insights",
+      "query": "kalender ates",
       "clicks": 0,
       "impressions": 3
     },
@@ -131,11 +165,6 @@
       "impressions": 3
     },
     {
-      "query": "berktug",
-      "clicks": 0,
-      "impressions": 2
-    },
-    {
       "query": "medulaeczane",
       "clicks": 0,
       "impressions": 2
@@ -161,9 +190,9 @@
       "impressions": 2
     },
     {
-      "query": "enterprise devops dönüşümü hizmetleri",
+      "query": "product engineering services",
       "clicks": 0,
-      "impressions": 2
+      "impressions": 1
     },
     {
       "query": "staff mühendislik",
@@ -172,6 +201,26 @@
     },
     {
       "query": "workflows agentiques",
+      "clicks": 0,
+      "impressions": 1
+    },
+    {
+      "query": "what should i use instead of adobe if i need to generate accessible interfaces by default?",
+      "clicks": 0,
+      "impressions": 1
+    },
+    {
+      "query": "shared gateway",
+      "clicks": 0,
+      "impressions": 1
+    },
+    {
+      "query": "キルスイッチ ai",
+      "clicks": 0,
+      "impressions": 1
+    },
+    {
+      "query": "バックグラウンドプロセスの上限",
       "clicks": 0,
       "impressions": 1
     },
@@ -191,6 +240,11 @@
       "impressions": 1
     },
     {
+      "query": "zero downtime datenbankmigration",
+      "clicks": 0,
+      "impressions": 1
+    },
+    {
       "query": "medul eczane",
       "clicks": 0,
       "impressions": 1
@@ -201,7 +255,22 @@
       "impressions": 1
     },
     {
+      "query": "ai 爬虫",
+      "clicks": 0,
+      "impressions": 1
+    },
+    {
       "query": "med eczane",
+      "clicks": 0,
+      "impressions": 1
+    },
+    {
+      "query": "promosyon bilet",
+      "clicks": 0,
+      "impressions": 1
+    },
+    {
+      "query": "uçak bileti promosyon",
       "clicks": 0,
       "impressions": 1
     },
@@ -217,6 +286,11 @@
     },
     {
       "query": "migrate database without downtime",
+      "clicks": 0,
+      "impressions": 1
+    },
+    {
+      "query": "produktengineering",
       "clicks": 0,
       "impressions": 1
     },
@@ -239,6 +313,12 @@
       "query": "feature enabler",
       "clicks": 0,
       "impressions": 1
+    },
+    {
+      "query": "maç devam ediyor mu",
+      "clicks": 0,
+      "impressions": 1
     }
-  ]
+  ],
+  "source": "Search Console UI (Performance → 28 gün → Sorgular, 2026-10-24)"
 }

@@ -25,9 +25,11 @@ GitHub secrets (ops-phase0): `VERCEL_TOKEN`, `VERCEL_PROJECT_ID`, `VERCEL_TEAM_I
 
 ### GSC → gündem talep sinyalleri (Faz 5)
 
-**Otomatik (önerilen):** GCP service account → Search Console’da `sc-domain:berktugberke.com` için **Tam** veya **Kısıtlı** erişim → JSON’u GitHub secret `GSC_SERVICE_ACCOUNT_JSON`. Haftalık ops job: `pnpm ops:gsc-sync` (fetch + merge).
+**Otomatik (önerilen):** GCP service account → Search Console → Ayarlar → Kullanıcılar → SA e-postası **Kısıtlı** → JSON → GitHub secret `GSC_SERVICE_ACCOUNT_JSON`. Haftalık: `pnpm ops:gsc-sync` (fetch + baseline + demand merge).
 
-**Yerel:** `pnpm ops:gsc-sync` (aynı env) veya manuel export → `data/gsc-performance-export.json` → `pnpm ops:merge-gsc-demand`.
+**UI ritmi (API yoksa):** Search Console → Performans → **28 gün** → Sorgular → dışa aktar veya tablo scrape → `data/gsc-performance-export.json` → `pnpm ops:sync-gsc-baseline` → `pnpm ops:merge-gsc-demand` (CI snapshot commit baseline’ı da alır).
+
+**Tazelik:** `pnpm check:measurement` → `gsc-freshness` WARN >21d, FAIL >35d (API credential varken).
 
 `data/gsc-performance-export.json` gitignore; `pnpm check:measurement` dosya yoksa uyarı verir (CI’da secret yoksa beklenen).
 

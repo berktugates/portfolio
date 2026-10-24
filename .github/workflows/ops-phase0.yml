@@ -104,7 +104,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           changed=0
-          for f in docs/ops-baseline.snapshot.json data/gundem-demand-signals.json; do
+          for f in docs/ops-baseline.snapshot.json docs/gsc-performance-baseline.snapshot.json data/gundem-demand-signals.json; do
             if [ -f "$f" ] && ! git diff --quiet "$f"; then
               git add "$f"
               changed=1
@@ -115,4 +115,5 @@ jobs:
             exit 0
           fi
           git commit -m "chore(ops): baseline snapshot and/or GSC demand merge"
+          git pull --rebase origin main
           git push

@@ -4,6 +4,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { GDS_PROD_PUBLISHED_SLUG } from "../app/lib/gds-prod-fixtures";
+import { parseGscExportAgeDays } from "./lib/gsc-baseline-sync";
 import { loadOpsEnv } from "./lib/load-ops-env";
 import { collectMeasurement, loadGscExport } from "./lib/measurement-collect";
 import { runDatalayerProbes } from "./lib/datalayer-probes";
@@ -69,8 +70,23 @@ async function main() {
     }
   } else {
     console.log(
-      `OK gsc-export: ${gsc.queries?.length ?? 0} queries, clicks=${gsc.totals?.clicks ?? "?"}`,
+      `OK gsc-export: ${gsc.queries?.length ?? 0} queries, clicks=${gsc.totals?.clicks ?? "?"}, exportedAt=${gsc.exportedAt ?? "?"}`,
     );
+    const ageDays = parseGscExportAgeDays(gsc.exportedAt);
+    const maxAge = gscConfigured ? 35 : 45;
+    if (ageDays != null && ageDays > maxAge) {
+      const msg = `GSC export ${ageDays}d old (max ${maxAge}d); ops:fetch-gsc or Search Console UI → ops:sync-gsc-baseline`;
+      if (gscConfigured) {
+        console.error(`FAIL gsc-freshness: ${msg}`);
+        errors += 1;
+      } else {
+        console.log(`WARN gsc-freshness: ${msg}`);
+        warns += 1;
+      }
+    } else if (ageDays != null && ageDays > 21) {
+      console.log(`WARN gsc-freshness: export ${ageDays}d old; haftalık ops:gsc-sync hedefi ≤21d`);
+      warns += 1;
+    }
   }
 
   console.log(`\nFaz 5 measurement: ${errors} error(s), ${warns} warning(s).`);

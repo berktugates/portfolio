@@ -1,7 +1,7 @@
 {
   "updatedAt": "2026-10-24",
   "source": "Google Trends TR RSS + GSC export + manuel şerit",
-  "gscExportedAt": "2026-09-22",
+  "gscExportedAt": "2026-10-24",
   "queries": [
     {
       "query": "gram altın",
@@ -282,6 +282,86 @@
       "query": "feature enabler",
       "weight": 5,
       "category": "diger"
+    },
+    {
+      "query": "ai キルスイッチ",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "ai kill switch ne",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "what is full-stack resilience?",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "reconcilen",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "kalender ates",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "product engineering services",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "what should i use instead of adobe if i need to generate accessible interfaces by default?",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "shared gateway",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "キルスイッチ ai",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "バックグラウンドプロセスの上限",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "zero downtime datenbankmigration",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "ai 爬虫",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "promosyon bilet",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "uçak bileti promosyon",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "produktengineering",
+      "weight": 5,
+      "category": "diger"
+    },
+    {
+      "query": "maç devam ediyor mu",
+      "weight": 5,
+      "category": "spor"
     }
   ]
 }

@@ -4,8 +4,9 @@
  */
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { syncGscBaselineSnapshot } from "./lib/gsc-baseline-sync";
 import { getGoogleAccessToken, parseServiceAccountJson } from "./lib/google-service-account";
-import { loadDotenvLocal } from "./lib/load-dotenv-local";
+import { loadOpsEnv } from "./lib/load-ops-env";
 
 const root = resolve(import.meta.dirname, "..");
 const SCOPE = "https://www.googleapis.com/auth/webmasters.readonly";
@@ -24,7 +25,7 @@ async function loadServiceAccount(): Promise<string | null> {
 }
 
 async function main() {
-  loadDotenvLocal(root);
+  loadOpsEnv(root);
   const raw = await loadServiceAccount();
   if (!raw) {
     console.log("GSC fetch skipped: GSC_SERVICE_ACCOUNT_JSON / GSC_SERVICE_ACCOUNT_PATH not set.");
@@ -87,6 +88,7 @@ async function main() {
   const outPath = resolve(root, "data/gsc-performance-export.json");
   await writeFile(outPath, `${JSON.stringify(out, null, 2)}\n`);
   console.log(`Wrote ${outPath} (${queries.length} queries, clicks=${totals.clicks})`);
+  await syncGscBaselineSnapshot(root, "Search Console API (ops:fetch-gsc)");
 }
 
 main().catch((error) => {
