@@ -75,10 +75,10 @@ git log --since=90.days --oneline -- app/data/blogs.ts content/posts | wc -l
 
 ## Faz 4 (gündem + blog içerik)
 
-- **Yayın:** Cloudflare Worker `workers/content-publisher` — haber `7,22,37,52 * * * *` UTC. Blog **GrowthDailySEO** webhook + `0 */2 * * *` reconcile → R2 + 7 dil (TR/DE GDS, fr/it/zh/ja Workers AI). Eski git kuyruk workflow yalnız `workflow_dispatch`.
+- **Yayın:** Cloudflare Worker `workers/content-publisher` — haber `7,22,37,52 * * * *` UTC. Blog GDS webhook + `0 */2 * * *` reconcile → R2. Git kuyruk `30 5 * * *` → R2 (`source: queue`, 7 dil). GH workflow deploy etmez; R2 sync only.
 - **Depo:** R2 `portfolio-content` → Vercel `CONTENT_PUBLIC_BASE_URL`.
 - **Manuel seed:** `pnpm gundem:seed-r2` / doğrulama `pnpm gundem:verify-r2` (GitHub: Seed gundem R2 workflow).
-- GitHub zamanlı `publish-gundem` **kapalı** (`workflow_dispatch`). Blog: **GDS kanonik** (`gds-daily-automation.yml` + Worker cron); `weekly-seo-blog.yml` schedule **08:00 UTC** yalnız GDS o gün boşsa git kuyruk fallback (+ `workflow_dispatch`).
+- GitHub zamanlı `publish-gundem` **kapalı** (`workflow_dispatch`). Blog **iki ayrı hat:** (1) **GDS → Worker → R2** webhook/cron; (2) **git kuyruk** → `weekly-seo-blog.yml` yalnız R2 sync (deploy yok) → Worker cron **`30 5 * * *` UTC** `blog-queue-cron`.
 - Detay: `docs/gundem-editorial.md`.
 
 ## Faz 5 (ölçüm) — GTM / GSC / GA4

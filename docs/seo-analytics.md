@@ -37,7 +37,7 @@ Prefer **one** client-side tag path to avoid double-counting:
 ## Daily SEO blogs
 
 - Queue: `content/blog-queue/YYYY-MM-DD-slug.json`
-- Git blog kuyruk: `.github/workflows/weekly-seo-blog.yml` (schedule fallback + `workflow_dispatch`; günlük kanonik GDS → R2 + `gds-daily-automation.yml`)
+- Git blog kuyruk: `.github/workflows/weekly-seo-blog.yml` (R2 sync; yayın Worker `blog-queue-cron`, GDS’ten bağımsız)
 - Manual: `pnpm blog:publish:dry` / `pnpm blog:publish`
 - Keep **≥ 7–14** queued days so the cron never exits empty.
 

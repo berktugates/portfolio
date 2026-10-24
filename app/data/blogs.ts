@@ -20,7 +20,7 @@ export type BlogPost = {
   /** Sanitized HTML body (GrowthDailySEO / Worker pipeline). */
   contentHtml?: string;
   faqJsonLd?: unknown;
-  source?: "git" | "growthdaily";
+  source?: "git" | "growthdaily" | "queue";
   /** Locales with a published overlay (R2 or git). */
   locales?: readonly string[];
   growthDailyPostId?: string;

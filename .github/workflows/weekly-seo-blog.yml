@@ -1,35 +1,27 @@
-name: Daily SEO blog
+name: Blog queue → R2 sync
 
-# Kanonik günlük blog: GrowthDailySEO → Worker → R2 (otomatik; bkz. gds-daily-automation.yml + Worker cron).
-# Git kuyruk → app/data/blogs.ts yalnız yedek: schedule ile GDS bugün yayınlamadıysa; workflow_dispatch her zaman çalışır.
+# Git kuyruk (content/blog-queue) → R2 queue/blog/. Yayın: Worker cron 30 5 * * * UTC (GDS’ten bağımsız, deploy yok).
 on:
   schedule:
-    - cron: "0 8 * * *"
+    - cron: "15 4 * * *"
+  push:
+    branches: [main]
+    paths:
+      - "content/blog-queue/**"
   workflow_dispatch:
-    inputs:
-      publish_date:
-        description: "Optional YYYY-MM-DD override (defaults to Istanbul today)"
-        required: false
-        type: string
-
-permissions:
-  contents: write
 
 concurrency:
-  group: weekly-seo-blog
+  group: blog-queue-r2-sync
   cancel-in-progress: false
 
 jobs:
-  publish:
-    name: Publish queued blog batch
+  sync:
+    name: Sync queue JSON to R2
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.BLOG_PUBLISH_TOKEN || github.token }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -45,103 +37,21 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Git fallback gate (skip if GDS already published today)
-        id: gate
-        env:
-          MANUAL_CRON_SECRET: ${{ secrets.MANUAL_CRON_SECRET }}
-        run: |
-          set +e
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "run=true" >> "$GITHUB_OUTPUT"
-            pnpm exec tsx scripts/gds-git-fallback-gate.ts --force
-            exit 0
-          fi
-          pnpm exec tsx scripts/gds-git-fallback-gate.ts
-          code=$?
-          if [ "$code" -eq 2 ]; then
-            echo "run=false" >> "$GITHUB_OUTPUT"
-            echo "GDS kanonik yayın mevcut — git kuyruk atlandı."
-            exit 0
-          fi
-          if [ "$code" -ne 0 ]; then exit "$code"; fi
-          echo "run=true" >> "$GITHUB_OUTPUT"
-
-      - name: Sync blog queue (7 locales, long-form depth)
-        if: steps.gate.outputs.run == 'true'
-        run: python3 scripts/_write_sept_blog_queue.py
-
-      - name: Validate queues and assistant
-        if: steps.gate.outputs.run == 'true'
+      - name: Validate blog queue
         run: |
           set -euo pipefail
-          pnpm typecheck
-          pnpm exec tsx scripts/validate-site-assistant-replies.ts
           pnpm check:queues
-          node scripts/assert-no-gundem-links.mjs
-
-      - name: Inventory check
-        if: steps.gate.outputs.run == 'true'
-        run: |
-          set -euo pipefail
           COUNT=$(find content/blog-queue -maxdepth 1 -name '*.json' 2>/dev/null | wc -l | tr -d ' ')
-          echo "Queued posts remaining: $COUNT"
+          echo "Queued posts: $COUNT"
           if [ "$COUNT" -lt 1 ]; then
-            echo "::error::Blog queue is empty; add posts via scripts/_write_sept_blog_queue.py"
-            exit 1
-          fi
-          if [ "$COUNT" -lt 7 ]; then
-            echo "::warning::Blog queue below 7 days ($COUNT files)."
-          fi
-
-      - name: Publish next blog from queue
-        if: steps.gate.outputs.run == 'true'
-        id: publish
-        run: |
-          set -euo pipefail
-          DATE_ARG="${{ inputs.publish_date }}"
-          if [ -n "$DATE_ARG" ]; then
-            node scripts/publish-daily-blog.mjs "$DATE_ARG"
-          else
-            node scripts/publish-daily-blog.mjs
-          fi
-          if git diff --quiet; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Regenerate blog feed
-        if: steps.publish.outputs.changed == 'true'
-        run: node scripts/generate-blogs-feed.mjs
-
-      - name: Commit and push
-        if: steps.publish.outputs.changed == 'true'
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app/data/blogs.ts app/content/blogs-*.ts app/lib/seo.ts content/blog-queue public/blogs/feed.json
-          git add -u public/blogs/feed.json 2>/dev/null || true
-          git commit -m "$(cat <<'EOF'
-          content: publish daily SEO blog
-
-          Automated queue publish (7 locales) from content/blog-queue.
-          EOF
-          )"
-          git push
-
-      - name: Revalidate blog surfaces
-        if: steps.publish.outputs.changed == 'true'
-        env:
-          REVALIDATE_URL: ${{ secrets.REVALIDATE_URL || 'https://berktugberke.com/api/revalidate' }}
-          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
-        run: |
-          set -euo pipefail
-          if [ -z "${REVALIDATE_SECRET:-}" ]; then
-            echo "::warning::REVALIDATE_SECRET not set; skip on-demand revalidate"
+            echo "::warning::Blog queue empty"
             exit 0
           fi
-          curl -sf -X POST "$REVALIDATE_URL" \
-            -H "Authorization: Bearer $REVALIDATE_SECRET" \
-            -H "Content-Type: application/json" \
-            -d '{"tags":["blogs"],"paths":["/","/tr","/de","/fr","/it","/zh","/ja","/blogs","/tr/blogs","/de/blogs","/fr/blogs","/it/blogs","/zh/blogs","/ja/blogs"]}'
+
+      - name: Upload queue to R2
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+        run: pnpm exec tsx scripts/sync-blog-queue-r2.ts
