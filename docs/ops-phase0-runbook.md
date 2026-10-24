@@ -45,7 +45,7 @@ Yerel env: `.env.local` (`VERCEL_TOKEN`, `MANUAL_CRON_SECRET`, `CONTENT_PUBLIC_B
 - **Kanonik sayaç:** D1 `growthdaily_daily_publish` (Istanbul günü) + prod URL **200** — GDS Faturalama “Bugün yayınlanan” ayrı ürün sayacı olabilir.
 - **Audit:** `growthdaily_ingest`, `published_slugs`, cap erteleme `growthdaily_deferred` (reason `daily-publish-cap`).
 - **Webhook:** `article.ready` / `published` / `updated` → Worker; GDS **Yayınla** her zaman webhook göndermeyebilir → yedek: cron `0 */2 * * *` reconcile + `15 4 * * *`.
-- **Gündem news sitemap:** `sitemap-gundem.xml` yalnız **son 48 saat**; kalıcı indeks `https://haberler.berktugberke.com/sitemap.xml`.
+- **Gündem news sitemap:** `sitemap-gundem.xml` yalnız **son 48 saat** (boş olabilir); kalıcı indeks `https://haberler.berktugberke.com/sitemap.xml`. Check’ler: `news48h ≥ 1` **veya** `haberMain ≥ 10`.
 - **Prod regression slug’ları:** `pnpm gds:sync-fixtures` (D1 → `app/lib/gds-prod-fixtures.ts`) veya `pnpm check:gds-ops`.
 - **Ops API:** `GET https://berktug-content-publisher.berktugates.workers.dev/ops/growthdaily` + `Authorization: Bearer $MANUAL_CRON_SECRET`.
 - **Reconcile (manuel):** `POST …/cron/growthdaily` aynı bearer; veya `GDS_RECONCILE=1 pnpm check:gds-ops`.

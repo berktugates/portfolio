@@ -115,3 +115,11 @@ GSC Performance export → `data/gsc-performance-export.json` (örnek: `.example
 | `pnpm verify:prod` | Release öncesi | `gundem:verify-r2` index adımı `CONTENT_PUBLIC_BASE_URL` yoksa **skip (OK)** |
 
 Yerel secret’lar: `.env.local` (gitignore); `scripts/lib/load-dotenv-local.ts` → `check:ops`, `check:gds-ops`, `ops:gsc-sync`, `ops:collect`.
+
+## Ürün sürekliliği (beklenen davranış)
+
+| Konu | Otomasyon | Not |
+|------|-----------|-----|
+| **sitemap-gundem.xml (48h)** | `gundem-sitemap-index` probe | Sık **0 loc** normal; geçer sayılması için `haberler…/sitemap.xml` **≥10** loc fallback (`scripts/lib/gundem-sitemap-probe.ts`) |
+| **Git blog kuyruk** | `check:ops` | GDS → R2 günlük kanonik; git `content/blog-queue` **≥7** bakım (runway **≥9** uyarı). `weekly-seo-blog.yml` yalnız `workflow_dispatch`. |
+| **GDS cap regression slug’ları** | `check:gds-ops` + `gds-prod-fixtures.ts` | Yeni yayın / cap günü değişince **`pnpm gds:sync-fixtures`** (D1 → fixtures). Özet: **`pnpm ops:periodic-report`**. |

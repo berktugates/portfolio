@@ -105,11 +105,16 @@ test.describe("Gündem surface", () => {
     await expect(page.getByText(/\d[\d.]* okuma/).first()).toBeVisible();
   });
 
-  test("GUN-3 sitemap-gundem lists slug", async ({ request }) => {
-    const res = await request.get("/sitemap-gundem.xml");
-    expect(res.ok()).toBeTruthy();
-    const xml = await res.text();
-    expect(xml).toContain("haberler.berktugberke.com/turkiye-gram-altin-brifing");
+  test("GUN-3 gundem sitemap lists seed slug (48h or haberler fallback)", async ({ request }) => {
+    const seed = "turkiye-gram-altin-brifing";
+    const needle = `haberler.berktugberke.com/${seed}`;
+    const news = await request.get("/sitemap-gundem.xml");
+    expect(news.ok()).toBeTruthy();
+    const newsXml = await news.text();
+    if (newsXml.includes(needle)) return;
+    const main = await request.get("https://haberler.berktugberke.com/sitemap.xml");
+    expect(main.ok()).toBeTruthy();
+    expect(await main.text()).toContain(needle);
   });
 });
 

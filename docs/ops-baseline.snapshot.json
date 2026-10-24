@@ -11,9 +11,9 @@
       "detail": "https://berktugberke.com/sitemap.xml → 200"
     },
     {
-      "name": "sitemap-gundem",
+      "name": "gundem-sitemap-index",
       "ok": true,
-      "detail": "https://haberler.berktugberke.com/sitemap-gundem.xml → 200"
+      "detail": "sitemap-gundem.xml empty (48h); haberler sitemap.xml fallback: 27 loc(s)"
     },
     {
       "name": "robots",
@@ -65,7 +65,7 @@
         {
           "id": "sitemap-gundem-count",
           "ok": true,
-          "detail": "haberler sitemap locs: 6"
+          "detail": "sitemap-gundem.xml empty (48h); haberler sitemap.xml fallback: 27 loc(s)"
         }
       ]
     },

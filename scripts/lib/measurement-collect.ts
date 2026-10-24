@@ -4,6 +4,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { HABERLER_ORIGIN } from "../../app/lib/gundem/hosts";
+import { probeGundemSitemapIndex, countSitemapLocs } from "./gundem-sitemap-probe";
 
 const GTM_EXPECTED = "GTM-K2PXS8ZC";
 const GA4_EXPECTED = "G-5H6GDB1CRH";
@@ -60,10 +61,7 @@ export async function probeLlmsHaberler(): Promise<MeasurementProbe> {
   }
 }
 
-export async function countSitemapLocs(url: string): Promise<number> {
-  const xml = await fetchText(url);
-  return [...xml.matchAll(/<loc>/g)].length;
-}
+export { countSitemapLocs } from "./gundem-sitemap-probe";
 
 export async function probeSitemapInventory(): Promise<MeasurementProbe[]> {
   const probes: MeasurementProbe[] = [];
@@ -82,14 +80,11 @@ export async function probeSitemapInventory(): Promise<MeasurementProbe[]> {
     });
   }
   try {
-    const news48h = await countSitemapLocs(`${HABERLER_ORIGIN}/sitemap-gundem.xml`);
-    const haberMain = await countSitemapLocs(`${HABERLER_ORIGIN}/sitemap.xml`);
-    // News sitemap only lists posts from the last 48h; haberler sitemap.xml is the durable index.
-    const ok = news48h >= 1 || haberMain >= 10;
+    const index = await probeGundemSitemapIndex();
     probes.push({
       id: "sitemap-gundem-count",
-      ok,
-      detail: `sitemap-gundem.xml (48h news): ${news48h}; haberler sitemap.xml: ${haberMain} locs`,
+      ok: index.ok,
+      detail: index.detail,
     });
   } catch (error) {
     probes.push({

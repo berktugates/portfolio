@@ -1,4 +1,5 @@
 import { HABERLER_ORIGIN } from "../../app/lib/gundem/hosts";
+import { probeGundemSitemapIndex } from "./gundem-sitemap-probe";
 import { probeGdsDailyCapSurface } from "./gds-prod-probes";
 
 export type ProbeResult = { name: string; ok: boolean; detail: string };
@@ -48,12 +49,27 @@ export async function probeGundemRedirect(): Promise<ProbeResult> {
   }
 }
 
+async function probeGundemSitemapSurface(): Promise<ProbeResult> {
+  try {
+    const index = await probeGundemSitemapIndex();
+    return {
+      name: "gundem-sitemap-index",
+      ok: index.ok,
+      detail: index.detail,
+    };
+  } catch (error) {
+    return {
+      name: "gundem-sitemap-index",
+      ok: false,
+      detail: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
 export async function runPublicSurfaceProbes(): Promise<ProbeResult[]> {
   const base = await Promise.all([
     probeUrl("sitemap-main", "https://berktugberke.com/sitemap.xml", { contains: ["<urlset", "berktugberke.com"] }),
-    probeUrl("sitemap-gundem", `${HABERLER_ORIGIN}/sitemap-gundem.xml`, {
-      contains: ["<urlset"],
-    }),
+    probeGundemSitemapSurface(),
     probeUrl("robots", "https://berktugberke.com/robots.txt"),
     probeUrl("haberler-index", `${HABERLER_ORIGIN}/`, { contains: ["Gündem"] }),
     probeGundemRedirect(),

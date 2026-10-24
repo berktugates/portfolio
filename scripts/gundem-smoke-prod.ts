@@ -2,8 +2,7 @@
  * Prod haberler yüzeyi smoke (Faz 4 DoD) — secrets gerekmez.
  */
 import { HABERLER_ORIGIN } from "../app/lib/gundem/hosts";
-
-const MIN_SITEMAP_ARTICLES = 2;
+import { probeGundemSitemapIndex } from "./lib/gundem-sitemap-probe";
 
 async function check(url: string, contains?: string[]): Promise<void> {
   const res = await fetch(url, { cache: "no-store" });
@@ -30,25 +29,11 @@ async function main() {
   await check(`${HABERLER_ORIGIN}/turkiye-ucak-bileti-brifing`, ["NewsArticle"]);
   await check(`${HABERLER_ORIGIN}/gundem/rss.xml`, ["<rss", "<channel>"]);
 
-  const host = new URL(HABERLER_ORIGIN).host;
-  const articleUrlPattern = new RegExp(`https://${host.replace(/\./g, "\\.")}/[a-z0-9-]+`, "g");
-
-  const sitemapRes = await fetch(`${HABERLER_ORIGIN}/sitemap-gundem.xml`, { cache: "no-store" });
-  if (!sitemapRes.ok) throw new Error(`sitemap-gundem HTTP ${sitemapRes.status}`);
-  const newsSitemap = await sitemapRes.text();
-  let articleUrls = [...newsSitemap.matchAll(articleUrlPattern)].map((m) => m[0]).filter((u) => !u.endsWith("/"));
-
-  if (articleUrls.length < MIN_SITEMAP_ARTICLES) {
-    const mainRes = await fetch(`${HABERLER_ORIGIN}/sitemap.xml`, { cache: "no-store" });
-    if (!mainRes.ok) throw new Error(`sitemap.xml HTTP ${mainRes.status}`);
-    const mainSitemap = await mainRes.text();
-    articleUrls = [...mainSitemap.matchAll(articleUrlPattern)].map((m) => m[0]).filter((u) => !u.endsWith("/"));
-    if (articleUrls.length < 10) {
-      throw new Error(
-        `Expected ≥${MIN_SITEMAP_ARTICLES} news sitemap URLs or ≥10 haberler sitemap.xml locs; news=${articleUrls.length}`,
-      );
-    }
+  const sitemapIndex = await probeGundemSitemapIndex();
+  if (!sitemapIndex.ok) {
+    throw new Error(`Gundem sitemap index failed: ${sitemapIndex.detail}`);
   }
+  console.log(`OK gundem-sitemap-index: ${sitemapIndex.detail}`);
 
   const redirectRes = await fetch("https://berktugberke.com/gundem", {
     redirect: "manual",
@@ -81,7 +66,7 @@ async function main() {
     }
   }
 
-  console.log(`Gundem prod smoke OK (${articleUrls.length} sitemap articles).`);
+  console.log(`Gundem prod smoke OK (${sitemapIndex.detail}).`);
 }
 
 main().catch((error) => {
