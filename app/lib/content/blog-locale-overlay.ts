@@ -1,4 +1,4 @@
-import { BLOGS_PER_PAGE } from "../../data/blogs";
+import { BLOGS_PER_PAGE, blogPosts } from "../../data/blogs";
 import { LOCALES, type Locale } from "../i18n/config";
 import blogsDe from "../../content/blogs-de";
 import blogsFr from "../../content/blogs-fr";
@@ -34,9 +34,19 @@ export function blogHreflangLocalesForSlugGit(slug: string): Locale[] {
 }
 
 export async function hasBlogLocale(locale: Locale, slug: string): Promise<boolean> {
-  if (locale === "en") return true;
+  if (locale === "en") {
+    if (blogPosts.some((post) => post.slug === slug)) return true;
+    return r2BlogHasLocale(slug, "en");
+  }
   if (hasBlogLocaleOverlay(locale, slug)) return true;
   return r2BlogHasLocale(slug, locale);
+}
+
+/** Blog index lists only posts with EN+TR hreflang siblings (GDS R2 + git queue parity). */
+export async function shouldListOnBlogIndex(locale: Locale, slug: string): Promise<boolean> {
+  if (!(await hasBlogLocale(locale, slug))) return false;
+  const hreflang = await blogHreflangLocalesForSlug(slug);
+  return hreflang.includes("en") && hreflang.includes("tr");
 }
 
 export async function blogHreflangLocalesForSlug(slug: string): Promise<Locale[]> {
@@ -55,11 +65,13 @@ async function postsForLocale(locale: Locale) {
   const posts = await getCatalogBlogPosts();
   const filtered = [];
   for (const post of posts) {
-    if (locale === "en" || (await hasBlogLocale(locale, post.slug))) {
-      filtered.push(post);
-    }
+    if (await shouldListOnBlogIndex(locale, post.slug)) filtered.push(post);
   }
   return filtered;
+}
+
+export async function postsForBlogIndex(locale: Locale) {
+  return postsForLocale(locale);
 }
 
 export async function blogIndexPageCount(locale: Locale) {

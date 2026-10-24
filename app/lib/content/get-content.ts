@@ -2,7 +2,7 @@ import type { Locale } from "../i18n/config";
 import type { BlogPost } from "../../data/blogs";
 import { BLOGS_PER_PAGE } from "../../data/blogs";
 import { getCatalogBlogPost, getCatalogBlogPosts } from "./blog-catalog";
-import { hasBlogLocale } from "./blog-locale-overlay";
+import { hasBlogLocale, postsForBlogIndex } from "./blog-locale-overlay";
 import { loadR2BlogLocalePost } from "./blog-locale-r2";
 import { estimateReadingMinutesFromHtml } from "@berktug/editorial-gates/blog/reading-html";
 import type { Project } from "../../data/projects";
@@ -33,10 +33,9 @@ export async function getLocalizedProject(
 
 export async function getLocalizedBlogPosts(locale: Locale): Promise<readonly LocalizedBlogPost[]> {
   const content = await getLocaleContent(locale);
-  const posts = await getCatalogBlogPosts();
+  const posts = await postsForBlogIndex(locale);
   const out: LocalizedBlogPost[] = [];
   for (const post of posts) {
-    if (locale !== "en" && !(await hasBlogLocale(locale, post.slug))) continue;
     out.push(await mergeBlog(post, content.blogs[post.slug], locale));
   }
   return out;

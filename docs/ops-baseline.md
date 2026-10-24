@@ -132,3 +132,12 @@ GitHub secrets (2026-10-24): **`MANUAL_CRON_SECRET`** ✓, **`VERCEL_*`** ✓ (F
 | **sitemap-gundem.xml (48h)** | `gundem-sitemap-index` probe | Sık **0 loc** normal; geçer sayılması için `haberler…/sitemap.xml` **≥10** loc fallback (`scripts/lib/gundem-sitemap-probe.ts`) |
 | **Git blog kuyruk** | `check:ops` | GDS → R2 günlük kanonik; git `content/blog-queue` **≥7** bakım (runway **≥9** uyarı). `weekly-seo-blog.yml` yalnız `workflow_dispatch`. |
 | **GDS cap regression slug’ları** | `check:gds-ops` + `gds-prod-fixtures.ts` | Yeni yayın / cap günü değişince **`pnpm gds:sync-fixtures`** (D1 → fixtures). Özet: **`pnpm ops:periodic-report`**. |
+
+## Faz C — GDS mimari (2026-10-24 teyit)
+
+| Madde | DoD |
+|-------|-----|
+| **isolate-actions** | `weekly-seo-blog.yml` yalnız `workflow_dispatch`; günlük blog Worker → R2. Git kuyruk dosyaları GDS ile karışmıyor. |
+| **daily-cap** | `GROWTHDAILY_DAILY_PUBLISH_CAP=1`, D1 `growthdaily_daily_publish` + `growthdaily_deferred`, webhook + `0 */2` reconcile + `15 4 * * *` (Istanbul). |
+| **ship-renderer** | `blog-detail` → `contentHtml` (R2); git overlay ayrı. Prod: `pnpm check:gds-ops` (yayın 200, cap slug 404). |
+| **Index hreflang** | Blog liste sayfaları yalnız EN+TR kardeşi olan yazıları listeler (`shouldListOnBlogIndex`); R2 kısmi dil indeks kaymasını önler. |
