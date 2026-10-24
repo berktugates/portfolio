@@ -4,6 +4,7 @@
 import { execSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { loadDotenvLocal } from "./lib/load-dotenv-local";
 import { runPublicSurfaceProbes } from "./lib/ops-probes";
 import { fetchDeploymentExpiration, loadVercelProjectIds } from "./lib/vercel-project";
 
@@ -17,6 +18,7 @@ function log(severity: Severity, code: string, message: string) {
 }
 
 async function main() {
+  loadDotenvLocal(root);
   let errors = 0;
   let warns = 0;
 
@@ -97,7 +99,11 @@ async function main() {
 
   const vercelToken = process.env.VERCEL_TOKEN;
   if (!vercelToken) {
-    log("warn", "vercel-token", "VERCEL_TOKEN unset; deployment prune/metrics CI’da secret gerekir");
+    log(
+      "warn",
+      "vercel-token",
+      "VERCEL_TOKEN unset; ops:collect retention + ops:prune-deployments (GitHub secret veya .env.local)",
+    );
     warns += 1;
   } else {
     console.log("OK vercel-token: set");

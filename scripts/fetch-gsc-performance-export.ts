@@ -5,6 +5,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { getGoogleAccessToken, parseServiceAccountJson } from "./lib/google-service-account";
+import { loadDotenvLocal } from "./lib/load-dotenv-local";
 
 const root = resolve(import.meta.dirname, "..");
 const SCOPE = "https://www.googleapis.com/auth/webmasters.readonly";
@@ -23,6 +24,7 @@ async function loadServiceAccount(): Promise<string | null> {
 }
 
 async function main() {
+  loadDotenvLocal(root);
   const raw = await loadServiceAccount();
   if (!raw) {
     console.log("GSC fetch skipped: GSC_SERVICE_ACCOUNT_JSON / GSC_SERVICE_ACCOUNT_PATH not set.");

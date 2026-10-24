@@ -1,6 +1,8 @@
 # Faz 0 runbook (operasyon)
 
-Otomasyon: `pnpm check:ops`, `pnpm ops:collect`, `pnpm ops:prune-deployments`.
+Otomasyon: `pnpm check:ops`, `pnpm ops:collect`, `pnpm ops:prune-deployments`, `pnpm ops:gsc-sync`, `pnpm ops:periodic-report`.
+
+Yerel env: `.env.local` (`VERCEL_TOKEN`, `MANUAL_CRON_SECRET`, `CONTENT_PUBLIC_BASE_URL`, `GSC_SERVICE_ACCOUNT_JSON`). Özet: `pnpm ops:periodic-report`.
 
 ## Vercel (Deployment Storage)
 

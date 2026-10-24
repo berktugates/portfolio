@@ -100,3 +100,18 @@ GSC Performance export → `data/gsc-performance-export.json` (örnek: `.example
 | `REVALIDATE_URL` | `https://berktugberke.com/api/revalidate` |
 | `R2_*` | Yerel/CI seed (Worker’da bucket binding) |
 | `VERCEL_TOKEN` | Ops prune + deployment metrics (GitHub secret) |
+| `MANUAL_CRON_SECRET` | Worker cron/ops (`check:gds-ops` → `/ops/growthdaily`) |
+| `GSC_SERVICE_ACCOUNT_JSON` | `pnpm ops:gsc-sync` (yoksa baseline export + merge) |
+
+## Periyodik / yerel ops
+
+| Komut | Sıklık | Not |
+|-------|--------|-----|
+| `pnpm ops:periodic-report` | İsteğe bağlı | Secret env özeti (WARN = beklenen yerel boşluk) |
+| `pnpm ops:gsc-sync` | Haftalık (CI ops-phase0) | GSC API veya `docs/gsc-performance-baseline.snapshot.json` → `data/gundem-demand-signals.json` |
+| `pnpm ops:collect` | Haftalık | `VERCEL_TOKEN` ile retention snapshot güncellenir |
+| `pnpm ops:prune-deployments` | Aylık / limit | `--apply` yalnızca token ile |
+| `pnpm check:gds-ops` | Günlük cap / GDS | `MANUAL_CRON_SECRET` yoksa ops API atlanır (WARN) |
+| `pnpm verify:prod` | Release öncesi | `gundem:verify-r2` index adımı `CONTENT_PUBLIC_BASE_URL` yoksa **skip (OK)** |
+
+Yerel secret’lar: `.env.local` (gitignore); `scripts/lib/load-dotenv-local.ts` → `check:ops`, `check:gds-ops`, `ops:gsc-sync`, `ops:collect`.

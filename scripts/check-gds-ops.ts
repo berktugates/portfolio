@@ -6,6 +6,7 @@ import { resolve } from "node:path";
 import { gdsProdBlogUrl } from "../app/lib/gds-prod-fixtures";
 import { resolveGdsFixturesFromD1 } from "./lib/gds-d1-fixtures";
 import { istanbulCalendarDay } from "./lib/istanbul-calendar-day";
+import { loadDotenvLocal } from "./lib/load-dotenv-local";
 import { probeGdsDailyCapSurface } from "./lib/gds-prod-probes";
 
 const root = resolve(import.meta.dirname, "..");
@@ -90,6 +91,7 @@ async function maybeReconcile(secret: string): Promise<void> {
 }
 
 async function main() {
+  loadDotenvLocal(root);
   let errors = 0;
 
   for (const msg of await checkIndexNowPublic()) {
@@ -128,7 +130,9 @@ async function main() {
     }
     await maybeReconcile(secret);
   } else {
-    console.log("WARN manual-cron-secret: MANUAL_CRON_SECRET unset; skip /ops/growthdaily");
+    console.log(
+      "WARN manual-cron-secret: MANUAL_CRON_SECRET unset; skip /ops/growthdaily (Worker: wrangler secret / .env.local)",
+    );
   }
 
   console.log(`\nGDS ops check: ${errors} error(s).`);

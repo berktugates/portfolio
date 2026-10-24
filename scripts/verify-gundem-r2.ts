@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { promisify } from "node:util";
 import { contentPublicBaseUrl } from "./lib/content-public-base";
+import { loadDotenvLocal } from "./lib/load-dotenv-local";
 import { createR2Client } from "./lib/r2-s3-client";
 
 const execFileAsync = promisify(execFile);
@@ -30,13 +31,17 @@ async function fetchJson(url: string): Promise<unknown> {
 }
 
 async function main() {
+  const root = resolve(import.meta.dirname, "..");
+  loadDotenvLocal(root);
+
   const base = contentPublicBaseUrl();
   if (!base) {
-    console.log("Skip R2 index verify: CONTENT_PUBLIC_BASE_URL unset.");
+    console.log(
+      "OK gundem-r2-index: skipped (CONTENT_PUBLIC_BASE_URL unset; prod smoke + haberler sitemap yeterli)",
+    );
     return;
   }
 
-  const root = resolve(import.meta.dirname, "..");
   const seedRaw = await readFile(resolve(root, "content/gundem-seed.json"), "utf8");
   const expectedSlugs = ((JSON.parse(seedRaw) as { posts: { slug: string }[] }).posts ?? []).map(
     (p) => p.slug,
@@ -80,7 +85,7 @@ async function main() {
     );
     process.exit(1);
   }
-  console.log(`R2 index OK (${expectedSlugs.length} seed slugs): ${expectedSlugs.join(", ")}`);
+  console.log(`OK gundem-r2-index: ${expectedSlugs.length} seed slug(s) — ${expectedSlugs.join(", ")}`);
 }
 
 main().catch((error) => {

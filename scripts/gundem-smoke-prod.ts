@@ -63,6 +63,9 @@ async function main() {
   }
 
   const indexBase = process.env.CONTENT_PUBLIC_BASE_URL?.replace(/\/$/, "");
+  if (!indexBase) {
+    console.log("OK gundem-r2-images: skipped (CONTENT_PUBLIC_BASE_URL unset)");
+  }
   if (indexBase) {
     const indexRes = await fetch(`${indexBase}/gundem/index.json`, { cache: "no-store" });
     if (!indexRes.ok) throw new Error(`R2 gundem index HTTP ${indexRes.status}`);
