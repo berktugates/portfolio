@@ -1,6 +1,96 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"seo-for-editorial-briefings-not-wire-copy": {
+    title: "SEO per briefing editoriali, non copia agenzia",
+    excerpt: "Ripubblicare titoli per traffico addestra i crawler alla duplicazione a bassa fiducia. Briefing con analisi, date chiare e structured data onesti costruiscono altra relazione con la ricerca.",
+    description: "SEO staff per siti briefing: disciplina schema, canonical per host, misura e quality gate anti copy-paste.",
+    sections: [
+      {
+        heading: "I briefing non sono riscritture",
+        paragraphs: [
+          "La ricerca premia autorship chiara, date di modifica e sintesi originale. Rewrite sottili su query trend bruciano crawl budget.",
+          "I briefing dichiarano cosa sono: analisi con fonti primarie citate, non wire breaking.",
+        ],
+      },
+      {
+        heading: "I structured data devono combaciare con la pagina",
+        paragraphs: [
+          "Il markup NewsArticle deve riflettere titoli, immagini e date visibili. Il mismatch peggio dell'omissione.",
+          "Stock photo con credito licenza in UI, non finto reportage.",
+        ],
+        points: [
+          "Separare briefing editoriali da copia wire in schema e UI",
+          "Stock con credito onesto, non finto photojournalism",
+          "Hreflang e canonical allineati per host",
+          "Analytics per content_group per superficie",
+        ],
+      },
+      {
+        heading: "Host e hreflang restano onesti",
+        paragraphs: [
+          "News su host dedicato: sitemap e link interni rispettano il confine.",
+          "Redirect e canonical portano utenti e crawler alla superficie giusta.",
+        ],
+      },
+      {
+        heading: "Analytics per superficie contenuto",
+        paragraphs: [
+          "Tag content_group in analytics per confrontare prodotto, blog e news senza doppio conteggio.",
+          "SEO briefing è gioco lungo: coerenza e qualità misurabile battono copy-paste quotidiano.",
+        ],
+        links: [
+          {
+            label: "Schema.org — NewsArticle",
+            url: "https://schema.org/NewsArticle",
+          },
+          {
+            label: "Google Search Central — Structured data",
+            url: "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data",
+          },
+        ],
+      },
+      {
+        heading: "Strutturare pagine per query durature",
+        paragraphs: [
+          "I briefing editoriali rankano quando rispondono a domande decisionali con URL stabili, non inseguendo keyword orarie. Aprite con tesi concisa, scope esplicito e contesto datato così il lettore capisce se la pagina resta valida. I titoli stile wire invecchiano in fretta; l'architettura briefing deve sopravvivere ai cicli news senza churn continuo di slug.",
+          "Il linking interno collega briefing a fonti primarie, documentazione prodotto ed explainer sotto controllo. Evitate pagine orfane solo per campagne. I motori premiano cluster coerenti dove ogni nodo aggiunge vocabolario e profondità invece di ripetere frasi da comunicato stampa. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+          "Misurate il successo sui template briefing separatamente dai funnel di conversione. Tempo on page, scroll depth sulle sezioni metodologia e visite di ritorno indicano fiducia. Trattate questi segnali come KPI editoriali accanto ai ranking così i team non ottimizzano titoli per click erodendo credibilità. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+        ],
+      },
+      {
+        heading: "Pubblicare structured data allineati alla realtà",
+        paragraphs: [
+          "I rich result richiedono JSON-LD che rifletta contenuto visibile, non blocchi FAQ boilerplate incollati per snippet. Validate il markup in staging con gli stessi componenti della prod, paywall, consent gate e sezioni lazy che i crawler potrebbero saltare. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+          "Lo schema Article deve allineare autore, dateModified e headline alla semantica on-page. Disallineamento tra structured data e HTML innesca revisione manuale nei sistemi qualità search. Preferite markup conservativo a tipi speculativi non approvati dal legale. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+          "Briefing internazionali richiedono hreflang e parità strutturale delle sezioni, non solo titoli tradotti. La documentazione Google Search Central spiega come le varianti linguistiche devono referenziarsi. Alternates rotti diluiscono autorità sulle locale tradotte. Rivedetelo nel prossimo production review, assegnate un owner e collegate un ticket di remediation datato.",
+        ],
+        links: [
+          {
+            label: "Google Search Central — Dati strutturati",
+            url: "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data",
+          },
+          {
+            label: "schema.org — Article",
+            url: "https://schema.org/Article",
+          },
+          {
+            label: "web.dev — Core Web Vitals",
+            url: "https://web.dev/articles/vitals",
+          },
+        ],
+      },
+      {
+        heading: "SEO briefing difendibile in Search Console",
+        paragraphs: [
+          "I briefing editoriali battono il wire quando spiegano tradeoff attuabili—costo, rischio, timeline—non quando ripetono titoli con keyword stuffing. H2 con domande che gli analisti pongono; risposte in prosa firmabile da staff engineer. Link interni collegano briefing e doc primari in cluster crawlable senza URL orfane in nav solo app. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+          "Structured data riflette ciò che shipate. FAQ finte e schema article disallineato danneggiano trust più dell'assenza di JSON-LD. Validare rich results in staging con canonical prod e hreflang. Misurare engagement landing organico separato dai funnel app così le vittorie SEO non spariscono in metriche blend. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+          "Refresh sezioni evergreen a calendario, non dopo crollo traffico. Impression e posizione media mensili sulle URL briefing; update se ranking scende con impression in salita—snippet stantii. Date revisione visibili. Timestamp stile wire immutabili insegnano ai crawler pagina non mantenuta. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+          "Distribuzione importante quanto on-page. I briefing guadagnano link quando product e policy li citano in changelog, release note, talk. Ancore stabili per definizioni quotabili. Non gated tutta la sostanza tecnica; summary public, worksheet registrati. SEO briefing è superficie prodotto, non afterthought marketing. Registrate owner, data di review e trigger di rollback nello stesso ticket di change così il prossimo on-call engineer rintraccia le decisioni senza riaprire l'incident.",
+        ],
+      },
+    ],
+  },
 "performance-budgets-for-marketing-and-app-routes": {
     title: "Budget di performance per rotte marketing e app",
     excerpt: "Marketing e app shell falliscono per motivi diversi; senza budget ogni launch aggiunge peso fino a danneggiare ricerca e conversione.",

@@ -1,6 +1,96 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"seo-for-editorial-briefings-not-wire-copy": {
+    title: "通信コピーではなく編集ブリーフィング向けSEO",
+    excerpt: "トラフィック目的の見出し再掲はクローラーを低信頼の複製扱いに慣らす。分析・明確な日付・正直な構造化データのブリーフは検索との関係を変える。",
+    description: "編集ブリーフサイト向けスタッフSEO：スキーマ規律、ホスト別canonical、計測、コピペ回避の品質ゲート。",
+    sections: [
+      {
+        heading: "ブリーフはリライトではない",
+        paragraphs: [
+          "検索は明確な著者・更新日・独自総合を評価。トレンドの薄いリライトはクロール予算を燃やす。",
+          "ブリーフは一次ソース引用の分析であると明示し、速報ワイヤーではない。",
+        ],
+      },
+      {
+        heading: "構造化データはページと一致",
+        paragraphs: [
+          "NewsArticleは可視見出し・画像・日付と一致。不一致は未マークより悪い。",
+          "ストック画像はUIでライセンス表示、偽 photojournalism 禁止。",
+        ],
+        points: [
+          "編集ブリーフィングをワイヤーコピーとschema/UIで分離",
+          "ストックは正直なクレジット、事件写真の演出禁止",
+          "ホスト毎にhreflangとcanonicalを整合",
+          "サーフェス毎のcontent_groupで計測",
+        ],
+      },
+      {
+        heading: "ホストとhreflangは正直に",
+        paragraphs: [
+          "専用ホストのニュースはサイトマップと内部リンクで境界を守る。",
+          "リダイレクトとcanonicalで正しい面に誘導。",
+        ],
+      },
+      {
+        heading: "コンテンツ面別アナリティクス",
+        paragraphs: [
+          "content_groupでタグ付けし製品・ブログ・ニュースを二重計上なく比較。",
+          "ブリーフSEOは長期戦：一貫性と測定可能品質が日次コピペに勝つ。",
+        ],
+        links: [
+          {
+            label: "Schema.org — NewsArticle",
+            url: "https://schema.org/NewsArticle",
+          },
+          {
+            label: "Google Search Central — Structured data",
+            url: "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data",
+          },
+        ],
+      },
+      {
+        heading: "持続的クエリ向けのページ構造",
+        paragraphs: [
+          "編集ブリーフィングは時間単位キーワードを追うより、安定 URL で意思決定質問に答えると順位を得やすい。簡潔な論旨、明示スコープ、日付付き文脈で始め、読者がページの現 validity を判断できるようにする。ワイヤー見出しは速く陳腐化する。ブリーフィング設計は slug  churn なしにニュースサイクルを超えるべきだ。",
+          "内部リンクはブリーフィングを一次ソース、製品ドキュメント、自社 explainer に結ぶ。キャンペーン専用の孤児ページを避ける。検索エンジンは各ノードがプレス文句を反復せず語彙と深さを足す一貫トピッククラスタを評価する。",
+          "成功はコンバージョンファネルと分け、ブリーフィングテンプレートで測る。滞在時間、方法論セクションのスクロール深度、再訪は信頼の指標。クリック向けタイトル最適化で信頼を削らないよう、これらをランキング横の編集 KPI とする。",
+        ],
+      },
+      {
+        heading: "実態に合う structured data を出荷する",
+        paragraphs: [
+          "リッチ結果には可視コンテンツを反映する JSON-LD が要る。snippet 用の定型 FAQ ブロックではない。staging で本番と同コンポーネントで markup を検証し、paywall、同意ゲート、クローラが逃しうる lazy セクションも含める。",
+          "Article schema の author、dateModified、headline は on-page 意味論と整合させる。structured data と HTML の不一致は search quality で人手レビューを招く。法務未承認の推測型より保守的 markup を選ぶ。",
+          "国際ブリーフィングはタイトル差替だけでなく hreflang とセクション構造の翻訳 parity が要る。Google Search Central は言語 variant の相互参照を説明する。壊れた alternate は翻訳投資した locale の権威を薄める。",
+        ],
+        links: [
+          {
+            label: "Google Search Central — 構造化データ",
+            url: "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data",
+          },
+          {
+            label: "schema.org — Article",
+            url: "https://schema.org/Article",
+          },
+          {
+            label: "web.dev — Core Web Vitals",
+            url: "https://web.dev/articles/vitals",
+          },
+        ],
+      },
+      {
+        heading: "Search Console で説明できる briefing SEO",
+        paragraphs: [
+          "編集 briefing は実装コスト・リスク・タイムラインなど行動可能な tradeoff を説明するとき wire copy を上回り、見出しの keyword 詰め込みではありません。アナリストが本当に聞く問いを H2 にし、staff engineer が署名する散文で答える。内部リンクで関連 briefing と primary doc を繋ぎ、app-only ナビに埋もれた orphan URL の cluster を避ける。",
+          "構造化データは ship したページを反映。偽 FAQ や不一致 article schema は JSON-LD 省略より trust を傷つける。staging で prod canonical と hreflang で rich result を検証。オーガニック landing engagement を app ファネルと分離計測し SEO 成果を blend メトリクスに埋もれさせない。 担当者、レビュー日、ロールバック条件を同一変更チケットに記録し、次の on-call エンジニアがインシデントを再オープンせず判断を追跡できるようにする。",
+          "evergreen 節は traffic 崩壊後ではなくカレンダーで更新。briefing URL の月次 impression と平均順位；impression 増で ranking 低下は stale snippet—更新を計画。改訂日を可視化。変わらない wire タイムスタンプは crawler に未保守を教える。 担当者、レビュー日、ロールバック条件を同一変更チケットに記録し、次の on-call エンジニアがインシデントを再オープンせず判断を追跡できるようにする。",
+          "配布は on-page と同じくらい重要。product と policy が changelog、release note、講演で cite すると link が付く。引用可能定義の stable anchor を提供。技術 substance を全面 gate しない；summary は public、worksheet は登録可。briefing SEO は blog テンプレ bolt-on ではなく product surface。",
+        ],
+      },
+    ],
+  },
 "performance-budgets-for-marketing-and-app-routes": {
     title: "マーケティングとアプリルートのパフォーマンス予算",
     excerpt: "マーケページと認証アプリシェルは別理由で失敗する。予算なしではローンチのたびに重くなり検索とコンバージョンが静かに損なわれる。",

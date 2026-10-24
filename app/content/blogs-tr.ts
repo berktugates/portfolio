@@ -1,6 +1,96 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"seo-for-editorial-briefings-not-wire-copy": {
+    title: "Ajans Kopyası Değil, Editöryal Brifing için SEO",
+    excerpt: "Trafik için manşet yeniden yayınlamak, tarayıcıları düşük güvenilir kopya olarak görmeye alıştırır. Analiz, net tarih ve dürüst yapılandırılmış veri ekleyen brifingler aramayla farklı ilişki kurar.",
+    description: "Editöryal brifing siteleri için staff SEO: schema disiplini, alt alan canonical'ları, ölçüm ve ajans kopyası tuzaklarından kaçınan kalite kapıları.",
+    sections: [
+      {
+        heading: "Brifingler yeniden yazım değildir",
+        paragraphs: [
+          "Arama sistemleri net yazım, güncelleme tarihi ve özgün sentezi ödüllendirir. Trend sorgularının ince yeniden yazımları crawl bütçesini yakar, marka inşa etmez.",
+          "Editöryal brifingler ne olduklarını açıkça söylemeli: atıflı birincil kaynaklarla analiz, canlı haber telgrafı değil.",
+        ],
+      },
+      {
+        heading: "Yapılandırılmış veri sayfayla uyumlu olmalı",
+        paragraphs: [
+          "NewsArticle işaretlemesi görünen başlık, görsel ve tarihlerle örtüşmeli. Uyumsuzluk, hiç işaretlemeden daha kötüdür.",
+          "Stok görsellerde UI'da lisans metadatası olmalı; sahte foto muhabirliği ipuçları kullanılmamalı.",
+        ],
+        points: [
+          "Editöryal brifingleri tel kopyasından schema ve UI'da ayır",
+          "Stok görseli dürüst atıfla kullan, olay fotoğrafı gibi gösterme",
+          "Host bazında hreflang ve canonical hizalı tut",
+          "Yüzey bazında content_group ile ölç",
+        ],
+      },
+      {
+        heading: "Host ve hreflang dürüst kalır",
+        paragraphs: [
+          "Haberler ayrı host'ta yaşarken sitemap ve iç linkleme, ilgisiz site graflarına sızmak yerine bu sınırı korumalı.",
+          "Yönlendirme ve canonical etiketleri kullanıcı ve tarayıcıyı doğru yüzeye indirmeli.",
+        ],
+      },
+      {
+        heading: "İçerik yüzeyine göre analitik",
+        paragraphs: [
+          "Analitikte içerik grubu etiketleyin; ürün, blog ve haber yüzeyleri çift sayım olmadan karşılaştırılabilir olsun.",
+          "Brifing SEO'su uzun oyun: tutarlılık, dürüstlük ve ölçülebilir kalite günlük kopyala-yapıştıyı geçer.",
+        ],
+        links: [
+          {
+            label: "Schema.org — NewsArticle",
+            url: "https://schema.org/NewsArticle",
+          },
+          {
+            label: "Google Search Central — Structured data",
+            url: "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data",
+          },
+        ],
+      },
+      {
+        heading: "Kalıcı sorgular için sayfa yapısı",
+        paragraphs: [
+          "Editoryal brifingler, saatlik anahtar kelimeleri kovaladığında değil karar sorularını sabit URL'lerle yanıtladığında sıralanır. Kısa tez, açık kapsam ve tarihli bağlamla başlayın; okuyucu sayfanın hâlâ geçerli olup olmadığını anlasın. Ajans tarzı manşetler hızla bayatlar; brifing mimarisi sürekli slug değiştirmeden haber döngülerini atlatsın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "İç linkleme brifingleri birincil kaynaklara, ürün dokümantasyonuna ve kontrol ettiğiniz ilgili açıklamalara bağlamalı. Yalnızca kampanyalar için var olan yetim sayfalardan kaçının. Arama motorları, her düğümün basın bülteni cümlelerini tekrarlamak yerine kelime dağarcığı ve derinlik eklediği tutarlı konu kümelerini ödüllendirir. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "Başarıyı brifing şablonlarında dönüşüm hunilerinden ayrı ölçün. Sayfada kalma süresi, metodoloji bölümlerinde kaydırma derinliği ve geri dönüşler güven gösterir. Ekipler tıklama için başlık optimize ederken itibar eritmesin diye bu sinyalleri sıralamanın yanında editoryal KPI sayın. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+        ],
+      },
+      {
+        heading: "Gerçeğe uyan yapılandırılmış veri gönderin",
+        paragraphs: [
+          "Zengin sonuçlar, snippet için yapıştırılmış kalıp SSS blokları değil görünür içeriği yansıtan JSON-LD ister. Staging'de üretimin render ettiği bileşenlerle işaretlemeyi doğrulayın; paywall, onay kapıları ve crawler'ların kaçırabileceği lazy bölümler dahil. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "Article schema yazar, dateModified ve manşet alanlarını sayfa içi semantikle hizalamalı. Yapılandırılmış veri ile HTML uyumsuzluğu arama kalite sistemlerinde manuel incelemeyi tetikler. Hukuk ekibinizin onaylamadığı spekülatif tipler yerine muhafazakâr işaretleme tercih edin. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+          "Uluslararası brifingler yalnızca başlık değişimi değil bölüm yapısında hreflang ve çeviri paritesi ister. Google Search Central, dil varyantlarının birbirine nasıl referans vermesi gerektiğini açıklar. Kırık alternates, çeviri yatırımı yaptığınız locale'lerde otoriteyi seyreltir. Bunu bir sonraki prodüksiyon incelemenizde tekrar ele alın, sahip atayın ve tarihli bir iyileştirme ticket'ı bağlayın.",
+        ],
+        links: [
+          {
+            label: "Google Search Central — Yapılandırılmış veri",
+            url: "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data",
+          },
+          {
+            label: "schema.org — Article",
+            url: "https://schema.org/Article",
+          },
+          {
+            label: "web.dev — Core Web Vitals",
+            url: "https://web.dev/articles/vitals",
+          },
+        ],
+      },
+      {
+        heading: "Search Console'da savunulabilir brifing SEO",
+        paragraphs: [
+          "Editoryal brifingler, okuyucunun uygulayabileceği tradeoff'ları—maliyet, risk, zaman çizelgesi—anlattığında wire copy'yi geçer; başlık özetine keyword doldurmakla değil. Analistlerin gerçekten sorduğu soruları H2 yapın, staff mühendisin imzalayacağı düz yazıyla yanıtlayın. İç linkler ilgili brifingleri ve birincil doklara bağlasın; app-only navigasyonda yetim kalan URL cluster'ı oluşmasın. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+          "Yapılandırılmış veri ship ettiğiniz sayfayı yansıtmalı. Sahte FAQ blokları ve uyumsuz article schema, JSON-LD'yi tamamen atlamaktan daha çok güven sinyalini zedeler. Staging'de production canonical ve hreflang alternates ile rich result doğrulayın. Organik landing etkileşimini app dönüşüm hunisinden ayrı ölçün; SEO kazanımları karışık ürün metriklerinde kaybolmasın. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+          "Evergreen bölümleri trafik çöktükten sonra değil takvimle yenileyin. Brifing URL'leri için aylık impression ve ortalama pozisyon izleyin; impression artarken sıralama düşüyorsa snippet bayat demektir—güncelleme planlayın. Yazarlar revizyon tarihini görünür yazsın. Hiç değişmeyen wire timestamp'i crawler'a sayfanın bakımsız olduğunu öğretir. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+          "Dağıtım on-page ustalık kadar önemli. Ürün ve politika ekipleri brifingleri changelog, release note ve konferansta cite edince link gelir. Partnerlerin alıntılayacağı stabil anchor tanımlar sunun. Teknik özü tamamen gate etmeyin; özet public, worksheet kayıtlı kalabilir. Brifing SEO'su blog şablonuna sonradan cıvatalanan pazarlama artığı değil, ürün yüzeyidir. Sahip, gözden geçirme tarihi ve rollback tetikleyicisini aynı değişiklik ticket'ında kaydedin; sonraki on-call mühendis olayı yeniden açmadan kararları izleyebilsin.",
+        ],
+      },
+    ],
+  },
 "performance-budgets-for-marketing-and-app-routes": {
     title: "Pazarlama ve Uygulama Rotaları için Performans Bütçeleri",
     excerpt: "Pazarlama sayfaları ve kimlik doğrulamalı app shell'ler farklı nedenlerle çöker; ortak kural: bütçe yoksa her lansman ağırlık ekler, arama ve dönüşüm sessizce zarar görür.",

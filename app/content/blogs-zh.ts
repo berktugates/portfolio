@@ -1,6 +1,96 @@
 import type { BlogLocaleMap } from "../lib/content/types";
 
 const blogs: BlogLocaleMap = {
+"seo-for-editorial-briefings-not-wire-copy": {
+    title: "面向编辑简报而非通稿复制的 SEO",
+    excerpt: "为流量转载标题会让爬虫把你当低信任重复源。带分析、清晰日期与诚实结构化数据的简报与搜索建立不同关系。",
+    description: "编辑简报站的 staff SEO：schema 纪律、分主机 canonical、度量与避开通稿陷阱的质量门。",
+    sections: [
+      {
+        heading: "简报不是改写",
+        paragraphs: [
+          "搜索奖励清晰作者、修改日期与原创综合；薄改写趋势查询烧 crawl 预算。",
+          "简报应声明自身：引用一手来源的分析，非突发电讯。",
+        ],
+      },
+      {
+        heading: "结构化数据须与页面一致",
+        paragraphs: [
+          "NewsArticle 标记须匹配可见标题、图片与日期；不一致比不标记更糟。",
+          "库存图在 UI 标注许可，勿伪装现场摄影。",
+        ],
+        points: [
+          "在 schema 与 UI 区分编辑简报与通稿复制",
+          "库存图诚实署名，勿伪装新闻摄影",
+          "按主机对齐 hreflang 与 canonical",
+          "按内容面 content_group 度量",
+        ],
+      },
+      {
+        heading: "主机与 hreflang 保持诚实",
+        paragraphs: [
+          "新闻在独立主机时，站点地图与内链应尊重边界。",
+          "重定向与 canonical 引导用户与爬虫到 intended 面。",
+        ],
+      },
+      {
+        heading: "按内容面分析",
+        paragraphs: [
+          "按 content_group 打标，产品、博客与新闻可对比且不重复计数。",
+          "简报 SEO 是长跑：一致、诚实与可测质量胜过日复粘贴。",
+        ],
+        links: [
+          {
+            label: "Schema.org — NewsArticle",
+            url: "https://schema.org/NewsArticle",
+          },
+          {
+            label: "Google Search Central — Structured data",
+            url: "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data",
+          },
+        ],
+      },
+      {
+        heading: "为长期查询设计页面结构",
+        paragraphs: [
+          "编辑简报要在稳定 URL 上回答决策问题才会获得排名，而不是追逐 hourly 关键词。以简洁论点、明确范围与 dated 上下文开篇，让读者判断页面是否仍适用。通讯社式标题很快过期；简报架构应跨新闻周期而无需频繁改 slug。",
+          "内链应把简报连到一手来源、产品文档及你们掌控的相关解读页。避免仅为 campaign 存在的孤儿页。搜索引擎奖励连贯主题簇，其中每个节点增加词汇与深度，而非重复新闻稿措辞。",
+          "在简报模板上单独衡量成功，与转化漏斗分开。停留时间、方法论区块滚动深度与回访表明信任。把这些信号与排名并列为编辑 KPI，避免团队为点击优化标题而损害可信度。",
+        ],
+      },
+      {
+        heading: "发布与真实内容一致的结构化数据",
+        paragraphs: [
+          "富结果需要反映可见内容的 JSON-LD，而非为 snippet 粘贴的模板 FAQ。在 staging 用与生产相同的组件验证 markup，包括 paywall、同意门与爬虫可能错过的懒加载区块。",
+          "Article schema 的 author、dateModified、headline 应与页面语义一致。结构化数据与 HTML 不一致会在搜索质量系统中触发人工审核。优先保守 markup，而非法务未批准的推测类型。",
+          "国际简报需要 hreflang 与章节结构翻译对等，而非仅换标题。Google Search Central 文档说明语言变体应如何互指。损坏的 alternate 会稀释你们已翻译 locale 的权威。",
+        ],
+        links: [
+          {
+            label: "Google Search Central — 结构化数据",
+            url: "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data",
+          },
+          {
+            label: "schema.org — Article",
+            url: "https://schema.org/Article",
+          },
+          {
+            label: "web.dev — Core Web Vitals",
+            url: "https://web.dev/articles/vitals",
+          },
+        ],
+      },
+      {
+        heading: "可在 Search Console 展示的简报 SEO",
+        paragraphs: [
+          "编辑简报在解释可行动的权衡——实施成本、风险与时间线——时优于电讯稿，而非用关键词堆砌复述标题。用分析师真实提问作 H2，以 staff 工程师愿意署名散文作答。内链连接相关简报与主文档，形成可被爬取的主题簇，避免 URL 仅藏在应用内导航成为孤儿页。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+          "结构化数据须反映实际上线页面。虚假 FAQ 与不符的 article schema 比省略 JSON-LD 更伤信任信号。在预发用与生产相同的 canonical 与 hreflang 验证富结果。有机落地页互动与 app 转化漏斗分开衡量，SEO 成效才不会淹没在混合产品指标里。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+          "按日历刷新常青段落，而非流量已跌才更新。每月跟踪简报 URL 的展示与平均排名；展示升而排名降时说明摘要陈旧，应排期更新。作者应显著标注修订日期。从不变化的电讯式时间戳会让爬虫认为页面无人维护。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+          "分发与页面工艺同样重要。产品与政策团队在 changelog、发布说明与演讲中引用简报时会带来链接。提供可引用的稳定锚点定义。勿将全部技术内容门禁；摘要可公开，工作表可注册访问。简报 SEO 是产品界面，而非博客模板上的营销补丁。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。 在同一变更工单中记录负责人、评审日期与回滚触发条件，以便下一轮值班工程师无需重开事件即可追溯决策。",
+        ],
+      },
+    ],
+  },
 "performance-budgets-for-marketing-and-app-routes": {
     title: "营销与应用路由的性能预算",
     excerpt: "营销页与认证应用壳失败原因不同；无预算则每次发布增重，搜索与转化悄然受损。",

@@ -30,6 +30,114 @@ export const BLOGS_PER_PAGE = 10;
 
 export const blogPosts: readonly BlogPost[] = [
   {
+    slug: "seo-for-editorial-briefings-not-wire-copy",
+    title: "SEO for Editorial Briefings, Not Wire Copy",
+    excerpt: "Republishing headlines for traffic trains crawlers to treat you as low-trust duplication. Briefings that add analysis, clear dates, and honest structured data earn a different relationship with search.",
+    description: "Staff SEO for editorial briefing sites: schema discipline, subdomain canonicals, measurement, and quality gates that avoid agency copy pitfalls.",
+    publishedAt: "2026-10-24",
+    readingMinutes: 10,
+    keywords: [
+      "editorial SEO",
+      "NewsArticle",
+      "structured data",
+      "content quality",
+      "Google Search",
+    ],
+    socialThreadTr: [
+      "Ajans kopyası yerine analiz brifingi: SEO ve güven aynı stratejinin parçası. 🧵",
+      "Schema ve ölçüm disiplini. Detay: https://berktugberke.com/tr/blogs/seo-for-editorial-briefings-not-wire-copy",
+    ],
+    sections: [
+      {
+        heading: "Briefings are not rewrites",
+        paragraphs: [
+          "Search systems reward documents with clear authorship, modification dates, and original synthesis. Thin rewrites of trending queries burn crawl budget without building brand.",
+          "Editorial briefings should declare what they are: analysis with cited primary sources, not breaking news wires.",
+          "Editorial briefings earn links when they explain tradeoffs readers can act on—not when they recap headlines.",
+        ],
+      },
+      {
+        heading: "Structured data must match the page",
+        paragraphs: [
+          "NewsArticle markup must reflect visible headlines, images, and dates. Mismatch is worse than omission.",
+          "Stock photos need license metadata in the UI, not fake photojournalism cues.",
+          "Structured data should reflect the page type you actually ship; fake FAQ blocks hurt more than they help.",
+        ],
+        points: [
+          "Separate editorial briefings from wire copy in schema and UI",
+          "Use stock imagery with honest credit, not event photos",
+          "Keep hreflang and canonicals aligned per host",
+          "Measure content_group in analytics per surface",
+        ],
+      },
+      {
+        heading: "Hosts and hreflang stay honest",
+        paragraphs: [
+          "When news lives on a dedicated host, sitemaps and internal linking should respect that boundary instead of leaking into unrelated site graphs.",
+          "Redirects and canonical tags should help users and crawlers land on the intended surface.",
+          "Measure engagement on briefing pages separately from app conversion funnels.",
+        ],
+      },
+      {
+        heading: "Analytics by content surface",
+        paragraphs: [
+          "Tag analytics by content group so product, blog, and news surfaces are comparable without double-counting journeys.",
+          "SEO for briefings is a long game: consistency, honesty, and measurable quality beat daily copy-paste.",
+          "Refresh evergreen sections on a schedule; stale authority pages decay quietly in Search Console.",
+        ],
+        links: [
+          {
+            label: "Schema.org — NewsArticle",
+            url: "https://schema.org/NewsArticle",
+          },
+          {
+            label: "Google Search Central — Structured data",
+            url: "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data",
+          },
+        ],
+      },
+      {
+        heading: "Structure pages for durable queries",
+        paragraphs: [
+          "Editorial briefings rank when they answer decision questions with stable URLs, not when they chase hourly keywords. Lead with a concise thesis, explicit scope, and dated context so readers know whether the page still applies. Wire-style headlines rot quickly; briefing architecture should survive news cycles without constant slug churn.",
+          "Internal linking should connect briefings to primary sources, product documentation, and related explainers you control. Avoid orphan pages that exist only for campaigns. Search engines reward coherent topic clusters where each node adds vocabulary and depth instead of repeating the same press release phrasing. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+          "Measure success with engagement on briefing templates separately from conversion funnels. Time on page, scroll depth on methodology sections, and return visits indicate trust. Treat those signals as editorial KPIs alongside rankings so teams do not optimize titles for clicks while eroding credibility. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        ],
+      },
+      {
+        heading: "Ship structured data that matches reality",
+        paragraphs: [
+          "Rich results require JSON-LD that reflects visible content, not boilerplate FAQ blocks pasted for snippets. Validate markup in staging with the same components production renders, including paywalls, consent gates, and lazy-loaded sections that crawlers might otherwise miss. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+          "Article schema should include author, dateModified, and headline fields aligned with on-page semantics. Mismatch between structured data and HTML triggers manual review in search quality systems. Prefer conservative markup over speculative types your legal team has not approved. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+          "International briefings need hreflang and translation parity on section structure, not just swapped titles. Google Search Central documentation describes how language variants should reference each other. Broken alternates dilute authority across locales you invested in translating. Revisit this in your next production review, assign an owner, and attach a dated remediation ticket.",
+        ],
+        links: [
+          {
+            label: "Google Search Central — Structured data",
+            url: "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data",
+          },
+          {
+            label: "schema.org — Article",
+            url: "https://schema.org/Article",
+          },
+          {
+            label: "web.dev — Core Web Vitals",
+            url: "https://web.dev/articles/vitals",
+          },
+        ],
+      },
+      {
+        heading: "Briefing SEO you can show in Search Console",
+        paragraphs: [
+          "Editorial briefings outperform wire copy when they explain tradeoffs readers can act on—implementation cost, risk, and timeline—not when they recap headlines with keyword stuffing. Structure pages with clear H2 questions analysts actually ask, then answer in prose a staff engineer would sign. Internal links should connect related briefings and primary docs, forming a topic cluster search engines can crawl without orphan URLs buried in app-only navigation.",
+          "Structured data must reflect what you ship. Fake FAQ blocks and mismatched article schema hurt trust signals more than omitting JSON-LD entirely. Validate rich results in staging with the same canonical URLs production uses, including hreflang alternates for localized briefings. Measure organic landing engagement separately from app conversion funnels so SEO wins are not hidden inside blended product metrics.",
+          "Refresh evergreen sections on a calendar, not when traffic already collapsed. Track query impressions and average position for briefing URLs monthly; schedule updates when rankings slip while impressions rise—a sign of stale snippets. Authors should note revision dates visibly. Wire-style timestamps that never change teach crawlers the page is unmaintained, even if the product beneath it evolved.",
+          "Distribution matters as much as on-page craft. Briefings earn links when product and policy teams cite them in changelogs, release notes, and conference talks. Provide stable anchors for quotable definitions partners can reference. Avoid gating technical substance entirely; summaries can be public while worksheets stay registered. SEO for briefings is a product surface, not a marketing afterthought bolted onto blog templates.",
+        ],
+      },
+    ],
+  },
+    {
     slug: "performance-budgets-for-marketing-and-app-routes",
     title: "Performance Budgets for Marketing and App Routes",
     excerpt: "Marketing pages and authenticated app shells fail for different reasons, but they share one rule: without budgets, every launch adds weight until search and conversion quietly suffer.",
