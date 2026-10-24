@@ -288,6 +288,7 @@ export async function ingestGrowthDailyPost(env: Env, slug: string): Promise<Ing
   }
 
   for (const loc of WORKER_TRANSLATED_LOCALES) {
+    if (localeHtml[loc]) continue;
     const translated = await translateHtmlToLocale(env, sanitizedEn, loc as ReadingLocale);
     if (!translated.ok) {
       console.log(`growthdaily: skip locale ${loc}`, translated.code);

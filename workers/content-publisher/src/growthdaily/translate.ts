@@ -2,9 +2,11 @@ import type { ReadingLocale } from "@berktug/editorial-gates/blog/reading-html";
 import { countReadingUnits, stripHtmlToText } from "@berktug/editorial-gates/blog/reading-html";
 
 const TRANSLATE_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
-const AI_LOCALES: ReadingLocale[] = ["fr", "it", "zh", "ja"];
+const AI_LOCALES: ReadingLocale[] = ["tr", "de", "fr", "it", "zh", "ja"];
 
 const LOCALE_LABEL: Record<(typeof AI_LOCALES)[number], string> = {
+  tr: "Turkish",
+  de: "German",
   fr: "French",
   it: "Italian",
   zh: "Simplified Chinese",

@@ -8,6 +8,7 @@ import blogsTr from "../../content/blogs-tr";
 import blogsZh from "../../content/blogs-zh";
 import { getCatalogBlogPosts } from "./blog-catalog";
 import { r2BlogHasLocale, r2HreflangLocalesForSlug } from "./blog-locale-r2";
+import { getBlobBlogPost } from "./load-blob";
 
 const OVERLAY_MAP: Partial<Record<Locale, Record<string, unknown>>> = {
   tr: blogsTr,
@@ -42,11 +43,25 @@ export async function hasBlogLocale(locale: Locale, slug: string): Promise<boole
   return r2BlogHasLocale(slug, locale);
 }
 
-/** Blog index lists only posts with EN+TR hreflang siblings (GDS R2 + git queue parity). */
+/** Git queue: EN+TR parity. Worker R2 (GDS / git-queue): list per locale when EN exists. */
 export async function shouldListOnBlogIndex(locale: Locale, slug: string): Promise<boolean> {
   if (!(await hasBlogLocale(locale, slug))) return false;
   const hreflang = await blogHreflangLocalesForSlug(slug);
-  return hreflang.includes("en") && hreflang.includes("tr");
+  if (!hreflang.includes("en")) return false;
+
+  const isGitCatalog = blogPosts.some((post) => post.slug === slug);
+  if (isGitCatalog) {
+    return hreflang.includes("tr");
+  }
+
+  const r2En = await getBlobBlogPost(slug);
+  const source = r2En?.source;
+  if (source === "growthdaily" || source === "queue") {
+    if (locale === "en") return true;
+    return hreflang.includes(locale);
+  }
+
+  return hreflang.includes("tr");
 }
 
 export async function blogHreflangLocalesForSlug(slug: string): Promise<Locale[]> {
