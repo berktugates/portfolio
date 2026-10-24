@@ -3,7 +3,9 @@
  */
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { GDS_PROD_PUBLISHED_SLUG } from "../app/lib/gds-prod-fixtures";
 import { collectMeasurement, loadGscExport } from "./lib/measurement-collect";
+import { runSchemaProbes } from "./lib/schema-probes";
 
 const root = resolve(import.meta.dirname, "..");
 
@@ -13,6 +15,15 @@ async function main() {
   let warns = 0;
 
   for (const p of data.gtmGa.probes) {
+    if (!p.ok) {
+      console.error(`FAIL ${p.id}: ${p.detail}`);
+      errors += 1;
+    } else {
+      console.log(`OK ${p.id}: ${p.detail}`);
+    }
+  }
+
+  for (const p of await runSchemaProbes(GDS_PROD_PUBLISHED_SLUG)) {
     if (!p.ok) {
       console.error(`FAIL ${p.id}: ${p.detail}`);
       errors += 1;

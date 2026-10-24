@@ -12,7 +12,7 @@ Prefer **one** client-side tag path to avoid double-counting:
 
 | Item | Value / status |
 |------|----------------|
-| GTM container | `GTM-K2PXS8ZC` — **v2 Live**: Google tag `G-5H6GDB1CRH`, trigger Initialization – All Pages |
+| GTM container | `GTM-K2PXS8ZC` — **v3 Live** (2026-10-24): Google tag `G-5H6GDB1CRH` + GA4 event `page_context` (`content_group`, `page_locale`, `page_path`) |
 | GA4 Measurement ID | `G-5H6GDB1CRH` (property berktugberke.com) |
 | Vercel | `NEXT_PUBLIC_GTM_ID=GTM-K2PXS8ZC` Production + Preview (GTM-only; no direct GA env) |
 | GSC | Domain `sc-domain:berktugberke.com` — sitemap `https://berktugberke.com/sitemap.xml` **Başarılı** (252 URLs) |
