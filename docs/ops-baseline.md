@@ -152,3 +152,14 @@ GitHub secrets (2026-10-24): **`MANUAL_CRON_SECRET`** ✓, **`VERCEL_*`** ✓ (F
 | **Otomasyon** | `pnpm check:schema-gsc` veya `pnpm check:measurement` (schema + snapshot dahil). |
 
 GSC İletiler’deki tarihsel Profil `dateModified` uyarısı prod HTML temiz olsa da **gecikmeli** kaybolabilir; yeni sorun için URL denetimi → canlı test + probeleri yenile.
+
+## Faz E — GTM/GA4, CF/Vercel, E2E (2026-10-24 teyit)
+
+| Madde | DoD |
+|-------|-----|
+| **gtm-ga** | GTM-only (`GTM-K2PXS8ZC`); `page_context` + `content_group` (home/blog/hire/gundem); `gtm-no-double-config`. |
+| **cf-vercel** | Apex/haberler **server=Vercel**, apex’te **cf-ray yok**; `/_next/static` uzun cache; IndexNow kök dosya. `docs/cf-vercel.snapshot.json`. |
+| **e2e-verify** | `pnpm test:e2e:prod` (prod smoke, SEO program, gündem, GDS blog); CI `e2e-prod-smoke.yml`. |
+| **Otomasyon** | `pnpm check:faz-e`; release: `pnpm verify:prod`. |
+
+Apex DNS doğrudan Vercel → zone Early Hints / turuncu bulut HTML için **bilinçli uygulanmıyor**; CF rolü Workers, R2, Turnstile, DNS.

@@ -19,6 +19,7 @@
     "gds:sync-fixtures": "node --import tsx scripts/sync-gds-prod-fixtures.ts",
     "check:measurement": "node --import tsx scripts/check-measurement-phase5.ts",
     "check:schema-gsc": "node --import tsx scripts/check-schema-gsc.ts",
+    "check:faz-e": "node --import tsx scripts/check-faz-e.ts",
     "ops:collect": "node --import tsx scripts/collect-ops-baseline.ts",
     "ops:fetch-gsc": "node --import tsx scripts/fetch-gsc-performance-export.ts",
     "ops:merge-gsc-demand": "node --import tsx scripts/merge-gsc-demand-signals.ts",
@@ -29,7 +30,7 @@
     "ops:verify-local": "pnpm ops:env-pull && pnpm check:ops-secrets && pnpm verify:prod",
     "ops:import-gsc-baseline": "node --import tsx scripts/import-gsc-baseline-snapshot.ts",
     "ops:sync-gsc-baseline": "node --import tsx scripts/sync-gsc-baseline-snapshot.ts",
-    "verify:prod": "pnpm check:ops && pnpm check:measurement && pnpm check:queues && pnpm gundem:smoke-prod && pnpm gundem:verify-r2",
+    "verify:prod": "pnpm check:ops && pnpm check:measurement && pnpm check:faz-e && pnpm check:queues && pnpm gundem:smoke-prod && pnpm gundem:verify-r2",
     "ops:prune-deployments": "node --import tsx scripts/vercel-prune-deployments.ts",
     "blog-queue:sync": "python3 scripts/_write_sept_blog_queue.py",
     "gundem:seed-r2": "node --import tsx scripts/seed-gundem-r2.ts",
@@ -50,7 +51,7 @@
     "blog:publish:dry": "node scripts/publish-daily-blog.mjs --dry-run",
     "test:e2e": "playwright test",
     "test:e2e:local": "playwright test --grep-invert @prod",
-    "test:e2e:prod": "E2E_BASE_URL=https://berktugberke.com playwright test e2e/prod-smoke.spec.ts e2e/plan-seo-gundem.spec.ts e2e/seo-program.spec.ts --grep-invert @local --project=chromium",
+    "test:e2e:prod": "E2E_BASE_URL=https://berktugberke.com playwright test e2e/prod-smoke.spec.ts e2e/plan-seo-gundem.spec.ts e2e/seo-program.spec.ts e2e/growthdaily-blog.spec.ts --grep-invert @local --project=chromium",
     "test:e2e:webkit": "playwright test --project=webkit"
   },
   "dependencies": {

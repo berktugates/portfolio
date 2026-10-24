@@ -17,3 +17,5 @@ pnpm test:e2e          # tüm spec'ler (yerel sunucu + prod URL probeleri)
 **CI:** `.github/workflows/e2e-prod-smoke.yml` — haftalık `pnpm test:e2e:prod` (Pazartesi 06:00 UTC). `ops-phase0.yml` içinde `check:measurement` ayrıca koşar.
 
 Faz 5: GTM-1 beacon `dataLayer` `content_group=gundem` on `/gundem` (local) veya haberler redirect (prod base URL).
+
+Faz E prod paketi: `pnpm test:e2e:prod` — `growthdaily-blog.spec.ts` dahil (GDS slug + `content_group=blog`). Otomasyon: `pnpm check:faz-e`.

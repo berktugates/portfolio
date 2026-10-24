@@ -1,0 +1,26 @@
+{
+  "exportedAt": "2026-10-24",
+  "architectureNote": "berktugberke.com apex HTML DNS → Vercel (turuncu bulut kapalı); CF: Workers, R2, D1, Turnstile, DNS.",
+  "gtmContainer": "GTM-K2PXS8ZC",
+  "ga4MeasurementId": "G-5H6GDB1CRH",
+  "gtmLiveVersion": "v3",
+  "vercelProductionEnv": [
+    "NEXT_PUBLIC_GTM_ID",
+    "CONTENT_PUBLIC_BASE_URL",
+    "REVALIDATE_SECRET",
+    "REVALIDATE_URL",
+    "INDEXNOW_KEY"
+  ],
+  "requiredProbeIds": [
+    "cf-apex-vercel",
+    "cf-haberler-vercel",
+    "vercel-static-cache",
+    "cf-indexnow-key",
+    "dl-home-other",
+    "dl-blog",
+    "dl-hire",
+    "dl-gundem",
+    "gtm-no-double-config"
+  ],
+  "e2eProd": "pnpm test:e2e:prod (prod-smoke, plan-seo-gundem, seo-program, growthdaily-blog)"
+}
