@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-24T13:28:17.526Z",
+  "generatedAt": "2026-10-24T13:29:58.992Z",
   "faz": [
     0,
     5
@@ -107,7 +107,7 @@
     "blogMinRecommended": 9
   },
   "git": {
-    "blogRelatedCommits90d": 30
+    "blogRelatedCommits90d": 1
   },
   "vercel": {
     "ok": true,
