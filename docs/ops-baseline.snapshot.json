@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-24T13:21:39.533Z",
+  "generatedAt": "2026-10-24T13:28:17.526Z",
   "faz": [
     0,
     5
@@ -107,11 +107,19 @@
     "blogMinRecommended": 9
   },
   "git": {
-    "blogRelatedCommits90d": 1
+    "blogRelatedCommits90d": 30
   },
   "vercel": {
-    "ok": false,
-    "note": "Vercel API 403"
+    "ok": true,
+    "totalListed": 100,
+    "retention": {
+      "expirationDays": 1,
+      "expirationDaysProduction": 7,
+      "expirationDaysCanceled": 30,
+      "expirationDaysErrored": 30,
+      "deploymentsToKeep": 10
+    },
+    "note": "Son 100 deployment listelendi (limit 100)."
   },
   "gscBaseline": {
     "exportedAt": "2026-09-22",

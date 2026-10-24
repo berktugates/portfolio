@@ -114,7 +114,7 @@ async function main() {
         log(
           "warn",
           "vercel-api",
-          "Vercel project API failed (often expired VERCEL_TOKEN or wrong team scope); yeni token → GitHub secret",
+          "Vercel project API failed (expired token or team-only scope — REST needs Full Account token); Account → Tokens → GitHub secret",
         );
         warns += 1;
       } else {
