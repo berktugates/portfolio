@@ -26,7 +26,7 @@ const dictionary: HomeDictionary = {
   emailMe: "İletişim formu",
   emailAria: "İletişim formunu aç",
   socialNav: "Sosyal profiller",
-  latestBlog: "Yazılar",
+  latestBlog: "Güncel Bloglar",
   viewAll: "Tümünü gör",
   engineer: "Full-stack Yazılım Mühendisi",
   engineerAria: "bradi.tech Full-stack Yazılım Mühendisi",

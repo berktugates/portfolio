@@ -25,7 +25,7 @@ const dictionary: HomeDictionary = {
   emailMe: "联系表单",
   emailAria: "打开联系表单",
   socialNav: "社交档案",
-  latestBlog: "文章",
+  latestBlog: "最新博客",
   viewAll: "查看全部",
   engineer: "全栈软件工程师",
   engineerAria: "bradi.tech 全栈软件工程师",

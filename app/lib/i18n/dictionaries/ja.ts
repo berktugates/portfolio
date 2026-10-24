@@ -26,7 +26,7 @@ const dictionary: HomeDictionary = {
   emailMe: "お問い合わせフォーム",
   emailAria: "お問い合わせフォームを開く",
   socialNav: "ソーシャルプロフィール",
-  latestBlog: "記事",
+  latestBlog: "最新のブログ",
   viewAll: "すべて見る",
   engineer: "フルスタックソフトウェアエンジニア",
   engineerAria: "bradi.tech フルスタックソフトウェアエンジニア",

@@ -70,7 +70,7 @@ test.describe("SEO program acceptance", () => {
       "Berktuğ Berke Ateş — Yazılım Mühendisi ve Ürün Geliştirici",
     );
     const home = page.locator("#main-content");
-    await expect(page.getByRole("heading", { level: 2, name: "Yazılar" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 2, name: "Güncel Bloglar" })).toBeVisible();
     await expect(home).toContainText("Berktuğ Berke Ateş");
     await expect(home).not.toContainText(
       "Yayındaki Celestial Insights ve StrumAI uygulamaları React Native ve Expo ile kuruludur.",
